@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Crypto Dorea
+Plugin Name: Dorea CashBack
 Description: A New way of cash back to you loyal customers
 Version: 1.0.0
 */
@@ -9,9 +9,17 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'DoreaCashBack_VERSION', '1.0.0' );
 define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
-class DoreaCashBack{
 
-    function __construct(){
+include_once('abstractDorea.php');
+include_once('DoreaDB.php');
+
+
+/**
+ * 
+ */
+class DoreaCashBack extends abstractDorea{
+
+    public function __construct(){
 
 
     }
@@ -79,8 +87,8 @@ class DoreaCashBack{
     }
 
     
-    protected function checkPlaceOrder(){
-        print("triggered!!!");
+    public function checkPlaceOrder(){
+
         add_action('woocommerce_thankyou','isPaid');
         function isPaid($order_id){
 
@@ -104,6 +112,7 @@ class DoreaCashBack{
                  * @param $displayName
                  * @param $userEmail
                 */
+                
 
 
                 // remove any session user data
@@ -134,3 +143,4 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 }
 
+?>
