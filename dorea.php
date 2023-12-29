@@ -1,26 +1,33 @@
 <?php
+
 /*
 Plugin Name: Dorea CashBack
-Description: A New way of cash back to you loyal customers
+Description: A New way of Crypto Cash Back to your most loyal customers
 Version: 1.0.0
 */
 
+// check security
 defined( 'ABSPATH' ) || exit;
-
 define( 'DoreaCashBack_VERSION', '1.0.0' );
 define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
 
+// include necessary files
 include_once('abstractDorea.php');
-include_once('DoreaDB.php');
+include_once(__DIR__ . '/model/DoreaDB.php');
 
 
 /**
- * 
+ * a Class for handling the Cash Back programm
  */
 class DoreaCashBack extends abstractDorea{
 
+    private $doreaDB;
+
     public function __construct(){
 
+        // create database on initial load
+        $this->doreaDB = new DoreaDB();
+        $this->doreaDB->createTable();
 
     }
 
@@ -70,9 +77,19 @@ class DoreaCashBack extends abstractDorea{
             }        
     }
 
+    /**
+     * remove Cash Back option from the Cart page
+     */
+
+
+    /**
+     * set session to check cash back state 
+     */
     public function checkCashBackToCart(){
+
         add_action('wp','check');
         function check(){
+
             session_start();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cartSession'])) {
@@ -86,7 +103,9 @@ class DoreaCashBack extends abstractDorea{
 
     }
 
-    
+    /**
+     * 
+     */
     public function checkPlaceOrder(){
 
         add_action('woocommerce_thankyou','isPaid');
