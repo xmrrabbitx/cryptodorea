@@ -12,8 +12,10 @@ abstract class abstractDorea{
 
     abstract function addCashBackToCart();
 
-    abstract function checkCashBackToCart();
+    abstract function checkCbToCart();
+    abstract function checkCbToCartState();
 
     abstract function checkPlaceOrder();
+    abstract function isPaid($order_id);
 
 }

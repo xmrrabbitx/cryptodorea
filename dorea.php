@@ -28,6 +28,7 @@ class DoreaCashBack extends abstractDorea{
         // create database on initial load
         $this->doreaDB = new DoreaDB();
         $this->doreaDB->createTable();
+        $this->a = 1;
 
     }
 
@@ -36,11 +37,11 @@ class DoreaCashBack extends abstractDorea{
      */
     public function addCashBackToCart(){
        
-            add_action('woocommerce_blocks_cart_enqueue_data','cashback',10,3);
-            function cashback(){ 
+        add_action('woocommerce_blocks_cart_enqueue_data','cashback',10,3);
+        function cashback(){ 
 
-                // add cash back program element to theme 
-                print("<div style='margin-bottom:10px;padding:5px;padding-left:5px;'>
+            // add cash back program element to theme 
+            print("<div style='margin-bottom:10px;padding:5px;padding-left:5px;'>
                     <p>
                         <h4>
                             add to cash back program 
@@ -51,10 +52,10 @@ class DoreaCashBack extends abstractDorea{
                             </span>
                         </h4>
                     </p>
-                </div>");
+            </div>");
 
-                // check and add to cash back program
-                print("<script>
+            // check and add to cash back program
+            print("<script>
                         function add_to_cashback_checkbox() {
                             let add_to_cashback_checkbox_checked = document.getElementById('add_to_cashback_checkbox_checked');
                             if(add_to_cashback_checkbox_checked.checked && add_to_cashback_checkbox_checked.value === 'checked'){
@@ -73,8 +74,9 @@ class DoreaCashBack extends abstractDorea{
                                 return false;
                             }
                         }
-                </script>");
-            }        
+            </script>");
+        }        
+    
     }
 
     /**
@@ -83,63 +85,80 @@ class DoreaCashBack extends abstractDorea{
 
 
     /**
-     * set session to check cash back state 
+     * cart page session actions
      */
-    public function checkCashBackToCart(){
+    public function checkCbToCart(){
 
-        add_action('wp','check');
-        function check(){
-
-            session_start();
-
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cartSession'])) {
-                
-                $_SESSION['cartSession'] = true;
-
-            }
-
-           //unset($_SESSION['cartSession']);
-        }
-
+        $self = $this;
+        add_action('wp',function() use($self){
+            $self->checkCbToCartState();
+        });
+    
     }
 
     /**
-     * 
+     * callback function to check session cart page
+     */
+    public function checkCbToCartState(){
+
+        
+        session_start();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cartSession'])) {
+            
+            $_SESSION['cartSession'] = true;
+
+        }
+
+       //unset($_SESSION['cartSession']);
+    }
+
+    /**
+     * place order actions
      */
     public function checkPlaceOrder(){
 
-        add_action('woocommerce_thankyou','isPaid');
-        function isPaid($order_id){
+        $self = $this;
+        
+        add_action('woocommerce_thankyou',function($order_id) use($self){
+            $self->isPaid($order_id);
+        });
+        
+    }
 
-            print_r($order_id);
+    /**
+     * call back for place order
+     * check if order paid or not!
+     */
+    public function isPaid($order_id){
+ 
+        print_r($order_id);
 
-            // Check if the order has been paid
-            if($order_id){
-                $order = wc_get_order($order_id);
-                print_r($order);
-    
-                $user = $order->get_user();
-                $userName = $user->user_login;
-                $displayName = $user->display_name;
-                $userEmail = $user->user_email; 
-                print_r($displayName);
+        // Check if the order has been paid
+        if($order_id){
+            $order = wc_get_order($order_id);
+            print_r($order);
 
-                // store data into sqlite database
-                /**
-                 * @param $order_id
-                 * @param $userName
-                 * @param $displayName
-                 * @param $userEmail
-                */
-                
+            $user = $order->get_user();
+            $userName = $user->user_login;
+            $displayName = $user->display_name;
+            $userEmail = $user->user_email; 
+            print_r($displayName);
 
-
-                // remove any session user data
-                unset($_SESSION['cartSession']);
-            }
+            // store data into sqlite database
+            /**
+             * @param $order_id
+             * @param $userName
+             * @param $displayName
+             * @param $userEmail
+            */
             
-    
-        }    
+
+
+            // remove any session user data
+            unset($_SESSION['cartSession']);
+        }
+        
 
     }
 
@@ -155,10 +174,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
     $dorea = new DoreaCashBack();
     $dorea->addCashBackToCart();
-    $dorea->checkCashBackToCart();
+    $dorea->checkCbToCartState();
     $dorea->checkPlaceOrder();
-
-
 
 }
 
