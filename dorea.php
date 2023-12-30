@@ -11,8 +11,9 @@ defined( 'ABSPATH' ) || exit;
 define( 'DoreaCashBack_VERSION', '1.0.0' );
 define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
 
+
 // include necessary files
-include_once('abstractDorea.php');
+include_once(__DIR__ . '/abstracts/abstractDorea.php');
 include_once(__DIR__ . '/model/DoreaDB.php');
 
 
@@ -28,7 +29,6 @@ class DoreaCashBack extends abstractDorea{
         // create database on initial load
         $this->doreaDB = new DoreaDB();
         $this->doreaDB->createTable();
-        $this->a = 1;
 
     }
 
