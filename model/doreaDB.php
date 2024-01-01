@@ -13,22 +13,26 @@ class DoreaDB extends abstractDoreaDb {
 
    public function __construct() {
 
-        global $wpdb;
-        try {
-            // Check if the wp_options table exists
-            if ($wpdb->get_var("SHOW TABLES LIKE '{$wpdb->options}'") != $wpdb->options) {
-                databaseError('Cannot access wp_options table!');
-            } 
-
-            $this->removeCache();
-            
-        } catch (Exception $error) {
-            databaseError('- Connection failed: ' . $error);
-        }
    }
 
-   private function removeCache(){
+   public function init(){
 
+    global $wpdb;
+    try {
+        // Check if the wp_options table exists
+        if ($wpdb->get_var("SHO TABLES LIKE '{$wpdb->options}'") != $wpdb->options) {
+            databaseError('Cannot access wp_options table!');
+        } 
+
+        $this->removeCacheLogs();
+
+    } catch (Exception $error) {
+        databaseError('- Connection failed: ' . $error);
+    }
+   }
+
+   private function removeCacheLogs(){
+   
         $logDirectory = WP_PLUGIN_DIR . "/dorea/debug/";
         $logFiles = glob($logDirectory . "*.log");
         $maxFileSize = 5 * 1024 * 1024;

@@ -100,7 +100,7 @@ class DoreaCashBack extends abstractDorea{
      */
     public function checkCbToCartState(){
 
-        
+        $this->doreaDB->init();
         session_start();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cartSession'])) {
