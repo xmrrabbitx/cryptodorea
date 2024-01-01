@@ -11,9 +11,9 @@ class debugController extends debugAbstract{
 
     }
 
-    public function error($error){
+    public function databasError($error){
 
-        $errorFile = fopen($this->path . '/error.log','a+');
+        $errorFile = fopen($this->path . '/databasError.log','a+');
         fwrite($errorFile,
             $error . " __ timestamps: (". date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000)) . ") \n"
         );

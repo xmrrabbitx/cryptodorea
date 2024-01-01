@@ -9,5 +9,5 @@ abstract class debugAbstract{
         
     }
 
-    abstract function error($error);
+    abstract function databasError($error);
 }

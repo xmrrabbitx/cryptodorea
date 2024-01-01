@@ -11,8 +11,4 @@ abstract class abstractDoreaDb{
 
     }
 
-    abstract function createTable();
-
-    abstract function close();
-
 }

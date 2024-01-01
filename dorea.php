@@ -28,7 +28,6 @@ class DoreaCashBack extends abstractDorea{
 
         // create database on initial load
         $this->doreaDB = new DoreaDB();
-        $this->doreaDB->createTable();
 
     }
 
