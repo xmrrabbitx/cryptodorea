@@ -12,9 +12,11 @@ define( 'DoreaCashBack_VERSION', '1.0.0' );
 define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
 
 
+
 // include necessary files
 include_once(__DIR__ . '/abstracts/abstractDorea.php');
-include_once(__DIR__ . '/model/DoreaDB.php');
+include_once(__DIR__ . '/model/doreaDB.php');
+include_once(__DIR__ . '/admin/admin.php');
 
 
 /**
@@ -27,7 +29,7 @@ class DoreaCashBack extends abstractDorea{
     public function __construct(){
 
         // create database on initial load
-        $this->doreaDB = new DoreaDB();
+        $this->doreaDB = new doreaDB();
 
     }
 
@@ -38,6 +40,7 @@ class DoreaCashBack extends abstractDorea{
        
         add_action('woocommerce_blocks_cart_enqueue_data','cashback',10,3);
         function cashback(){ 
+
 
             // add cash back program element to theme 
             print("<div style='margin-bottom:10px;padding:5px;padding-left:5px;'>
@@ -67,6 +70,7 @@ class DoreaCashBack extends abstractDorea{
                                         console.log(xhr.responseText);
                                     }
                                 };
+                                
                                 xhr.send('cartSession=true');
                         
                                 // Prevent the form from submitting (optional)
@@ -86,11 +90,11 @@ class DoreaCashBack extends abstractDorea{
     /**
      * cart page session actions
      */
-    public function checkCbToCart(){
+    public function addtoCashBack(){
 
         $self = $this;
         add_action('wp',function() use($self){
-            $self->checkCbToCartState();
+            $self->checkaddtoCashBack();
         });
     
     }
@@ -98,18 +102,28 @@ class DoreaCashBack extends abstractDorea{
     /**
      * callback function to check session cart page
      */
-    public function checkCbToCartState(){
+    public function checkaddtoCashBack(){
 
-        $this->doreaDB->init();
+        dorea_add_menu_page();
+        
         session_start();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cartSession'])) {
+        if(isset($_POST['cartSession'])){
+            $session = $_POST['cartSession'] == "true";
+            if($session && $session === true){    
+               $_SESSION['cartSession'] = $session;
+                $addToChProgram = $session;
+                $loyaltyName = "jashnvareh2";
+                $exp = 7 * 24 * 60 * 60;
+                $this->doreaDB->addtoCashBack($addToChProgram, $loyaltyName, $exp);
+            }
             
-            $_SESSION['cartSession'] = true;
-
         }
+       
+        //print($_SESSION['cartSession']);
+        print(get_transient('jashnvareh2'));
+        //unset($_SESSION['cartSession']);
 
-       //unset($_SESSION['cartSession']);
     }
 
     /**
@@ -151,11 +165,9 @@ class DoreaCashBack extends abstractDorea{
              * @param $displayName
              * @param $userEmail
             */
-            
+            $this->doreaDB->init();
 
-
-            // remove any session user data
-            unset($_SESSION['cartSession']);
+  
         }
         
 
@@ -173,7 +185,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
     $dorea = new DoreaCashBack();
     $dorea->addCashBackToCart();
-    $dorea->checkCbToCartState();
+    $dorea->addtoCashBack();
     $dorea->checkPlaceOrder();
 
 }

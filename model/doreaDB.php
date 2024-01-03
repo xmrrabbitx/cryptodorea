@@ -6,7 +6,7 @@ require(WP_PLUGIN_DIR . "/dorea/abstracts/abstractDoreaDB.php");
 /**
  * an interface to connect to a PDO_SQLite3 Database
  */
-class DoreaDB extends abstractDoreaDb {
+class doreaDB extends abstractDoreaDb {
 
     private $maxFileSize;
     private  $logFile;
@@ -15,24 +15,28 @@ class DoreaDB extends abstractDoreaDb {
 
    }
 
+   /**
+    * check the status of Database connection
+    */
    public function init(){
+        global $wpdb;
+        try {
+            // Check if the wp_options table exists
+            if ($wpdb->get_var("SHOW TABLES LIKE '{$wpdb->options}'") != $wpdb->options) {
+                databaseError('Cannot access wp_options table!');
+            } 
 
-    global $wpdb;
-    try {
-        // Check if the wp_options table exists
-        if ($wpdb->get_var("SHO TABLES LIKE '{$wpdb->options}'") != $wpdb->options) {
-            databaseError('Cannot access wp_options table!');
-        } 
+            $this->removeCacheLogs();
 
-        $this->removeCacheLogs();
-
-    } catch (Exception $error) {
-        databaseError('- Connection failed: ' . $error);
+        } catch (Exception $error) {
+            databaseError('- Connection failed: ' . $error);
+        }
     }
-   }
 
+   /**
+    * check and remove the size of log files in /debug directory
+    */
    private function removeCacheLogs(){
-   
         $logDirectory = WP_PLUGIN_DIR . "/dorea/debug/";
         $logFiles = glob($logDirectory . "*.log");
         $maxFileSize = 5 * 1024 * 1024;
@@ -46,6 +50,17 @@ class DoreaDB extends abstractDoreaDb {
             }
         
         }
-   }
+    }
+
+    public function addtoCashBack($addToChProgram, $loyaltyName, $exp){
+
+        if($addToChProgram && $addToChProgram === true){
+
+            set_transient($loyaltyName, $addToChProgram, $exp);
+
+        }
+       
+
+    }
   
 }

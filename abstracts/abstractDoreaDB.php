@@ -11,4 +11,6 @@ abstract class abstractDoreaDb{
 
     }
 
+    abstract function addtoCashBack($addToChProgram, $loyaltyName, $exp);
+
 }
