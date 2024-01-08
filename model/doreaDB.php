@@ -1,12 +1,12 @@
 <?php
 
 require(WP_PLUGIN_DIR . "/dorea/exceptions/databaseError.php");
-require(WP_PLUGIN_DIR . "/dorea/abstracts/abstractDoreaDB.php");
+require(WP_PLUGIN_DIR . "/dorea/abstracts/doreaDbAbstract.php");
 
 /**
  * an interface to connect to a PDO_SQLite3 Database
  */
-class doreaDB extends abstractDoreaDb {
+class doreaDB extends doreaDbAbstract {
 
     private $maxFileSize;
     private  $logFile;

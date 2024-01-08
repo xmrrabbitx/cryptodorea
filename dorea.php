@@ -14,22 +14,24 @@ define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
 
 
 // include necessary files
-include_once(__DIR__ . '/abstracts/abstractDorea.php');
+include_once(__DIR__ . '/abstracts/doreaAbstract.php');
 include_once(__DIR__ . '/model/doreaDB.php');
 include_once(__DIR__ . '/admin/admin.php');
+include_once(__DIR__ . '/config/conf.php');
 
 
 /**
  * a Class for handling the Cash Back programm
  */
-class DoreaCashBack extends abstractDorea{
+class DoreaCashBack extends doreaAbstract{
 
     private $doreaDB;
 
     public function __construct(){
 
-        // create database on initial load
+        // create instance database on initial load
         $this->doreaDB = new doreaDB();
+        $this->conf = new config();
 
     }
 
@@ -83,6 +85,25 @@ class DoreaCashBack extends abstractDorea{
     }
 
     /**
+     * test
+     */
+    public function test(){
+        $self = $this;
+        add_action('wp',function() use($self){
+            $self->testing();
+        });
+
+    }
+
+    public function testing(){
+
+       // $ch = $this->conf->add(['hadi','mirzaie']);
+      //$this->conf->remove('init_config');
+        $ch = $this->conf->check('init_config');
+       print_r($ch);
+    }
+
+    /**
      * remove Cash Back option from the Cart page
      */
 
@@ -121,7 +142,7 @@ class DoreaCashBack extends abstractDorea{
         }
        
         //print($_SESSION['cartSession']);
-        print(get_transient('jashnvareh2'));
+        //print(get_transient('jashnvareh2'));
         //unset($_SESSION['cartSession']);
 
     }
@@ -145,7 +166,7 @@ class DoreaCashBack extends abstractDorea{
      */
     public function isPaid($order_id){
  
-        print_r($order_id);
+        //print_r($order_id);
 
         // Check if the order has been paid
         if($order_id){
@@ -156,7 +177,7 @@ class DoreaCashBack extends abstractDorea{
             $userName = $user->user_login;
             $displayName = $user->display_name;
             $userEmail = $user->user_email; 
-            print_r($displayName);
+            //print_r($displayName);
 
             // store data into sqlite database
             /**
@@ -187,6 +208,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     $dorea->addCashBackToCart();
     $dorea->addtoCashBack();
     $dorea->checkPlaceOrder();
+    $dorea->test();
 
 }
 

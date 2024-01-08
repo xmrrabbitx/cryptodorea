@@ -3,7 +3,7 @@
 /**
  * an Abstract Class for Crypto Dorea Plugin
  */
-abstract class abstractDorea{
+abstract class doreaAbstract{
 
     public function __construct(){
 
