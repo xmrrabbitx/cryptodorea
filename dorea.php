@@ -23,7 +23,7 @@ include_once(__DIR__ . '/config/conf.php');
 /**
  * a Class for handling the Cash Back programm
  */
-class DoreaCashBack extends doreaAbstract{
+class doreaCashBack extends doreaAbstract{
 
     private $doreaDB;
 
@@ -204,7 +204,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         include_once ABSPATH . 'wp-content/plugins/woocommerce/woocommerce.php'; 
     }
  
-    $dorea = new DoreaCashBack();
+    $dorea = new doreaCashBack();
     $dorea->addCashBackToCart();
     $dorea->addtoCashBack();
     $dorea->checkPlaceOrder();
