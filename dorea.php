@@ -16,7 +16,7 @@ define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
 // include necessary files
 include_once(__DIR__ . '/abstracts/doreaAbstract.php');
 include_once(__DIR__ . '/model/doreaDB.php');
-include_once(__DIR__ . '/admin/admin.php');
+include_once(__DIR__ . '/view/admin/admin.php');
 include_once(__DIR__ . '/config/conf.php');
 
 

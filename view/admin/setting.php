@@ -2,60 +2,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-include_once(WP_PLUGIN_DIR . '/dorea/config/conf.php');
-
-/**
- * add a main page to menu in wordpress
- */
-add_action('admin_menu', 'dorea_add_menu_page');
-
-function dorea_add_menu_page() {
-
-    $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
-
-    if (file_exists($logo_path)) {
-        $logo_content = file_get_contents($logo_path);
-        $base64_encoded = base64_encode($logo_content);
-
-        /**
-         * Dorea Cash Back Main Menu
-         */
-        add_menu_page(
-            'Dorea Cash Back',   // Page title
-            'Dorea Cash Back',        // Menu title
-            'manage_options',     // Capability required to access
-            'crypto-dorea-cashback',   // Menu slug (unique identifier)
-            'dorea_main_page_content', // Callback function to display page content
-            'data:image/svg+xml;base64,' . $base64_encoded, // Icon URL or dashicon class
-            20 // Menu position (you can adjust this)
-        );
-
-        /**
-         * Setting Menu
-         */
-        add_submenu_page(
-            'crypto-dorea-cashback',
-            'Setting Page',
-            'settings',
-            'manage_options',
-            'settings',
-            'dorea_main_setting_content'
-        );
-    
-    }
-    
-}
-
-/**
- *  main page content
- */ 
-function dorea_main_page_content(){
-
-    print("create cash back program");
-    
-    
-}
-
 /**
  * setting page content
  */
@@ -116,12 +62,16 @@ function dorea_main_setting_content(){
     */
 }
 
+
 /**
  * set up init config
  */
 add_action('admin_post_init_config', 'dorea_admin_init_config');
+
 function dorea_admin_init_config(){
+
     static $init_config_name = 'init_config_setup';
+    static $home_url = '/wp-admin/admin.php?page=crypto-dorea-cashback';
     
     if(!empty($_POST['name'] && $_POST['username'] && $_POST['recoveryPassword'] && $_POST['companyPurpose'] && $_POST['companySize'])){
 
@@ -140,6 +90,8 @@ function dorea_admin_init_config(){
             
         }
         
+        header('Location: '.$home_url);
+
     }
     
 }
