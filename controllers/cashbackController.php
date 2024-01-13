@@ -18,8 +18,7 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
     public function create($campaignName,$cryptoType,$startDate,$expDate){
 
       $arr = [$campaignName,$cryptoType,$startDate,$expDate];
-
-
+      
          if(empty($this->list()) || !in_array($campaignName, $this->list())){
             if(isset($arr)){
                $exp = expCalculator($expDate);
@@ -34,8 +33,7 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
     public function list(){
 
       if(get_option('campaign_list')){
-         //var_dump(delete_option('campaign_list'));
-         var_dump(get_option('campaign_list'));
+         //var_dump(get_option('campaign_list'));
          return get_option('campaign_list');
       }
 
@@ -45,15 +43,20 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
 
       if(!empty($campaignName)){
           $list = get_option('campaign_list');
-  
+
+     
           if($list){
             array_push($list, $campaignName);
-            add_option('campaign_list', $list);
+            var_dump($list);
+            update_option('campaign_list', $list);
+           
           }else{
+            var_dump("trigger 2");
             $list = [$campaignName];
             add_option('campaign_list', $list);
           }
          
+
       }
 
     }

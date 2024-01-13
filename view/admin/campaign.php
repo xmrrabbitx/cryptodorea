@@ -56,6 +56,8 @@ function dorea_admin_cashback_campaign(){
             $expDate = htmlspecialchars($_POST['expDate']);
 
             $cashback = new cashback();
+            //delete_option('campaign_list');
+            //add_option('campaign_list', ['digi']);
             $cashback->create($campaignName, $cryptoType, $startDate, $expDate);
             
             //var_dump($cashback->list());
