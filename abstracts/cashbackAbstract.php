@@ -10,7 +10,9 @@ abstract class cashbackAbstract{
 
     }
 
-    abstract function create();
+    abstract function create($campaignName, $cryptoType, $startDate, $expDate);
+
+    abstract function list();
 
     abstract function modify();
 
