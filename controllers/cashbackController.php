@@ -33,7 +33,6 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
     public function list(){
 
       if(get_option('campaign_list')){
-         //var_dump(get_option('campaign_list'));
          return get_option('campaign_list');
       }
 
@@ -42,21 +41,18 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
     public function addtoList($campaignName){
 
       if(!empty($campaignName)){
+
           $list = get_option('campaign_list');
 
-     
           if($list){
-            array_push($list, $campaignName);
-            var_dump($list);
-            update_option('campaign_list', $list);
-           
+              array_push($list, $campaignName);
+              var_dump($list);
+              update_option('campaign_list', $list);
           }else{
-            var_dump("trigger 2");
-            $list = [$campaignName];
-            add_option('campaign_list', $list);
+              $list = [$campaignName];
+              add_option('campaign_list', $list);
           }
-         
-
+          
       }
 
     }

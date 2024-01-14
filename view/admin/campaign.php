@@ -48,6 +48,8 @@ add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
 
 function dorea_admin_cashback_campaign(){
 
+    static $home_url = '/wp-admin/admin.php?page=crypto-dorea-cashback';
+
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDate'] && $_POST['expDate'])){
 
             $campaignName = htmlspecialchars($_POST['campaignName']);
@@ -56,11 +58,16 @@ function dorea_admin_cashback_campaign(){
             $expDate = htmlspecialchars($_POST['expDate']);
 
             $cashback = new cashback();
-            //delete_option('campaign_list');
-            //add_option('campaign_list', ['digi']);
-            $cashback->create($campaignName, $cryptoType, $startDate, $expDate);
-            
-            //var_dump($cashback->list());
+            if(strlen($campaignName) < 25 ){
+               
+                //delete_option('campaign_list');
+                //add_option('campaign_list', ['digi']);
+                $cashback->create($campaignName, $cryptoType, $startDate, $expDate);
+                header('Location: '.$home_url);
+            }else{
+                print('exceed characters limit!');
+            }
+            var_dump($cashback->list());
     }    
     
  

@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 include_once(WP_PLUGIN_DIR . '/dorea/config/conf.php');
 
+
 /**
  * add menu options to admin panels
  */
@@ -64,7 +65,14 @@ function dorea_add_menu_page() {
  */ 
 function dorea_main_page_content(){
 
-    print("create cash back program");
+    $cashback = new cashback();
+    $cashbackList = $cashback->list();
+
+    print("create cash back program </br>");
+    foreach ($cashbackList as &$campaignList) {
+        print($campaignList . '</br>');
+        
+    }
     
     
 }
