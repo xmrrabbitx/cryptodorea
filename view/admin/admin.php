@@ -69,12 +69,12 @@ function dorea_main_page_content(){
     $cashbackList = $cashback->list();
 
     print("create cash back program </br>");
-    foreach ($cashbackList as &$campaignList) {
-        print($campaignList . '</br>');
-        
+    if(isset($campaignList)){
+        foreach ($cashbackList as &$campaignList) {
+            print($campaignList . '<a href="'.esc_url(admin_url('admin-post.php?cashbackName='.$campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))).'">delete</a>' . '</br>');
+            
+        }
     }
-    
-    
 }
 
 /**
@@ -87,5 +87,3 @@ include('setting.php');
  * Crypto Cashback Campaign
  */
 include('campaign.php');
-
-

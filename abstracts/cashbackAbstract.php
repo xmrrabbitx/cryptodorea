@@ -16,6 +16,6 @@ abstract class cashbackAbstract{
 
     abstract function modify();
 
-    abstract function remove();
+    abstract function remove($campaignName);
 
 }

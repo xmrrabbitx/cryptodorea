@@ -12,7 +12,7 @@ function dorea_cashback_campaign_content(){
     print("
     
         </br>
-        <form method='POST' action='http:///localhost/wp-admin/admin-post.php' id='cashback_campaign'>
+        <form method='POST' action='".esc_url(admin_url('admin-post.php'))."' id='cashback_campaign'>
             
             <input type='hidden' name='action' value='cashback_campaign'>
            
@@ -71,5 +71,31 @@ function dorea_admin_cashback_campaign(){
     }    
     
  
+
+}
+
+
+
+/**
+ * delete a campaign
+ */
+add_action('admin_post_delete_campaign', 'dorea_admin_delete_campaign');
+
+function dorea_admin_delete_campaign(){
+
+    if ( !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'delete_campaign_nonce') ) {
+        die('Security check failed');
+    }
+
+    // Get campaign name
+    $campaignName = isset($_GET['cashbackName']) ? sanitize_text_field($_GET['cashbackName']) : '';
+
+    // Perform your delete operation here
+    $cashback = new cashback();
+    $cashback->remove($campaignName);
+    
+    // Redirect back to the previous page after deletion
+    wp_redirect(wp_get_referer());
+    exit;
 
 }
