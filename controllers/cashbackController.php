@@ -21,9 +21,11 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
       
          if(empty($this->list()) || !in_array($campaignName, $this->list())){
             if(isset($arr)){
+              
                $exp = expCalculator($expDate);
                set_transient($campaignName, $arr, $exp);
                $this->addtoList($campaignName);
+
             }
          }
       
@@ -51,6 +53,7 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
           }else{
               $list = [$campaignName];
               add_option('campaign_list', $list);
+              var_dump(get_option('campaign_list'));
           }
           
       }
@@ -69,7 +72,7 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
          $campaignModified = array_filter($campaignList,function($list) use($campaignName){
             return $list !== $campaignName;
          });
-         var_dump($campaignModified);
+       
          update_option('campaign_list', $campaignModified);
 
       }
