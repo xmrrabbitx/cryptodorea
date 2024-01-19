@@ -64,6 +64,11 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
 
     }
 
+    public function check($campaignName){
+
+      
+    }
+
     public function remove($campaignName){
 
       if(!empty($campaignName)){
@@ -74,6 +79,7 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
          });
        
          update_option('campaign_list', $campaignModified);
+         delete_transient($campaignName);
 
       }
     

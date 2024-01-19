@@ -39,11 +39,11 @@ class doreaCashBack extends doreaAbstract{
      * add Cash Back program to Cart page
      */
     public function addCashBackToCart(){
-       
-        add_action('woocommerce_blocks_cart_enqueue_data','cashback',10,3);
+       // woocommerce_after_shop_loop_item_title
+       // woocommerce_blocks_checkout_enqueue_data
+        add_action('woocommerce_after_shop_loop_item_title','cashback',10,3);
         function cashback(){ 
-
-
+        
             // add cash back program element to theme 
             print("<div style='margin-bottom:10px;padding:5px;padding-left:5px;'>
                     <p>
@@ -64,15 +64,17 @@ class doreaCashBack extends doreaAbstract{
                             let add_to_cashback_checkbox_checked = document.getElementById('add_to_cashback_checkbox_checked');
                             if(add_to_cashback_checkbox_checked.checked && add_to_cashback_checkbox_checked.value === 'checked'){
                                 
+                                //'/checkout/order-received'
                                 let xhr = new XMLHttpRequest();
-                                xhr.open('POST', window.location.href, true);
+                                xhr.open('POST', '/cart', true);
                                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                                 xhr.onreadystatechange = function() {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
-                                        console.log(xhr.responseText);
+                                        //console.log('add to cash back session is set');
+                                        //console.log(xhr.responseText);
                                     }
                                 };
-                                
+                               
                                 xhr.send('cartSession=true');
                         
                                 // Prevent the form from submitting (optional)
@@ -96,7 +98,16 @@ class doreaCashBack extends doreaAbstract{
     }
 
     public function testing(){
-
+        session_start();
+        if(isset($_POST['cartSession'])){
+            $session = $_POST['cartSession'] == "true";
+            if($session && $session === true){    
+               $_SESSION['cartSession'] = $session;
+               
+            }
+            
+        }
+        var_dump($_SESSION['cartSession']);
        // $ch = $this->conf->add(['hadi','mirzaie']);
       //$this->conf->remove('init_config');
         $ch = $this->conf->check('init_config');
@@ -112,7 +123,7 @@ class doreaCashBack extends doreaAbstract{
      * cart page session actions
      */
     public function addtoCashBack(){
-
+        //woocommerce_thankyou
         $self = $this;
         add_action('wp',function() use($self){
             $self->checkaddtoCashBack();
@@ -129,17 +140,20 @@ class doreaCashBack extends doreaAbstract{
         
         session_start();
 
+        // just check if isset then we can set option for it
         if(isset($_POST['cartSession'])){
-            $session = $_POST['cartSession'] == "true";
-            if($session && $session === true){    
-               $_SESSION['cartSession'] = $session;
-                $addToChProgram = $session;
-                $loyaltyName = "jashnvareh2";
-                $exp = 7 * 24 * 60 * 60;
-                $this->doreaDB->addtoCashBack($addToChProgram, $loyaltyName, $exp);
-            }
-            
+            $session = $_POST['cartSession'] === true;
         }
+        if($session && $session === true){    
+            //$_SESSION['cartSession'] = $session;
+            $addToChProgram = $session;
+            var_dump('thankyou');
+            $loyaltyName = "jashnvareh2";
+            $exp = 7 * 24 * 60 * 60;
+            $this->doreaDB->addtoCashBack($addToChProgram, $loyaltyName, $exp);
+        }
+            
+        
        
         //print($_SESSION['cartSession']);
         //print(get_transient('jashnvareh2'));
@@ -171,7 +185,7 @@ class doreaCashBack extends doreaAbstract{
         // Check if the order has been paid
         if($order_id){
             $order = wc_get_order($order_id);
-            print_r($order);
+            //print_r($order);
 
             $user = $order->get_user();
             $userName = $user->user_login;
