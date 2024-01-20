@@ -59,8 +59,9 @@ function dorea_admin_cashback_campaign(){
 
             $cashback = new cashback();
             if(strlen($campaignName) < 25 ){
-                
-                if(null !==(get_option('campaign_list'))){
+               
+                if(empty(get_option('campaign_list')) || get_option('campaign_list') === NULL){
+                    
                     delete_option('campaign_list');
                 }
                 

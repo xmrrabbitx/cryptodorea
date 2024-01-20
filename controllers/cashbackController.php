@@ -7,7 +7,7 @@
 require(WP_PLUGIN_DIR . "/dorea/abstracts/cashbackAbstract.php");
 require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
 
- class cashback extends cashbackAbstract{
+class cashback extends cashbackAbstract{
 
     function __contruct(){
 
@@ -48,12 +48,10 @@ require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
 
           if($list){
               array_push($list, $campaignName);
-
               update_option('campaign_list', $list);
           }else{
               $list = [$campaignName];
               add_option('campaign_list', $list);
-              var_dump(get_option('campaign_list'));
           }
           
       }
