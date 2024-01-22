@@ -30,8 +30,7 @@ function cashback(){
         ");
 
     }
-    print("
-                       </h4>
+    print("</h4>
                    </p>
            </div>");
 
@@ -49,7 +48,6 @@ function cashback(){
                             }
                         }
                     }
-                    
                             //'/checkout/order-received'
                             let xhr = new XMLHttpRequest();
                             xhr.open('POST', '#', true);
@@ -78,9 +76,12 @@ function cashback(){
 */
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
+    if (is_page('checkout')) {
+        $checkout = new checkout();
+        $checkout->addtoList();
 
-    $checkout = new checkout();
-    $checkout->addtoCashback();
-
-
+        var_dump(get_option('campaignList_user'));
+    }
 }
+
+

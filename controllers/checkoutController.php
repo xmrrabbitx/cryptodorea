@@ -12,14 +12,14 @@ class checkout extends checkoutAbstract{
 
     }
 
-    public function addtoCashback(){
+    public function addtoList(){
 
         
         // just check if isset then we can set option for it
         if(isset($_POST['campaignList'])){
             $campaignList = $_POST['campaignList'];
-            var_dump(explode(',',$campaignList));
-            //set_option('campaignList_user',$campaignList);
+            $campaignList = explode(',',$campaignList);
+            update_option('campaignList_user', $campaignList);
         }
         
         /*

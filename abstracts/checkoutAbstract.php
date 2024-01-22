@@ -10,6 +10,6 @@ abstract class checkoutAbstract{
 
     }
 
-    abstract function addtoCashback();
+    abstract function addtoList();
 
 }
