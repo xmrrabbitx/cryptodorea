@@ -16,9 +16,10 @@ class checkout extends checkoutAbstract{
 
         
         // just check if isset then we can set option for it
-        if(isset($_POST['addtoCart'])){
-            $session = $_POST['addtoCart'] === true;
-            var_dump($_POST['addtoCart']);
+        if(isset($_POST['campaignList'])){
+            $campaignList = $_POST['campaignList'];
+            var_dump(explode(',',$campaignList));
+            //set_option('campaignList_user',$campaignList);
         }
         
         /*

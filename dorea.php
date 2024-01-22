@@ -38,13 +38,6 @@ class doreaCashBack extends doreaAbstract{
     }
 
     /**
-     * add Cash Back program to Cart page
-     */
-    public function addCashBackToCart(){
-      
-    }
-
-    /**
      * test
      */
     public function test(){
@@ -68,26 +61,6 @@ class doreaCashBack extends doreaAbstract{
      * remove Cash Back option from the Cart page
      */
 
-
-    /**
-     * cart page session actions
-     */
-    public function addtoCashBack(){
-        //woocommerce_thankyou
-        $self = $this;
-        add_action('wp',function() use($self){
-            $self->checkaddtoCashBack();
-        });
-    
-    }
-
-    /**
-     * callback function to check session cart page
-     */
-    public function checkaddtoCashBack(){
-
-
-    }
 
     /**
      * place order actions
@@ -147,8 +120,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
  
     $dorea = new doreaCashBack();
-    $dorea->addCashBackToCart();
-    $dorea->addtoCashBack();
     $dorea->checkPlaceOrder();
     $dorea->test();
 
