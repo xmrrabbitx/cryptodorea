@@ -12,15 +12,23 @@ class checkout extends checkoutAbstract{
 
     }
 
-    public function addtoList(){
+    public function check($campaignNames){
 
-        
-        // just check if isset then we can set option for it
-        if(isset($_POST['campaignList'])){
-            $campaignList = $_POST['campaignList'];
-            $campaignList = explode(',',$campaignList);
-            update_option('campaignList_user', $campaignList);
+        if(get_option('campaignList_user')){
+            $campaignList = get_option('campaignList_user');
+            foreach($campaignNames as $campaign){
+                if(in_array($campaign,$campaignList)){
+                    return true;
+                }
+            }
+           
         }
+  
+      }
+
+    public function add($campaignNames){
+
+        add_option('campaignList_user', $campaignNames);
         
         /*
         if($session && $session === true){    
@@ -38,6 +46,11 @@ class checkout extends checkoutAbstract{
         //print(get_transient('jashnvareh2'));
         //unset($_SESSION['cartSession']);
 
+    }
+
+    public function update($campaignNames){
+
+        update_option('campaignList_user', $campaignNames);
     }
 
 }

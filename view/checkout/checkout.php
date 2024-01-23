@@ -10,6 +10,9 @@ require(WP_PLUGIN_DIR . "/dorea/controllers/checkoutController.php");
 // woocommerce_blocks_checkout_enqueue_data
 add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
 function cashback(){ 
+
+    wp_enqueue_script('jquery');
+
     $cashback = new cashback();
     $cashbackList = $cashback->list();
 
@@ -40,33 +43,39 @@ function cashback(){
                 let add_to_cashback_checkbox_checked = document.getElementsByClassName('add_to_cashback_checkbox_');
                 if(add_to_cashback_checkbox_checked.length > 0){
                 let campaignList = [];
-                    for(let i=0; i < add_to_cashback_checkbox_checked.length;i++){  
-                        if(add_to_cashback_checkbox_checked[i].checked){
-                            if(add_to_cashback_checkbox_checked[i].value !== ''){
+                for(let i=0; i < add_to_cashback_checkbox_checked.length;i++){  
+                    if(add_to_cashback_checkbox_checked[i].checked){
+                        if(add_to_cashback_checkbox_checked[i].value !== ''){
                                 console.log(add_to_cashback_checkbox_checked[i].value);
                                 campaignList.push(add_to_cashback_checkbox_checked[i].value);
-                            }
                         }
                     }
-                            //'/checkout/order-received'
-                            let xhr = new XMLHttpRequest();
-                            xhr.open('POST', '#', true);
-                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                            xhr.onreadystatechange = function() {
-                                if (xhr.readyState === 4 && xhr.status === 200) {
+                }
+                   
+                //'/checkout/order-received'
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '#', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
                                         
-                                    //console.log('add to cash back session is set');
-                                    //console.log(xhr.responseText);
-                                }
-                            };
-                            if(campaignList.length > 0){ 
-                                xhr.send('campaignList='+campaignList);
-                            }
-                            // Prevent the form from submitting (optional)
-                            return false;
+                        //console.log('add to cash back session is set');
+                        //console.log(xhr.responseText);
+                    }
+                };
+                    
+                if(campaignList.length > 0){ 
+                    xhr.send('campaignList='+campaignList);
+                }
+                // Prevent the form from submitting (optional)
+                return false;
+                
+               
+                // Prevent the form from submitting (optional)
+                return false;
                             
-                            }
-                        }
+                }
+            }
         </script>");
 } 
 
@@ -77,10 +86,19 @@ function cashback(){
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
     if (is_page('checkout')) {
-        $checkout = new checkout();
-        $checkout->addtoList();
-
-        var_dump(get_option('campaignList_user'));
+        if(isset($_POST['campaignList'])){
+            $campaignList = $_POST['campaignList'];
+            $campaignList = explode(',',$campaignList);
+            var_dump($campaignList);
+            $checkout = new checkout();
+            if($checkout->check($campaignList)){
+                var_dump("update");
+                $checkout->update($campaignList);
+            }
+            var_dump("add");
+            $checkout->add($campaignList);
+        }
+     
     }
 }
 

@@ -10,6 +10,8 @@ abstract class checkoutAbstract{
 
     }
 
-    abstract function addtoList();
+    abstract function check($campaignNames);
+    abstract function add($campaignNames);
+    abstract function update($campaignNames);
 
 }
