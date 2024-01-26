@@ -24,11 +24,10 @@ function cashback(){
                            
     ");
     foreach($cashbackList as $campaignList){
-
         print(" <span>
                     
                     <label>".$campaignList."</label>
-                        <input class='add_to_cashback_checkbox_' type='checkbox' value=".$campaignList." onclick='add_to_cashback_checkbox()'>
+                        <input class='add_to_cashback_checkbox_' type='checkbox' value=" . $campaignList . " onclick='add_to_cashback_checkbox()'>
                 </span>
         ");
 
@@ -37,7 +36,7 @@ function cashback(){
                    </p>
            </div>");
 
-               // check and add to cash back program
+        // check and add to cash back program
         print("<script>
             function add_to_cashback_checkbox() {
                 let add_to_cashback_checkbox_checked = document.getElementsByClassName('add_to_cashback_checkbox_');
@@ -85,21 +84,10 @@ function cashback(){
 */
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
-    if (is_page('checkout')) {
-        if(isset($_POST['campaignList'])){
-            $campaignList = $_POST['campaignList'];
-            $campaignList = explode(',',$campaignList);
-            var_dump($campaignList);
-            $checkout = new checkout();
-            if($checkout->check($campaignList)){
-                var_dump("update");
-                $checkout->update($campaignList);
-            }
-            var_dump("add");
-            $checkout->add($campaignList);
-        }
-     
-    }
+
+    $checkout = new checkout();
+    $checkout->checkout();
+
 }
 
 

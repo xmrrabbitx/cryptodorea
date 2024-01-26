@@ -35,6 +35,29 @@ class doreaCashBack extends doreaAbstract{
         $this->doreaDB = new doreaDB();
         $this->conf = new config();
 
+        $this->removeCacheLogs();
+
+    }
+
+    /**
+    * check and remove the size of log files in /debug directory
+    */
+    private function removeCacheLogs(){
+
+        $logDirectory = WP_PLUGIN_DIR . "/dorea/debug/";
+        $logFiles = glob($logDirectory . "*.log");
+        $maxFileSize = 5 * 1024 * 1024;
+    
+        foreach ($logFiles as $logFile) {
+
+            if(filesize($logFile) > $maxFileSize){
+
+                unlink($logFile);
+
+            }
+        
+        }
+
     }
 
     /**

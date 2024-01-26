@@ -26,41 +26,8 @@ class doreaDB extends doreaDbAbstract {
                 databaseError('Cannot access wp_options table!');
             } 
 
-            $this->removeCacheLogs();
-
         } catch (Exception $error) {
             databaseError('- Connection failed: ' . $error);
         }
     }
-
-   /**
-    * check and remove the size of log files in /debug directory
-    */
-   private function removeCacheLogs(){
-        $logDirectory = WP_PLUGIN_DIR . "/dorea/debug/";
-        $logFiles = glob($logDirectory . "*.log");
-        $maxFileSize = 5 * 1024 * 1024;
-    
-        foreach ($logFiles as $logFile) {
-
-            if(filesize($logFile) > $maxFileSize){
-
-                unlink($logFile);
-
-            }
-        
-        }
-    }
-
-    public function addtoCashBack($addToChProgram, $loyaltyName, $exp){
-
-        if($addToChProgram && $addToChProgram === true){
-
-            set_transient($loyaltyName, $addToChProgram, $exp);
-
-        }
-       
-
-    }
-  
 }

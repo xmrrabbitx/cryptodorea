@@ -1,34 +1,37 @@
 <?php
 
+require(WP_PLUGIN_DIR . "/dorea/abstracts/checkoutAbstract.php");
+require(WP_PLUGIN_DIR . "/dorea/model/checkoutModel.php");
+
 /**
  * Controller for checkout
  */
-
-require(WP_PLUGIN_DIR . "/dorea/abstracts/checkoutAbstract.php");
-
 class checkout extends checkoutAbstract{
 
-    function __contruct(){
+    function __construct(){
+
+        $this->checkoutModel = new checkoutModel();
 
     }
 
     public function check($campaignNames){
+        
 
-        if(get_option('campaignList_user')){
-            $campaignList = get_option('campaignList_user');
+
+        if($this->checkoutModel->list()){
+
+            $campaignList = $this->checkoutModel->list(); 
             foreach($campaignNames as $campaign){
-                if(in_array($campaign,$campaignList)){
+                if(in_array($campaign, $campaignList)){
                     return true;
                 }
             }
-           
         }
-  
-      }
+    }
 
     public function add($campaignNames){
 
-        add_option('campaignList_user', $campaignNames);
+        $this->checkoutModel->add($campaignNames);
         
         /*
         if($session && $session === true){    
@@ -49,8 +52,30 @@ class checkout extends checkoutAbstract{
     }
 
     public function update($campaignNames){
+        $this->checkoutModel->update($campaignNames);
+    }
 
-        update_option('campaignList_user', $campaignNames);
+
+    public function checkout(){
+
+        if (is_page('checkout')) {
+
+            if(isset($_POST['campaignList'])){
+    
+                $campaignList = $_POST['campaignList'];
+                $campaignList = explode(',',$campaignList);
+    
+                if($this->check($campaignList)){
+    
+                    $this->update($campaignList);
+                }
+    
+                $this->add($campaignList);
+                
+            }
+         
+        }
+
     }
 
 }

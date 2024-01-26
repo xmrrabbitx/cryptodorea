@@ -10,6 +10,4 @@ abstract class doreaDbAbstract{
 
     }
 
-    abstract function addtoCashBack($addToChProgram, $loyaltyName, $exp);
-
 }
