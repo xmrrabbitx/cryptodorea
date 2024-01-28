@@ -57,7 +57,7 @@ function cashback(){
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4 && xhr.status === 200) {
-                                        
+                     
                         //console.log('add to cash back session is set');
                         //console.log(xhr.responseText);
                     }
@@ -85,8 +85,10 @@ function cashback(){
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
 
+    var_dump(get_option('campaignList_user'));
     $checkout = new checkout();
     $checkout->checkout();
+   
 
 }
 

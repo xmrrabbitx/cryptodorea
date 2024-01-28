@@ -16,8 +16,6 @@ class checkout extends checkoutAbstract{
 
     public function check($campaignNames){
         
-
-
         if($this->checkoutModel->list()){
 
             $campaignList = $this->checkoutModel->list(); 
@@ -26,6 +24,8 @@ class checkout extends checkoutAbstract{
                     return true;
                 }
             }
+
+            return false;
         }
     }
 
@@ -66,10 +66,9 @@ class checkout extends checkoutAbstract{
                 $campaignList = explode(',',$campaignList);
     
                 if($this->check($campaignList)){
-    
                     $this->update($campaignList);
                 }
-    
+                
                 $this->add($campaignList);
                 
             }

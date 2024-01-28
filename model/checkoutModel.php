@@ -17,10 +17,27 @@ class checkoutModel extends checkoutModelAbstract{
     }
 
     public function add($campaignNames){
-        add_option('campaignList_user', $campaignNames);
+
+        $campaignList = $this->list();
+        if(count($campaignList) < 1){
+            var_dump("triggere add");
+            add_option('campaignList_user', $campaignNames);  
+        }
+      
     }
 
     public function update($campaignNames){
-        update_option('campaignList_user', $campaignNames);
+        $campaignList = $this->list();
+        var_dump("triggere 1");
+        if(count($campaignList) > 0){
+            var_dump("triggere 1");
+            foreach($campaignNames as $camps){
+                if(!in_array($camps, $campaignList)){
+                    var_dump("triggere update");
+                    array_push($campaignList, $camps);
+                    update_option('campaignList_user', $campaignList);
+                }
+            }
+        }
     }
 }
