@@ -20,7 +20,7 @@ class checkout extends checkoutAbstract{
 
             $campaignList = $this->checkoutModel->list(); 
             foreach($campaignNames as $campaign){
-                if(in_array($campaign, $campaignList)){
+                if(!in_array($campaign, $campaignList)){
                     return true;
                 }
             }
@@ -29,7 +29,7 @@ class checkout extends checkoutAbstract{
         }
     }
 
-    public function add($campaignNames){
+    public function addtoList($campaignNames){
 
         $this->checkoutModel->add($campaignNames);
         
@@ -51,29 +51,26 @@ class checkout extends checkoutAbstract{
 
     }
 
-    public function update($campaignNames){
-        $this->checkoutModel->update($campaignNames);
-    }
-
-
     public function checkout(){
 
-        if (is_page('checkout')) {
+        if(isset($_POST['campaignList'])){
+    
+            $campaignList = $_POST['campaignList'];
+            $campaignList = explode(',',$campaignList);
 
-            if(isset($_POST['campaignList'])){
-    
-                $campaignList = $_POST['campaignList'];
-                $campaignList = explode(',',$campaignList);
-    
-                if($this->check($campaignList)){
-                    $this->update($campaignList);
-                }
+            try{
                 
-                $this->add($campaignList);
-                
-            }
+                $this->addtoList($campaignList);
+
+               // throw new Exception('something went wrong!');
+            }catch(Exception $error){
+                //
+            } 
          
+                
         }
+         
+        
 
     }
 

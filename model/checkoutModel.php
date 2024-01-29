@@ -13,31 +13,25 @@ class checkoutModel extends checkoutModelAbstract{
     }
 
     public function list(){
-       return get_option('campaignList_user') ?? null;
+        return get_option('campaignList_user') === true ? get_option('campaignList_user') : [];
+
     }
 
     public function add($campaignNames){
 
         $campaignList = $this->list();
-        if(count($campaignList) < 1){
-            var_dump("triggere add");
+        if(count($campaignList) > 0){
+            foreach($campaignNames as $camps){
+                if(!in_array($camps, $campaignList)){
+                    array_push($campaignList, $camps);
+                    update_option('campaignList_user', $campaignList);
+                }
+            }
+        }else if(count($campaignList) < 1){
             add_option('campaignList_user', $campaignNames);  
         }
       
     }
 
-    public function update($campaignNames){
-        $campaignList = $this->list();
-        var_dump("triggere 1");
-        if(count($campaignList) > 0){
-            var_dump("triggere 1");
-            foreach($campaignNames as $camps){
-                if(!in_array($camps, $campaignList)){
-                    var_dump("triggere update");
-                    array_push($campaignList, $camps);
-                    update_option('campaignList_user', $campaignList);
-                }
-            }
-        }
-    }
+ 
 }

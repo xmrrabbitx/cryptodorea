@@ -10,6 +10,4 @@ abstract class checkoutModelAbstract{
 
     abstract function add($campaignNames);
 
-    abstract function update($campaignNames);
-
 }
