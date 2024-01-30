@@ -13,8 +13,9 @@ class checkoutModel extends checkoutModelAbstract{
     }
 
     public function list(){
-        return get_option('campaignList_user') === true ? get_option('campaignList_user') : [];
 
+        return get_option('campaignList_user') !== false ? get_option('campaignList_user') : [];
+    
     }
 
     public function add($campaignNames){

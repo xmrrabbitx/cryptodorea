@@ -28,7 +28,7 @@ function cashback(){
             print(" <span>
                         
                         <label>".$campaignList."</label>
-                            <input class='add_to_cashback_checkbox_' type='checkbox' value=" . $campaignList . " onclick='add_to_cashback_checkbox()'>
+                            <input class='add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='add_to_cashback_checkbox()'>
                     </span>
             ");
 
