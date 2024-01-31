@@ -19,6 +19,7 @@ include_once(__DIR__ . '/model/doreaDB.php');
 include_once(__DIR__ . '/config/conf.php');
 include_once(__DIR__ . '/view/admin/admin.php');
 include_once(__DIR__ . '/view/checkout/checkout.php');
+include_once(__DIR__ . '/view/receipe/receipe.php');
 
 
 
@@ -72,12 +73,9 @@ class doreaCashBack extends doreaAbstract{
     }
 
     public function testing(){
-        session_start();
-       
-       // $ch = $this->conf->add(['hadi','mirzaie']);
-      //$this->conf->remove('init_config');
-        $ch = $this->conf->check('init_config');
-       print_r($ch);
+        
+        add_option('test_option',["name"=>"hadi"]);
+        var_dump(get_option('test_option')['name']);
     }
 
     /**

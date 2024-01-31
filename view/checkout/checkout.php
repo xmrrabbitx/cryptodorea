@@ -89,7 +89,7 @@ function cashback(){
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
 
-    var_dump(get_option('campaignList_user'));
+    //var_dump(get_option('campaignList_user'));
     //var_dump(delete_option('campaignList_user'));
     if (is_page('checkout')) {
         $checkout = new checkout();
