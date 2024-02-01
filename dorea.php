@@ -38,6 +38,18 @@ class doreaCashBack extends doreaAbstract{
 
         $this->removeCacheLogs();
 
+        // set the session max lifetime to 2 hours
+        $inactive = 7200; 
+        ini_set('session.gc_maxlifetime', $inactive); 
+
+        session_start();
+        var_dump($_SESSION['time'] );
+        if (isset($_SESSION['campaignList_user']) && (time() - $_SESSION['time'] > $inactive)) {
+            
+            session_unset();     
+            session_destroy();  
+        }
+
     }
 
     /**
@@ -75,7 +87,7 @@ class doreaCashBack extends doreaAbstract{
     public function testing(){
         
         add_option('test_option',["name"=>"hadi"]);
-        var_dump(get_option('test_option')['name']);
+        //var_dump(get_option('test_option')['name']);
     }
 
     /**

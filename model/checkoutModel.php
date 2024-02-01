@@ -10,6 +10,8 @@ class checkoutModel extends checkoutModelAbstract{
 
     function __construct(){
 
+        $_SESSION['time'] = time();
+
     }
 
     public function list(){
@@ -29,8 +31,11 @@ class checkoutModel extends checkoutModelAbstract{
                 }
             }
         }else if(count($campaignList) < 1){
-            add_option('campaignList_user', $campaignNames);  
+            add_option('campaignList_user', $campaignNames);
         }
+
+        // set flash list of current user campaigns
+        $_SESSION['campaignList_user'] = $campaignNames;
       
     }
 

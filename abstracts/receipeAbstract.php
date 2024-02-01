@@ -8,5 +8,5 @@ abstract class receipeAbstract{
 
     }
 
-    abstract function is_paid($order);
+    abstract function is_paid($order, $campaignList);
 }

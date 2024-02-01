@@ -15,16 +15,20 @@ class receipe extends receipeAbstract{
 
     }
 
-    function is_paid($order){
+    function is_paid($order, $campaignList){
 
             $user = $order->get_user();
             $userName = $user->user_login;
             $displayName = $user->display_name;
             $userEmail = $user->user_email; 
             
-            // it must trigger and count campaign on every eash of product
-            $campaignInfo = [$productName=>['user'=>$user,'username'=>$userName,'displayName'=>$displayName,'userEmail'=>$userEmail]];
+            foreach($campaignList as $campaignName){
 
-            $this->receipeModel->add($campaignInfo);
+                // it must trigger and count campaign on every eash of product
+                $campaignInfo = [$campaignName=>['username'=>$userName,'displayName'=>$displayName,'userEmail'=>$userEmail]];
+
+                $this->receipeModel->add($campaignInfo);
+
+            }
     }
 }

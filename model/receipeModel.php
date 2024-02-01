@@ -29,7 +29,7 @@ class receipeModel extends receipeModelAbstract{
                 }
             }
         }else if(count($campaignInfoList) < 1){
-            set_transient('campaignInfo_user', $campaignInfo);  
+            set_transient('campaign_'.key($campaignInfo).'_user', $campaignInfo);  
         }
       
     }
