@@ -14,22 +14,22 @@ class receipeModel extends receipeModelAbstract{
 
     public function list(){
 
-        return get_transient('campaignList_user') !== false ? get_option('campaignList_user') : [];
+        return get_transient('campaignInfo_user') !== false ? get_option('campaignList_user') : [];
     
     }
 
-    public function add($campaignNames){
+    public function add($campaignInfo){
 
-        $campaignList = $this->list();
-        if(count($campaignList) > 0){
-            foreach($campaignNames as $camps){
-                if(!in_array($camps, $campaignList)){
+        $campaignInfoList = $this->list();
+        if(count($campaignInfoList) > 0){
+            foreach($campaignInfoList as $camps){
+                if(!in_array($camps, $campaignInfo)){
                     array_push($campaignList, $camps);
                     update_transient('campaignList_user', $campaignList);
                 }
             }
-        }else if(count($campaignList) < 1){
-            set_transient('campaignList_user', $campaignNames);  
+        }else if(count($campaignInfoList) < 1){
+            set_transient('campaignInfo_user', $campaignInfo);  
         }
       
     }

@@ -8,6 +8,6 @@ abstract class receipeModelAbstract{
 
     abstract function list();
 
-    abstract function add($campaignNames);
+    abstract function add($campaignInfo);
 
 }

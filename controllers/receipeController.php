@@ -22,7 +22,9 @@ class receipe extends receipeAbstract{
             $displayName = $user->display_name;
             $userEmail = $user->user_email; 
             
-            var_dump($user);
+            // it must trigger and count campaign on every eash of product
+            $campaignInfo = [$productName=>['user'=>$user,'username'=>$userName,'displayName'=>$displayName,'userEmail'=>$userEmail]];
 
+            $this->receipeModel->add($campaignInfo);
     }
 }
