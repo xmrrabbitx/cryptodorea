@@ -43,7 +43,7 @@ class doreaCashBack extends doreaAbstract{
         ini_set('session.gc_maxlifetime', $inactive); 
 
         session_start();
-        var_dump($_SESSION['time'] );
+
         if (isset($_SESSION['campaignList_user']) && (time() - $_SESSION['time'] > $inactive)) {
             
             session_unset();     

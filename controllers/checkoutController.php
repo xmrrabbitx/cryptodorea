@@ -53,9 +53,9 @@ class checkout extends checkoutAbstract{
 
     public function checkout(){
 
-        if(isset($_POST['campaignList'])){
+        if(isset($_POST['campaignlist'])){
     
-            $campaignList = $_POST['campaignList'];
+            $campaignList = $_POST['campaignlist'];
             $campaignList = explode(',',$campaignList);
 
             try{

@@ -13,23 +13,33 @@ class receipeModel extends receipeModelAbstract{
     }
 
     public function list(){
-
-        return get_transient('campaignInfo_user') !== false ? get_option('campaignList_user') : [];
+      
+        return get_transient('campaigninfo_user') !== false ? get_transient('campaigninfo_user') : [];
     
     }
 
     public function add($campaignInfo){
-
         $campaignInfoList = $this->list();
+        //var_dump($campaignInfoList);
+        //var_dump(get_transient('campaigninfo_user'));
+        
         if(count($campaignInfoList) > 0){
-            foreach($campaignInfoList as $camps){
-                if(!in_array($camps, $campaignInfo)){
-                    array_push($campaignList, $camps);
-                    update_transient('campaignList_user', $campaignList);
-                }
+            $campaignInfoKeys = array_keys($campaignInfo);
+            foreach($campaignInfoKeys as $info){
+
+                array_filter($campaignInfoList,function($values,$keys) use(&$campaignInfoList,&$campaignInfo, &$info){
+                    if($info !== $keys){
+                        $campaignInfoList = $campaignInfoList + $campaignInfo;
+                        delete_transient('campaigninfo_user');
+                        set_transient('campaigninfo_user', $campaignInfoList);
+                    }
+
+                },ARRAY_FILTER_USE_BOTH);
+                
             }
+
         }else if(count($campaignInfoList) < 1){
-            set_transient('campaign_'.key($campaignInfo).'_user', $campaignInfo);  
+            set_transient('campaigninfo_user', $campaignInfo);  
         }
       
     }

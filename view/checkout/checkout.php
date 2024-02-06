@@ -42,12 +42,12 @@ function cashback(){
                 function add_to_cashback_checkbox() {
                     let add_to_cashback_checkbox_checked = document.getElementsByClassName('add_to_cashback_checkbox_');
                     if(add_to_cashback_checkbox_checked.length > 0){
-                    let campaignList = [];
+                    let campaignlist = [];
                     for(let i=0; i < add_to_cashback_checkbox_checked.length;i++){  
                         if(add_to_cashback_checkbox_checked[i].checked){
                             if(add_to_cashback_checkbox_checked[i].value !== ''){
                                     console.log(add_to_cashback_checkbox_checked[i].value);
-                                    campaignList.push(add_to_cashback_checkbox_checked[i].value);
+                                    campaignlist.push(add_to_cashback_checkbox_checked[i].value);
                             }
                         }
                     }
@@ -64,8 +64,8 @@ function cashback(){
                         }
                     };
                         
-                    if(campaignList.length > 0){ 
-                        xhr.send('campaignList='+campaignList);
+                    if(campaignlist.length > 0){ 
+                        xhr.send('campaignlist='+campaignlist);
                     }
                     // Prevent the form from submitting (optional)
                     return false;
@@ -89,14 +89,13 @@ function cashback(){
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
 
-    //var_dump(get_option('campaignList_user'));
-    //var_dump(delete_option('campaignList_user'));
+    //var_dump(get_option('campaignlist_user'));
+    //var_dump(delete_option('campaignlist_user'));
     if (is_page('checkout')) {
         $checkout = new checkout();
         $checkout->checkout();
     }
    
-
 }
 
 

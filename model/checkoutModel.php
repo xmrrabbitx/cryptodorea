@@ -16,7 +16,7 @@ class checkoutModel extends checkoutModelAbstract{
 
     public function list(){
 
-        return get_option('campaignList_user') !== false ? get_option('campaignList_user') : [];
+        return get_option('campaignlist_user') !== false ? get_option('campaignlist_user') : [];
     
     }
 
@@ -27,15 +27,15 @@ class checkoutModel extends checkoutModelAbstract{
             foreach($campaignNames as $camps){
                 if(!in_array($camps, $campaignList)){
                     array_push($campaignList, $camps);
-                    update_option('campaignList_user', $campaignList);
+                    update_option('campaignlist_user', $campaignList);
                 }
             }
         }else if(count($campaignList) < 1){
-            add_option('campaignList_user', $campaignNames);
+            add_option('campaignlist_user', $campaignNames);
         }
 
         // set flash list of current user campaigns
-        $_SESSION['campaignList_user'] = $campaignNames;
+        $_SESSION['campaignlist_user'] = $campaignNames;
       
     }
 
