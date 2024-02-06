@@ -5,7 +5,7 @@
  */
 
 require(WP_PLUGIN_DIR . "/dorea/abstracts/cashbackAbstract.php");
-require(WP_PLUGIN_DIR . "/dorea/utility/expCalculator.php");
+require(WP_PLUGIN_DIR . "/dorea/utilities/expCalculator.php");
 
 class cashback extends cashbackAbstract{
 
@@ -15,9 +15,9 @@ class cashback extends cashbackAbstract{
     }
 
     
-    public function create($campaignName,$cryptoType,$startDate,$expDate){
+    public function create($campaignName, $cryptoType, $cryptoAmount, $startDate, $expDate){
 
-      $arr = [$campaignName,$cryptoType,$startDate,$expDate];
+      $arr = [$campaignName, $cryptoType, $cryptoAmount, $startDate, $expDate];
       
          if(empty($this->list()) || !in_array($campaignName, $this->list())){
             if(isset($arr)){
@@ -29,7 +29,6 @@ class cashback extends cashbackAbstract{
             }
          }
       
-
     }
 
     public function list(){

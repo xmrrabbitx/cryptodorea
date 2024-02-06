@@ -14,15 +14,15 @@ class receipeModel extends receipeModelAbstract{
 
     public function list(){
       
-        return get_transient('campaigninfo_user') !== false ? get_transient('campaigninfo_user') : [];
+        return get_option('campaigninfo_user') !== false ? get_option('campaigninfo_user') : [];
     
     }
 
     public function add($campaignInfo){
+
         $campaignInfoList = $this->list();
-        //var_dump($campaignInfoList);
-        //var_dump(get_transient('campaigninfo_user'));
-        
+        static $expDate = 12;
+
         if(count($campaignInfoList) > 0){
             $campaignInfoKeys = array_keys($campaignInfo);
             foreach($campaignInfoKeys as $info){
@@ -30,8 +30,8 @@ class receipeModel extends receipeModelAbstract{
                 array_filter($campaignInfoList,function($values,$keys) use(&$campaignInfoList,&$campaignInfo, &$info){
                     if($info !== $keys){
                         $campaignInfoList = $campaignInfoList + $campaignInfo;
-                        delete_transient('campaigninfo_user');
-                        set_transient('campaigninfo_user', $campaignInfoList);
+                        //delete_transient('campaigninfo_user');
+                        update_option('campaigninfo_user', $campaignInfoList);
                     }
 
                 },ARRAY_FILTER_USE_BOTH);
@@ -39,7 +39,7 @@ class receipeModel extends receipeModelAbstract{
             }
 
         }else if(count($campaignInfoList) < 1){
-            set_transient('campaigninfo_user', $campaignInfo);  
+            add_option('campaigninfo_user', $campaignInfo);  
         }
       
     }

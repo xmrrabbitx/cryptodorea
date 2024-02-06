@@ -32,23 +32,7 @@ class checkout extends checkoutAbstract{
     public function addtoList($campaignNames){
 
         $this->checkoutModel->add($campaignNames);
-        
-        /*
-        if($session && $session === true){    
-            //$_SESSION['cartSession'] = $session;
-            $addToChProgram = $session;
-            var_dump('thankyou');
-            $loyaltyName = "jashnvareh2";
-            $exp = 7 * 24 * 60 * 60;
-            //$this->doreaDB->addtoCashBack($addToChProgram, $loyaltyName, $exp);
-        }
-            
-        */
-       
-        //print($_SESSION['cartSession']);
-        //print(get_transient('jashnvareh2'));
-        //unset($_SESSION['cartSession']);
-
+    
     }
 
     public function checkout(){

@@ -21,8 +21,8 @@ class receipe extends receipeAbstract{
             $userName = $user->user_login;
             $displayName = $user->display_name;
             $userEmail = $user->user_email; 
-            var_dump(get_transient('campaigninfo_user'));
-            //var_dump(delete_transient('campaigninfo_user'));
+            //var_dump(get_option('campaigninfo_user'));
+            //var_dump(delete_option('campaigninfo_user'));
             foreach($campaignList as $campaignName){
 
                 // it must trigger and count campaign on every eash of product
