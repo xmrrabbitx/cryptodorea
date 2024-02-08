@@ -22,15 +22,14 @@ class receipeModel extends receipeModelAbstract{
 
         $campaignInfoList = $this->list();
         static $expDate = 12;
-
         if(count($campaignInfoList) > 0){
             $campaignInfoKeys = array_keys($campaignInfo);
-            foreach($campaignInfoKeys as $info){
+            foreach($campaignInfoKeys as $infoKeys){
 
-                array_filter($campaignInfoList,function($values,$keys) use(&$campaignInfoList,&$campaignInfo, &$info){
-                    if($info !== $keys){
+                array_filter($campaignInfoList,function($values,$keys) use(&$campaignInfoList,&$campaignInfo, &$infoKeys){
+                    if($infoKeys !== $keys || $campaignInfoList[$keys]['count'] !== $campaignInfo[$infoKeys]['count']){
+                        $campaignInfoList[$keys]['count'] = $campaignInfo[$infoKeys]['count'];
                         $campaignInfoList = $campaignInfoList + $campaignInfo;
-                        //delete_transient('campaigninfo_user');
                         update_option('campaigninfo_user', $campaignInfoList);
                     }
 

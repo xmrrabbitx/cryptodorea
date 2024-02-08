@@ -9,8 +9,8 @@ require(WP_PLUGIN_DIR . "/dorea/controllers/receipeController.php");
 add_action('woocommerce_thankyou','receipe',10,3);
 function receipe($order_id){ 
     
-    //var_dump(get_option('campaignlist_user'));
-    //var_dump(delete_transient('campaignlist_user'));
+    //var_dump(get_option('campaigninfo_user'));
+    //var_dump(delete_option('campaignlist_user'));
     if($order_id){
 
         if(isset($_SESSION['campaignlist_user'])){
