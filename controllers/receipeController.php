@@ -15,7 +15,7 @@ class receipe extends receipeAbstract{
 
     }
 
-    function count(){
+    function campaignInfo(){
         return get_option("campaigninfo_user");
     }
 
@@ -29,9 +29,9 @@ class receipe extends receipeAbstract{
             //var_dump(delete_option('campaigninfo_user'));
            
             foreach($campaignList as $campaignName){
-                
-                $count = $this->count()[$campaignName]['count'] === false || null || $this->count()[$campaignName]['count'] < 1 ? 1 : $this->count()[$campaignName]['count'] + 1;
-                //var_dump($count);
+
+                $count = $this->campaignInfo()[$campaignName]['count'] === false || null || $this->campaignInfo()[$campaignName]['count'] < 1 ? 1 : $this->campaignInfo()[$campaignName]['count'] + 1;
+                //var_dump( $count );
                 // it must trigger and count campaign on every eash of product
                 $campaignInfo = [$campaignName=>['username'=>$userName,'displayName'=>$displayName,'userEmail'=>$userEmail,'count'=>$count]];
 
