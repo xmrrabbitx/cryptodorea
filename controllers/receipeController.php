@@ -25,9 +25,7 @@ class receipe extends receipeAbstract{
             $userName = $user->user_login;
             $displayName = $user->display_name;
             $userEmail = $user->user_email; 
-            var_dump(get_option('campaigninfo_user'));
-            //var_dump(delete_option('campaigninfo_user'));
-           
+
             foreach($campaignList as $campaignName){
 
                 $count = $this->campaignInfo()[$campaignName]['count'] === false || null || $this->campaignInfo()[$campaignName]['count'] < 1 ? 1 : $this->campaignInfo()[$campaignName]['count'] + 1;
@@ -38,5 +36,6 @@ class receipe extends receipeAbstract{
                 $this->receipeModel->add($campaignInfo);
 
             }
+           
     }
 }

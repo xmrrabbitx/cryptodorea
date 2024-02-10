@@ -32,14 +32,14 @@ class receipeModel extends receipeModelAbstract{
                     $campaignInfoList = $campaignInfoList + $campaignInfo;
                     //var_dump($campaignInfoList);
                     update_option('campaigninfo_user', $campaignInfoList);
-                    return true;
+                   break;
                 }elseif( $campaignInfoList[$campaignInfoKeys[0]]['count'] !== $campaignInfo[$campaignInfoKeys[0]]['count']){
                    
                     $campaignInfoList[$campaignInfoKeys[0]]['count'] += 1;
                     //var_dump($campaignInfoList);
                     update_option('campaigninfo_user', $campaignInfoList);
                     //var_dump($campaignInfoList[$campaignInfoKeys[0]]['count']);
-                    return true;
+                    break;
                 }
 /*
                 if($campaignInfoKeys[0] !== $infoListKeys || $campaignInfoList[$infoListKeys]['count'] !== $campaignInfo[$campaignInfoKeys[0]]['count']){
@@ -69,7 +69,8 @@ class receipeModel extends receipeModelAbstract{
         }else if(count($campaignInfoList) < 1){
             add_option('campaigninfo_user', $campaignInfo);  
         }
-      
+
+        $_SESSION['campaignlist_user'] = null;
     }
 
  
