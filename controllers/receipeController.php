@@ -28,7 +28,12 @@ class receipe extends receipeAbstract{
 
             foreach($campaignList as $campaignName){
 
-                $count = $this->campaignInfo()[$campaignName]['count'] === false || null || $this->campaignInfo()[$campaignName]['count'] < 1 ? 1 : $this->campaignInfo()[$campaignName]['count'] + 1;
+                if(isset($this->campaignInfo()[$campaignName])){
+                    $count = $this->campaignInfo()[$campaignName]['count'] + 1;
+                }else{
+                    $count = 1;
+                }
+             
                 //var_dump( $count );
                 // it must trigger and count campaign on every eash of product
                 $campaignInfo = [$campaignName=>['username'=>$userName,'displayName'=>$displayName,'userEmail'=>$userEmail,'count'=>$count]];

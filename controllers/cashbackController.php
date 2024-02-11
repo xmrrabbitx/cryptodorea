@@ -15,9 +15,9 @@ class cashback extends cashbackAbstract{
     }
 
     
-    public function create($campaignName, $cryptoType, $cryptoAmount, $startDate, $expDate){
+    public function create($campaignName, $cryptoType, $cryptoAmount,  $shoppingCount, $startDate, $expDate){
 
-      $arr = [$campaignName, $cryptoType, $cryptoAmount, $startDate, $expDate];
+      $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDate' => $startDate, 'expDate' => $expDate];
       
          if(empty($this->list()) || !in_array($campaignName, $this->list())){
             if(isset($arr)){

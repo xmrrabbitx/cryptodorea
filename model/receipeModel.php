@@ -70,7 +70,10 @@ class receipeModel extends receipeModelAbstract{
             add_option('campaigninfo_user', $campaignInfo);  
         }
 
-        $_SESSION['campaignlist_user'] = null;
+        $pay = new pay();
+        $pay->checkCount();
+
+        //$_SESSION['campaignlist_user'] = null;
     }
 
  

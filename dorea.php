@@ -86,8 +86,11 @@ class doreaCashBack extends doreaAbstract{
 
     public function testing(){
         
+        //var_dump(delete_transient('dorea 1'));
+        //var_dump(delete_option('campaigninfo_user'));
+        //var_dump(delete_option('campaign_list'));
+        //var_dump(get_transient('dorea 1'));
         var_dump(get_option('campaigninfo_user'));
-        //var_dump(get_option('campaigninfo_user'));
         //add_option('test_option',["name"=>"hadi"]);
         //var_dump(get_option('test_option')['name']);
         

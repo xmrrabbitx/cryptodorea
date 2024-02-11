@@ -20,12 +20,16 @@ function dorea_cashback_campaign_content(){
             <input type='text' name='campaignName'>
             </br>
 
-            <lable>crypt type</lable>
+            <lable>crypto type</lable>
             <input type='text' name='cryptoType'>
             </br>
 
             <lable>amount</lable>
             <input type='text' name='cryptoAmount'>
+            </br>
+
+            <lable>Shopping Counts</lable>
+            <input type='text' name='shoppingCount'>
             </br>
 
             <lable>start date</lable>
@@ -59,6 +63,7 @@ function dorea_admin_cashback_campaign(){
             $campaignName = htmlspecialchars($_POST['campaignName']);
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
             $cryptoAmount = (int)htmlspecialchars($_POST['cryptoAmount']);
+            $shoppingCount = (int)htmlspecialchars($_POST['shoppingCount']);
             $startDate = htmlspecialchars($_POST['startDate']);
             $expDate = htmlspecialchars($_POST['expDate']);
 
@@ -70,7 +75,7 @@ function dorea_admin_cashback_campaign(){
                     delete_option('campaign_list');
                 }
                 
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $startDate, $expDate);
+                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDate, $expDate);
                 header('Location: '.$home_url);
             }else{
                die('exceed characters limit!');
