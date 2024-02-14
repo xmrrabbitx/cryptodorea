@@ -22,7 +22,7 @@ class pay extends payAbstract{
             $campaign = get_option('campaigninfo_user')[$campaignName];
             $limit = get_transient($campaignName)['shoppingCount'];
             if($campaign['count'] >= $limit){
-                die("time to pay!");
+                $this->checkExpire($campaignName);
             }
 
         }
@@ -32,8 +32,30 @@ class pay extends payAbstract{
     /**
      * check Loyalty Program Expiration Date && Time
      */
-    public function checkExpire(){
+    public function checkExpire($campaignName){
 
+        $currentDate = Date();
+        $campaignDate = get_option('campaigninfo_user')['date'];
+
+        // check if date of campaign has not been expired!
+        // we need trigger a modal view page to het wallet address
+    }
+
+    /**
+     * queue to pay
+     */
+    public function queuePay(){
+        
+        // wp_schedule_event
+    }
+
+    /**
+     * pay crypto to user
+     */
+    public function pay(){
+
+        // pay when queue trigger on specific date
+        die("time to pay");
     }
 
 }

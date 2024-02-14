@@ -7,5 +7,6 @@ abstract class payAbstract{
 
     }
 
-    
+    abstract function checkExpire($campaignName);
+    abstract function pay();
 }
