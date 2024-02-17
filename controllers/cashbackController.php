@@ -6,6 +6,7 @@
 
 require(WP_PLUGIN_DIR . "/dorea/abstracts/cashbackAbstract.php");
 require(WP_PLUGIN_DIR . "/dorea/utilities/expCalculator.php");
+require(WP_PLUGIN_DIR . "/dorea/utilities/dateCalculator.php");
 
 class cashback extends cashbackAbstract{
 

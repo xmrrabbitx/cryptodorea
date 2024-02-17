@@ -91,8 +91,6 @@ function cashback(){
 add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
 
-    //var_dump(get_option('campaignlist_user'));
-    //var_dump(delete_option('campaignlist_user'));
     if (is_page('cart')) {
         $checkout = new checkout();
         $checkout->checkout();

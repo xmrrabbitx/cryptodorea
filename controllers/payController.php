@@ -38,7 +38,7 @@ class pay extends payAbstract{
         $campaignDate = get_option('campaigninfo_user')['date'];
 
         // check if date of campaign has not been expired!
-        // we need trigger a modal view page to het wallet address
+        // we need trigger a modal view page to get wallet address
     }
 
     /**

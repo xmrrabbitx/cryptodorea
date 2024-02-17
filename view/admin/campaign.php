@@ -3,10 +3,18 @@
 /**
  * Crypto Cashback Campaign
  */
-
 require(WP_PLUGIN_DIR . "/dorea/controllers/cashbackController.php");
 
 function dorea_cashback_campaign_content(){
+
+    // utilities helper functions
+    $currentTime = currentDate();
+    $currentDate = unixToMonth($currentTime);
+    $futureDate = futureDate(7,1,2022);
+    $futureDate = unixToMonth($futureDate);
+
+    $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 
     print("campaign page");
     print("
@@ -31,13 +39,42 @@ function dorea_cashback_campaign_content(){
             <lable>Shopping Counts</lable>
             <input type='text' name='shoppingCount'>
             </br>
-
+            
             <lable>start date</lable>
-            <input type='text' name='startDate'>
+            <select name='startDate' id='startDate'>
+            ");
+
+            foreach($monthsList as $month){
+
+                if($month === $currentDate){
+   
+                    print("<option value='".$month."' selected>".$month."</option>");
+                }
+                else{
+                    print("<option value='".$month."'>".$month."</option>");
+                }
+            }
+
+            print("</select>
             </br>
 
             <lable>expire date</lable>
-            <input type='text' name='expDate'>
+            <select name='expDate' id='expDate'>
+            ");
+            
+            foreach($monthsList as $month){
+                $nextMonth = next($monthsList);
+                if($month === $currentDate){ 
+                    print("<option value='".$month."'>".$month."</option>");
+                    print("<option value='".$nextMonth ."' selected>".$nextMonth."</option>");
+                    $next = $nextMonth;
+                }elseif($month !== $next){
+                    print("<option value='".$month."'>".$month."</option>");
+                }
+              
+            }
+
+            print("</select>
             </br>
 
 
@@ -46,7 +83,7 @@ function dorea_cashback_campaign_content(){
         </form>
         </br>
     
-    ");
+        ");
 }
 
 /**
@@ -67,6 +104,7 @@ function dorea_admin_cashback_campaign(){
             $startDate = htmlspecialchars($_POST['startDate']);
             $expDate = htmlspecialchars($_POST['expDate']);
 
+            /*
             $cashback = new cashback();
             if(strlen($campaignName) < 25 ){
                
@@ -80,6 +118,7 @@ function dorea_admin_cashback_campaign(){
             }else{
                die('exceed characters limit!');
             }
+            */
            
     }    
     
