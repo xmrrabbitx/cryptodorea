@@ -21,6 +21,15 @@ function unixToMonth($time){
 
 }
 
+ /**
+ * calculate unix date in Day Format
+ * @param $date in Date Format
+ */
+function unixToday($time){
+
+   return $date = date('d',$time);;
+
+}
 
  /**
  * calculate unix time in the future date and time

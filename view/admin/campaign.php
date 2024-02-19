@@ -10,11 +10,12 @@ function dorea_cashback_campaign_content(){
     // utilities helper functions
     $currentTime = currentDate();
     $currentDate = unixToMonth($currentTime);
+    $currentDay = (int) unixToDay($currentTime);
     $futureDate = futureDate(7,1,2022);
     $futureDate = unixToMonth($futureDate);
 
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
+    $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
     print("campaign page");
     print("
@@ -47,7 +48,6 @@ function dorea_cashback_campaign_content(){
             foreach($monthsList as $month){
 
                 if($month === $currentDate){
-   
                     print("<option value='".$month."' selected>".$month."</option>");
                 }
                 else{
@@ -56,12 +56,27 @@ function dorea_cashback_campaign_content(){
             }
 
             print("</select>
+            <span><select>");
+
+            for($days=1;$days <= $daysList[$currentDate]; $days++){
+                if($days === $currentDay){
+                    print("
+                    <option value='".$days."' selected>".$days."</option>
+                    ");
+                }
+                print("
+                    <option value='".$days."'>".$days."</option>
+                    ");
+            }
+            
+            print("</select>
+            </span>
             </br>
 
             <lable>expire date</lable>
             <select name='expDate' id='expDate'>
             ");
-            
+            $next = "";
             foreach($monthsList as $month){
                 $nextMonth = next($monthsList);
                 if($month === $currentDate){ 
@@ -74,9 +89,24 @@ function dorea_cashback_campaign_content(){
               
             }
 
+              print("</select>
+            <span><select>");
+            $nextDay = 30 - ($daysList[$currentDate] - $currentDay);
+            var_dump($nextDay);
+            for($days=1; $days <= $daysList[$next]; $days++){
+                if($days === $nextDay){
+                    print("
+                    <option value='".$days."' selected>".$days."</option>
+                    ");
+                }
+                print("
+                    <option value='".$days."'>".$days."</option>
+                    ");
+            }
+            
             print("</select>
+            </span>
             </br>
-
 
             <button type='submit' onClick='setup_init_config()'>set up campaign!</button>
         
