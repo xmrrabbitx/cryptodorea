@@ -42,7 +42,7 @@ function dorea_cashback_campaign_content(){
             </br>
             
             <lable>start date</lable>
-            <select name='startDate' id='startDate'>
+            <select name='startDateMonth' id='startDateMonth'>
             ");
 
             foreach($monthsList as $month){
@@ -56,7 +56,8 @@ function dorea_cashback_campaign_content(){
             }
 
             print("</select>
-            <span><select>");
+                    <span>
+                    <select name='startDateDay' id='startDateDay'>");
 
             for($days=1;$days <= $daysList[$currentDate]; $days++){
                 if($days === $currentDay){
@@ -74,7 +75,7 @@ function dorea_cashback_campaign_content(){
             </br>
 
             <lable>expire date</lable>
-            <select name='expDate' id='expDate'>
+            <select name='expDateMonth' id='expDateMonth'>
             ");
             $next = "";
             foreach($monthsList as $month){
@@ -89,10 +90,10 @@ function dorea_cashback_campaign_content(){
               
             }
 
-              print("</select>
-            <span><select>");
+            print("</select>
+                <span><select name='expDateDay' id='expDateDay'>");
+
             $nextDay = 30 - ($daysList[$currentDate] - $currentDay);
-            var_dump($nextDay);
             for($days=1; $days <= $daysList[$next]; $days++){
                 if($days === $nextDay){
                     print("
@@ -105,8 +106,8 @@ function dorea_cashback_campaign_content(){
             }
             
             print("</select>
-            </span>
-            </br>
+                    </span>
+                    </br>
 
             <button type='submit' onClick='setup_init_config()'>set up campaign!</button>
         
@@ -125,16 +126,18 @@ function dorea_admin_cashback_campaign(){
 
     static $home_url = '/wp-admin/admin.php?page=crypto-dorea-cashback';
    
-    if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDate'] && $_POST['expDate'])){
+    if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDateMonth'] && $_POST['expDateDay'])){
        
             $campaignName = htmlspecialchars($_POST['campaignName']);
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
             $cryptoAmount = (int)htmlspecialchars($_POST['cryptoAmount']);
             $shoppingCount = (int)htmlspecialchars($_POST['shoppingCount']);
-            $startDate = htmlspecialchars($_POST['startDate']);
-            $expDate = htmlspecialchars($_POST['expDate']);
+            $startDateMonth = htmlspecialchars($_POST['startDateMonth']);
+            $startDateDay = htmlspecialchars($_POST['startDateDay']);
+            $expDateMonth = htmlspecialchars($_POST['expDateMonth']);
+            $expDateDay= htmlspecialchars($_POST['expDateDay']);
 
-            /*
+            
             $cashback = new cashback();
             if(strlen($campaignName) < 25 ){
                
@@ -143,12 +146,15 @@ function dorea_admin_cashback_campaign(){
                     delete_option('campaign_list');
                 }
                 
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDate, $expDate);
+                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay);
+                
+                // head to the admin page of Dorea
                 header('Location: '.$home_url);
+
             }else{
                die('exceed characters limit!');
             }
-            */
+            
            
     }    
     

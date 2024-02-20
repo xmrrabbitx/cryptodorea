@@ -86,13 +86,13 @@ class doreaCashBack extends doreaAbstract{
 
     public function testing(){
         
-        $time = '1708068853';//time();
-        $date = date('F j, Y, g:i a',$time);
+        //$time = '1708068853';//time();
+        //$date = date('F j, Y, g:i a',$time);
         //echo mktime(0, 0, 0, 7, 1, 2000);
-        //var_dump(delete_transient('dorea 1'));
+        //var_dump(delete_transient('dorea'));
         //var_dump(delete_option('campaigninfo_user'));
         //var_dump(delete_option('campaign_list'));
-        //var_dump(get_transient('dorea 1'));
+        var_dump(get_transient('dorea'));
         //var_dump(get_option('campaigninfo_user'));
         //add_option('test_option',["name"=>"hadi"]);
         //var_dump(get_option('test_option')['name']);

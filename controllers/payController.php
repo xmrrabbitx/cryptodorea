@@ -24,9 +24,7 @@ class pay extends payAbstract{
             if($campaign['count'] >= $limit){
                 $this->checkExpire($campaignName);
             }
-
         }
-    
     }
 
     /**
@@ -34,9 +32,22 @@ class pay extends payAbstract{
      */
     public function checkExpire($campaignName){
 
-        $currentDate = Date();
-        $campaignDate = get_option('campaigninfo_user')['date'];
+        $currentTime = currentDate();
+        $currentDateMonth = unixToMonth($currentTime);
+        $currentDateDay = unixToday($currentTime);
 
+        $startCampaignDateMonth = get_transient($campaignName)['startDateMonth'];
+        $startCampaignDateDay = get_transient($campaignName)['startDateDay'];
+        $expCampaignDateMonth = get_transient($campaignName)['expDateMonth'];
+        $expCampaignDateDay = get_transient($campaignName)['expDateDay'];
+
+        $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
+
+        if($currentDateMonth === $startCampaignDateMonth || $currentDateMonth === $expCampaignDateMonth){
+            if($currentDateDay >= $startCampaignDateDay || $currentDateDay <= $expCampaignDateDay){
+                var_dump("your in");
+            }
+        }
         // check if date of campaign has not been expired!
         // we need trigger a modal view page to get wallet address
     }

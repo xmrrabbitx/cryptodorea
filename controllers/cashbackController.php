@@ -1,13 +1,12 @@
 <?php
 
-/**
- * Controller to create_modify_delete cashback campaign
- */
-
 require(WP_PLUGIN_DIR . "/dorea/abstracts/cashbackAbstract.php");
 require(WP_PLUGIN_DIR . "/dorea/utilities/expCalculator.php");
 require(WP_PLUGIN_DIR . "/dorea/utilities/dateCalculator.php");
 
+/**
+ * Controller to create_modify_delete cashback campaign
+ */
 class cashback extends cashbackAbstract{
 
     function __contruct(){
@@ -15,10 +14,9 @@ class cashback extends cashbackAbstract{
 
     }
 
-    
-    public function create($campaignName, $cryptoType, $cryptoAmount,  $shoppingCount, $startDate, $expDate){
+    public function create($campaignName, $cryptoType, $cryptoAmount,  $shoppingCount, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay){
 
-      $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDate' => $startDate, 'expDate' => $expDate];
+      $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDateMonth'=> $startDateMonth, 'startDateDay' => $startDateDay, 'expDateMonth' => $expDateMonth, 'expDateDay' => $expDateDay];
       
          if(empty($this->list()) || !in_array($campaignName, $this->list())){
             if(isset($arr)){
