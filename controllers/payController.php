@@ -44,20 +44,26 @@ class pay extends payAbstract{
         $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
         if($currentDateMonth === $startCampaignDateMonth || $currentDateMonth === $expCampaignDateMonth){
-            if($currentDateDay >= $startCampaignDateDay || $currentDateDay <= $expCampaignDateDay){
-                var_dump("your in");
+            if($currentDateDay >= $startCampaignDateDay || $currentDateDay <= $startCampaignDateDay){
+               return $this->queuePay($campaignName);
             }
         }
-        // check if date of campaign has not been expired!
-        // we need trigger a modal view page to get wallet address
+        
     }
 
     /**
      * queue to pay
      */
-    public function queuePay(){
+    public function queuePay($campaignName){
         
-        // wp_schedule_event
+        if(!get_option('dorea_queue_pay')){
+            $campaignList = [$campaignName];
+            add_option('dorea_queue_pay',$campaignList);
+        }else{
+            $campaignList = get_option('dorea_queue_pay');
+            array_push($campaignList, $campaignName);
+            update_option('dorea_queue_pay',$campaignList);
+        }
     }
 
     /**
@@ -67,6 +73,7 @@ class pay extends payAbstract{
 
         // pay when queue trigger on specific date
         die("time to pay");
+        // wp_schedule_event
     }
 
 }

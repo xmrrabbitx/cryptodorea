@@ -41,6 +41,8 @@ class receipe extends receipeAbstract{
                 $this->receipeModel->add($campaignInfo);
 
             }
-           
+
+            $pay = new pay();
+            $pay->checkCount();
     }
 }

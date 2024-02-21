@@ -22,7 +22,6 @@ class receipeModel extends receipeModelAbstract{
 
         $campaignInfoList = $this->list();
         static $expDate = 12;
-
         if(count($campaignInfoList) > 0){
             $campaignInfoKeys = array_keys($campaignInfo);
 
@@ -46,9 +45,6 @@ class receipeModel extends receipeModelAbstract{
         }
 
         //$_SESSION['campaignlist_user'] = null;
-
-        $pay = new pay();
-        $pay->checkCount();
         
     }
 
