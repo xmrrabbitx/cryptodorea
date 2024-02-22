@@ -11,6 +11,6 @@ abstract class doreaAbstract{
     }
 
     abstract function checkPlaceOrder();
-    abstract function isPaid($order_id);
+    abstract function timeToPay();
 
 }

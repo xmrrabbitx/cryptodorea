@@ -20,6 +20,7 @@ include_once(__DIR__ . '/config/conf.php');
 include_once(__DIR__ . '/view/admin/admin.php');
 include_once(__DIR__ . '/view/checkout/checkout.php');
 include_once(__DIR__ . '/view/receipe/receipe.php');
+include_once(__DIR__ . '/view/payment/payment.php');
 
 
 
@@ -86,7 +87,7 @@ class doreaCashBack extends doreaAbstract{
 
     public function testing(){
         
-        var_dump(get_option('dorea_queue_pay'));
+        //var_dump(get_option('dorea_queue_pay'));
         //var_dump(delete_option('dorea_queue_pay'));
         //$time = '1708068853';//time();
         //$date = date('F j, Y, g:i a',$time);
@@ -117,45 +118,30 @@ class doreaCashBack extends doreaAbstract{
      */
     public function checkPlaceOrder(){
 
-        $self = $this;
-        
-        add_action('woocommerce_thankyou',function($order_id) use($self){
-            $self->isPaid($order_id);
-        });
-        
+        $queuePay = get_option('dorea_queue_pay');
+        if($queuePay){
+            $self = $this;
+            add_action('wp',function() use($self){
+                $self->timeToPay();
+            });
+        }
     }
 
     /**
      * call back for place order
      * check if order paid or not!
      */
-    public function isPaid($order_id){
- 
-        //print_r($order_id);
+    public function timeToPay(){
 
-        // Check if the order has been paid
-        if($order_id){
-            $order = wc_get_order($order_id);
-            //print_r($order);
+        var_dump("time to pay function!");
 
-            $user = $order->get_user();
-            $userName = $user->user_login;
-            $displayName = $user->display_name;
-            $userEmail = $user->user_email; 
-            //print_r($displayName);
+        paymentModal();
 
-            // store data into sqlite database
-            /**
-             * @param $order_id
-             * @param $userName
-             * @param $displayName
-             * @param $userEmail
-            */
-            $this->doreaDB->init();
-
-  
+        $pay = new Pay();
+        $paymentStatus = $pay->pay();
+        if($paymentStatus){
+            var_dump("time to delete all campaign info");
         }
-        
 
     }
 
@@ -171,7 +157,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
     $dorea = new doreaCashBack();
     $dorea->checkPlaceOrder();
-    $dorea->test();
+    //$dorea->test();
 
 }
 

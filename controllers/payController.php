@@ -72,8 +72,8 @@ class pay extends payAbstract{
     public function pay(){
 
         // pay when queue trigger on specific date
-        die("time to pay");
-        // wp_schedule_event
+        var_dump("pay controller function");
+        return true;
     }
 
 }
