@@ -133,8 +133,6 @@ class doreaCashBack extends doreaAbstract{
      */
     public function timeToPay(){
 
-        var_dump("time to pay function!");
-
         paymentModal();
 
         $pay = new Pay();
