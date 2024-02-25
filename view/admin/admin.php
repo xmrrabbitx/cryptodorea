@@ -61,14 +61,25 @@ function dorea_add_menu_page() {
 }
 
 /**
+ * Enqueue styles for the plugin
+ */
+function sample_custom_styles() {
+    wp_enqueue_style('dorea_styles', plugin_dir_url(__FILE__) . 'sample.css');
+}
+// input must be after scripts
+add_action('wp_enqueue_scripts', 'sample_custom_styles');
+
+/**
  *  main page content
  */ 
 function dorea_main_page_content(){
 
+    sample_custom_styles();
+
     $cashback = new cashback();
     $cashbackList = $cashback->list();
 
-    print("create cash back program </br>");
+    print("create cash back program </br> <div id='sampleDorea'>sample dorea style</div>");
     if(isset($cashbackList)){
         foreach ($cashbackList as &$campaignList) {
             print($campaignList . '<a href="'.esc_url(admin_url('admin-post.php?cashbackName='.$campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))).'"> delete </a>' . '</br>');

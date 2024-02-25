@@ -139,7 +139,7 @@ class doreaCashBack extends doreaAbstract{
         $paymentStatus = $pay->pay();
         if($paymentStatus){
             var_dump("time to delete all campaign info");
-        }
+        }   
 
     }
 

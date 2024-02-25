@@ -3,11 +3,11 @@
 /**
  * Enqueue styles for the plugin
  */
-function enqueue_custom_styles() {
-    wp_enqueue_style('custom_plugin_styles', plugin_dir_url(__FILE__) . 'style/paymentModal.css');
+function paymentModal_styles() {
+    wp_enqueue_style('paymentModal_styles', plugin_dir_url(__FILE__) . 'paymentModal.css');
 }
 // input must be after scripts
-add_action('wp_enqueue_scripts', 'enqueue_custom_styles');
+add_action('wp_enqueue_scripts', 'paymentModal_styles');
 
 /**
  * a payment modal to get wallet address
@@ -15,8 +15,10 @@ add_action('wp_enqueue_scripts', 'enqueue_custom_styles');
 function paymentModal(){
 
     print('
-        <lable>please write your wallet adddress:</lable>
-        <input id="doreaModal" type="text" name="doreaModal">
+        <div id="customPaymentModal" class="custom-payment-modal">
+            <lable>please write your wallet adddress:</lable>
+            <input style="" id="doreaModal" type="text" name="doreaModal">
+        </div>
     ');
 
 }
