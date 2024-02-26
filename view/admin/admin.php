@@ -64,7 +64,7 @@ function dorea_add_menu_page() {
  * Enqueue styles for the plugin
  */
 function sample_custom_styles() {
-    wp_enqueue_style('dorea_styles', plugin_dir_url(__FILE__) . 'sample.css');
+    wp_enqueue_style('dorea_styles', plugin_dir_url('dorea/view') . 'view/style/sample.css');
 }
 // input must be after scripts
 add_action('wp_enqueue_scripts', 'sample_custom_styles');
