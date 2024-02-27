@@ -16,8 +16,11 @@ function paymentModal(){
 
     print('
         <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
-            <lable>please write your wallet adddress:</lable>
-            <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
+            <form method="POST" action="#">
+                <lable>please write your wallet adddress:</lable>
+                <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
+                <button type="submit">submit</button>
+            </form>
         </div>
     ');
 

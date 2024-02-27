@@ -1,8 +1,21 @@
-.dorea-payment-modal-container{
-    position:absolute !important;
-    top:20px !important;
+#doreaPaymentModalContainer{
+    position: absolute;
+    top: -100px;
     z-index: 10000000000;
+    animation-name: paymentModal;
+    animation-duration: 5s;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
 }
+
+@keyframes paymentModal {
+
+    from {top:-100px;} 
+    to {top: 120px;}
+
+}
+
 #doreaModalText{
-    color:blue !important;
+    color:rgb(107, 107, 107) !important;
 }
+
