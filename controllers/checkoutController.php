@@ -36,15 +36,16 @@ class checkout extends checkoutAbstract{
     }
 
     public function checkout(){
+       
+        // get Json Data
+        $json_data = file_get_contents('php://input');
+        $campaignList = json_decode($json_data);
 
-        if(isset($_POST['campaignlist'])){
+        if(isset($campaignList)){
     
-            $campaignList = $_POST['campaignlist'];
-            $campaignList = explode(',',$campaignList);
-
             try{
                 
-                $this->addtoList($campaignList);
+                $this->addtoList($campaignList['campaignlist']);
 
                // throw new Exception('something went wrong!');
             }catch(Exception $error){

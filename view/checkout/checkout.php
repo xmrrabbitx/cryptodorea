@@ -55,26 +55,26 @@ function cashback(){
                         }
                         
                         //'/checkout/order-received'
+                        //application/x-www-form-urlencoded
                         let xhr = new XMLHttpRequest();
                         xhr.open('POST', '#', true);
-                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        xhr.setRequestHeader('Accept', 'application/json');
+                        xhr.setRequestHeader('Content-Type', 'application/json');
                         xhr.onreadystatechange = function() {
                             if (xhr.readyState === 4 && xhr.status === 200) {
                             
-                                //console.log('add to cash back session is set');
-                                //console.log(xhr.responseText);
+                                console.log('add to cash back session is set');
+                                console.log(xhr.responseText);
                             }
                         };
                             
                         if(campaignlist.length > 0){ 
-                            xhr.send('campaignlist='+campaignlist);
+                            xhr.send(JSON.stringify({'campaignlist':campaignlist}));
                         }
+
                         // Prevent the form from submitting (optional)
                         return false;
                         
-                    
-                        // Prevent the form from submitting (optional)
-                        return false;
                                     
                         }
                     }
@@ -95,7 +95,7 @@ function checkaddtoCashBack(){
         $checkout = new checkout();
         $checkout->checkout();
     }
-   
+  
 }
 
 

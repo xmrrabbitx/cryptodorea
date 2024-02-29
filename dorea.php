@@ -88,17 +88,17 @@ class doreaCashBack extends doreaAbstract{
     public function testing(){
         
         //var_dump(get_option('dorea_queue_pay'));
-        //var_dump(delete_option('dorea_queue_pay'));
+        var_dump(delete_option('dorea_queue_pay'));
         //$time = '1708068853';//time();
         //$date = date('F j, Y, g:i a',$time);
         //echo mktime(0, 0, 0, 7, 1, 2000);
-        //var_dump(delete_transient('dorea'));
-        //var_dump(delete_transient('dorea 1'));
-        //var_dump(delete_transient('dorea 2'));
-        //var_dump(delete_transient('dorea 3'));
-        //var_dump(delete_transient('dorea 4'));
-        //var_dump(delete_option('campaigninfo_user'));
-        //var_dump(delete_option('campaign_list'));
+        var_dump(delete_transient('dorea'));
+        var_dump(delete_transient('dorea 1'));
+        var_dump(delete_transient('dorea 2'));
+        var_dump(delete_transient('dorea 3'));
+        var_dump(delete_transient('dorea 4'));
+        var_dump(delete_option('campaigninfo_user'));
+        var_dump(delete_option('campaign_list'));
         //var_dump(get_transient('dorea 1'));
         //var_dump(get_transient('dorea 2'));
         //var_dump(get_transient('dorea 3'));
@@ -155,7 +155,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
     $dorea = new doreaCashBack();
     $dorea->checkPlaceOrder();
-    //$dorea->test();
+    $dorea->test();
 
 }
 
