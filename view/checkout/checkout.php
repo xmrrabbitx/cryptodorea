@@ -63,8 +63,8 @@ function cashback(){
                         xhr.onreadystatechange = function() {
                             if (xhr.readyState === 4 && xhr.status === 200) {
                             
-                                console.log('add to cash back session is set');
-                                console.log(xhr.responseText);
+                                //console.log('add to cash back session is set');
+                               //console.log(xhr.responseText);
                             }
                         };
                             
