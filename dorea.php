@@ -86,7 +86,7 @@ class doreaCashBack extends doreaAbstract{
     }
 
     public function testing(){
-        
+        //var_dump(delete_option('campaignlist_user'));
         //var_dump(get_option('dorea_queue_pay'));
         //var_dump(delete_option('dorea_queue_pay'));
         //$time = '1708068853';//time();
@@ -97,6 +97,7 @@ class doreaCashBack extends doreaAbstract{
         //var_dump(delete_transient('dorea 2'));
         //var_dump(delete_transient('dorea 3'));
         //var_dump(delete_transient('dorea 4'));
+        //var_dump(delete_transient('dorea 5'));
         //var_dump(delete_option('campaigninfo_user'));
         //var_dump(delete_option('campaign_list'));
         //var_dump(get_transient('dorea 1'));

@@ -16,7 +16,6 @@ class pay extends payAbstract{
      * check Shopping Counts of every user
      */
     public function checkCount(){
-
         $campaignName = array_keys(get_option('campaigninfo_user'));
         foreach(array_keys(get_option('campaigninfo_user')) as $campaignName){
             $campaign = get_option('campaigninfo_user')[$campaignName];
@@ -55,15 +54,18 @@ class pay extends payAbstract{
      * queue to pay
      */
     public function queuePay($campaignName){
-        
+
         if(!get_option('dorea_queue_pay')){
             $campaignList = [$campaignName];
             add_option('dorea_queue_pay',$campaignList);
         }else{
             $campaignList = get_option('dorea_queue_pay');
-            array_push($campaignList, $campaignName);
-            update_option('dorea_queue_pay',$campaignList);
+            if(!in_array($campaignName, $campaignList)){
+                array_push($campaignList, $campaignName);
+                update_option('dorea_queue_pay',$campaignList);
+            }
         }
+
     }
 
     /**
