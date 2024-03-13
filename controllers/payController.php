@@ -73,6 +73,9 @@ class pay extends payAbstract{
      */
     public function pay(){
 
+        // GET Wallet address of user
+        var_dump($_POST['dorea-modal-text']);
+
         // pay when queue trigger on specific date
         var_dump("pay controller function");
         return true;

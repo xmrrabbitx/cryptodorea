@@ -134,6 +134,7 @@ class doreaCashBack extends doreaAbstract{
      */
     public function timeToPay(){
 
+        // show payment modal to users
         paymentModal();
 
         $pay = new Pay();

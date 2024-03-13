@@ -27,18 +27,8 @@ function paymentModal(){
 
     // js script to handle the Payment Modal
     print("
-        <script>
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', '#', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-            
-                //console.log('add to cash back session is set');
-                //console.log(xhr.responseText);
-            }
-        };
-        </script>
+    
+        
     ");
 
 }
