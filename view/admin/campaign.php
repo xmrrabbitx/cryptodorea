@@ -3,7 +3,7 @@
 /**
  * Crypto Cashback Campaign
  */
-require(WP_PLUGIN_DIR . "/dorea/controllers/cashbackController.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/cashbackController.php");
 
 function dorea_cashback_campaign_content(){
 

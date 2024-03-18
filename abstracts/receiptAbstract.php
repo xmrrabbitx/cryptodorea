@@ -1,7 +1,7 @@
 <?php
 
 
-abstract class receipeAbstract{
+abstract class receiptAbstract{
 
 
     function __construct(){

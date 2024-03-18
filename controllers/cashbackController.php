@@ -1,8 +1,8 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/cashbackAbstract.php");
-require(WP_PLUGIN_DIR . "/dorea/utilities/expCalculator.php");
-require(WP_PLUGIN_DIR . "/dorea/utilities/dateCalculator.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/cashbackAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/utilities/expCalculator.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/utilities/dateCalculator.php");
 
 /**
  * Controller to create_modify_delete cashback campaign

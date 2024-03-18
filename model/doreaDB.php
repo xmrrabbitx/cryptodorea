@@ -1,7 +1,7 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/exceptions/databaseError.php");
-require(WP_PLUGIN_DIR . "/dorea/abstracts/doreaDbAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/exceptions/databaseError.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/doreaDbAbstract.php");
 
 /**
  * an interface to connect to a PDO_SQLite3 Database

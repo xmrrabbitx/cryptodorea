@@ -19,13 +19,13 @@ include_once(__DIR__ . '/model/doreaDB.php');
 include_once(__DIR__ . '/config/conf.php');
 include_once(__DIR__ . '/view/admin/admin.php');
 include_once(__DIR__ . '/view/checkout/checkout.php');
-include_once(__DIR__ . '/view/receipe/receipe.php');
+include_once(__DIR__ . '/view/receipt/receipt.php');
 include_once(__DIR__ . '/view/payment/payment.php');
 
 
 
 /**
- * a Class for handling the Cash Back programm
+ * a Class for handling the Cash Back program
  */
 class doreaCashBack extends doreaAbstract{
 
@@ -40,28 +40,28 @@ class doreaCashBack extends doreaAbstract{
         $this->removeCacheLogs();
 
         // set the session max lifetime to 2 hours
-        $inactive = 7200; 
-        ini_set('session.gc_maxlifetime', $inactive); 
+        $inactive = 7200;
+        ini_set('session.gc_maxlifetime', $inactive);
 
         session_start();
 
         if (isset($_SESSION['campaignList_user']) && (time() - $_SESSION['time'] > $inactive)) {
-            
-            session_unset();     
-            session_destroy();  
+
+            session_unset();
+            session_destroy();
         }
 
     }
 
     /**
-    * check and remove the size of log files in /debug directory
-    */
+     * check and remove the size of log files in /debug directory
+     */
     private function removeCacheLogs(){
 
-        $logDirectory = WP_PLUGIN_DIR . "/dorea/debug/";
+        $logDirectory = WP_PLUGIN_DIR . "/woo-cryptodorea/debug/";
         $logFiles = glob($logDirectory . "*.log");
         $maxFileSize = 5 * 1024 * 1024;
-    
+
         foreach ($logFiles as $logFile) {
 
             if(filesize($logFile) > $maxFileSize){
@@ -69,7 +69,7 @@ class doreaCashBack extends doreaAbstract{
                 unlink($logFile);
 
             }
-        
+
         }
 
     }
@@ -106,7 +106,7 @@ class doreaCashBack extends doreaAbstract{
         //var_dump(get_option('campaigninfo_user'));
         //add_option('test_option',["name"=>"hadi"]);
         //var_dump(get_option('test_option')['name']);
-        
+
     }
 
     /**
@@ -141,24 +141,23 @@ class doreaCashBack extends doreaAbstract{
         $paymentStatus = $pay->pay();
         if($paymentStatus){
             var_dump("time to delete all campaign info");
-        }   
+        }
 
     }
 
-    
+
 }
 
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
     if (!class_exists('WooCommerce')) {
-       
-        include_once ABSPATH . 'wp-content/plugins/woocommerce/woocommerce.php'; 
+
+        include_once ABSPATH . 'wp-content/plugins/woocommerce/woocommerce.php';
     }
- 
+
     $dorea = new doreaCashBack();
     $dorea->checkPlaceOrder();
     $dorea->test();
 
 }
 
-?>

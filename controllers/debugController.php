@@ -1,13 +1,13 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/debugAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/debugAbstract.php");
 
 class debugController extends debugAbstract{
 
     private $path;
     function __construct(){
 
-        $this->path = WP_PLUGIN_DIR . '/dorea/debug';
+        $this->path = WP_PLUGIN_DIR . '/woo-cryptodorea/debug';
 
     }
 

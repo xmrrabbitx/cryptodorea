@@ -4,7 +4,7 @@
  * Crypto Cashback Checkout View
  */
 
-require(WP_PLUGIN_DIR . "/dorea/controllers/checkoutController.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/checkoutController.php");
 
 // woocommerce_after_shop_loop_item_title
 // woocommerce_blocks_checkout_enqueue_data

@@ -1,6 +1,6 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/controllers/debugController.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/debugController.php");
 
 function databaseError($error){
   

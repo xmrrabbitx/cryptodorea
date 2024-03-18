@@ -1,6 +1,6 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/model/checkoutModelAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/model/checkoutModelAbstract.php");
 
 /**
  * an abstract for checkout model

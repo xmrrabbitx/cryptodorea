@@ -1,7 +1,7 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/checkoutAbstract.php");
-require(WP_PLUGIN_DIR . "/dorea/model/checkoutModel.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/checkoutAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/model/checkoutModel.php");
 
 /**
  * Controller for checkout

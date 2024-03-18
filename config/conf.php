@@ -1,6 +1,6 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/confAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/confAbstract.php");
 
 /**
  * an interface for saving initial config

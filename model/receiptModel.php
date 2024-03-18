@@ -1,11 +1,11 @@
 <?php
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/model/receipeModelAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/model/receiptModelAbstract.php");
 
 /**
- * an abstract for receipe model
+ * an abstract for receipt model
  */
-class receipeModel extends receipeModelAbstract{
+class receiptModel extends receipeModelAbstract{
 
 
     function __construct(){
@@ -44,7 +44,7 @@ class receipeModel extends receipeModelAbstract{
             add_option('campaigninfo_user', $campaignInfo);  
         }
 
-        $_SESSION['campaignlist_user'] = null;
+       return $_SESSION['campaignlist_user'] = null;
         
     }
 

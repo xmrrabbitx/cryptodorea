@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-include_once(WP_PLUGIN_DIR . '/dorea/config/conf.php');
+include_once(WP_PLUGIN_DIR . '/woo-cryptodorea/config/conf.php');
 
 
 /**

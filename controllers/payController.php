@@ -4,7 +4,7 @@
  * a class for pay controller
  */
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/payAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/payAbstract.php");
 
 class pay extends payAbstract{
 

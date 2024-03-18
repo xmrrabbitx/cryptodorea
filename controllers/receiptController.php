@@ -1,17 +1,17 @@
 <?php
 
 /**
- * a class for receipe controller
+ * a class for receipt controller
  */
 
-require(WP_PLUGIN_DIR . "/dorea/abstracts/receipeAbstract.php");
-require(WP_PLUGIN_DIR . "/dorea/model/receipeModel.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/abstracts/receiptAbstract.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/model/receiptModel.php");
 
-class receipe extends receipeAbstract{
+class receipt extends receiptAbstract{
 
     function __construct(){
 
-        $this->receipeModel = new receipeModel();
+        $this->receiptModel = new receiptModel();
 
     }
 
@@ -33,12 +33,11 @@ class receipe extends receipeAbstract{
                 }else{
                     $count = 1;
                 }
-             
-                //var_dump( $count );
+
                 // it must trigger and count campaign on every eash of product
                 $campaignInfo = [$campaignName=>['username'=>$userName,'displayName'=>$displayName,'userEmail'=>$userEmail,'count'=>$count]];
 
-                $this->receipeModel->add($campaignInfo);
+                $this->receiptModel->add($campaignInfo);
 
             }
 

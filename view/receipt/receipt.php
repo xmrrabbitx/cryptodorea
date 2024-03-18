@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Crypto Cashback Receipe View
+ * Crypto Cashback Receipt View
  */
 
-require(WP_PLUGIN_DIR . "/dorea/controllers/receipeController.php");
-require(WP_PLUGIN_DIR . "/dorea/controllers/payController.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/receiptController.php");
+require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/payController.php");
 
-add_action('woocommerce_thankyou','receipe',10,3);
-function receipe($order_id){ 
+add_action('woocommerce_thankyou','receipt',10,3);
+function receipt($order_id){
         
     if($order_id){
 
@@ -20,8 +20,8 @@ function receipe($order_id){
             $order = wc_get_order($order_id);
      
             // pass $order object into recipe controller
-            $receipe = new receipe();
-            $receipe->is_paid($order, $campaignList);
+            $receipt = new receipt();
+            $receipt->is_paid($order, $campaignList);
         }
 
     }
