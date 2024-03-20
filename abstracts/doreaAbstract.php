@@ -1,5 +1,7 @@
 <?php
 
+namespace cryptodorea\woocryptodorea\abstracts;
+
 /**
  * an Abstract Class for Crypto Dorea Plugin
  */
@@ -10,7 +12,7 @@ abstract class doreaAbstract{
 
     }
 
-    abstract function checkPlaceOrder();
-    abstract function timeToPay();
+    //abstract function checkPlaceOrder();
+    //abstract function timeToPay();
 
 }

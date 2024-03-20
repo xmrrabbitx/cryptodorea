@@ -1,8 +1,11 @@
 <?php
 
+namespace cryptodorea\woocryptodorea\abstracts;
 
+/**
+ * an abstract interface for receipt class
+ */
 abstract class receiptAbstract{
-
 
     function __construct(){
 

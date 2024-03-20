@@ -1,5 +1,7 @@
 <?php
 
+namespace cryptodorea\woocryptodorea\abstracts;
+
 /**
  * an abstract interface for debug controller
 */

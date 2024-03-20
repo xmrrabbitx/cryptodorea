@@ -55,6 +55,19 @@ function dorea_add_menu_page() {
             'campaigns',
             'dorea_cashback_campaign_content'
         );
+
+        /**
+         * Campaign Credit
+         */
+        add_submenu_page(
+            'crypto-dorea-cashback',
+            'Campaign Page',
+            'campaign credit',
+            'manage_options',
+            'credit',
+            'dorea_cashback_campaign_credit'
+        );
+
     
     }
     
@@ -88,12 +101,16 @@ function dorea_main_page_content(){
 }
 
 /**
- * setting page _ set up init config
+ * Setting page _ Set up Init Config
  */
 include('setting.php');
-
 
 /**
  * Crypto Cashback Campaign
  */
 include('campaign.php');
+
+/**
+ * Credit
+ */
+include('campaignCredit.php');

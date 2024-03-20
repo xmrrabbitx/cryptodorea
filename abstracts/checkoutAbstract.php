@@ -1,5 +1,6 @@
 <?php
 
+namespace cryptodorea\woocryptodorea\abstracts;
 
 /**
  * an abstract interface for checkout class controller
