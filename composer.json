@@ -1,22 +1,16 @@
 {
-    "name": "cryptodorea/woo-cryptodorea",
-    "description": "A New way of Crypto Cash Back to your most loyal customers",
-    "type": "project",
-    "license": "MIT",
+    "name": "cryptodorea/woocryptodorea",
+
     "autoload": {
         "psr-4": {
-            "cryptodorea\\woocryptodorea\\": "./"
+            "Cryptodorea\\Woocryptodorea\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "hadi mirzaie",
+            "name": "Dorea Team",
             "email": "contact@cryptodorea.io"
         }
     ],
-    "minimum-stability": "stable",
-    "require": {
-        "web3p/web3.php": "dev-master"
-
-    }
+    "require": {}
 }

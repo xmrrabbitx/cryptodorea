@@ -1,44 +1,30 @@
 <?php
 
-/*
-Plugin Name: Dorea CashBack
-Description: A New way of Crypto Cash Back to your most loyal customers
-Version: 1.0.0
-*/
+/**
+ * loader class for dorea file
+ */
 
-//namespace cryptodorea\woocryptodorea;
-
-
-require __DIR__ . '/vendor/autoload.php';
+namespace Cryptodorea\Woocryptodorea;
 
 // check security
 defined( 'ABSPATH' ) || exit;
-define( 'DoreaCashBack_VERSION', '1.0.0' );
-define( 'DoreaCashBack_URI', plugin_dir_url( __FILE__ ) );
 
+// load initial classes
+use Cryptodorea\Woocryptodorea\abstracts\doreaAbstract;
+use Cryptodorea\Woocryptodorea\config\config;
 
-// include necessary files
-include_once(__DIR__ . '/abstracts/doreaAbstract.php');
-//include_once(__DIR__ . '/model/doreaDB.php');
-include_once(__DIR__ . '/config/conf.php');
-include_once(__DIR__ . '/view/admin/admin.php');
-include_once(__DIR__ . '/view/checkout/checkout.php');
-include_once(__DIR__ . '/view/receipt/receipt.php');
-include_once(__DIR__ . '/view/payment/payment.php');
-
+// load necessary files
+include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
 
 
 /**
  * a Class for handling the Cash Back program
  */
-class doreaCashBack extends doreaAbstract{
-
-    private $doreaDB;
+class loader extends doreaAbstract{
 
     public function __construct(){
 
         // create instance database on initial load
-        $this->doreaDB = new doreaDB();
         $this->conf = new config();
 
         $this->removeCacheLogs();
@@ -149,19 +135,5 @@ class doreaCashBack extends doreaAbstract{
 
     }
 
-
-}
-
-
-if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-
-    if (!class_exists('WooCommerce')) {
-
-        include_once ABSPATH . 'wp-content/plugins/woocommerce/woocommerce.php';
-    }
-
-    $dorea = new doreaCashBack();
-    $dorea->checkPlaceOrder();
-    $dorea->test();
 
 }
