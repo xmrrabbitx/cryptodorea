@@ -15,6 +15,7 @@ use Cryptodorea\Woocryptodorea\config\config;
 
 // load necessary files
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
+include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';
 
 
 /**
@@ -90,7 +91,7 @@ class loader extends doreaAbstract{
         //var_dump(delete_transient('dorea 5'));
         //var_dump(delete_option('campaigninfo_user'));
         //var_dump(delete_option('campaign_list'));
-        //var_dump(get_transient('dorea 1'));
+        //var_dump(get_transient('dorea'));
         //var_dump(get_transient('dorea 2'));
         //var_dump(get_transient('dorea 3'));
         //var_dump(get_option('campaigninfo_user'));

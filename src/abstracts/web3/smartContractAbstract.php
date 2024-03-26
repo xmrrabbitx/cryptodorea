@@ -1,6 +1,8 @@
 <?php
 
 namespace Cryptodorea\Woocryptodorea\abstracts\web3;
+
+
 /**
  * an abstract class for doreaWeb3
  */

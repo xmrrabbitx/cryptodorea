@@ -12,3 +12,5 @@ include_once __DIR__ . '/vendor/autoload.php';
 include_once __DIR__ . '/src/loader.php';
 
 
+//$loader = new  \Cryptodorea\Woocryptodorea\loader();
+//$loader->testing();

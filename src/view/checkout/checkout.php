@@ -1,15 +1,11 @@
 <?php
 
-//namespace cryptodorea\woocryptodorea\view\checkout;
-
 /**
  * Crypto Cashback Checkout View
  */
 
 use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 use Cryptodorea\Woocryptodorea\controllers\checkoutController;
-
-require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/checkoutController.php");
 
 // woocommerce_after_shop_loop_item_title
 // woocommerce_blocks_checkout_enqueue_data
@@ -20,7 +16,7 @@ function cashback(){
 
     if ( ! WC()->cart->get_cart_contents_count() == 0 ) { 
 
-        $cashback = new cashback();
+        $cashback = new cashbackController();
         $cashbackList = $cashback->list();
 
         if($cashbackList){
@@ -97,8 +93,10 @@ add_action('wp','checkaddtoCashBack');
 function checkaddtoCashBack(){
 
     if (is_page('cart')) {
-        $checkout = new checkout();
+
+        $checkout = new checkoutController();
         $checkout->checkout();
+
     }
   
 }

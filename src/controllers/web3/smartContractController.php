@@ -6,15 +6,30 @@
 
 namespace Cryptodorea\Woocryptodorea\controllers\web3;
 
-use cryptodorea\woocryptodorea\abstracts\web3\smartContractAbstract;
+use Cryptodorea\Woocryptodorea\abstracts\web3\smartContractAbstract;
+
 
 
 class smartContractController extends smartContractAbstract
 {
 
-    public function deploy()
+    public function getAmount($amount, $campaignName)
     {
 
+        $campaignList  = get_option('campaignlist_user');
+        if(in_array($campaignName, $campaignList)){
+            $campaign = get_transient($campaignName);
+            $campaign['contractBalance'] = $amount;
+            set_transient($campaignName,$campaign);
+        }
+        wp_redirect('admin.php?page=credit');
+
+    }
+
+    public function deploy($amount)
+    {
+
+        var_dump($amount);
 
     }
 

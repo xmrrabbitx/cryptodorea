@@ -25,7 +25,7 @@ function dorea_add_menu_page(): void
             'crypto-dorea-cashback',   // Menu slug (unique identifier)
             'dorea_main_page_content', // Callback function to display page content
             'data:image/svg+xml;base64,' . $base64_encoded, // Icon URL or dashicon class
-            20 // Menu position (you can adjust this)
+            20 // Menu position
         );
 
         /**
@@ -54,7 +54,7 @@ function dorea_add_menu_page(): void
         );
 
         /**
-         * Campaign Credit
+         * Campaign Credit Menu
          */
         add_submenu_page(
             'crypto-dorea-cashback',
