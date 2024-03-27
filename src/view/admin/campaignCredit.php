@@ -11,15 +11,17 @@ function dorea_cashback_campaign_credit()
 {
 
     print("campaign credit page");
+    var_dump(get_transient('dorea 7'));
 
-    //remove campaign name after test
-    $campaignName = 'dorea';
-    var_dump(get_transient($campaignName));
+    if(isset($_GET['campaignName'])) {
 
-    if(empty(get_transient($campaignName)['contractBalance'])) {
+        $campaignName = $_GET['campaignName'];
+        print("CHARGE CAMPAIN NAME" .  $campaignName);
+
         print("
             <form method='POST' action='" . esc_url(admin_url('admin-post.php')) . "' id='campaign_credit'>
                 <input type='hidden' name='action' value='campaign_credit_charge'>
+                <input type='hidden' name='campaignName' value= '".$campaignName."' >
                 <input type='text' name='amount'>
                 <button type='submit'>charge</button>
             </form>
@@ -79,9 +81,11 @@ function dorea_admin_campaign_credit_charge()
     //var_dump($userAddress);
 
     //remove campaign name after test
-    $campaignName = 'dorea';
+    if(isset($_POST['campaignName'])) {
 
-    $doreaWeb3 = new smartContractController();
-    $doreaWeb3->getAmount($_POST['amount'], $campaignName);
+        $campaignName = $_POST['campaignName'];
 
+        $doreaWeb3 = new smartContractController();
+        $doreaWeb3->getAmount($_POST['amount'], $campaignName);
+    }
 }

@@ -89,7 +89,8 @@ function dorea_admin_init_config(){
             $config->add($init_config_name, $init_config_values);
             
         }
-        
+
+        // replace it wit wp_redirect
         header('Location: '.$home_url);
 
     }

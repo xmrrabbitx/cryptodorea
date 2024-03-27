@@ -16,7 +16,7 @@ class smartContractController extends smartContractAbstract
     public function getAmount($amount, $campaignName)
     {
 
-        $campaignList  = get_option('campaignlist_user');
+        $campaignList  = get_option('campaign_list');
         if(in_array($campaignName, $campaignList)){
             $campaign = get_transient($campaignName);
             $campaign['contractBalance'] = $amount;
