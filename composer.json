@@ -12,5 +12,8 @@
             "email": "contact@cryptodorea.io"
         }
     ],
-    "require": {}
+    "require": {
+        "web3p/web3.php": "dev-master"
+    },
+    "minimum-stability": "dev"
 }

@@ -11,7 +11,7 @@ function dorea_cashback_campaign_credit()
 {
 
     print("campaign credit page");
-    var_dump(get_transient('dorea 7'));
+    //var_dump(get_transient('dorea 7'));
 
     if(isset($_GET['campaignName'])) {
 
@@ -29,7 +29,8 @@ function dorea_cashback_campaign_credit()
     }
 
     print("
-            
+        
+       
         <button id='charge'>Perform Action</button>
         
         <script>
@@ -37,25 +38,27 @@ function dorea_cashback_campaign_credit()
             if (window.ethereum) {
                 try {
                     // Request access to Metamask
-                    await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    
+
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const userAddress = accounts[0];
+
+                    const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
+
                     const address = {
                         userAddress: userAddress,
+                        userBalance: userBalance
                     };
-                    console.log(userAddress);
+     
                     // Perform action and send transaction data to PHP backend
-                  
                     const response = await fetch('admin.php', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json;UTF=8' },
                         body: JSON.stringify(address)
                     });
                     
                     // Handle response from backend
                     const responseData = await response.json();
-                    console.log(responseData);
+  
                 } catch (error) {
                     console.error(error);
                 }
@@ -77,10 +80,6 @@ add_action('admin_post_campaign_credit_charge', 'dorea_admin_campaign_credit_cha
 function dorea_admin_campaign_credit_charge()
 {
 
-    //$userAddress = json_decode(file_get_contents('php://input'), true);
-    //var_dump($userAddress);
-
-    //remove campaign name after test
     if(isset($_POST['campaignName'])) {
 
         $campaignName = $_POST['campaignName'];
@@ -88,4 +87,19 @@ function dorea_admin_campaign_credit_charge()
         $doreaWeb3 = new smartContractController();
         $doreaWeb3->getAmount($_POST['amount'], $campaignName);
     }
+}
+
+
+add_action('admin_menu', 'dorea_admin_campaign_smart_contract');
+function dorea_admin_campaign_smart_contract()
+{
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if(isset($data)){
+        $doreaWeb3 = new smartContractController();
+        $doreaWeb3->deploy();
+    }
+
+
 }

@@ -7,6 +7,8 @@
 namespace Cryptodorea\Woocryptodorea\controllers\web3;
 
 use Cryptodorea\Woocryptodorea\abstracts\web3\smartContractAbstract;
+use Web3\Web3;
+
 
 
 
@@ -26,10 +28,11 @@ class smartContractController extends smartContractAbstract
 
     }
 
-    public function deploy($amount)
+    public function deploy()
     {
-
-        var_dump($amount);
+        $web3 = new Web3('http://localhost:8545');
+        var_dump($web3);
+        var_dump('deploy is done!!!');
 
     }
 
