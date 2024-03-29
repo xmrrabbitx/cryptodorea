@@ -8,7 +8,7 @@ namespace Cryptodorea\Woocryptodorea\controllers\web3;
 
 use Cryptodorea\Woocryptodorea\abstracts\web3\smartContractAbstract;
 use Web3\Web3;
-
+use Web3\Providers\HttpProvider;
 
 
 
@@ -28,13 +28,38 @@ class smartContractController extends smartContractAbstract
 
     }
 
-    public function deploy()
+    /**
+     * deploy initial smart contract
+     * @return void
+     */
+    public function deployContract($contract)
     {
-        $web3 = new Web3('http://localhost:8545');
-        var_dump($web3);
-        var_dump('deploy is done!!!');
+        $web3 = new Web3(new HttpProvider('http://localhost:8545'));
+        $eth = $web3->eth;
+        $eth->batch(true);
+        $eth->protocolVersion();
+        $eth->syncing();
 
+        $eth->provider->execute(function ($err, $data) {
+            if ($err !== null) {
+                // do something
+                return;
+            }
+            // do something
+        });
+
+        var_dump('deploy is done!!!');
     }
+
+    /**
+     * create initial smart contract
+     * @return void
+     */
+    public function createContract(){
+
+        // create initial smart contract
+    }
+
 
 }
 

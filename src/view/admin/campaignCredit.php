@@ -42,18 +42,18 @@ function dorea_cashback_campaign_credit()
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const userAddress = accounts[0];
 
-                    const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
+                    //const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
 
-                    const address = {
+                    const metamaskInfo = {
                         userAddress: userAddress,
-                        userBalance: userBalance
+                        //userBalance: userBalance
                     };
-     
+
                     // Perform action and send transaction data to PHP backend
                     const response = await fetch('admin.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json;UTF=8' },
-                        body: JSON.stringify(address)
+                        body: JSON.stringify(metamaskInfo)
                     });
                     
                     // Handle response from backend
