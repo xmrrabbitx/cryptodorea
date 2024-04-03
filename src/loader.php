@@ -18,7 +18,6 @@ use Cryptodorea\Woocryptodorea\config\config;
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';
 
-
 /**
  * a Class for handling the Cash Back program
  */

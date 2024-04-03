@@ -7,6 +7,7 @@
 namespace Cryptodorea\Woocryptodorea\controllers\web3;
 
 use Cryptodorea\Woocryptodorea\abstracts\web3\smartContractAbstract;
+use Web3\Contract;
 use Web3\Web3;
 use Web3\Providers\HttpProvider;
 
@@ -36,17 +37,33 @@ class smartContractController extends smartContractAbstract
     {
         $web3 = new Web3(new HttpProvider('http://localhost:8545'));
         $eth = $web3->eth;
-        $eth->batch(true);
-        $eth->protocolVersion();
-        $eth->syncing();
+        $abi = null;
+        $contract = new Contract('http://localhost:8545', $abi);
+        $contractCode = <<<EOF
+pragma solidity ^0.8.0;
 
-        $eth->provider->execute(function ($err, $data) {
-            if ($err !== null) {
-                // do something
-                return;
-            }
-            // do something
-        });
+contract SimpleStorage {
+    uint storedData;
+
+    function set(uint x) public {
+        storedData = x;
+    }
+
+    function get() public view returns (uint) {
+        return storedData;
+    }
+}
+EOF;
+
+// Compile the Solidity contract
+        $compiled = $web3->eth->compileSolidity($contractCode);
+
+// Retrieve the ABI
+        $abi = $compiled['contracts']['SimpleStorage']['abi'];
+
+// Output the ABI
+        var_dump($abi);
+
 
         var_dump('deploy is done!!!');
     }
