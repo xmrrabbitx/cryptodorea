@@ -12,7 +12,7 @@ use Web3\Web3;
 use Web3\Utils;
 
 
-add_action('admin_menu','compile');
+//add_action('admin_menu','compile');
 function compile()
 {
     $jsonData = array(
@@ -91,42 +91,61 @@ function dorea_cashback_campaign_credit()
     }
 
     print("
-        
-        <button id='charge'>Perform Action</button>
+  
+        <button id='charge'>Connect to MetaMask</button>
         
         <script>
-        document.getElementById('charge').addEventListener('click', async () => {
-            if (window.ethereum) {
-                try {
-                    
-                    // Request access to Metamask
+         // Request access to Metamask
+         /*
+             (async () => {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const userAddress = accounts[0];
+                    if(userAddress){
+                        document.getElementById('charge').style.display = 'none';
+                    }else{
+                      
+                    }
+              })();
+              
+          */
 
-                    const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
-
-                    const metamaskInfo = {
-                        userAddress: userAddress,
-                        userBalance: userBalance
-                    };
-
-                    // Perform action and send transaction data to PHP backend
-                    const response = await fetch('admin.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json;UTF=8' },
-                        body: JSON.stringify(metamaskInfo)
-                    });
-                    
-                    // Handle response from backend
-                    const responseData = await response.json();
-  
-                } catch (error) {
-                    console.error(error);
-                }
-            } else {
-                console.error('Metamask not detected');
-            }
-        });
+          if(window.ethereum._state.accounts.length > 0){
+               document.getElementById('charge').style.display = 'none';
+               
+          }else{
+                document.getElementById('charge').style.display = 'block';
+              document.getElementById('charge').addEventListener('click', async () => {
+                            if (window.ethereum) {
+                                try {
+                                    
+                                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                                    const userAddress = accounts[0];
+                                    const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
+                                    
+                                    const metamaskInfo = {
+                                        userAddress: userAddress,
+                                        userBalance: userBalance
+                                    };
+                
+                                    // Perform action and send transaction data to PHP backend
+                                    const response = await fetch('admin.php', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json;UTF=8' },
+                                        body: JSON.stringify(metamaskInfo)
+                                    });
+                                    
+                                    // Handle response from backend
+                                    const responseData = await response.json();
+                  
+                                }catch (error) {
+                                    console.error(error);
+                                }
+                            } else {
+                                console.error('Metamask not detected');
+                            }
+                        });
+          
+          }
         </script>
     
     ");
@@ -139,7 +158,6 @@ add_action('admin_post_campaign_credit_charge', 'dorea_admin_campaign_credit_cha
 
 function dorea_admin_campaign_credit_charge()
 {
-
     if(isset($_POST['campaignName'])) {
 
         $campaignName = $_POST['campaignName'];
@@ -154,45 +172,11 @@ add_action('admin_menu', 'dorea_admin_campaign_smart_contract');
 function dorea_admin_campaign_smart_contract()
 {
 
-    //$web3 = new Web3(new HttpProvider('http://localhost:8545'));
-
-    $contractCode = <<<EOF
-pragma solidity ^0.8.0;
-
-contract SimpleStorage {
-    uint storedData;
-
-    function set(uint x) public {
-        storedData = x;
-    }
-
-    function get() public view returns (uint) {
-        return storedData;
-    }
-}
-EOF;
-
-
-// Compile the Solidity contract
-    $eth = new Eth('http://localhost:8545');
-    $eth->batch(true);
-    $eth->protocolVersion();
-    $eth->syncing();
-    //$eth->compileSolidity();
-
-    $eth->provider->execute(function ($err, $data) {
-        if ($err !== null) {
-            // do something
-            return;
-        }
-    });
-
-
-    //$data = json_decode(file_get_contents('php://input'), true);
+    $data = json_decode(file_get_contents('php://input'), true);
 
     if (isset($data)) {
-        // $doreaWeb3 = new smartContractController();
-        //$doreaWeb3->deployContract(true);
+         $doreaWeb3 = new smartContractController();
+         $doreaWeb3->deployContract(true);
     }
 
 }
