@@ -96,37 +96,35 @@ function dorea_cashback_campaign_credit()
         
         <script>
          // Request access to Metamask
-         /*
+         setTimeout(delay, 0)
+         function delay(){
              (async () => {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const userAddress = accounts[0];
-                    if(userAddress){
-                        document.getElementById('charge').style.display = 'none';
-                    }else{
-                      
-                    }
-              })();
-              
-          */
 
-          if(window.ethereum._state.accounts.length > 0){
-               document.getElementById('charge').style.display = 'none';
-               
-          }else{
-                document.getElementById('charge').style.display = 'block';
+                  if(window.ethereum._state.accounts.length > 0){
+                     
+                      document.getElementById('charge').style.display = 'none';
+                       
+                  }else {
+                      document.getElementById('charge').style.display = 'block';
+                  }
+                        console.log( document.getElementById('charge'))
+              
               document.getElementById('charge').addEventListener('click', async () => {
+                           console.log('click')
+                           console.log(window.ethereum._state)
                             if (window.ethereum) {
                                 try {
-                                    
+                                  
                                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                                     const userAddress = accounts[0];
+                                    console.log('trigger')
                                     const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
-                                    
+                                     
                                     const metamaskInfo = {
                                         userAddress: userAddress,
                                         userBalance: userBalance
                                     };
-                
+
                                     // Perform action and send transaction data to PHP backend
                                     const response = await fetch('admin.php', {
                                         method: 'POST',
@@ -136,7 +134,10 @@ function dorea_cashback_campaign_credit()
                                     
                                     // Handle response from backend
                                     const responseData = await response.json();
-                  
+                                    
+                                    // hide charge button after metamask window closed
+                                    document.getElementById('charge').style.display = 'none';
+                                   
                                 }catch (error) {
                                     console.error(error);
                                 }
@@ -145,7 +146,13 @@ function dorea_cashback_campaign_credit()
                             }
                         });
           
+          
+              })();
           }
+          
+
+
+
         </script>
     
     ");
