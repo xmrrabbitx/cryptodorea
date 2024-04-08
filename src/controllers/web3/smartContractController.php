@@ -1,8 +1,5 @@
 <?php
 
-/**
- * an interface for smart contract web3 php
- */
 
 namespace Cryptodorea\Woocryptodorea\controllers\web3;
 
@@ -12,10 +9,17 @@ use Web3\Web3;
 use Web3\Providers\HttpProvider;
 
 
-
+/**
+ * an interface for smart contract web3 php
+ */
 class smartContractController extends smartContractAbstract
 {
 
+    /**
+     * @param $amount
+     * @param $campaignName
+     * @return void
+     */
     public function getAmount($amount, $campaignName)
     {
 
@@ -29,41 +33,77 @@ class smartContractController extends smartContractAbstract
 
     }
 
+
+    public function compile()
+    {
+
+        $jsonData = array(
+            "language" => "Solidity",
+            "sources" => array(
+                "test.sol" => array(
+                    "content" => "contract C { function f() public { } }"
+                )
+            ),
+            "settings" => array(
+                "outputSelection" => array(
+                    "*" => array(
+                        "*" => array("*")
+                    )
+                )
+            )
+        );
+
+        $jsonData = json_encode($jsonData);
+
+        // URL to send the POST request to
+        $url = "https://cryptodorea.io/api/smartContract/compile";
+
+        // Set content type header
+        $header = [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($jsonData)
+        ];
+
+        // Set stream context options
+        $options = [
+            'http' => [
+                'method' => 'POST',
+                'header' => implode("\r\n", $header),
+                'content' => $jsonData
+            ]
+        ];
+
+        // Create stream context
+        $context = stream_context_create($options);
+
+        // Send the request and get response
+        $response = file_get_contents($url, false, $context);
+
+        // Decode JSON response
+        $responseData = json_decode($response, true);
+
+        // Check for errors
+        if ($responseData[0] !== 'success') {
+            // log error on wordpress log system
+        }
+        return $responseData;
+    }
+
     /**
      * deploy initial smart contract
      * @return void
      */
-    public function deployContract($contract)
+    public function deployContract($metamaskInfo, $compiledConract): void
     {
+
+        $userAddress = $metamaskInfo->userAddress;
+
         $web3 = new Web3(new HttpProvider('http://localhost:8545'));
         $eth = $web3->eth;
-        $abi = null;
-        $contract = new Contract('http://localhost:8545', $abi);
-        $contractCode = <<<EOF
-pragma solidity ^0.8.0;
 
-contract SimpleStorage {
-    uint storedData;
+        $contract = new Contract('http://localhost:8545', $compiledConract['abi']);
 
-    function set(uint x) public {
-        storedData = x;
-    }
-
-    function get() public view returns (uint) {
-        return storedData;
-    }
-}
-EOF;
-
-// Compile the Solidity contract
-        $compiled = $web3->eth->compileSolidity($contractCode);
-
-// Retrieve the ABI
-        $abi = $compiled['contracts']['SimpleStorage']['abi'];
-
-// Output the ABI
-        var_dump($abi);
-
+        //$contract->bytecode($compiledConract['bytecode'])->new($params, $callback);
 
         var_dump('deploy is done!!!');
     }

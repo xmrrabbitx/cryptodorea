@@ -10,7 +10,7 @@ use Cryptodorea\Woocryptodorea\controllers\checkoutController;
 // woocommerce_after_shop_loop_item_title
 // woocommerce_blocks_checkout_enqueue_data
 add_action('woocommerce_blocks_enqueue_cart_block_scripts_after','cashback',10,3);
-function cashback(){ 
+function cashback(){
 
     //wp_enqueue_script('jquery');
 
@@ -83,8 +83,7 @@ function cashback(){
 
         }
     }
-} 
-
+}
 
 /**
 * callback function to check session cart page
