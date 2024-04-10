@@ -34,7 +34,7 @@ class smartContractController extends smartContractAbstract
     }
 
 
-    public function compile()
+    public function compile():array
     {
 
         $jsonData = array(
@@ -103,7 +103,17 @@ class smartContractController extends smartContractAbstract
 
         $contract = new Contract('http://localhost:8545', $compiledConract['abi']);
 
-        //$contract->bytecode($compiledConract['bytecode'])->new($params, $callback);
+        $contract->bytecode('0x' . $compiledConract['bytecode'])->new([
+            'from' => '0x6d50cEBED465fcf13A6E3dC48740307A8b72578b',//$metamaskInfo->userAddress,
+            'gas' => '0x200b20'
+        ], function ($err, $result){
+            if ($err) {
+                echo "\nerror is:" . $err . "\n";
+            }
+            if ($result) {
+                echo "\nTransaction has made:) id: " . $result . "\n";
+            }
+        });
 
         var_dump('deploy is done!!!');
     }

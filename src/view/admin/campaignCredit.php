@@ -58,15 +58,14 @@ function dorea_cashback_campaign_credit()
                             if (window.ethereum) {
                                 try {
                                   
-                                    //const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                                    //const userAddress = accounts[0];
+                                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                                    const userAddress = accounts[0];
                        
                                     //const userBalance = await window.ethereum.request({ method: 'eth_getBalance', params: [userAddress,'latest'] });
-                                    //console.log(userBalance)
-                                    
+
                                     // the issue is vpn
                                     const metamaskInfo = {
-                                        //userAddress: userAddress,
+                                        userAddress: userAddress,
                                         userBalance: '0x0' //replace it with real userBalance
                                     };
 
@@ -135,8 +134,10 @@ function dorea_admin_campaign_smart_contract()
     if (isset($metamaskInfo)) {
          $doreaWeb3 = new smartContractController();
          $compiledConract = $doreaWeb3->compile();
-         var_dump($compiledConract);
-         //$doreaWeb3->deployContract($metamaskInfo, $compiledConract);
+         if($compiledConract['success']){
+             $doreaWeb3->deployContract($metamaskInfo, $compiledConract['success']);
+         }
+
     }
 
 }
