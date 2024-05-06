@@ -41,7 +41,11 @@ class smartContractController extends smartContractAbstract
             "language" => "Solidity",
             "sources" => array(
                 "test.sol" => array(
-                    "content" => "contract C { function f() public { } }"
+                    "content" => "// SPDX-License-Identifier: MIT
+// compiler version must be greater than or equal to 0.8.24 and less than 0.9.0
+pragma solidity ^0.8.24;
+contract C { function f() public { } }"
+
                 )
             ),
             "settings" => array(
@@ -56,7 +60,8 @@ class smartContractController extends smartContractAbstract
         $jsonData = json_encode($jsonData);
 
         // URL to send the POST request to
-        $url = "https://cryptodorea.io/api/smartContract/compile";
+        //$url = "https://cryptodorea.io/api/smartContract/compile";
+        $url = "http://127.0.0.1:3000/api/smartContract/compile";
 
         // Set content type header
         $header = [
@@ -83,10 +88,13 @@ class smartContractController extends smartContractAbstract
         $responseData = json_decode($response, true);
 
         // Check for errors
-        if ($responseData[0] !== 'success') {
-            // log error on wordpress log system
+        if($responseData['status'] !== 'success') {
+
+            //log errors
+            die('error in response!!!!');
         }
-        return $responseData;
+
+        return $responseData['body'];
     }
 
     /**

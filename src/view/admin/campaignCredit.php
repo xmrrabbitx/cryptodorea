@@ -134,8 +134,9 @@ function dorea_admin_campaign_smart_contract()
     if (isset($metamaskInfo)) {
          $doreaWeb3 = new smartContractController();
          $compiledConract = $doreaWeb3->compile();
-         if($compiledConract['success']){
-             $doreaWeb3->deployContract($metamaskInfo, $compiledConract['success']);
+         var_dump($compiledConract);
+         if($compiledConract){
+             $doreaWeb3->deployContract($metamaskInfo, $compiledConract);
          }
 
     }
