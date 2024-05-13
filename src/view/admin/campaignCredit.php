@@ -35,6 +35,17 @@ function dorea_cashback_campaign_credit()
     }
 
     print("
+             
+            <script src='http://code.dappbench.com/browser-solc.min.js' type='text/javascript'></script>
+            <script>
+            console.log('test')
+                
+             console.log(BrowserSolc)
+        </script>
+        
+        ");
+
+    print("
 
         <button id='metamask'>Connect to MetaMask</button>
 
