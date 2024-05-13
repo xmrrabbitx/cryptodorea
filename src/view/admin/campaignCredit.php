@@ -15,7 +15,6 @@ use Web3\Utils;
 function dorea_cashback_campaign_credit()
 {
 
-
     print("campaign credit page");
     //var_dump(get_transient('dorea 7'));
 
@@ -33,17 +32,6 @@ function dorea_cashback_campaign_credit()
             </form>
         ");
     }
-
-    print("
-             
-            <script src='http://code.dappbench.com/browser-solc.min.js' type='text/javascript'></script>
-            <script>
-            console.log('test')
-                
-             console.log(BrowserSolc)
-        </script>
-        
-        ");
 
     print("
 
@@ -134,9 +122,6 @@ function dorea_admin_campaign_credit_charge()
 }
 
 
-
-
-
 add_action('admin_menu', 'dorea_admin_campaign_smart_contract');
 function dorea_admin_campaign_smart_contract()
 {
@@ -145,7 +130,7 @@ function dorea_admin_campaign_smart_contract()
     if (isset($metamaskInfo)) {
          $doreaWeb3 = new smartContractController();
          $compiledConract = $doreaWeb3->compile();
-         var_dump($compiledConract);
+
          if($compiledConract){
              $doreaWeb3->deployContract($metamaskInfo, $compiledConract);
          }
