@@ -46,7 +46,8 @@ class HttpProvider extends Provider implements IProvider
     public function __construct($host, $timeout = 1)
     {
         parent::__construct($host, $timeout);
-        $this->client = new Client;
+        $this->client = new Client();
+
     }
 
     /**
