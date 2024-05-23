@@ -34,25 +34,39 @@ function dorea_cashback_campaign_credit()
     }
 
     print('
-        
-        <script>
-        let xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "http://127.0.0.1/wordpress/wp-admin/admin-post.php?action=loyalty_json_file", true);
-xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-            let response = JSON.parse(xhr.responseText);
-            console.log(response[1]);
-    }
-};
-
-xhr.send();
-</script>
-        
-        
+                
         <input id="creditAmount" type="text">
-        <button id="metamask">Fund your Campaign</button>
+        <button id="metamask" style="display:none">Fund your Campaign</button>
+        <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
 
+
+
+        <script>
+         // Request access to Metamask
+         setTimeout(delay, 1000)
+         function delay(){
+             (async () => {
+                  // issue here
+                  if(window.ethereum._state.accounts.length > 0){
+                        document.getElementById("metamaskDisconnect").addEventListener("click", async () => {
+                      console.log("click")
+                            // disconnect user 
+                            const result = await window.ethereum.request({
+                            method: "wallet_revokePermissions",
+                            params: [{
+                              eth_accounts: {}
+                            }]
+                          });
+                          
+                          // remove wordpress prefix on production
+                          window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                          
+                        })
+                  }
+             })();
+         }
+           
+        </script>
         <script type="module">
         
          import {ethers, BrowserProvider, ContractFactory, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
@@ -65,9 +79,11 @@ xhr.send();
                   if(window.ethereum._state.accounts.length > 0){
                      
                       document.getElementById("metamask").style.display = "none";
+                      document.getElementById("metamaskDisconnect").style.display = "block";
                        
                   }else {
                       document.getElementById("metamask").style.display = "block";
+                      document.getElementById("metamaskDisconnect").style.display = "none";
                   }
                   
                     document.getElementById("metamask").addEventListener("click", async () => {
@@ -134,14 +150,29 @@ xhr.send();
                             
                               if (window.ethereum) {
 
-
-                                    const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-                                    const userAddress = accounts[0];
+                // get abi and bytecode
+                let xhr = new XMLHttpRequest();
+        
+                // remove wordpress prefix on production
+                xhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_json_file", true);
+                xhr.onreadystatechange = async function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                            let response = JSON.parse(xhr.responseText);
+                            let abi = response[0]
+                            let bytecode = response[1]
+                        //console.log(bytecode)
+                       
                         
-                                    const userBalance = await window.ethereum.request({
-                                        method: "eth_getBalance",
-                                        params: [userAddress, "latest"]
-                                    });
+                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                       const userAddress = accounts[0];
+                      
+                       
+                       const userBalance = await window.ethereum.request({
+                             method: "eth_getBalance",
+                             params: [userAddress, "latest"]
+                       });
+                       
+                       
                         
                                     //const provider = new ethers.JsonRpcProvider("https://polygon-amoy.g.alchemy.com/v2/LuZ5CnAEURDtdQRwm9VJlkHRQR29Kw_a");
                                     //const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -153,15 +184,26 @@ xhr.send();
                                    // const privateKey = "0x37483b8eebc0281371d439a846b6114f2e6cda020d92453b89285306a099ff88"; // Replace with the private key of the account from Ganache
                                    // const signer = new ethers.Wallet(privateKey, provider);
                        
-                                    const factory = new ContractFactory("", "",signer);
+                                    const factory = new ContractFactory(abi, bytecode, signer);
                         
                                     // If your contract requires constructor args, you can specify them here
-                                    //const contract = await factory.deploy();
+                                   // const contract = await factory.deploy();
                         
-                                    const contract = new ethers.Contract("0x98999E3FaC5dd0d4444A727e076B4f21c45F066f", compiledContract.abi, signer);
+                                    const contract = new ethers.Contract("0xde9764665376698f9455e637a20a36ea96c09a7d", abi, signer);
                         
                                     const tx = await contract.show();
                                     console.log(tx)
+                                    
+                          window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                          
+                    }
+                       
+                };
+                
+                xhr.send();
+                
+                           
+                        
                             }
 
 
