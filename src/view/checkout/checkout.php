@@ -31,7 +31,8 @@ function cashback()
                             
                             <label>" . $campaignList . "</label>
                             <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='add_to_cashback_checkbox()'>
-                            <input id='dorea_add_to_cashback_address' type='text'>
+                            <input id='dorea_add_to_cashback_address' type='text' oninput='add_to_cashback_checkbox()'>
+                            <p id='dorea_add_to_cashback_address_error' style='display:none;color:red;'>wallet address could not be left empty!</p>
                         </span>
                 ");
 
@@ -43,11 +44,11 @@ function cashback()
             // check and add to cash back program
             print("<script>
                     function add_to_cashback_checkbox() {
-
+                        
                         let dorea_add_to_cashback_checked = document.getElementsByClassName('dorea_add_to_cashback_checkbox_');
                         let dorea_add_to_cashback_address = document.getElementById('dorea_add_to_cashback_address');
                           
-                        
+                       
                         if(dorea_add_to_cashback_checked.length > 0){
                    
                         let campaignlist = [];
@@ -59,10 +60,15 @@ function cashback()
                                 // throw border error on empty address
                                 if(dorea_add_to_cashback_address.value === ''){
                                      dorea_add_to_cashback_address.style.border = '1px solid red';
+                                     document.getElementById('dorea_add_to_cashback_address_error').style.display = 'block';
+                                }else{
+                                    dorea_add_to_cashback_address.style.border = '1px solid green';
+                                      document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
                                 }
                             }else {
                                 // back to normal border 
                                 dorea_add_to_cashback_address.style.border = '1px solid black';
+                                  document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
                             }
                         }
                       
@@ -81,7 +87,7 @@ function cashback()
                         };
                         
                         if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== ''){ 
-                            
+                             
                             let walletAddress = dorea_add_to_cashback_address.value;
                             xhr.send(JSON.stringify({'campaignlist':campaignlist, 'wallet_address':walletAddress}));
                         }
