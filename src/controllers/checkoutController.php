@@ -50,6 +50,8 @@ class checkoutController extends checkoutAbstract
         // issue is here
         if (!empty($json_data)) {
             $campaignLists = json_decode($json_data);
+            var_dump($campaignLists);
+            die('stopp!!!');
 
             try {
 

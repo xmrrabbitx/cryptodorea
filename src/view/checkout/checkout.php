@@ -23,7 +23,7 @@ function cashback()
             print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;padding-left:5px;'>
                         <p>
                             <h4>
-                                add to cash back program
+                                add to cash back program:
                                 
             ");
             foreach ($cashbackList as $campaignList) {
@@ -31,14 +31,17 @@ function cashback()
                             
                             <label>" . $campaignList . "</label>
                             <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='add_to_cashback_checkbox()'>
-                            <input id='dorea_add_to_cashback_address' type='text' oninput='add_to_cashback_checkbox()'>
-                            <p id='dorea_add_to_cashback_address_error' style='display:none;color:red;'>wallet address could not be left empty!</p>
                         </span>
                 ");
 
             }
-            print("</h4>
-                        </p>
+            print("
+                    </h4>
+                        
+                        <input id='dorea_add_to_cashback_address' type='text' placeholder='insert wallet address...' oninput='add_to_cashback_checkbox()'>
+                        <p id='dorea_add_to_cashback_address_error' style='display:none;color:red;'>wallet address could not be left empty!</p>
+
+                    </p>
                 </div>");
 
             // check and add to cash back program
@@ -59,21 +62,32 @@ function cashback()
                                 }
                                 // throw border error on empty address
                                 if(dorea_add_to_cashback_address.value === ''){
+                             
                                      dorea_add_to_cashback_address.style.border = '1px solid red';
                                      document.getElementById('dorea_add_to_cashback_address_error').style.display = 'block';
-                                }else{
-                                    dorea_add_to_cashback_address.style.border = '1px solid green';
-                                      document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                     break;
+                                } else{
+                              
+                                     dorea_add_to_cashback_address.style.border = '1px solid green';
+                                     document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                     
                                 }
                             }else {
-                                // back to normal border 
-                                dorea_add_to_cashback_address.style.border = '1px solid black';
-                                  document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                // throw border error on empty address
+                                if(dorea_add_to_cashback_address.value !== ''){
+                              
+                                     dorea_add_to_cashback_address.style.border = '1px solid green';
+                                     document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                     
+                                }else{
+                                    // back to normal border 
+                                    dorea_add_to_cashback_address.style.border = '1px solid black';
+                                    document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                }
                             }
                         }
-                      
-                        //'/checkout/order-received'
-                        //application/x-www-form-urlencoded
+               
+                        // remove wordpress prefix on production
                         let xhr = new XMLHttpRequest();
                         xhr.open('POST', '#', true);
                         xhr.setRequestHeader('Accept', 'application/json');
@@ -85,9 +99,9 @@ function cashback()
                                //console.log(xhr.responseText);
                             }
                         };
-                        
+                       
                         if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== ''){ 
-                             
+                            console.log(campaignlist)
                             let walletAddress = dorea_add_to_cashback_address.value;
                             xhr.send(JSON.stringify({'campaignlist':campaignlist, 'wallet_address':walletAddress}));
                         }
@@ -105,15 +119,29 @@ function cashback()
 }
 
 /**
-* callback function to check session cart page
-*/
-add_action('wp','checkaddtoCashBack');
-function checkaddtoCashBack(){
+ * callback function to save session of checkout page
+ */
+add_action('wp','checkoutReceived');
+function checkoutReceived()
+{
+    if(is_page('checkout')) {
+         $checkout = new checkoutController();
+         $checkout->checkout();
+    }
+}
 
-    if (is_page('cart')) {
+/**
+ * callback function to check session of checkout page
+ */
+add_action('wp','orderReceived');
+function orderReceived(){
+
+    $json_data = file_get_contents('php://input');
+
+    if (is_wc_endpoint_url('order-received')) {
 
         $checkout = new checkoutController();
-        $checkout->checkout();
+        //$checkout->orederReceived();
 
     }
   
