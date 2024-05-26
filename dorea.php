@@ -22,15 +22,3 @@ function my_plugin_enqueue_scripts(): void
 }
 add_action('wp_enqueue_scripts', 'my_plugin_enqueue_scripts');
 
-add_action("wp","test");
-
-function test()
-{
-    print ('<script
-  type="text/javascript"
-  src="https://binaries.soliditylang.org/bin/{{ SOLC VERSION }}.js"
-></script>');
-    print ('
-    
-    ');
-}

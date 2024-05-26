@@ -4,6 +4,7 @@ namespace Cryptodorea\Woocryptodorea\controllers;
 
 use Cryptodorea\Woocryptodorea\abstracts\checkoutAbstract;
 use Cryptodorea\Woocryptodorea\model\checkoutModel;
+use WC_Order;
 
 /**
  * Controller for checkout
@@ -67,10 +68,16 @@ class checkoutController extends checkoutAbstract
     }
 
 
-    public function orederReceived()
+    public function orederReceived($orderId)
     {
-        var_dump(get_option('campaignlist_user'));
-        var_dump(get_option('dorea_user_walletAddress'));
+        global $woocommerce, $post;
+
+        $order = new WC_Order($orderId);
+
+        $campaignlist = get_option('campaignlist_user');
+        add_option('dorea_campaignlist_user', $campaignlist);
+        delete_option('campaignlist_user');
+
     }
 
 }

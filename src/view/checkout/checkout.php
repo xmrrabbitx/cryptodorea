@@ -131,15 +131,15 @@ function checkout()
 }
 
 /**
- * callback function to check session of checkout page
+ * callback function on order received
  */
-add_action('wp','orderReceived');
-function orderReceived(){
+add_action('woocommerce_thankyou','orderReceived');
+function orderReceived($orderId){
 
     if (is_wc_endpoint_url('order-received')) {
 
         $checkout = new checkoutController();
-        $checkout->orederReceived();
+        $checkout->orederReceived($orderId);
 
     }
   

@@ -47,19 +47,15 @@ class checkoutModel extends checkoutModelAbstract
             add_option('campaignlist_user', $campaignNames);
         }
 
-        // set flash list of current user campaigns
-        // remove maybe in future
-        $_SESSION['campaignlist_user'] = $campaignNames;
-
         $currentWalletAddress = $this->walletAddress();
         if (count($currentWalletAddress) > 0) {
 
-            update_option('user_walletAddress', $walletAddress);
+            update_option('dorea_user_walletAddress', $walletAddress);
 
         }else{
 
             add_option('dorea_user_walletAddress', $walletAddress);
-            var_dump(get_option('dorea_user_walletAddress'));
+
         }
 
     }
