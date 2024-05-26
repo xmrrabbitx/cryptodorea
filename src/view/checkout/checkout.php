@@ -103,7 +103,7 @@ function cashback()
                         if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== ''){ 
                             console.log(campaignlist)
                             let walletAddress = dorea_add_to_cashback_address.value;
-                            xhr.send(JSON.stringify({'campaignlist':campaignlist, 'wallet_address':walletAddress}));
+                            xhr.send(JSON.stringify({'campaignlist':campaignlist, 'walletAddress':walletAddress}));
                         }
                         
                         // Prevent the form from submitting (optional)
@@ -121,8 +121,8 @@ function cashback()
 /**
  * callback function to save session of checkout page
  */
-add_action('wp','checkoutReceived');
-function checkoutReceived()
+add_action('wp','checkout');
+function checkout()
 {
     if(is_page('checkout')) {
          $checkout = new checkoutController();
@@ -136,12 +136,10 @@ function checkoutReceived()
 add_action('wp','orderReceived');
 function orderReceived(){
 
-    $json_data = file_get_contents('php://input');
-
     if (is_wc_endpoint_url('order-received')) {
 
         $checkout = new checkoutController();
-        //$checkout->orederReceived();
+        $checkout->orederReceived();
 
     }
   

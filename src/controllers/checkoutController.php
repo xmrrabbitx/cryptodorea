@@ -34,10 +34,10 @@ class checkoutController extends checkoutAbstract
         }
     }
 
-    public function addtoList($campaignNames)
+    public function addtoList($campaignNames, $walletAddress)
     {
 
-        $this->checkoutModel->add($campaignNames);
+        $this->checkoutModel->add($campaignNames, $walletAddress);
 
     }
 
@@ -50,12 +50,10 @@ class checkoutController extends checkoutAbstract
         // issue is here
         if (!empty($json_data)) {
             $campaignLists = json_decode($json_data);
-            var_dump($campaignLists);
-            die('stopp!!!');
 
             try {
 
-                $this->addtoList($campaignLists->campaignlist);
+                $this->addtoList($campaignLists->campaignlist, $campaignLists->walletAddress);
 
                 // throw new Exception('something went wrong!');
             } catch (Exception $error) {
@@ -66,6 +64,13 @@ class checkoutController extends checkoutAbstract
         }
 
 
+    }
+
+
+    public function orederReceived()
+    {
+        var_dump(get_option('campaignlist_user'));
+        var_dump(get_option('dorea_user_walletAddress'));
     }
 
 }
