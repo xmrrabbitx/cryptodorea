@@ -28,7 +28,7 @@ class checkoutModel extends checkoutModelAbstract
     public function walletAddress()
     {
 
-        return get_option('user_walletAddress') !== false ? get_option('user_walletAddress') : [];
+        return get_option('dorea_walletAddress_user') !== false ? get_option('dorea_walletAddress_user') : null;
 
     }
 
@@ -48,13 +48,13 @@ class checkoutModel extends checkoutModelAbstract
         }
 
         $currentWalletAddress = $this->walletAddress();
-        if (count($currentWalletAddress) > 0) {
+        if ($currentWalletAddress !== null) {
 
-            update_option('dorea_user_walletAddress', $walletAddress);
+            update_option('dorea_walletAddress_user', $walletAddress);
 
         }else{
 
-            add_option('dorea_user_walletAddress', $walletAddress);
+            add_option('dorea_walletAddress_user', $walletAddress);
 
         }
 

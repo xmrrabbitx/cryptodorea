@@ -51,66 +51,69 @@ function cashback()
                         let dorea_add_to_cashback_checked = document.getElementsByClassName('dorea_add_to_cashback_checkbox_');
                         let dorea_add_to_cashback_address = document.getElementById('dorea_add_to_cashback_address');
                           
-                       
-                        if(dorea_add_to_cashback_checked.length > 0){
-                   
-                        let campaignlist = [];
-                        for(let i=0; i < dorea_add_to_cashback_checked.length;i++){ 
-                            if(dorea_add_to_cashback_checked[i].checked){
-                                if(dorea_add_to_cashback_checked[i].value !== ''){
-                                        campaignlist.push(dorea_add_to_cashback_checked[i].value);
-                                }
-                                // throw border error on empty address
-                                if(dorea_add_to_cashback_address.value === ''){
+                         if(dorea_add_to_cashback_address.value.length === 42){   
                              
-                                     dorea_add_to_cashback_address.style.border = '1px solid red';
-                                     document.getElementById('dorea_add_to_cashback_address_error').style.display = 'block';
-                                     break;
-                                } else{
-                              
-                                     dorea_add_to_cashback_address.style.border = '1px solid green';
-                                     document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
-                                     
-                                }
-                            }else {
-                                // throw border error on empty address
-                                if(dorea_add_to_cashback_address.value !== ''){
-                              
-                                     dorea_add_to_cashback_address.style.border = '1px solid green';
-                                     document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
-                                     
-                                }else{
-                                    // back to normal border 
-                                    dorea_add_to_cashback_address.style.border = '1px solid black';
-                                    document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                            if(dorea_add_to_cashback_checked.length > 0){
+                   
+                            let campaignlist = [];
+                            for(let i=0; i < dorea_add_to_cashback_checked.length;i++){ 
+                                if(dorea_add_to_cashback_checked[i].checked){
+                                    if(dorea_add_to_cashback_checked[i].value !== ''){
+                                            campaignlist.push(dorea_add_to_cashback_checked[i].value);
+                                    }
+                                    // throw border error on empty address
+                                    if(dorea_add_to_cashback_address.value === ''){
+                                 
+                                         dorea_add_to_cashback_address.style.border = '1px solid red';
+                                         document.getElementById('dorea_add_to_cashback_address_error').style.display = 'block';
+                                         break;
+                                    } else{
+                                  
+                                         dorea_add_to_cashback_address.style.border = '1px solid green';
+                                         document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                         
+                                    }
+                                }else {
+                                    // throw border error on empty address
+                                    if(dorea_add_to_cashback_address.value !== ''){
+                                  
+                                         dorea_add_to_cashback_address.style.border = '1px solid green';
+                                         document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                         
+                                    }else{
+                                        // back to normal border 
+                                        dorea_add_to_cashback_address.style.border = '1px solid black';
+                                        document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                    }
                                 }
                             }
-                        }
-               
-                        // remove wordpress prefix on production
-                        let xhr = new XMLHttpRequest();
-                        xhr.open('POST', '#', true);
-                        xhr.setRequestHeader('Accept', 'application/json');
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                        xhr.onreadystatechange = function() {
-                            if (xhr.readyState === 4 && xhr.status === 200) {
+                   
+                            // remove wordpress prefix on production
+                            let xhr = new XMLHttpRequest();
+                            xhr.open('POST', '#', true);
+                            xhr.setRequestHeader('Accept', 'application/json');
+                            xhr.setRequestHeader('Content-Type', 'application/json');
+                            xhr.onreadystatechange = function() {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                
+                                    //console.log('add to cash back session is set');
+                                   //console.log(xhr.responseText);
+                                }
+                            };
+                           
+                            if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== ''){ 
+                                let walletAddress = dorea_add_to_cashback_address.value;
+                                xhr.send(JSON.stringify({'campaignlist':campaignlist, 'walletAddress':walletAddress}));
+                            }
                             
-                                //console.log('add to cash back session is set');
-                               //console.log(xhr.responseText);
-                            }
-                        };
-                       
-                        if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== ''){ 
-                            console.log(campaignlist)
-                            let walletAddress = dorea_add_to_cashback_address.value;
-                            xhr.send(JSON.stringify({'campaignlist':campaignlist, 'walletAddress':walletAddress}));
-                        }
-                        
-                        // Prevent the form from submitting (optional)
-                        return false;
+                            // Prevent the form from submitting (optional)
+                            return false;
                         
                                     
                         }
+                            
+                         }
+                        
                     }
                 </script>");
 
@@ -145,4 +148,9 @@ function orderReceived($orderId){
   
 }
 
-
+add_action('wp','pay');
+function pay()
+{
+    var_dump(get_option('dorea_campaignlist_user'));
+    var_dump(get_option('dorea_walletAddress_user'));
+}

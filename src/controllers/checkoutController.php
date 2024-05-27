@@ -72,11 +72,15 @@ class checkoutController extends checkoutAbstract
     {
         global $woocommerce, $post;
 
-        $order = new WC_Order($orderId);
+        $order = json_decode(new WC_Order($orderId));
 
-        $campaignlist = get_option('campaignlist_user');
-        add_option('dorea_campaignlist_user', $campaignlist);
-        delete_option('campaignlist_user');
+        if(isset($order->id)){
+            $campaignlist = get_option('campaignlist_user');
+            add_option('dorea_campaignlist_user', $campaignlist);
+            delete_option('campaignlist_user');
+        }
+
+
 
     }
 
