@@ -51,9 +51,9 @@ function cashback()
                         let dorea_add_to_cashback_checked = document.getElementsByClassName('dorea_add_to_cashback_checkbox_');
                         let dorea_add_to_cashback_address = document.getElementById('dorea_add_to_cashback_address');
                           
-                         if(dorea_add_to_cashback_address.value.length === 42){   
+                   
                              
-                            if(dorea_add_to_cashback_checked.length > 0){
+                        if(dorea_add_to_cashback_checked.length > 0){
                    
                             let campaignlist = [];
                             for(let i=0; i < dorea_add_to_cashback_checked.length;i++){ 
@@ -100,8 +100,8 @@ function cashback()
                                    //console.log(xhr.responseText);
                                 }
                             };
-                           
-                            if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== ''){ 
+                                 
+                            if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== '' && dorea_add_to_cashback_address.value.length === 42){ 
                                 let walletAddress = dorea_add_to_cashback_address.value;
                                 xhr.send(JSON.stringify({'campaignlist':campaignlist, 'walletAddress':walletAddress}));
                             }
@@ -112,7 +112,7 @@ function cashback()
                                     
                         }
                             
-                         }
+                         
                         
                     }
                 </script>");
