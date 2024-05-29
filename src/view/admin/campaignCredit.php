@@ -83,6 +83,7 @@ function dorea_cashback_campaign_credit()
                      
                       document.getElementById("metamask").style.display = "none";
                       document.getElementById("metamaskDisconnect").style.display = "block";
+                     
                        
                   }else {
                       document.getElementById("metamask").style.display = "block";
@@ -96,7 +97,7 @@ function dorea_cashback_campaign_credit()
                               if (window.ethereum) {
                                   
                                   // change it to the real polygon network
-                                  window.ethereum.request({
+                                  await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
                                         chainId: "0x539",
@@ -110,6 +111,8 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["http://127.0.0.1:8545"]
                                       }]
                                   });
+                                  
+                                   const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
 
                                 // get abi and bytecode
                                 let xhr = new XMLHttpRequest();
@@ -123,18 +126,18 @@ function dorea_cashback_campaign_credit()
                                             let bytecode = response[1]
                                         //console.log(bytecode)
                                        
-                                        
-                                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                                       
+                                       const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                        const userAddress = accounts[0];
                                       
                                        
                                        const userBalance = await window.ethereum.request({
                                              method: "eth_getBalance",
-                                             params: [userAddress, "latest"]
+                                            params: [userAddress, "latest"]
                                        });
+                                        
                        
-                       
-                        
+                            
                                     //const provider = new ethers.JsonRpcProvider("https://polygon-amoy.g.alchemy.com/v2/LuZ5CnAEURDtdQRwm9VJlkHRQR29Kw_a");
                                     //const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
                                     const provider = new BrowserProvider(window.ethereum);
@@ -147,15 +150,22 @@ function dorea_cashback_campaign_credit()
                        
                                     const factory = new ContractFactory(abi, bytecode, signer);
                         
-                                    // If your contract requires constructor args, you can specify them here
-                                   // const contract = await factory.deploy();
+                                     //If your contract requires constructor args, you can specify them here
+                                    //const contract = await factory.deploy({
+                                    //      value: contractAmount,
+                                    //      gasLimit :3000000
+                                   // });
+                                   
                         
-                                    const contract = new ethers.Contract("0xde9764665376698f9455e637a20a36ea96c09a7d", abi, signer);
+                                    const contract = new ethers.Contract("0x806094643f488628b28cebb0952cbf43cafdc192", abi, signer);
                         
-                                    const tx = await contract.show();
+                                    //const tx = await contract.show();
+                                    const amount = await contract.get();
+                                    console.log(amount)
+                                    const tx = await contract.pay(["0xF91f0E2C96a7B3f0998B891e9B9F7E487dF92F16"],"2000000000000000000");
                                     console.log(tx)
                                     
-                                    window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                   // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                               }
                        
                 };
@@ -221,9 +231,8 @@ function dorea_admin_campaign_smart_contract()
 
 
 
-
 /**
- * Campaign Credit
+ * Campaign Credit Loyalty ABI and Bytecode of smart contract
  */
 add_action('admin_post_loyalty_json_file', 'dorea_admin_loyalty_json_file');
 
@@ -235,13 +244,12 @@ function dorea_admin_loyalty_json_file()
 
     $abi = $compiledContract->abi;
     $bytecode = $compiledContract->bytecode->object;
-    //var_dump($abi);
+
     $responseArray = [$abi, $bytecode];
     header('Content-Type: application/json');
 
     // Echo the JSON-encoded response
     echo json_encode($responseArray);
     exit;
-   // return json_encode([$abi,$bytecode]);
 
 }
