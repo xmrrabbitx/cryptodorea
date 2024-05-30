@@ -72,7 +72,7 @@ function dorea_cashback_campaign_credit()
         </script>
         <script type="module">
         
-         import {ethers, BrowserProvider, ContractFactory, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
+         import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
          // Request access to Metamask
          setTimeout(delay, 1000)
@@ -149,21 +149,21 @@ function dorea_cashback_campaign_credit()
                                    // const signer = new ethers.Wallet(privateKey, provider);
                        
                                     const factory = new ContractFactory(abi, bytecode, signer);
-                        
+                                    
                                      //If your contract requires constructor args, you can specify them here
-                                    //const contract = await factory.deploy({
-                                    //      value: contractAmount,
-                                    //      gasLimit :3000000
-                                   // });
+                                    const contract = await factory.deploy({
+                                          value: BigInt(contractAmount / 0.000000000000000001).toString(),
+                                          gasLimit :3000000
+                                    });
                                    
                         
-                                    const contract = new ethers.Contract("0x806094643f488628b28cebb0952cbf43cafdc192", abi, signer);
+                                    //const contract = new ethers.Contract("", abi, signer);
                         
                                     //const tx = await contract.show();
-                                    const amount = await contract.get();
-                                    console.log(amount)
-                                    const tx = await contract.pay(["0xF91f0E2C96a7B3f0998B891e9B9F7E487dF92F16"],"2000000000000000000");
-                                    console.log(tx)
+                                    //const amount = await contract.get();
+                                    //console.log(amount)
+                                    //const tx = await contract.pay([""],"2000000000000000000");
+                                    //console.log(tx)
                                     
                                    // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                               }
