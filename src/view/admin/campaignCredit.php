@@ -15,26 +15,8 @@ use Web3\Utils;
 function dorea_cashback_campaign_credit()
 {
 
-    //var_dump(dechex(1337));
-    //die('stopppp!!!');
 
     print("campaign credit page");
-    //var_dump(get_transient('dorea 7'));
-
-    if (isset($_GET['campaignName'])) {
-
-        $campaignName = $_GET['campaignName'];
-        print("CHARGE CAMPAIN NAME" . $campaignName);
-
-        print("
-            <form method='POST' action='" . esc_url(admin_url('admin-post.php')) . "' id='campaign_credit'>
-                <input type='hidden' name='action' value='campaign_credit_charge'>
-                <input type='hidden' name='campaignName' value= '" . $campaignName . "' >
-                <input type='text' name='amount'>
-                <button type='submit'>charge</button>
-            </form>
-        ");
-    }
 
     print('
                 

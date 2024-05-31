@@ -18,6 +18,12 @@ function cashback()
         $cashback = new cashbackController();
         $cashbackList = $cashback->list();
 
+        $campaign = new checkoutController;
+        $campaignListUser = $campaign->list();
+
+        //var_dump($campaign->check($cashbackList));
+       // die('stoppp!!!');
+
         if ($cashbackList) {
             // add cash back program element to theme 
             print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;padding-left:5px;'>
@@ -27,15 +33,17 @@ function cashback()
                                 
             ");
             foreach ($cashbackList as $campaignList) {
-                print(" <span>
+                if(!in_array($campaignList, $campaignListUser)) {
+                    print(" <span>
                             
                             <label>" . $campaignList . "</label>
                             <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='add_to_cashback_checkbox()'>
                         </span>
-                ");
-
+                    ");
+                }
             }
-            print("
+            if(!$campaign->check($cashbackList)) {
+                print("
                     </h4>
                         
                         <input id='dorea_add_to_cashback_address' type='text' placeholder='insert wallet address...' oninput='add_to_cashback_checkbox()'>
@@ -43,6 +51,11 @@ function cashback()
 
                     </p>
                 </div>");
+            }else{
+                print ("
+                    <p>You already joined all cashback programs!</p>
+                ");
+            }
 
             // check and add to cash back program
             print("<script>
@@ -152,5 +165,7 @@ add_action('wp','pay');
 function pay()
 {
     var_dump(get_option('dorea_campaignlist_user'));
+    //var_dump(delete_option('dorea_campaignlist_user'));
     var_dump(get_option('dorea_walletAddress_user'));
+    //var_dump(delete_option('dorea_walletAddress_user'));
 }
