@@ -20,16 +20,14 @@ class receiptController extends receiptAbstract
 
     function campaignInfo()
     {
-        return get_option("campaigninfo_user");
+        return get_option("dorea_campaigninfo_user");
     }
 
     function is_paid($order, $campaignList)
     {
 
-        $user = $order->get_user();
-        $userName = $user->user_login;
-        $displayName = $user->display_name;
-        $userEmail = $user->user_email;
+        $displayName = $order->billing->first_name . " " . $order->billing->last_name ;
+        $userEmail = $order->billing->email;
 
         foreach ($campaignList as $campaignName) {
 
@@ -39,14 +37,12 @@ class receiptController extends receiptAbstract
                 $count = 1;
             }
 
-            // it must trigger and count campaign on every eash of product
-            $campaignInfo = [$campaignName => ['username' => $userName, 'displayName' => $displayName, 'userEmail' => $userEmail, 'count' => $count]];
+            // it must trigger and count campaign on every each of product
+            $campaignInfo = [$campaignName => ['displayName' => $displayName, 'userEmail' => $userEmail, 'count' => $count]];
 
             $this->receiptModel->add($campaignInfo);
 
         }
 
-        $pay = new pay();
-        $pay->checkCount();
     }
 }

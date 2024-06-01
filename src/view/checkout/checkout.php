@@ -15,14 +15,13 @@ function cashback()
 
     if (!WC()->cart->get_cart_contents_count() == 0) {
 
+        // get cashback list of admin
         $cashback = new cashbackController();
         $cashbackList = $cashback->list();
 
+        // get campaign list of user
         $campaign = new checkoutController;
         $campaignListUser = $campaign->list();
-
-        //var_dump($campaign->check($cashbackList));
-       // die('stoppp!!!');
 
         if ($cashbackList) {
             // add cash back program element to theme 
@@ -159,13 +158,4 @@ function orderReceived($orderId){
 
     }
   
-}
-
-add_action('wp','pay');
-function pay()
-{
-    var_dump(get_option('dorea_campaignlist_user'));
-    //var_dump(delete_option('dorea_campaignlist_user'));
-    var_dump(get_option('dorea_walletAddress_user'));
-    //var_dump(delete_option('dorea_walletAddress_user'));
 }

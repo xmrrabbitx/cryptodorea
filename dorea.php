@@ -10,7 +10,7 @@ Version: 1.0.0
 include_once __DIR__ . '/vendor/autoload.php';
 
 include_once __DIR__ . '/src/loader.php';
+use Cryptodorea\WooCryptodorea\loader;
 
-
-//$loader = new  \Cryptodorea\Woocryptodorea\loader();
-//$loader->testing();
+$loader = new  loader();
+$loader->testing();

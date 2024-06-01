@@ -4,6 +4,7 @@ namespace Cryptodorea\Woocryptodorea\controllers;
 
 use Cryptodorea\Woocryptodorea\abstracts\checkoutAbstract;
 use Cryptodorea\Woocryptodorea\model\checkoutModel;
+use Cryptodorea\Woocryptodorea\controllers\receiptController;
 use WC_Order;
 
 /**
@@ -36,8 +37,9 @@ class checkoutController extends checkoutAbstract
                 }
             }
 
-            return false;
         }
+
+        return false;
     }
 
     public function addtoList($campaignNames, $walletAddress)
@@ -80,12 +82,12 @@ class checkoutController extends checkoutAbstract
         $order = json_decode(new WC_Order($orderId));
 
         if(isset($order->id)){
-            $campaignlist = get_option('campaignlist_user');
-            add_option('dorea_campaignlist_user', $campaignlist);
-            delete_option('campaignlist_user');
+
+            // call receipt controller
+            $receipt = new receiptController();
+            $receipt->is_paid($order, $this->list());
+
         }
-
-
 
     }
 

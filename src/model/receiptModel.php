@@ -2,15 +2,14 @@
 
 namespace Cryptodorea\Woocryptodorea\model;
 
-use Cryptodorea\Woocryptodorea\abstracts\model\receipeModelAbstract;
+use Cryptodorea\Woocryptodorea\abstracts\model\receiptModelAbstract;
 
 
 /**
  * an abstract for receipt model
  */
-class receiptModel extends receipeModelAbstract
+class receiptModel extends receiptModelAbstract
 {
-
 
     function __construct()
     {
@@ -20,7 +19,7 @@ class receiptModel extends receipeModelAbstract
     public function list()
     {
 
-        return get_option('campaigninfo_user') !== false ? get_option('campaigninfo_user') : [];
+        return get_option('dorea_campaigninfo_user') !== false ? get_option('dorea_campaigninfo_user') : [];
 
     }
 
@@ -36,22 +35,22 @@ class receiptModel extends receipeModelAbstract
 
                 if (!in_array($campaignInfoKeys[0], array_keys($campaignInfoList))) {
                     $campaignInfoList = $campaignInfoList + $campaignInfo;
-                    update_option('campaigninfo_user', $campaignInfoList);
+                    update_option('dorea_campaigninfo_user', $campaignInfoList);
                     break;
                 } elseif ($campaignInfoList[$campaignInfoKeys[0]]['count'] !== $campaignInfo[$campaignInfoKeys[0]]['count']) {
 
                     $campaignInfoList[$campaignInfoKeys[0]]['count'] += 1;
-                    update_option('campaigninfo_user', $campaignInfoList);
+                    update_option('dorea_campaigninfo_user', $campaignInfoList);
                     break;
                 }
 
             }
 
         } else if (count($campaignInfoList) < 1) {
-            add_option('campaigninfo_user', $campaignInfo);
+            add_option('dorea_campaigninfo_user', $campaignInfo);
         }
 
-        return $_SESSION['campaignlist_user'] = null;
+        return $_SESSION['dorea_campaignlist_user'] = null;
 
     }
 

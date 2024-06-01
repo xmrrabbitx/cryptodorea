@@ -8,7 +8,7 @@ namespace Cryptodorea\Woocryptodorea\abstracts\utilities;
 abstract class dateCalculatorAbstract
 {
 
-    function __contruct()
+    function __construct()
     {
 
     }

@@ -21,9 +21,9 @@ class payController extends payAbstract
      */
     public function checkCount()
     {
-        $campaignName = array_keys(get_option('campaigninfo_user'));
-        foreach (array_keys(get_option('campaigninfo_user')) as $campaignName) {
-            $campaign = get_option('campaigninfo_user')[$campaignName];
+        $campaignName = array_keys(get_option('dorea_campaigninfo_user'));
+        foreach (array_keys(get_option('dorea_campaigninfo_user')) as $campaignName) {
+            $campaign = get_option('dorea_campaigninfo_user')[$campaignName];
             $limit = get_transient($campaignName)['shoppingCount'];
             if ($campaign['count'] >= $limit) {
                 $this->checkExpire($campaignName);

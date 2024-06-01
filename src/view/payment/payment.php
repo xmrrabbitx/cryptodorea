@@ -1,7 +1,5 @@
 <?php
 
-//namespace cryptodorea\woocryptodorea\view\payment;
-
 /**
  * Enqueue styles for the plugin
  */
@@ -12,25 +10,30 @@ function paymentModal_styles() {
 add_action('wp_enqueue_scripts', 'paymentModal_styles');
 
 /**
- * a payment modal to get wallet address
+ * a payment modal to get wallet address and pay to user
  */
+add_action('wp', 'paymentModal');
 function paymentModal(){
 
-    // Payment Modal
-    print('
-        <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
-            <form method="POST" action="#">
-                <lable>please write your wallet adddress:</lable>
-                <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
-                <button type="submit">submit</button>
-            </form>
-        </div>
-    ');
+    //var_dump(get_option('dorea_campaigninfo_user'));
+    //var_dump(get_transient('dorea'));
 
-    // js script to handle the Payment Modal
-    print("
-    
-        
-    ");
+    $campaignInfoUser = get_option('dorea_campaigninfo_user');
 
+    foreach ($campaignInfoUser as $keys=>$values){
+        $campaign = get_transient($keys);
+
+        if($values['count'] >= $campaign['shoppingCount']){
+            // Payment Modal
+            return print('
+                <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
+                    <form method="POST" action="#">
+                        <lable>please write your wallet adddress:</lable>
+                        <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
+                        <button type="submit">submit</button>
+                    </form>
+                </div>
+            ');
+        }
+    }
 }

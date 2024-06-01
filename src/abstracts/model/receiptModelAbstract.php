@@ -1,10 +1,14 @@
 <?php
 
 namespace Cryptodorea\Woocryptodorea\abstracts\model;
-abstract class receipeModelAbstract
+
+/**
+ * an abstract class for receipt model
+ */
+abstract class receiptModelAbstract
 {
 
-    function __contruct()
+    function __construct()
     {
 
     }

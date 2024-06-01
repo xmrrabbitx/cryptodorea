@@ -1,6 +1,10 @@
 <?php
 
 namespace Cryptodorea\Woocryptodorea\abstracts\model;
+
+/**
+ * an abstract class for checkout model
+ */
 abstract class checkoutModelAbstract
 {
 
