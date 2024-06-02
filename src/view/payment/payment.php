@@ -43,7 +43,7 @@ function paymentModal(){
         function doreapay(){
 
         /*
-        // issue is here
+        // issue onclick is here
             return (async() => {
                  
                  let doreaPaymentModalButton = document.getElementById("dorea_claimCashback");
