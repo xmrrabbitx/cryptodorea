@@ -106,8 +106,7 @@ function dorea_cashback_campaign_credit()
                                             let response = JSON.parse(xhr.responseText);
                                             let abi = response[0]
                                             let bytecode = response[1]
-                                        //console.log(bytecode)
-                                       
+                                      
                                        
                                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                        const userAddress = accounts[0];
@@ -132,12 +131,28 @@ function dorea_cashback_campaign_credit()
                        
                                     const factory = new ContractFactory(abi, bytecode, signer);
                                     
-                                     //If your contract requires constructor args, you can specify them here
+                                    //If your contract requires constructor args, you can specify them here
                                     const contract = await factory.deploy({
                                           value: BigInt(contractAmount / 0.000000000000000001).toString(),
                                           gasLimit :3000000
+                                    }).then(function(transaction) {
+                                        let contractAddress = transaction.target;
+                                        
+                                        // get contract address
+                                        let xhr = new XMLHttpRequest();
+                                
+                                        // remove wordpress prefix on production
+                                        xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address", true);
+                                        xhr.onreadystatechange = async function() {
+                                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                                
+                                            }
+                                        }
+                                    
+                                        xhr.send(JSON.stringify({"contractAddress":contractAddress}));
+                                        
                                     });
-                                   
+                                    
                         
                                     //const contract = new ethers.Contract("", abi, signer);
                         
@@ -233,5 +248,23 @@ function dorea_admin_loyalty_json_file()
     // Echo the JSON-encoded response
     echo json_encode($responseArray);
     exit;
+
+}
+
+
+/**
+ * Campaign Credit smart contract address
+ */
+add_action('admin_post_dorea_contract_address', 'dorea_contract_address');
+
+function dorea_contract_address()
+{
+
+    // get Json Data
+    $json_data = file_get_contents('php://input');
+    $json = json_decode($json_data);
+
+    // set contract adddress into option
+    add_option('dorea_contract_address', $json->contractAddress);
 
 }
