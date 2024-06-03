@@ -27,25 +27,26 @@ function paymentModal(){
                 <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
                         <lable>please write your wallet adddress:</lable>
                         <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
-                        <button onclick="doreapay()" id="dorea_claimCashback" type="button">claim cashback</button>
+                        <button id="dorea_claimCashback" type="button">claim cashback</button>
                 </div>
             ');
             break;
         }
     }
 
-    print (' <button onclick="doreapay()" id="dorea_claimCashback" type="button">claim cashback</button>');
-
     $contractAddress = get_option('dorea_contract_address');
 
     print('
-        <script>
-        function doreapay(){
-
-        /*
-        // issue onclick is here
-            return (async() => {
-                 
+       <script type="module">
+        
+            import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
+            
+            let doreaPaymentModalButton = document.getElementById("dorea_claimCashback");
+            doreaPaymentModalButton.addEventListener("click", function(){
+                    
+                setTimeout(delay, 500)
+                function delay(){
+                 (async () => {
                  let doreaPaymentModalButton = document.getElementById("dorea_claimCashback");
                  if (window.ethereum) {
                                       
@@ -116,10 +117,12 @@ function paymentModal(){
                                
                             
                                 }
-                 
-             }
-          */   
-        }
+                     })();
+                }
+
+            })
+
+         
         </script>    
 
     ');

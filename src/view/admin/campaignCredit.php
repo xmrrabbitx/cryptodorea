@@ -264,7 +264,16 @@ function dorea_contract_address()
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
 
-    // set contract adddress into option
-    add_option('dorea_contract_address', $json->contractAddress);
+    $doreaContractAddress = get_option('dorea_contract_address');
+
+    if($doreaContractAddress){
+        // update contract adddress
+        update_option('dorea_contract_address', $json->contractAddress);
+
+    }else{
+        // set contract adddress into option
+        add_option('dorea_contract_address', $json->contractAddress);
+    }
+
 
 }
