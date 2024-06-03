@@ -142,6 +142,6 @@ function dorea_claim_contract_address()
     //header('Content-Type: application/json');
 
     // Echo the JSON-encoded response
-    echo json_encode($responseArray);
+    return json_encode($responseArray);
 
 }
