@@ -153,16 +153,8 @@ function dorea_cashback_campaign_credit()
                                         
                                     });
                                     
-                        
-                                    //const contract = new ethers.Contract("", abi, signer);
-                        
-                                    //const tx = await contract.show();
-                                    //const amount = await contract.get();
-                                    //console.log(amount)
-                                    //const tx = await contract.pay([""],"2000000000000000000");
-                                    //console.log(tx)
-                                    
-                                   // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                    // remove wordpress prefix on production 
+                                    window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                               }
                        
                 };

@@ -22,6 +22,8 @@ function paymentModal(){
 
         if($values['count'] >= $campaign['shoppingCount']){
 
+            $amount = $campaign['cryptoAmount'];
+
             // Payment Modal
             print('
                 <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
@@ -35,6 +37,8 @@ function paymentModal(){
     }
 
     $contractAddress = get_option('dorea_contract_address');
+
+
 
     print('
        <script type="module">
@@ -84,12 +88,12 @@ function paymentModal(){
                                            const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                            const userAddress = accounts[0];
                                           
-                                           
+                                           /*
                                            const userBalance = await window.ethereum.request({
                                                  method: "eth_getBalance",
                                                 params: [userAddress, "latest"]
                                            });
-                                            
+                                            */
                            
                                 
                                         //const provider = new ethers.JsonRpcProvider("https://polygon-amoy.g.alchemy.com/v2/LuZ5CnAEURDtdQRwm9VJlkHRQR29Kw_a");
@@ -100,13 +104,11 @@ function paymentModal(){
                                         const signer = await provider.getSigner();
                            
                                         const contract = new ethers.Contract("'.$contractAddress.'", abi, signer);
-                            
-                                        const tx = await contract.show();
-                                        //const amount = await contract.get();
-                                        //console.log(amount)
-                                        //const tx = await contract.pay([""],"2000000000000000000");
-                                        console.log(tx)
-                                        
+                           
+                                        const trxResult = await contract.pay([userAddress.toString()], BigInt("'.$amount.'" / 0.000000000000000001).toString());
+                                     
+                                        console.log(trxResult)
+                                       
                                        // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                   }
                            
