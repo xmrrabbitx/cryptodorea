@@ -8,6 +8,9 @@ use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+    //var_dump(delete_option('dorea_contract_address'));
+    //var_dump(add_option('dorea_contract_address','hadi'));
+    //var_dump(get_option('dorea_contract_address'));
 
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
@@ -89,7 +92,7 @@ function dorea_main_page_content(){
     print("create cash back program </br> <div id='sampleDorea'>sample dorea style</div>");
     if(isset($cashbackList)){
         foreach ($cashbackList as &$campaignList) {
-            print($campaignList . '<a href="'.esc_url(admin_url('admin-post.php?cashbackName='.$campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))).'"> delete </a>' . '</br>');
+            print($campaignList . '<a href="'.esc_url(admin_url('admin-post.php?cashbackName='. $campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))).'"> delete </a>' . '<a href="'.esc_url(admin_url('admin.php?page=credit&cashbackName='. $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))).'"> deploy </a>' . '</br>');
         }
     }
 }

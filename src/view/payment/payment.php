@@ -38,8 +38,6 @@ function paymentModal(){
 
     $contractAddress = get_option('dorea_contract_address');
 
-
-
     print('
        <script type="module">
         

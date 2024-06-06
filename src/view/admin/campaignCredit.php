@@ -15,9 +15,15 @@ use Web3\Utils;
 function dorea_cashback_campaign_credit()
 {
 
-
     print("campaign credit page");
+    $campaignName = null;
+    if(isset($_GET['cashbackName'])) {
+        $campaignName = $_GET['cashbackName'];
 
+        $doreaContractAddress = get_option($campaignName . '_contract_address');
+
+        var_dump($doreaContractAddress);
+    }
     print('
                 
         <input id="creditAmount" type="text">
@@ -142,7 +148,7 @@ function dorea_cashback_campaign_credit()
                                         let xhr = new XMLHttpRequest();
                                 
                                         // remove wordpress prefix on production
-                                        xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address", true);
+                                        xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName='.$campaignName.'", true);
                                         xhr.onreadystatechange = async function() {
                                             if (xhr.readyState === 4 && xhr.status === 200) {
                                                 
@@ -154,7 +160,7 @@ function dorea_cashback_campaign_credit()
                                     });
                                     
                                     // remove wordpress prefix on production 
-                                    window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                    //window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                               }
                        
                 };
@@ -252,19 +258,23 @@ add_action('admin_post_dorea_contract_address', 'dorea_contract_address');
 function dorea_contract_address()
 {
 
+    $campaignName = $_GET['cashbackName'];
+
     // get Json Data
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
 
-    $doreaContractAddress = get_option('dorea_contract_address');
+    $doreaContractAddress = get_option($campaignName . '_contract_address');
 
     if($doreaContractAddress){
-        // update contract adddress
-        update_option('dorea_contract_address', $json->contractAddress);
+        // update contract adddress of specific campaign
+        update_option($campaignName . '_contract_address', $json->contractAddress);
 
     }else{
+
+
         // set contract adddress into option
-        add_option('dorea_contract_address', $json->contractAddress);
+        add_option($campaignName . '_contract_address', $json->contractAddress);
     }
 
 
