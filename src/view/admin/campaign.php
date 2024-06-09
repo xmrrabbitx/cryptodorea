@@ -112,7 +112,7 @@ function dorea_cashback_campaign_content(){
                     </span>
                     </br>
 
-            <button type='submit' onClick='setup_init_config()'>set up campaign!</button>
+            <button type='submit'>set up campaign!</button>
         
         </form>
         </br>
@@ -128,7 +128,7 @@ add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
 function dorea_admin_cashback_campaign(){
 
     static $home_url = 'admin.php?page=crypto-dorea-cashback';
-   
+
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDateMonth'] && $_POST['expDateDay'])){
        
             $campaignName = htmlspecialchars($_POST['campaignName']);
@@ -140,7 +140,7 @@ function dorea_admin_cashback_campaign(){
             $expDateMonth = htmlspecialchars($_POST['expDateMonth']);
             $expDateDay= htmlspecialchars($_POST['expDateDay']);
 
-            
+
             $cashback = new cashbackController();
             if(strlen($campaignName) < 25 ){
                
@@ -148,11 +148,11 @@ function dorea_admin_cashback_campaign(){
                     
                     delete_option('campaign_list');
                 }
-                
+
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay);
-                
+
                 // head to the admin page of Dorea
-                wp_redirect('admin.php?page=credit&campaignName='.$campaignName);
+                wp_redirect('admin.php?page=credit&cashbackName='.$campaignName);
 
             }else{
                die('exceed characters limit!');

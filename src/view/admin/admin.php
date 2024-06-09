@@ -56,6 +56,7 @@ function dorea_add_menu_page(): void
         /**
          * Campaign Credit Menu
          */
+
         add_submenu_page(
             'crypto-dorea-cashback',
             'Campaign Page',
@@ -64,6 +65,7 @@ function dorea_add_menu_page(): void
             'credit',
             'dorea_cashback_campaign_credit'
         );
+
 
 
     }
@@ -92,8 +94,7 @@ function dorea_main_page_content(){
             print($campaignList . '<a href="'.esc_url(admin_url('admin-post.php?cashbackName='. $campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))).'"> delete </a>');
 
             $doreaContractAddress = get_option($campaignList . '_contract_address');
-            //var_dump($doreaContractAddress);
-            //var_dump(delete_option($campaignList . '_contract_address'));
+
             if($doreaContractAddress){
                print ('deployed!</br>');
             }else{
