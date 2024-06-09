@@ -21,8 +21,6 @@ function dorea_cashback_campaign_credit()
     if(isset($_GET['cashbackName'])) {
 
         $campaignName = $_GET['cashbackName'];
-        $doreaContractAddress = get_option($campaignName . '_contract_address');
-        var_dump($doreaContractAddress);
 
     }else{
        wp_redirect('admin.php?page=crypto-dorea-cashback');
@@ -164,7 +162,7 @@ function dorea_cashback_campaign_credit()
                                     });
                                     
                                     // remove wordpress prefix on production 
-                                    //window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                    window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                               }
                        
                 };

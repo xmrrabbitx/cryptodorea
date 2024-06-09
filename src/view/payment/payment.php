@@ -16,7 +16,7 @@ add_action('wp', 'paymentModal');
 function paymentModal(){
 
     $campaignInfoUser = get_option('dorea_campaigninfo_user');
-
+    var_dump($campaignInfoUser);
     foreach ($campaignInfoUser as $keys=>$values){
         $campaign = get_transient($keys);
 

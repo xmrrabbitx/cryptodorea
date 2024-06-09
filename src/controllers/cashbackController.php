@@ -89,6 +89,7 @@ class cashbackController extends cashbackAbstract
             update_option('campaign_list', $campaignModified);
             delete_transient($campaignName);
             delete_option($campaignName . '_contract_address');
+            //delete_option('');
         }
 
     }

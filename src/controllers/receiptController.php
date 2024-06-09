@@ -37,8 +37,10 @@ class receiptController extends receiptAbstract
                 $count = 1;
             }
 
+            $contractAddress = get_option($campaignName . '_contract_address');
+
             // it must trigger and count campaign on every each of product
-            $campaignInfo = [$campaignName => ['displayName' => $displayName, 'userEmail' => $userEmail, 'count' => $count]];
+            $campaignInfo = [$campaignName => ['displayName' => $displayName, 'userEmail' => $userEmail, 'count' => $count,'contractAddress'=>$contractAddress]];
 
             $this->receiptModel->add($campaignInfo);
 
