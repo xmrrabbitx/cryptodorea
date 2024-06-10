@@ -89,7 +89,26 @@ class cashbackController extends cashbackAbstract
             update_option('campaign_list', $campaignModified);
             delete_transient($campaignName);
             delete_option($campaignName . '_contract_address');
-            //delete_option('');
+
+            $key = array_search($campaignName, get_option('campaign_list'));
+            $campaignsList = get_option('campaign_list');
+            unset($campaignsList[$key]);
+            update_option('campaign_list', $campaignsList);
+
+            if(empty(get_option('campaign_list'))){
+                delete_option('campaign_list');
+            }
+
+            // remove dorea_campaignlist_user from list
+            $key = array_search($campaignName, get_option('dorea_campaignlist_user'));
+            $campaignListUser = get_option('dorea_campaignlist_user');
+            unset($campaignListUser[$key]);
+            update_option('dorea_campaignlist_user', $campaignListUser);
+
+            if(empty(get_option('dorea_campaignlist_user'))){
+                delete_option('dorea_campaignlist_user');
+            }
+
         }
 
     }
