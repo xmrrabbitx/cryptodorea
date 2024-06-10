@@ -15,28 +15,31 @@ add_action('wp_enqueue_scripts', 'paymentModal_styles');
 add_action('wp', 'paymentModal');
 function paymentModal(){
 
+    $contractAddress = null;
+    $amount = null;
     $campaignInfoUser = get_option('dorea_campaigninfo_user');
+    if($campaignInfoUser) {
+        foreach ($campaignInfoUser as $keys => $values) {
+            $campaign = get_transient($keys);
 
-    foreach ($campaignInfoUser as $keys=>$values){
-        $campaign = get_transient($keys);
+            if ($values['count'] >= $campaign['shoppingCount']) {
 
-        if($values['count'] >= $campaign['shoppingCount']){
+                $contractAddress = get_option($keys . '_contract_address');
 
-            $amount = $campaign['cryptoAmount'];
+                $amount = $campaign['cryptoAmount'];
 
-            // Payment Modal
-            print('
+                // Payment Modal
+                print('
                 <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
                         <lable>please write your wallet adddress:</lable>
                         <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
                         <button id="dorea_claimCashback" type="button">claim cashback</button>
                 </div>
             ');
-            break;
+                break;
+            }
         }
     }
-
-    $contractAddress = get_option('dorea_contract_address');
 
     print('
        <script type="module">
@@ -105,6 +108,7 @@ function paymentModal(){
                            
                                         const trxResult = await contract.pay([userAddress.toString()], BigInt("'.$amount.'" / 0.000000000000000001).toString());
                                      
+                                        // check if trx is full done then redirect
                                         console.log(trxResult)
                                        
                                        // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");

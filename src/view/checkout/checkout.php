@@ -12,7 +12,7 @@ use Cryptodorea\Woocryptodorea\controllers\checkoutController;
 add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
 function cashback()
 {
-    var_dump(get_option('dorea_campaignlist_user'));
+
     if (!WC()->cart->get_cart_contents_count() == 0) {
 
         // get cashback list of admin

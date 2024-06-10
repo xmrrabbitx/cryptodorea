@@ -81,12 +81,17 @@ class cashbackController extends cashbackAbstract
 
         if (!empty($campaignName)) {
 
+
+            // unnecessary codes
+            /*
             $campaignList = get_option('campaign_list');
             $campaignModified = array_filter($campaignList, function ($list) use ($campaignName) {
                 return $list !== $campaignName;
             });
 
             update_option('campaign_list', $campaignModified);
+            */
+
             delete_transient($campaignName);
             delete_option($campaignName . '_contract_address');
 
@@ -99,14 +104,27 @@ class cashbackController extends cashbackAbstract
                 delete_option('campaign_list');
             }
 
-            // remove dorea_campaignlist_user from list
-            $key = array_search($campaignName, get_option('dorea_campaignlist_user'));
-            $campaignListUser = get_option('dorea_campaignlist_user');
-            unset($campaignListUser[$key]);
-            update_option('dorea_campaignlist_user', $campaignListUser);
 
-            if(empty(get_option('dorea_campaignlist_user'))){
-                delete_option('dorea_campaignlist_user');
+            if(get_option('dorea_campaignlist_user')) {
+                // remove dorea_campaignlist_user from list
+                $key = array_search($campaignName, get_option('dorea_campaignlist_user'));
+                $campaignListUser = get_option('dorea_campaignlist_user');
+                unset($campaignListUser[$key]);
+                update_option('dorea_campaignlist_user', $campaignListUser);
+
+                if (empty(get_option('dorea_campaignlist_user'))) {
+                    delete_option('dorea_campaignlist_user');
+                }
+            }
+
+
+            //remove dorea_campaigninfo_user
+            $campaignInfoUser = get_option('dorea_campaigninfo_user');
+            unset($campaignInfoUser[$campaignName]);
+            update_option('dorea_campaigninfo_user', $campaignInfoUser);
+
+            if(empty(get_option('dorea_campaigninfo_user'))){
+                delete_option('dorea_campaigninfo_user');
             }
 
         }
