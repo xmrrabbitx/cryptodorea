@@ -31,12 +31,10 @@ function paymentModal(){
                 // Payment Modal
                 print('
                 <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
-                        <lable>please write your wallet adddress:</lable>
-                        <input style="" id="doreaModalText" type="text" name="dorea-modal-text">
-                        <button id="dorea_claimCashback" type="button">claim cashback</button>
+                        <button id='.$keys.' class="_claimCashback" type="button">Claim '.$keys.' Cashback</button>
+                        <input id='.$keys.'_contractAddress type="hidden" value="'.$contractAddress.'" >
                 </div>
             ');
-                break;
             }
         }
     }
@@ -45,16 +43,24 @@ function paymentModal(){
        <script type="module">
         
             import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
-            
-            let doreaPaymentModalButton = document.getElementById("dorea_claimCashback");
-            doreaPaymentModalButton.addEventListener("click", function(){
-                    
+
+            let doreaPaymentModalButton = document.querySelectorAll("._claimCashback");
+            console.log(doreaPaymentModalButton)
+            doreaPaymentModalButton.forEach(
+                
+                (element) =>             
+           
+                element.addEventListener("click", function(){
+                  
                 setTimeout(delay, 500)
                 function delay(){
                  (async () => {
-                 let doreaPaymentModalButton = document.getElementById("dorea_claimCashback");
+                
                  if (window.ethereum) {
+                
                                       
+                         let conttractAddress = document.getElementById(element.id + "_contractAddress").value;
+         
                                       // change it to the real polygon network
                                       await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
@@ -96,21 +102,20 @@ function paymentModal(){
                                            });
                                             */
                            
-                                
-                                        //const provider = new ethers.JsonRpcProvider("https://polygon-amoy.g.alchemy.com/v2/LuZ5CnAEURDtdQRwm9VJlkHRQR29Kw_a");
-                                        //const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+
                                         const provider = new BrowserProvider(window.ethereum);
                             
                                         // Get the signer from the provider metamask
                                         const signer = await provider.getSigner();
                            
-                                        const contract = new ethers.Contract("'.$contractAddress.'", abi, signer);
+                                        const contract = new ethers.Contract(conttractAddress, abi, signer);
                            
+                                        const balance = await contract.get();
+                                        
+                                        console.log(balance)
+                                        
                                         const trxResult = await contract.pay([userAddress.toString()], BigInt("'.$amount.'" / 0.000000000000000001).toString());
-                                     
-                                        // check if trx is full done then redirect
-                                        console.log(trxResult)
-                                       
+                                        
                                        // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                   }
                            
@@ -126,7 +131,9 @@ function paymentModal(){
 
             })
 
-         
+                
+            )
+
         </script>    
 
     ');

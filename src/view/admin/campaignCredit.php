@@ -29,12 +29,12 @@ function dorea_cashback_campaign_credit()
     print('
                 
         <input id="creditAmount" type="text">
-        <button id="metamask" style="display:none">Fund your Campaign</button>
+        <button id="doreaFuund" style="">Fund your Campaign</button>
         <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
 
 
 
-        <script>
+        <script>          
          // Request access to Metamask
          setTimeout(delay, 1000)
          function delay(){
@@ -61,7 +61,6 @@ function dorea_cashback_campaign_credit()
            
         </script>
         <script type="module">
-        
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
          // Request access to Metamask
@@ -69,6 +68,7 @@ function dorea_cashback_campaign_credit()
          function delay(){
              (async () => {
 
+                 /*
                   if(window.ethereum._state.accounts.length > 0){
                      
                       document.getElementById("metamask").style.display = "none";
@@ -79,9 +79,10 @@ function dorea_cashback_campaign_credit()
                       document.getElementById("metamask").style.display = "block";
                       document.getElementById("metamaskDisconnect").style.display = "none";
                   }
+                  */
                   
-                    document.getElementById("metamask").addEventListener("click", async () => {
-                             
+                    document.getElementById("doreaFuund").addEventListener("click", async () => {
+   
                             let contractAmount = document.getElementById("creditAmount").value;
                             
                               if (window.ethereum) {
@@ -119,12 +120,12 @@ function dorea_cashback_campaign_credit()
                                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                        const userAddress = accounts[0];
                                       
-                                       
+                                       /*
                                        const userBalance = await window.ethereum.request({
                                              method: "eth_getBalance",
                                             params: [userAddress, "latest"]
                                        });
-                                        
+                                        */
                        
                             
                                     //const provider = new ethers.JsonRpcProvider("https://polygon-amoy.g.alchemy.com/v2/LuZ5CnAEURDtdQRwm9VJlkHRQR29Kw_a");
@@ -154,6 +155,9 @@ function dorea_cashback_campaign_credit()
                                         xhr.onreadystatechange = async function() {
                                             if (xhr.readyState === 4 && xhr.status === 200) {
                                                 
+                                                // remove wordpress prefix on production 
+                                                window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                            
                                             }
                                         }
                                     
@@ -161,8 +165,6 @@ function dorea_cashback_campaign_credit()
                                         
                                     });
                                     
-                                    // remove wordpress prefix on production 
-                                    window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                               }
                        
                 };

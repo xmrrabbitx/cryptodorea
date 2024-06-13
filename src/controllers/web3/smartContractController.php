@@ -108,7 +108,7 @@ class smartContractController extends smartContractAbstract
         //$eth = $web3->eth;
 
         $contract = new Contract('https://sepolia.infura.io/v3/6ced7b98fae94ba18b14324cf1331fd0', $compiledConract['abi']);
-//2441406250000000000
+
         function bcdechex($dec) {
             $hex = '';
             do {

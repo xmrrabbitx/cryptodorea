@@ -36,13 +36,21 @@ function cashback()
                     print(" <span>
                             
                             <label>" . $campaignList . "</label>
-                            <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='debouncedAddToCashbackCheckbox()'>
+                            <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='add_to_cashback_checkbox()'>
                         </span>
                     ");
                 }
             }
+            if(!$campaign->check($cashbackList)) {
+                print("
+                    </h4>
+                        
+                        <input id='dorea_add_to_cashback_address' type='text' placeholder='insert wallet address...' oninput='add_to_cashback_checkbox()'>
+                        <p id='dorea_add_to_cashback_address_error' style='display:none;color:red;'>wallet address could not be left empty!</p>
 
-            if($campaign->check($cashbackList)) {
+                    </p>
+                </div>");
+            }else{
                 print ("
                     <p>You already joined all cashback programs!</p>
                 ");
@@ -50,15 +58,6 @@ function cashback()
 
             // check and add to cash back program
             print("<script>
-                     let debounceTimeout;
-                    
-                        function debounce(func, wait) {
-                            return function(...args) {
-                                clearTimeout(debounceTimeout);
-                                debounceTimeout = setTimeout(() => func.apply(this, args), wait);
-                            };
-                        }
-    
                     function add_to_cashback_checkbox() {
                         
                         let dorea_add_to_cashback_checked = document.getElementsByClassName('dorea_add_to_cashback_checkbox_');
@@ -74,13 +73,33 @@ function cashback()
                                     if(dorea_add_to_cashback_checked[i].value !== ''){
                                             campaignlist.push(dorea_add_to_cashback_checked[i].value);
                                     }
-                                    
+                                    // throw border error on empty address
+                                    if(dorea_add_to_cashback_address.value === ''){
+                                 
+                                         dorea_add_to_cashback_address.style.border = '1px solid red';
+                                         document.getElementById('dorea_add_to_cashback_address_error').style.display = 'block';
+                                         break;
+                                    } else{
+                                  
+                                         dorea_add_to_cashback_address.style.border = '1px solid green';
+                                         document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                         
+                                    }
                                 }else {
-                                    
+                                    // throw border error on empty address
+                                    if(dorea_add_to_cashback_address.value !== ''){
+                                  
+                                         dorea_add_to_cashback_address.style.border = '1px solid green';
+                                         document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                         
+                                    }else{
+                                        // back to normal border 
+                                        dorea_add_to_cashback_address.style.border = '1px solid black';
+                                        document.getElementById('dorea_add_to_cashback_address_error').style.display = 'none';
+                                    }
                                 }
                             }
-                            
-                          
+                   
                             // remove wordpress prefix on production
                             let xhr = new XMLHttpRequest();
                             xhr.open('POST', '#', true);
@@ -93,10 +112,10 @@ function cashback()
                                    //console.log(xhr.responseText);
                                 }
                             };
-                               
-                            if(campaignlist.length > 0){ 
-                                console.log(campaignlist)
-                                xhr.send(JSON.stringify({'campaignlist':campaignlist}));
+                                 
+                            if(campaignlist.length > 0 && dorea_add_to_cashback_address.value !== '' && dorea_add_to_cashback_address.value.length === 42){ 
+                                let walletAddress = dorea_add_to_cashback_address.value;
+                                xhr.send(JSON.stringify({'campaignlist':campaignlist, 'walletAddress':walletAddress}));
                             }
                             
                             // Prevent the form from submitting (optional)
@@ -108,8 +127,6 @@ function cashback()
                          
                         
                     }
-                    
-                    const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 5000);
                 </script>");
 
         }

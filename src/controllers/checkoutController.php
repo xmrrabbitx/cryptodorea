@@ -42,10 +42,10 @@ class checkoutController extends checkoutAbstract
         return false;
     }
 
-    public function addtoList($campaignNames, $walletAddress)
+    public function addtoList($campaignNames)
     {
 
-        $this->checkoutModel->add($campaignNames, $walletAddress);
+        $this->checkoutModel->add($campaignNames);
 
     }
 
@@ -61,7 +61,7 @@ class checkoutController extends checkoutAbstract
 
             try {
 
-                $this->addtoList($campaignLists->campaignlist, $campaignLists->walletAddress);
+                $this->addtoList($campaignLists->campaignlist);
 
                 // throw new Exception('something went wrong!');
             } catch (Exception $error) {

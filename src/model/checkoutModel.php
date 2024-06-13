@@ -25,14 +25,8 @@ class checkoutModel extends checkoutModelAbstract
 
     }
 
-    public function walletAddress()
-    {
 
-        return get_option('dorea_walletAddress_user') !== false ? get_option('dorea_walletAddress_user') : null;
-
-    }
-
-    public function add($campaignNames, $walletAddress)
+    public function add($campaignNames)
     {
 
         $campaignList = $this->list();
@@ -45,17 +39,6 @@ class checkoutModel extends checkoutModelAbstract
             }
         } else if (count($campaignList) < 1) {
             add_option('dorea_campaignlist_user', $campaignNames);
-        }
-
-        $currentWalletAddress = $this->walletAddress();
-        if ($currentWalletAddress !== null) {
-
-            update_option('dorea_walletAddress_user', $walletAddress);
-
-        }else{
-
-            add_option('dorea_walletAddress_user', $walletAddress);
-
         }
 
     }
