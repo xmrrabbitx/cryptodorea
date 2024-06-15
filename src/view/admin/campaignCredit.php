@@ -127,23 +127,20 @@ function dorea_cashback_campaign_credit()
                                        });
                                         */
                        
-                            
-                                    //const provider = new ethers.JsonRpcProvider("https://polygon-amoy.g.alchemy.com/v2/LuZ5CnAEURDtdQRwm9VJlkHRQR29Kw_a");
-                                    //const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
                                     const provider = new BrowserProvider(window.ethereum);
                         
                                     // Get the signer from the provider metamask
                                     const signer = await provider.getSigner();
                         
-                                   // const privateKey = "0x37483b8eebc0281371d439a846b6114f2e6cda020d92453b89285306a099ff88"; // Replace with the private key of the account from Ganache
-                                   // const signer = new ethers.Wallet(privateKey, provider);
-                       
                                     const factory = new ContractFactory(abi, bytecode, signer);
-                                    
+                           
                                     //If your contract requires constructor args, you can specify them here
                                     const contract = await factory.deploy({
+                                    
+                                          _secret:secret,
                                           value: BigInt(contractAmount / 0.000000000000000001).toString(),
-                                          gasLimit :3000000
+                                          gasLimit :3000000,
+                                       
                                     }).then(function(transaction) {
                                         let contractAddress = transaction.target;
                                         

@@ -32,11 +32,11 @@ class checkoutController extends checkoutAbstract
 
             $campaignList = $this->checkoutModel->list();
             foreach ($campaignNames as $campaign) {
-                if (in_array($campaign, $campaignList)) {
+                if (!in_array($campaign, $campaignList)) {
                     return true;
                 }
             }
-
+            return false;
         }
 
         return false;

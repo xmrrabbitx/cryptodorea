@@ -42,7 +42,7 @@ function cashback()
                 }
             }
 
-            if($campaign->check($cashbackList)) {
+            if(!$campaign->check($cashbackList)) {
                 print ("
                     <p>You already joined all cashback programs!</p>
                 ");

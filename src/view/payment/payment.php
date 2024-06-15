@@ -45,7 +45,7 @@ function paymentModal(){
             import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
             let doreaPaymentModalButton = document.querySelectorAll("._claimCashback");
-            console.log(doreaPaymentModalButton)
+
             doreaPaymentModalButton.forEach(
                 
                 (element) =>             
@@ -59,7 +59,7 @@ function paymentModal(){
                  if (window.ethereum) {
                 
                                       
-                         let conttractAddress = document.getElementById(element.id + "_contractAddress").value;
+                         let contractAddress = document.getElementById(element.id + "_contractAddress").value;
          
                                       // change it to the real polygon network
                                       await window.ethereum.request({
@@ -89,7 +89,7 @@ function paymentModal(){
                                                 let response = JSON.parse(xhr.responseText);
                                                 let abi = response[0]
                                                 let bytecode = response[1]
-                                            //console.log(bytecode)
+                                      
                                            
                                            
                                            const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
@@ -107,16 +107,22 @@ function paymentModal(){
                             
                                         // Get the signer from the provider metamask
                                         const signer = await provider.getSigner();
+                                 
+                                        const contract = new ethers.Contract(contractAddress, abi, signer);
                            
-                                        const contract = new ethers.Contract(conttractAddress, abi, signer);
-                           
-                                        const balance = await contract.get();
+                                        const balance = await contract.getBalance();
+                                        const test = await contract.show();
+                                        console.log(test)
+
+                                        //if(balance !== 0n){
+                                       
+                                          //  const trxResult = await contract.pay([userAddress.toString()], BigInt("'.$amount.'" / 0.000000000000000001).toString());
+                        
+                                        //}else{
+                                             
+                                            // show error popup message
+                                        //}
                                         
-                                        console.log(balance)
-                                        
-                                        const trxResult = await contract.pay([userAddress.toString()], BigInt("'.$amount.'" / 0.000000000000000001).toString());
-                                        
-                                       // window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                   }
                            
                     };
@@ -137,22 +143,4 @@ function paymentModal(){
         </script>    
 
     ');
-}
-
-
-/**
- * get contract address to claim cashback
- */
-add_action('wp', 'dorea_claim_contract_address');
-
-function dorea_claim_contract_address()
-{
-
-    $contractAddress = get_option('dorea_contract_address');
-    $responseArray = [$contractAddress];
-    //header('Content-Type: application/json');
-
-    // Echo the JSON-encoded response
-    return json_encode($responseArray);
-
 }
