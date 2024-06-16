@@ -4,12 +4,10 @@
  * Crypto Cashback Campaign Credit
  */
 
-use Cryptodorea\Woocryptodorea\controllers\web3\smartContractController;
-use Web3\Contract;
-use Web3\Eth;
-use Web3\Providers\HttpProvider;
-use Web3\Web3;
-use Web3\Utils;
+
+
+use Cryptodorea\Woocryptodorea\utilities\Encrypt;
+
 
 
 function dorea_cashback_campaign_credit()
@@ -26,13 +24,16 @@ function dorea_cashback_campaign_credit()
        wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
 
+    $encrypt = new Encrypt();
+    $encryptedSecret = $encrypt->encrypt(get_transient($campaignName));
+
+
+
     print('
                 
         <input id="creditAmount" type="text">
         <button id="doreaFuund" style="">Fund your Campaign</button>
         <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
-
-
 
         <script>          
          // Request access to Metamask
@@ -133,14 +134,15 @@ function dorea_cashback_campaign_credit()
                                     const signer = await provider.getSigner();
                         
                                     const factory = new ContractFactory(abi, bytecode, signer);
-                           
+                          
                                     //If your contract requires constructor args, you can specify them here
-                                    const contract = await factory.deploy({
-                                    
-                                          _secret:secret,
+                                    const contract = await factory.deploy(
+                                        "'.$encryptedSecret.'",
+                                        {
+                                          
                                           value: BigInt(contractAmount / 0.000000000000000001).toString(),
                                           gasLimit :3000000,
-                                       
+                                          
                                     }).then(function(transaction) {
                                         let contractAddress = transaction.target;
                                         
@@ -153,6 +155,7 @@ function dorea_cashback_campaign_credit()
                                             if (xhr.readyState === 4 && xhr.status === 200) {
                                                 
                                                 // remove wordpress prefix on production 
+                                                
                                                 window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                             
                                             }

@@ -17,6 +17,9 @@ function paymentModal(){
 
     $contractAddress = null;
     $amount = null;
+    $secret = null;
+    $campaignCount = null;
+    $shoppingCount = null;
     $campaignInfoUser = get_option('dorea_campaigninfo_user');
     if($campaignInfoUser) {
         foreach ($campaignInfoUser as $keys => $values) {
@@ -25,6 +28,9 @@ function paymentModal(){
             if ($values['count'] >= $campaign['shoppingCount']) {
 
                 $contractAddress = get_option($keys . '_contract_address');
+                $secret = get_option($keys . '_secretHash');
+                $campaignCount = $campaign['shoppingCount'];
+                $shoppingCount = $values['count'];
 
                 $amount = $campaign['cryptoAmount'];
 
@@ -111,17 +117,15 @@ function paymentModal(){
                                         const contract = new ethers.Contract(contractAddress, abi, signer);
                            
                                         const balance = await contract.getBalance();
-                                        const test = await contract.show();
-                                        console.log(test)
-
-                                        //if(balance !== 0n){
+                                      
+                                        if(balance !== 0n){
                                        
-                                          //  const trxResult = await contract.pay([userAddress.toString()], BigInt("'.$amount.'" / 0.000000000000000001).toString());
+                                            const trxResult = await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'");
                         
-                                        //}else{
+                                        }else{
                                              
                                             // show error popup message
-                                        //}
+                                        }
                                         
                                   }
                            
