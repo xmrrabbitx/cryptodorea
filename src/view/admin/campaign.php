@@ -13,9 +13,13 @@ function dorea_cashback_campaign_content(){
     $dateCalculator = new dateCalculator();
     $currentTime = $dateCalculator->currentDate();
     $currentDate = $dateCalculator->unixToMonth($currentTime);
+
+    //remove  after test
+    //$currentDate = "December";
+
     $currentDay = (int) $dateCalculator->unixToDay($currentTime);
-    $futureDate = $dateCalculator->futureDate(7,1,2022);
-    $futureDate = $dateCalculator->unixToMonth($futureDate);
+    //$futureDate = $dateCalculator->futureDate(7,1,2022);
+    //$futureDate = $dateCalculator->unixToMonth($futureDate);
 
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
@@ -48,14 +52,22 @@ function dorea_cashback_campaign_content(){
             <select name='startDateMonth' id='startDateMonth'>
             ");
 
+            $index = 0;
             foreach($monthsList as $month){
 
+                if($index < 9){
+                    $index = '0' . $index +1;
+                }else {
+                    $index = $index + 1;
+                }
+
                 if($month === $currentDate){
-                    print("<option value='".$month."' selected>".$month."</option>");
+                    print("<option value='".$index."' selected>".$month."</option>");
                 }
                 else{
-                    print("<option value='".$month."'>".$month."</option>");
+                    print("<option value='".$index."'>".$month."</option>");
                 }
+
             }
 
             print("</select>
@@ -81,16 +93,34 @@ function dorea_cashback_campaign_content(){
             <select name='expDateMonth' id='expDateMonth'>
             ");
             $next = "";
+            $index = 0;
             foreach($monthsList as $month){
-                $nextMonth = next($monthsList);
-                if($month === $currentDate){ 
-                    print("<option value='".$month."'>".$month."</option>");
-                    print("<option value='".$nextMonth ."' selected>".$nextMonth."</option>");
-                    $next = $nextMonth;
-                }elseif($month !== $next){
-                    print("<option value='".$month."'>".$month."</option>");
+                if($index < 9){
+                    $index = '0' . $index +1;
+                }else {
+                    $index = $index + 1;
                 }
-              
+
+                if($currentDate === "December"){
+                    $nextMonth = $monthsList[0];
+                    $next = $nextMonth;
+                }else{
+                    $nextMonth = next($monthsList);
+                }
+
+                if($month === $currentDate){
+
+                    print("<option value='".$index."'>".$month."</option>");
+                    if($nextMonth === $monthsList[0]){
+                        $index = '01';
+                    }
+                    print("<option value='".$index."' selected>".$nextMonth."</option>");
+                    $next = $nextMonth;
+
+                }elseif($month !== $next){
+                    print("<option value='".$index."'>".$month."</option>");
+                }
+
             }
 
             print("</select>
@@ -186,5 +216,20 @@ function dorea_admin_delete_campaign(){
     // Redirect back to the previous page after deletion
     wp_redirect(wp_get_referer());
     exit;
+
+}
+
+/**
+ * auto remove outdated campaign
+ */
+add_action('wp', 'dorea_autoremove_campaign');
+function dorea_autoremove_campaign()
+{
+    $d=mktime(00, 00, 00, 10, 12, 2014);
+    echo "Created date is " . date("Y-m-d", $d);
+    //var_dump(date('y-m-d'));
+    $campaignName = get_option('campaign_list')[0];
+   // var_dump(get_transient($campaignName));
+   // var_dump('autoremove check triggere');
 
 }

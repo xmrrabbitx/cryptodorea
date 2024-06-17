@@ -81,17 +81,6 @@ class cashbackController extends cashbackAbstract
 
         if (!empty($campaignName)) {
 
-
-            // unnecessary codes
-            /*
-            $campaignList = get_option('campaign_list');
-            $campaignModified = array_filter($campaignList, function ($list) use ($campaignName) {
-                return $list !== $campaignName;
-            });
-
-            update_option('campaign_list', $campaignModified);
-            */
-
             delete_transient($campaignName);
             delete_option($campaignName . '_contract_address');
 
