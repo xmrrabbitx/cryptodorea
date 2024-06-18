@@ -51,4 +51,33 @@ class dateCalculator extends dateCalculatorAbstract
 
     }
 
+    /**
+     * calculate expire date for campaign creation process
+     */
+    public function expDateCampaign($startDateMonth, $startDateDay, $expDate)
+    {
+        $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $daysListCount = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+
+        $remainedDays = $daysListCount[(int)$startDateMonth-1] - (int)$startDateDay;
+
+        if($expDate === 'weekly'){
+            if($remainedDays < 7){
+                $exp = 7 - $remainedDays;
+
+            }else{
+                $exp = (int)$startDateDay + 7;
+
+            }
+        }
+
+
+        if($exp < 9){
+            $exp = '0' . $exp;
+        }
+
+        return (string)$exp;
+    }
+
 }
