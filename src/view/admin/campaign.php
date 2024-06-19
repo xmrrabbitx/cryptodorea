@@ -17,7 +17,7 @@ function dorea_cashback_campaign_content(){
     $currentDate = $dateCalculator->unixToMonth($currentTime);
 
     //remove  after test
-    //$currentDate = "December";
+    //$currentDate = "January";
 
     $currentDay = (int) $dateCalculator->unixToDay($currentTime);
     //$futureDate = $dateCalculator->futureDate(7,1,2022);
@@ -58,7 +58,7 @@ function dorea_cashback_campaign_content(){
             foreach($monthsList as $month){
 
                 if($index < 9){
-                    $index = '0' . $index +1;
+                    $index = '0' . $index + 1;
                 }else {
                     $index = $index + 1;
                 }
@@ -76,15 +76,24 @@ function dorea_cashback_campaign_content(){
                     <span>
                     <select name='startDateDay' id='startDateDay'>");
 
+            $index=0;
             for($days=1;$days <= $daysList[$currentDate]; $days++){
+
+                if($index < 9){
+                    $index = '0' . $index + 1;
+                }else {
+                    $index = $index + 1;
+                }
+
                 if($days === $currentDay){
                     print("
-                    <option value='".$days."' selected>".$days."</option>
+                    <option value='".$index."' selected>".$days."</option>
+                    ");
+                }else {
+                    print("
+                    <option value='".$index."'>" . $days . "</option>
                     ");
                 }
-                print("
-                    <option value='".$days."'>".$days."</option>
-                    ");
             }
             
             print("</select>
@@ -179,8 +188,6 @@ function dorea_admin_cashback_campaign(){
 
             $dateCalculator = new dateCalculator();
             $expDate = $dateCalculator->expDateCampaign($startDateMonth, $startDateDay, $expDate);
-var_dump($expDate);
-            die('stoppp');
 
             $cashback = new cashbackController();
             if(strlen($campaignName) < 25 ){
@@ -190,7 +197,7 @@ var_dump($expDate);
                     delete_option('campaign_list');
                 }
 
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay);
+                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay']);
 
                 // head to the admin page of Dorea
                 wp_redirect('admin.php?page=credit&cashbackName='.$campaignName);
@@ -242,6 +249,5 @@ function dorea_autoremove_campaign()
 
     $autoremove = new autoremoveController();
     $autoremove->remove($campaignName);
-
 
 }

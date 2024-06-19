@@ -41,7 +41,7 @@ class dateCalculator extends dateCalculatorAbstract
     }
 
     /**
-     * calculate unix time in the future date and time
+     * calculate date time in the future
      * @param $date in Date Format
      */
     public function futureDate($month, $day, $year)
@@ -54,8 +54,10 @@ class dateCalculator extends dateCalculatorAbstract
     /**
      * calculate expire date for campaign creation process
      */
-    public function expDateCampaign($startDateMonth, $startDateDay, $expDate)
+    public function expDateCampaign($startDateMonth, $startDateDay, $expDate):array
     {
+
+
         $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $daysListCount = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -64,20 +66,40 @@ class dateCalculator extends dateCalculatorAbstract
 
         if($expDate === 'weekly'){
             if($remainedDays < 7){
-                $exp = 7 - $remainedDays;
-
+                $expDay = 7 - $remainedDays;
             }else{
-                $exp = (int)$startDateDay + 7;
+                $expDay = (int)$startDateDay + 7;
+                $expMonth = $startDateMonth;
+            }
+        }elseif($expDate === 'monthly'){
+            if($remainedDays < 30){
+                $expDay = 30 - $remainedDays;
+            }else{
+                $expDay = $remainedDays;
+                $expMonth = $startDateMonth;
+            }
 
+
+        }
+
+
+        if(!isset($expMonth)){
+            if((int)$startDateMonth === 12){
+                $expMonth = 1;
+            }else{
+                $expMonth = (int)$startDateMonth + 1;
             }
         }
 
-
-        if($exp < 9){
-            $exp = '0' . $exp;
+        if($expDay < 9){
+            $expDay = '0' . $expDay;
+        }
+        if((int)$expMonth < 9){
+            $expMonth = '0' . (int)$expMonth;
         }
 
-        return (string)$exp;
+        return ['expDay'=>$expDay, 'expMonth'=>(string)$expMonth ?? $startDateMonth];
+
     }
 
 }
