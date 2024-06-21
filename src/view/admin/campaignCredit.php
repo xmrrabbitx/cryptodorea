@@ -89,6 +89,56 @@ function dorea_cashback_campaign_credit()
                               if (window.ethereum) {
                                   
                                   // change it to the real polygon network
+                                  /*
+                                   await window.ethereum.request({
+                                      method: "wallet_addEthereumChain",
+                                      params: [{
+                                        //chainId: "0xE708",
+                                        chainId: "0xE705",
+                                        //rpcUrls: ["https://base.blockpi.network/v1/rpc/public"],
+                                        rpcUrls: ["https://linea-sepolia.blockpi.network/v1/rpc/public"],
+                                        chainName: "linea sepolia",
+                                        nativeCurrency: {
+                                          name: "ETH",
+                                          symbol: "ETH",
+                                          decimals: 18
+                                        },
+                                        blockExplorerUrls: ["https://etherscan.io/"]
+                                      }]
+                                  });
+                                  /*
+                                  await window.ethereum.request({
+                                      method: "wallet_addEthereumChain",
+                                      params: [{
+                                        chainId: "0x14A34",
+                                        rpcUrls: ["https://sepolia.base.org"],
+                                        chainName: "Base Network",
+                                        nativeCurrency: {
+                                          name: "ETH",
+                                          symbol: "ETH",
+                                          decimals: 18
+                                        },
+                                        blockExplorerUrls: ["https://sepolia-explorer.base.org"]
+                                      }]
+                                  });
+                                  /*
+                                  await window.ethereum.request({
+                                      method: "wallet_addEthereumChain",
+                                      params: [{
+                                        chainId: "0x2105",
+                                        rpcUrls: ["https://mainnet.base.org"],
+                                        chainName: "Base Network",
+                                        nativeCurrency: {
+                                          name: "ETH",
+                                          symbol: "ETH",
+                                          decimals: 18
+                                        },
+                                        blockExplorerUrls: ["https://base.blockscout.com"]
+                                      }]
+                                  });
+                                  */
+                                   
+                                  
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
@@ -104,7 +154,8 @@ function dorea_cashback_campaign_credit()
                                       }]
                                   });
                                   
-                                   const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                                  
+                                const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
 
                                 // get abi and bytecode
                                 let xhr = new XMLHttpRequest();
@@ -288,3 +339,4 @@ function dorea_contract_address()
 
 
 }
+

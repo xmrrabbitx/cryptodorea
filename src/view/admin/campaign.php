@@ -106,55 +106,7 @@ function dorea_cashback_campaign_content(){
                  <option value='monthly'>Monthly</option>
                  <option value='yearly'>Yearly</option>
             ");
-            /*
-            $next = "";
-            $index = 0;
-            foreach($monthsList as $month){
-                if($index < 9){
-                    $index = '0' . $index +1;
-                }else {
-                    $index = $index + 1;
-                }
 
-                if($currentDate === "December"){
-                    $nextMonth = $monthsList[0];
-                    $next = $nextMonth;
-                }else{
-                    $nextMonth = next($monthsList);
-                }
-
-                if($month === $currentDate){
-
-                    print("<option value='".$index."'>".$month."</option>");
-                    if($nextMonth === $monthsList[0]){
-                        $index = '01';
-                    }
-                    print("<option value='".$index."' selected>".$nextMonth."</option>");
-                    $next = $nextMonth;
-
-                }elseif($month !== $next){
-                    print("<option value='".$index."'>".$month."</option>");
-                }
-
-            }
-
-
-            print("</select>
-                <span><select name='expDateDay' id='expDateDay'>");
-
-            $nextDay = 30 - ($daysList[$currentDate] - $currentDay);
-            for($days=1; $days <= $daysList[$next]; $days++){
-                if($days === $nextDay){
-                    print("
-                    <option value='".$days."' selected>".$days."</option>
-                    ");
-                }
-                print("
-                    <option value='".$days."'>".$days."</option>
-                    ");
-            }
-            */
-            
             print("</select>
                     </span>
                     </br>
@@ -180,7 +132,7 @@ function dorea_admin_cashback_campaign(){
        
             $campaignName = htmlspecialchars($_POST['campaignName']);
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
-            $cryptoAmount = (int)htmlspecialchars($_POST['cryptoAmount']);
+            $cryptoAmount = (float)htmlspecialchars($_POST['cryptoAmount']);
             $shoppingCount = (int)htmlspecialchars($_POST['shoppingCount']);
             $startDateMonth = htmlspecialchars($_POST['startDateMonth']);
             $startDateDay = htmlspecialchars($_POST['startDateDay']);
@@ -245,7 +197,6 @@ function dorea_autoremove_campaign()
 {
 
     $campaignName = get_option('campaign_list');
-    var_dump('autoremove check triggere');
 
     $autoremove = new autoremoveController();
     $autoremove->remove($campaignName);

@@ -119,7 +119,7 @@ function paymentModal(){
                                         const balance = await contract.getBalance();
                                       
                                         if(balance !== 0n){
-                                       
+
                                             const trxResult = await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'");
                         
                                         }else{
