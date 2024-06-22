@@ -93,7 +93,6 @@ class cashbackController extends cashbackAbstract
                 delete_option('campaign_list');
             }
 
-
             if(get_option('dorea_campaignlist_user')) {
                 // remove dorea_campaignlist_user from list
                 $key = array_search($campaignName, get_option('dorea_campaignlist_user'));
@@ -115,6 +114,7 @@ class cashbackController extends cashbackAbstract
             if(empty(get_option('dorea_campaigninfo_user'))){
                 delete_option('dorea_campaigninfo_user');
             }
+
 
         }
 

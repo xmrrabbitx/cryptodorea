@@ -172,49 +172,49 @@ function dorea_cashback_campaign_credit()
                                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                        const userAddress = accounts[0];
                                       
-                                       /*
+                                       
                                        const userBalance = await window.ethereum.request({
                                              method: "eth_getBalance",
                                             params: [userAddress, "latest"]
                                        });
-                                        */
+                                        
                        
-                                    const provider = new BrowserProvider(window.ethereum);
-                        
-                                    // Get the signer from the provider metamask
-                                    const signer = await provider.getSigner();
-                        
-                                    const factory = new ContractFactory(abi, bytecode, signer);
-                          
-                                    //If your contract requires constructor args, you can specify them here
-                                    const contract = await factory.deploy(
-                                        "'.$encryptedSecret.'",
-                                        {
-                                          
-                                          value: BigInt(contractAmount / 0.000000000000000001).toString(),
-                                          gasLimit :3000000,
-                                          
-                                    }).then(function(transaction) {
-                                        let contractAddress = transaction.target;
-                                        
-                                        // get contract address
-                                        let xhr = new XMLHttpRequest();
-                                
-                                        // remove wordpress prefix on production
-                                        xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName='.$campaignName.'", true);
-                                        xhr.onreadystatechange = async function() {
-                                            if (xhr.readyState === 4 && xhr.status === 200) {
-                                                
-                                                // remove wordpress prefix on production 
-                                                
-                                                window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                        const provider = new BrowserProvider(window.ethereum);
+                            
+                                        // Get the signer from the provider metamask
+                                        const signer = await provider.getSigner();
+                            
+                                        const factory = new ContractFactory(abi, bytecode, signer);
+                              
+                                        //If your contract requires constructor args, you can specify them here
+                                        const contract = await factory.deploy(
+                                            "'.$encryptedSecret.'",
+                                            {
+                                              
+                                              value: BigInt(contractAmount / 0.000000000000000001).toString(),
+                                              gasLimit :3000000,
+                                              
+                                        }).then(function(transaction) {
+                                            let contractAddress = transaction.target;
                                             
-                                            }
-                                        }
+                                            // get contract address
+                                            let xhr = new XMLHttpRequest();
                                     
-                                        xhr.send(JSON.stringify({"contractAddress":contractAddress}));
+                                            // remove wordpress prefix on production
+                                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName='.$campaignName.'", true);
+                                            xhr.onreadystatechange = async function() {
+                                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                                    
+                                                    // remove wordpress prefix on production 
+                                                    
+                                                    window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                                
+                                                }
+                                            }
                                         
-                                    });
+                                            xhr.send(JSON.stringify({"contractAddress":contractAddress}));
+                                            
+                                            });
                                     
                               }
                        
