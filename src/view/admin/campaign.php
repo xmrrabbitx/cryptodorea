@@ -213,7 +213,7 @@ function dorea_admin_cashback_campaign(){
 
                 }
 
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay']);
+                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay']);
 
                 // head to the admin page of Dorea
                 wp_redirect('admin.php?page=credit&cashbackName=' . $campaignName);
@@ -233,7 +233,6 @@ function dorea_admin_cashback_campaign(){
 add_action('admin_post_delete_campaign', 'dorea_admin_delete_campaign');
 
 function dorea_admin_delete_campaign(){
-
 
     if ( !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'delete_campaign_nonce') ) {
         die('Security check failed');

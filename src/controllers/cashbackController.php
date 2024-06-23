@@ -18,12 +18,12 @@ class cashbackController extends cashbackAbstract
 
     }
 
-    public function create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay)
+    public function create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateYear, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay)
     {
 
         $expCalculator = new expCalculator();
 
-        $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDateMonth' => $startDateMonth, 'startDateDay' => $startDateDay, 'expDateMonth' => $expDateMonth, 'expDateDay' => $expDateDay];
+        $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDateYear'=>$startDateYear, 'startDateMonth' => $startDateMonth, 'startDateDay' => $startDateDay, 'expDateMonth' => $expDateMonth, 'expDateDay' => $expDateDay];
 
         if (empty($this->list()) || !in_array($campaignName, $this->list())) {
             if (isset($arr)) {
@@ -105,12 +105,12 @@ class cashbackController extends cashbackAbstract
                 }
             }
 
-
             //remove dorea_campaigninfo_user
             $campaignInfoUser = get_option('dorea_campaigninfo_user');
-            unset($campaignInfoUser[$campaignName]);
-            update_option('dorea_campaigninfo_user', $campaignInfoUser);
-
+            if($campaignInfoUser) {
+                unset($campaignInfoUser[$campaignName]);
+                update_option('dorea_campaigninfo_user', $campaignInfoUser);
+            }
             if(empty(get_option('dorea_campaigninfo_user'))){
                 delete_option('dorea_campaigninfo_user');
             }
