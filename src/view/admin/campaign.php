@@ -15,6 +15,7 @@ function dorea_cashback_campaign_content(){
     $dateCalculator = new dateCalculator();
     $currentTime = $dateCalculator->currentDate();
     $currentDate = $dateCalculator->unixToMonth($currentTime);
+    $currentYear = $dateCalculator->unixToYear($currentTime);
 
     //remove  after test
     //$currentDate = "January";
@@ -67,21 +68,34 @@ function dorea_cashback_campaign_content(){
             <select name='startDateMonth' id='startDateMonth'>
     ");
 
-            $index = 0;
+            $index = array_search($currentDate,$monthsList);
+            $nextYear = $currentYear;
             foreach($monthsList as $month){
 
-                if($index < 9){
-                    $index = '0' . $index + 1;
-                }else {
-                    $index = $index + 1;
+                // fix this part
+                if($index > (count($monthsList)-1)){
+                    $index = 0;
+                    $nextYear = (int)$currentYear + 1;
                 }
 
-                if($month === $currentDate){
-                    print("<option value='".$index."' selected>".$month."</option>");
+
+                if($index < 9){
+                    $monthNum = '0' . $index + 1;
+                }else {
+                    $monthNum = $index + 1;
+                }
+
+                if($monthsList[$index] === $currentDate){
+                    print("<option value='".$monthNum . "_" . $nextYear."' selected>".$monthsList[$index]."</option>");
+
                 }
                 else{
-                    print("<option value='".$index."'>".$month."</option>");
+                    print("<option value='".$monthNum . "_" . $nextYear."'>".$monthsList[$index]."</option>");
+
                 }
+
+                $index += 1;
+
 
             }
 
@@ -117,7 +131,6 @@ function dorea_cashback_campaign_content(){
                 <select name='expDate' id='expDate'>
                  <option value='weekly'>Weekly</option>
                  <option value='monthly'>Monthly</option>
-                 <option value='yearly'>Yearly</option>
             ");
 
             print("</select>
@@ -147,7 +160,7 @@ function dorea_admin_cashback_campaign(){
             $campaignName = htmlspecialchars($_POST['campaignName']);
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
 
-            if(!is_float($_POST['cryptoAmount'])){
+            if(!is_numeric($_POST['cryptoAmount'])){
 
                 //throws error on not existed campaign
                 $redirect_url = add_query_arg('cryptoAmountError', urlencode('Error: Amount must be numeric!'), $referer);
@@ -159,7 +172,10 @@ function dorea_admin_cashback_campaign(){
 
             $cryptoAmount = (float)htmlspecialchars($_POST['cryptoAmount']);
             $shoppingCount = (int)htmlspecialchars($_POST['shoppingCount']);
-            $startDateMonth = htmlspecialchars($_POST['startDateMonth']);
+            $startDate = htmlspecialchars($_POST['startDateMonth']);
+            $startDateMonth = explode('_',$startDate)[0];
+            $startDateYear = explode('_',$startDate)[1];
+
             $startDateDay = htmlspecialchars($_POST['startDateDay']);
             $expDate = htmlspecialchars($_POST['expDate']);
 

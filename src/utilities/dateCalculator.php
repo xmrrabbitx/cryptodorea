@@ -22,10 +22,21 @@ class dateCalculator extends dateCalculatorAbstract
      * calculate unix date in Month Format
      * @param $date in Date Format
      */
+    public function unixToYear($time)
+    {
+
+        return date('Y', $time);
+
+    }
+
+    /**
+     * calculate unix date in Month Format
+     * @param $date in Date Format
+     */
     public function unixToMonth($time)
     {
 
-        return $date = date('F', $time);
+        return date('F', $time);
 
     }
 
@@ -36,7 +47,7 @@ class dateCalculator extends dateCalculatorAbstract
     public function unixToday($time)
     {
 
-        return $date = date('d', $time);
+        return date('d', $time);
 
     }
 
