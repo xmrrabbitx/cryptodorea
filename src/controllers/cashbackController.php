@@ -115,7 +115,6 @@ class cashbackController extends cashbackAbstract
                 delete_option('dorea_campaigninfo_user');
             }
 
-
         }
 
     }

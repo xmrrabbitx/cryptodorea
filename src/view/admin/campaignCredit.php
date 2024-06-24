@@ -35,6 +35,8 @@ function dorea_cashback_campaign_credit()
         <button id="doreaFuund" style="">Fund your Campaign</button>
         <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
 
+        <p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
+
         <script>          
          // Request access to Metamask
          setTimeout(delay, 1000)
@@ -85,7 +87,19 @@ function dorea_cashback_campaign_credit()
                     document.getElementById("doreaFuund").addEventListener("click", async () => {
    
                             let contractAmount = document.getElementById("creditAmount").value;
+                            const metamaskError = document.getElementById("dorea_metamask_error");
                             
+                            if(!Number.isInteger(parseInt(contractAmount))){
+                                
+                                metamaskError.style.display = "block";
+                                const errorText = document.createTextNode("cryptocurrency amount must be in the number format!");
+                                metamaskError.appendChild(errorText);
+                                return false;
+                                
+                            }else{
+                                  metamaskError.style.display = "none";
+                            }
+                           
                               if (window.ethereum) {
                                   
                                   // change it to the real polygon network
@@ -93,11 +107,11 @@ function dorea_cashback_campaign_credit()
                                    await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
-                                        //chainId: "0xE708",
-                                        chainId: "0xE705",
-                                        //rpcUrls: ["https://base.blockpi.network/v1/rpc/public"],
-                                        rpcUrls: ["https://linea-sepolia.blockpi.network/v1/rpc/public"],
-                                        chainName: "linea sepolia",
+                                        chainId: "0x2105",
+                                        //chainId: "0xE705",
+                                        rpcUrls: ["https://base.blockpi.network/v1/rpc/public"],
+                                        //rpcUrls: ["https://linea-sepolia.blockpi.network/v1/rpc/public"],
+                                        chainName: "Base",
                                         nativeCurrency: {
                                           name: "ETH",
                                           symbol: "ETH",
@@ -136,8 +150,8 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["https://base.blockscout.com"]
                                       }]
                                   });
-                                  */
-                                   
+                                  
+                                   */
                                   
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
@@ -154,7 +168,7 @@ function dorea_cashback_campaign_credit()
                                       }]
                                   });
                                   
-                                  
+                                   
                                 const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
 
                                 // get abi and bytecode
@@ -169,14 +183,26 @@ function dorea_cashback_campaign_credit()
                                             let bytecode = response[1]
                                       
                                        
-                                       const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-                                       const userAddress = accounts[0];
+                                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                                        const userAddress = accounts[0];
                                       
                                        
-                                       const userBalance = await window.ethereum.request({
+                                        const userBalance = await window.ethereum.request({
                                              method: "eth_getBalance",
                                             params: [userAddress, "latest"]
-                                       });
+                                        });
+
+                                        // check balance of metamask wallet 
+                                        if(userBalance < 0.003){
+                                            
+                                            metamaskError.style.display = "block";
+                                            const errorText = document.createTextNode("not enough balance to support fee. please fund your wallet at least 0.003 ETH!");
+                                            metamaskError.appendChild(errorText);
+                                            return false;
+                                            
+                                        }else{
+                                            metamaskError.style.display = "none";
+                                        }
                                         
                        
                                         const provider = new BrowserProvider(window.ethereum);
@@ -197,6 +223,7 @@ function dorea_cashback_campaign_credit()
                                         }).then(function(transaction) {
                                             let contractAddress = transaction.target;
                                             
+                                            console.log(contractAddress)
                                             // get contract address
                                             let xhr = new XMLHttpRequest();
                                     
@@ -206,7 +233,6 @@ function dorea_cashback_campaign_credit()
                                                 if (xhr.readyState === 4 && xhr.status === 200) {
                                                     
                                                     // remove wordpress prefix on production 
-                                                    
                                                     window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                                 
                                                 }
@@ -240,45 +266,7 @@ function dorea_cashback_campaign_credit()
     ');
 
 
-
 }
-
-/**
- * Campaign Credit
- */
-add_action('admin_post_campaign_credit_charge', 'dorea_admin_campaign_credit_charge');
-
-function dorea_admin_campaign_credit_charge()
-{
-    if(isset($_POST['campaignName'])) {
-
-        $campaignName = $_POST['campaignName'];
-
-        $doreaWeb3 = new smartContractController();
-        $doreaWeb3->getAmount($_POST['amount'], $campaignName);
-    }
-}
-
-
-add_action('admin_menu', 'dorea_admin_campaign_smart_contract');
-function dorea_admin_campaign_smart_contract()
-{
-/*
-    $contractInfo = json_decode(file_get_contents('php://input', true));
-
-    if (isset($contractInfo)) {
-         $doreaWeb3 = new smartContractController();
-         $compiledConract = $doreaWeb3->compile();
-
-         if($compiledConract){
-             $doreaWeb3->deployContract($contractInfo, $compiledConract);
-         }
-
-    }
-*/
-}
-
-
 
 
 /**
