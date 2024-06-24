@@ -40,6 +40,8 @@ function paymentModal(){
                         <button id='.$keys.' class="_claimCashback" type="button">Claim '.$keys.' Cashback</button>
                         <input id='.$keys.'_contractAddress type="hidden" value="'.$contractAddress.'" >
                 </div>
+                
+                <p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
             ');
             }
         }
@@ -66,7 +68,8 @@ function paymentModal(){
                 
                                       
                          let contractAddress = document.getElementById(element.id + "_contractAddress").value;
-         
+                         const metamaskError = document.getElementById("dorea_metamask_error");
+                            
                                       // change it to the real polygon network
                                       await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
@@ -101,14 +104,24 @@ function paymentModal(){
                                            const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                            const userAddress = accounts[0];
                                           
-                                           /*
+                                           
                                            const userBalance = await window.ethereum.request({
                                                  method: "eth_getBalance",
                                                 params: [userAddress, "latest"]
                                            });
-                                            */
+                                           
+                                           // check balance of metamask wallet 
+                                            if(userBalance < 0.003){
+                                            
+                                                metamaskError.style.display = "block";
+                                                const errorText = document.createTextNode("not enough balance to support fee. please fund your wallet at least 0.003 ETH!");
+                                                metamaskError.appendChild(errorText);
+                                                return false;
+                                            
+                                            }else{
+                                                metamaskError.style.display = "none";
+                                            }
                            
-
                                         const provider = new BrowserProvider(window.ethereum);
                             
                                         // Get the signer from the provider metamask
@@ -119,12 +132,17 @@ function paymentModal(){
                                         const balance = await contract.getBalance();
                                       
                                         if(balance !== 0n){
-
+                                            
+                                            metamaskError.style.display = "none";
                                             const trxResult = await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'");
-                        
+                       
                                         }else{
                                              
                                             // show error popup message
+                                              metamaskError.style.display = "block";
+                                              const errorText = document.createTextNode("Sorry, this campaign reached to the end!");
+                                              metamaskError.appendChild(errorText);
+                                              return false;
                                         }
                                         
                                   }

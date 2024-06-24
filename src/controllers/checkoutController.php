@@ -28,7 +28,7 @@ class checkoutController extends checkoutAbstract
     public function check($campaignNames)
     {
 
-        if ($this->checkoutModel->list()) {
+        if ($this->checkoutModel->list() && !empty($this->checkoutModel->list())){
 
             $campaignList = $this->checkoutModel->list();
             foreach ($campaignNames as $campaign) {
@@ -37,9 +37,10 @@ class checkoutController extends checkoutAbstract
                 }
             }
             return false;
+        }else{
+            return true;
         }
 
-        return false;
     }
 
     public function addtoList($campaignNames)

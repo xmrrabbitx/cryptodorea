@@ -28,6 +28,10 @@ function dorea_cashback_campaign_content(){
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
     print("campaign page");
+    $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
+    if($emptyError){
+        print("<span style='color:#ff5d5d;'>$emptyError</span>");
+    }
     print("
         </br>
         <form method='POST' action='".esc_url(admin_url('admin-post.php'))."' id='cashback_campaign'>
@@ -221,7 +225,15 @@ function dorea_admin_cashback_campaign(){
             }
             
            
-    }    
+    }else{
+
+        //throws error on empty
+        $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('Error: some feilds left empty!'), $referer);
+
+        wp_redirect($redirect_url);
+        return false;
+
+    }
     
 }
 
