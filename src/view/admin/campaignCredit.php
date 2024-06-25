@@ -28,11 +28,10 @@ function dorea_cashback_campaign_credit()
     $encryptedSecret = $encrypt->encrypt(get_transient($campaignName));
 
 
-
     print('
                 
         <input id="creditAmount" type="text">
-        <button id="doreaFuund" style="">Fund your Campaign</button>
+        <button id="doreaFund" style="">Fund your Campaign</button>
         <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
 
         <p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
@@ -71,20 +70,7 @@ function dorea_cashback_campaign_credit()
          function delay(){
              (async () => {
 
-                 /*
-                  if(window.ethereum._state.accounts.length > 0){
-                     
-                      document.getElementById("metamask").style.display = "none";
-                      document.getElementById("metamaskDisconnect").style.display = "block";
-                     
-                       
-                  }else {
-                      document.getElementById("metamask").style.display = "block";
-                      document.getElementById("metamaskDisconnect").style.display = "none";
-                  }
-                  */
-                  
-                    document.getElementById("doreaFuund").addEventListener("click", async () => {
+                    document.getElementById("doreaFund").addEventListener("click", async () => {
    
                             let contractAmount = document.getElementById("creditAmount").value;
                             const metamaskError = document.getElementById("dorea_metamask_error");
@@ -120,19 +106,19 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["https://etherscan.io/"]
                                       }]
                                   });
-                                  /*
+                                  */
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
                                         chainId: "0x14A34",
-                                        rpcUrls: ["https://sepolia.base.org"],
-                                        chainName: "Base Network",
+                                        rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
+                                        chainName: "Amoy",
                                         nativeCurrency: {
-                                          name: "ETH",
-                                          symbol: "ETH",
+                                          name: "MATIC",
+                                          symbol: "MATIC",
                                           decimals: 18
                                         },
-                                        blockExplorerUrls: ["https://sepolia-explorer.base.org"]
+                                        blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
                                       }]
                                   });
                                   /*
@@ -151,7 +137,7 @@ function dorea_cashback_campaign_credit()
                                       }]
                                   });
                                   
-                                   */
+                                   
                                   
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
@@ -167,6 +153,8 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["http://127.0.0.1:8545"]
                                       }]
                                   });
+                                  
+                                   */
                                   
                                    
                                 const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
