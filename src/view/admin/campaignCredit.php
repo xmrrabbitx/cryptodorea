@@ -106,7 +106,7 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["https://etherscan.io/"]
                                       }]
                                   });
-                                  */
+                                  
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
@@ -138,7 +138,7 @@ function dorea_cashback_campaign_credit()
                                   });
                                   
                                    
-                                  
+                                  */
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
@@ -154,7 +154,7 @@ function dorea_cashback_campaign_credit()
                                       }]
                                   });
                                   
-                                   */
+                                   
                                   
                                    
                                 const accounts = await window.ethereum.request({method: "eth_requestAccounts"});

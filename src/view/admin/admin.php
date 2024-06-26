@@ -96,11 +96,14 @@ function dorea_main_page_content(){
             $doreaContractAddress = get_option($campaignList . '_contract_address');
 
             if($doreaContractAddress){
-               print ('deployed!</br>');
+               print ('funded!</br>');
             }else{
-                print('<a href="'.esc_url(admin_url('admin.php?page=credit&cashbackName='. $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))).'"> deploy </a>' . '</br>');
+                print('<a href="'.esc_url(admin_url('admin.php?page=credit&cashbackName='. $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))).'"> fund </a>' . '</br>');
             }
         }
+    }else{
+        // remove wordpress prefix on production
+        print('<a href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
     }
 }
 

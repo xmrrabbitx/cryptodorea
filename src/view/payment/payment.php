@@ -37,8 +37,8 @@ function paymentModal(){
                 // Payment Modal
                 print('
                 <div id="doreaPaymentModalContainer" class="dorea-payment-modal-container">
-                        <button id='.$keys.' class="_claimCashback" type="button">Claim '.$keys.' Cashback</button>
-                        <input id='.$keys.'_contractAddress type="hidden" value="'.$contractAddress.'" >
+                        <button id="'.$keys.'" class="_claimCashback" type="button">Claim '.$keys.' Cashback</button>
+                        <input id="'.$keys.'_contractAddress" type="hidden" value="'.$contractAddress.'" >
                 </div>
                 
                 <p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
@@ -66,12 +66,12 @@ function paymentModal(){
                 
                  if (window.ethereum) {
                 
-                                      
+                        
                          let contractAddress = document.getElementById(element.id + "_contractAddress").value;
                          const metamaskError = document.getElementById("dorea_metamask_error");
                             
                                       // change it to the real polygon network
-                                      /*
+                                      
                                       await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
                                           params: [{
@@ -87,7 +87,7 @@ function paymentModal(){
                                           }]
                                       });
                                       
-                                       */
+                                       /*
                                        await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
                                           params: [{
@@ -102,6 +102,8 @@ function paymentModal(){
                                             blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
                                           }]
                                        });
+                                       
+                                        */
                                       
                                        const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
     
@@ -153,11 +155,9 @@ function paymentModal(){
                                             metamaskError.style.display = "none";
                                             
                                             try{
-                                                let b = await contract.getBalance();
-                                                console.log(b)
-                                                console.log("'.$amount.'")
-                                                //await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'")
-                                                await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001), 3, "'.$shoppingCount.'", "'.$secret.'");
+                                                
+                                                await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'")
+                                                //await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001), 3, "'.$shoppingCount.'", "'.$secret.'");
                                                 
                                             }catch (error) {
                                              

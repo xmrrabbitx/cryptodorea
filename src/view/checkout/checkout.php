@@ -24,21 +24,40 @@ function cashback()
         $campaignListUser = $campaign->list();
 
         if ($cashbackList) {
-            // add cash back program element to theme 
-            print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;padding-left:5px;'>
+
+
+            // check if any campaign funded or not!
+            $funded = array_map(function($values){
+                if(get_option( $values . '_contract_address')) {
+
+                    return true;
+
+                }
+            }, $cashbackList);
+
+            if(in_array(true, $funded)) {
+                // add cash back program element to theme
+                print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
                         <p>
                             <h4>
                                 add to cash back program:
                                 
-            ");
+                ");
+            }
+
             foreach ($cashbackList as $campaignList) {
-                if(!in_array($campaignList, $campaignListUser)) {
-                    print(" <span>
-                            
-                            <label>" . $campaignList . "</label>
-                            <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='debouncedAddToCashbackCheckbox()'>
-                        </span>
-                    ");
+                // check if campaign is funded
+                if(get_option( $campaignList . '_contract_address')) {
+
+                    if (!in_array($campaignList, $campaignListUser)) {
+                        print(" 
+                            <span>
+                                <label>" . $campaignList . "</label>
+                                <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='debouncedAddToCashbackCheckbox()'>
+                            </span>
+                        ");
+                    }
+                    //return print("done!!!");
                 }
             }
 
@@ -111,6 +130,7 @@ function cashback()
                     
                     const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 5000);
                 </script>");
+
 
         }
     }
