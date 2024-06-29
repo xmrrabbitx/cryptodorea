@@ -161,10 +161,10 @@ function dorea_admin_cashback_campaign(){
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
        
-            $campaignName = htmlspecialchars($_POST['campaignName']);
+            $campaignName = trim(htmlspecialchars($_POST['campaignName']));
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
 
-            if(!is_numeric($_POST['cryptoAmount'])){
+            if(!is_numeric(trim($_POST['cryptoAmount']))){
 
                 //throws error on not existed campaign
                 $redirect_url = add_query_arg('cryptoAmountError', urlencode('Error: Amount must be numeric!'), $referer);
