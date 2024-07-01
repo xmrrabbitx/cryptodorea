@@ -55,7 +55,7 @@ class dateCalculator extends dateCalculatorAbstract
      * calculate date time in the future
      * @param $date in Date Format
      */
-    public function futureDate($month, $day, $year)
+    public function futureDate($day, $month, $year)
     {
 
         return $date = mktime(0, 0, 0, $month, $day, $year); //e.g: 7 1 2000
@@ -65,13 +65,11 @@ class dateCalculator extends dateCalculatorAbstract
     /**
      * calculate expire date for campaign creation process
      */
-    public function expDateCampaign($startDateMonth, $startDateDay, $expDate):array
+    public function expDateCampaign($startDateDay, $startDateMonth, $startDateYear, $expDate):array
     {
-
 
         $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $daysListCount = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
 
         $remainedDays = $daysListCount[(int)$startDateMonth-1] - (int)$startDateDay;
 
@@ -90,26 +88,27 @@ class dateCalculator extends dateCalculatorAbstract
                 $expMonth = $startDateMonth;
             }
 
-
         }
 
 
         if(!isset($expMonth)){
             if((int)$startDateMonth === 12){
                 $expMonth = 1;
+                $expYear = $startDateYear + 1;
             }else{
                 $expMonth = (int)$startDateMonth + 1;
+                $expYear = $startDateYear;
             }
         }
 
         if($expDay < 9){
             $expDay = '0' . $expDay;
         }
-        if((int)$expMonth < 9){
-            $expMonth = '0' . (int)$expMonth;
+        if($expMonth < 9){
+            $expMonth = '0' . $expMonth;
         }
 
-        return ['expDay'=>$expDay, 'expMonth'=>(string)$expMonth ?? $startDateMonth];
+        return ['expDay'=>$expDay, 'expMonth'=>(string)$expMonth ?? $startDateMonth, 'expYear' => $expYear ?? $startDateYear];
 
     }
 

@@ -26,9 +26,6 @@ class loader extends doreaAbstract{
 
     public function __construct(){
 
-        // create instance database on initial load
-        $this->conf = new config();
-
         $this->removeCacheLogs();
 
         // set the session max lifetime to 2 hours

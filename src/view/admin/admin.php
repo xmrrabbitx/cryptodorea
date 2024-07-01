@@ -19,27 +19,14 @@ function dorea_add_menu_page(): void
          * Dorea Cash Back Main Menu
          */
         add_menu_page(
-            'Dorea Cash Back',   // Page title
-            'Dorea Cash Back',        // Menu title
+            'Dorea CashBack',   // Page title
+            'Dorea CashBack',        // Menu title
             'manage_options',     // Capability required to access
             'crypto-dorea-cashback',   // Menu slug (unique identifier)
             'dorea_main_page_content', // Callback function to display page content
             'data:image/svg+xml;base64,' . $base64_encoded, // Icon URL or dashicon class
-            20 // Menu position
+            30 // Menu position
         );
-
-        /**
-         * Setting Menu
-         */
-        add_submenu_page(
-            'crypto-dorea-cashback',
-            'Setting Page',
-            'settings',
-            'manage_options',
-            'settings',
-            'dorea_main_setting_content'
-        );
-
 
         /**
          * Campaign Menu
@@ -56,7 +43,6 @@ function dorea_add_menu_page(): void
         /**
          * Campaign Credit Menu
          */
-
         add_submenu_page(
             'crypto-dorea-cashback',
             'Campaign Page',
@@ -66,24 +52,27 @@ function dorea_add_menu_page(): void
             'dorea_cashback_campaign_credit'
         );
 
-
+        /**
+         * Dorea Plans
+         */
+        add_submenu_page(
+            'crypto-dorea-cashback',
+            'Plans Page',
+            'Dorea Plans',
+            'manage_options',
+            'plans',
+            'doreaPlans'
+        );
 
     }
 
 }
-
-/**
- * Enqueue styles for the plugin
- */
-
 
 
 /**
  *  main page content
  */
 function dorea_main_page_content(){
-
-    //sample_custom_styles();
 
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
@@ -107,10 +96,6 @@ function dorea_main_page_content(){
     }
 }
 
-/**
- * Setting page _ Set up Init Config
- */
-include('setting.php');
 
 /**
  * Crypto Cashback Campaign
@@ -121,3 +106,9 @@ include('campaign.php');
  * Credit
  */
 include('campaignCredit.php');
+
+
+/**
+ * Plans
+ */
+include('doreaPlans.php');

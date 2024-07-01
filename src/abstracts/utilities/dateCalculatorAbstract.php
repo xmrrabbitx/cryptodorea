@@ -16,6 +16,6 @@ abstract class dateCalculatorAbstract
     abstract  function currentDate();
     abstract  function unixToMonth($time);
     abstract  function unixToday($time);
-    abstract  function futureDate($month, $day, $year);
+    abstract  function futureDate($day, $month, $year);
 
 }

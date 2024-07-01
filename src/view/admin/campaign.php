@@ -156,6 +156,8 @@ add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
 
 function dorea_admin_cashback_campaign(){
 
+
+
     //static $home_url = 'admin.php?page=crypto-dorea-cashback';
     $referer = wp_get_referer();
 
@@ -184,8 +186,9 @@ function dorea_admin_cashback_campaign(){
             $expDate = htmlspecialchars($_POST['expDate']);
 
             $dateCalculator = new dateCalculator();
-            $expDate = $dateCalculator->expDateCampaign($startDateMonth, $startDateDay, $expDate);
+            $expDate = $dateCalculator->expDateCampaign($startDateDay, $startDateMonth,$startDateYear, $expDate);
 
+            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . $expDate['expYear']);
 
             $cashback = new cashbackController();
             if(get_option('campaign_list')){
@@ -217,7 +220,7 @@ function dorea_admin_cashback_campaign(){
 
                 }
 
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay']);
+                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay'], $timestampDate);
 
                 // head to the admin page of Dorea
                 wp_redirect('admin.php?page=credit&cashbackName=' . $campaignName);
