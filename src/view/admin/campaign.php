@@ -147,6 +147,11 @@ function dorea_cashback_campaign_content(){
         </br>
     
         ");
+
+    $expiredError = filter_input( INPUT_GET, 'expiredError' );
+    if($expiredError){
+        print("<span style='color:#ff5d5d;'>$expiredError</span>");
+    }
 }
 
 /**
@@ -157,9 +162,18 @@ add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
 function dorea_admin_cashback_campaign(){
 
 
-
     //static $home_url = 'admin.php?page=crypto-dorea-cashback';
     $referer = wp_get_referer();
+
+    // check error on expired campaign
+    if(dorea_autoremove_campaign_admin()){
+
+        //throws error on not existed campaign
+        $redirect_url = add_query_arg('expiredError', urlencode('Error: campaign date is not valid!'), $referer);
+
+        wp_redirect($redirect_url);
+        return false;
+    }
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
        
@@ -188,7 +202,7 @@ function dorea_admin_cashback_campaign(){
             $dateCalculator = new dateCalculator();
             $expDate = $dateCalculator->expDateCampaign($startDateDay, $startDateMonth,$startDateYear, $expDate);
 
-            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . $expDate['expYear']);
+            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . '2024'); //$expDate['expYear']);
 
             $cashback = new cashbackController();
             if(get_option('campaign_list')){
@@ -267,7 +281,7 @@ function dorea_admin_delete_campaign(){
 }
 
 /**
- * auto remove outdated campaign
+ * auto remove outdated campaign trigger on website
  */
 add_action('wp', 'dorea_autoremove_campaign');
 function dorea_autoremove_campaign()
@@ -277,5 +291,24 @@ function dorea_autoremove_campaign()
 
     $autoremove = new autoremoveController();
     $autoremove->remove($campaignName);
+
+}
+
+
+/**
+ * auto remove outdated campaign trigger in admin menu
+ */
+add_action('admin_menu', 'dorea_autoremove_campaign_admin');
+function dorea_autoremove_campaign_admin()
+{
+
+    $campaignName = get_option('campaign_list');
+
+    $autoremove = new autoremoveController();
+    $autoremove->remove($campaignName);
+
+
+    return true;
+
 
 }

@@ -57,7 +57,6 @@ function cashback()
                             </span>
                         ");
                     }
-                    //return print("done!!!");
                 }
             }
 

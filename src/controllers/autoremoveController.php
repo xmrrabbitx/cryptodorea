@@ -19,16 +19,11 @@ class autoremoveController extends autoremoveAbstract
     public function remove($campaignName)
     {
 
-        $cuurrentDateYear = date('Y');
+        $currentDateYear = date('Y');
         $currentDateMonth = date('m');
-        $cuurrentDateDay = date('d');
+        $currentDateDay = date('d');
 
-        $currentTimestamp = strtotime($cuurrentDateDay . '.' . $currentDateMonth . '.' . $cuurrentDateDay);
-
-        //var_dump($currentTimestamp);
-//var_dump(get_transient($campaignName[0]));
-
-       // die('stoppp');
+        $currentTimestamp = strtotime($currentDateDay . '.' . $currentDateMonth . '.' . $currentDateYear);
 
         $cashback = new cashbackController();
 
@@ -39,29 +34,6 @@ class autoremoveController extends autoremoveAbstract
                 if($campainInfo['timestamp'] < $currentTimestamp){
                     $cashback->remove($campaignNames);
                 }
-   /*
-                // check on Year expiration
-                if($campainInfo['startDateYear'] < $cuurrentDateYear){
-                    $cashback->remove($campaignNames);
-                }
-
-                // check on Month and Day expiration
-                if ($campainInfo['startDateMonth'] <= $currentDateMonth) {
-                    if ($campainInfo['expDateMonth'] === $currentDateMonth) {
-                        if ($campainInfo['expDateDay'] < $cuurrentDateDay) {
-
-                            $cashback->remove($campaignNames);
-
-                        }
-                    } else {
-                        if ($campainInfo['expDateMonth'] < $currentDateMonth) {
-
-                            $cashback->remove($campaignNames);
-                        }
-                    }
-                }
-*/
-
             }
         }
 
