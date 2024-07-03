@@ -71,7 +71,7 @@ function paymentModal(){
                          const metamaskError = document.getElementById("dorea_metamask_error");
                             
                                       // change it to the real polygon network
-                                      
+                                      /*
                                       await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
                                           params: [{
@@ -86,26 +86,26 @@ function paymentModal(){
                                             blockExplorerUrls: ["http://127.0.0.1:8545"]
                                           }]
                                       });
+                                      */
                                       
-                                       /*
+                                       
                                        await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
                                           params: [{
                                             chainId: "0x14A34",
                                             rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                                            chainName: "Amoy",
+                                            chainName: "SEPOLIA",
                                             nativeCurrency: {
-                                              name: "MATIC",
-                                              symbol: "MATIC",
+                                              name: "ETH",
+                                              symbol: "ETH",
                                               decimals: 18
                                             },
                                             blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
                                           }]
                                        });
                                        
-                                        */
-                                      
-                                       const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                                        
+                                    const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
     
                                     // get abi and bytecode
                                     let xhr = new XMLHttpRequest();
@@ -156,15 +156,14 @@ function paymentModal(){
                                             
                                             try{
                                                 
-                                                await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'")
-                                                //await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001), 3, "'.$shoppingCount.'", "'.$secret.'");
+                                                //await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001).toString(), "'.$campaignCount.'", "'.$shoppingCount.'", "'.$secret.'")
+                                                await contract.pay(userAddress.toString(), BigInt("'.$amount.'" / 0.000000000000000001), 3, "'.$shoppingCount.'", "'.$secret.'");
                                                 
                                             }catch (error) {
                                              
-                                                console.log(error)
                                                 // show error popup message
                                                 metamaskError.style.display = "block";
-                                                const errorText = document.createTextNode(error.message);
+                                                const errorText = document.createTextNode(error.revert.args[0]);
                                                 metamaskError.appendChild(errorText);
                                                 return false;
                                             }

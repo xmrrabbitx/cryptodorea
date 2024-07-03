@@ -192,7 +192,7 @@ function dorea_admin_cashback_campaign(){
             $dateCalculator = new dateCalculator();
             $expDate = $dateCalculator->expDateCampaign($startDateDay, $startDateMonth,$startDateYear, $expDate);
 
-            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . '2024');//$expDate['expYear']);
+            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . $expDate['expYear']);
 
             $cashback = new cashbackController();
             if(get_option('campaign_list')){

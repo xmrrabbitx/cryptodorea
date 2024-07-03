@@ -93,10 +93,10 @@ function dorea_cashback_campaign_credit()
                                    await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
-                                        chainId: "0x2105",
-                                        //chainId: "0xE705",
-                                        rpcUrls: ["https://base.blockpi.network/v1/rpc/public"],
-                                        //rpcUrls: ["https://linea-sepolia.blockpi.network/v1/rpc/public"],
+                                        //chainId: "0x2105",
+                                        chainId: "0xE705",
+                                        //rpcUrls: ["https://base.blockpi.network/v1/rpc/public"],
+                                        rpcUrls: ["https://linea-sepolia.blockpi.network/v1/rpc/public"],
                                         chainName: "Base",
                                         nativeCurrency: {
                                           name: "ETH",
@@ -106,39 +106,25 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["https://etherscan.io/"]
                                       }]
                                   });
+                                  */
                                   
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
                                         chainId: "0x14A34",
                                         rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                                        chainName: "Amoy",
-                                        nativeCurrency: {
-                                          name: "MATIC",
-                                          symbol: "MATIC",
-                                          decimals: 18
-                                        },
-                                        blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
-                                      }]
-                                  });
-                                  /*
-                                  await window.ethereum.request({
-                                      method: "wallet_addEthereumChain",
-                                      params: [{
-                                        chainId: "0x2105",
-                                        rpcUrls: ["https://mainnet.base.org"],
-                                        chainName: "Base Network",
+                                        chainName: "SEPOLIA",
                                         nativeCurrency: {
                                           name: "ETH",
                                           symbol: "ETH",
                                           decimals: 18
                                         },
-                                        blockExplorerUrls: ["https://base.blockscout.com"]
+                                        blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
                                       }]
                                   });
                                   
-                                   
-                                  */
+                                  
+                                  /*
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
@@ -153,7 +139,7 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["http://127.0.0.1:8545"]
                                       }]
                                   });
-                                  
+                                  */
                                    
                                   
                                    
@@ -181,10 +167,10 @@ function dorea_cashback_campaign_credit()
                                         });
 
                                         // check balance of metamask wallet 
-                                        if(userBalance < 0.003){
+                                        if(parseInt(userBalance) < 300000000000000){
                                             
                                             metamaskError.style.display = "block";
-                                            const errorText = document.createTextNode("not enough balance to support fee. please fund your wallet at least 0.003 ETH!");
+                                            const errorText = document.createTextNode("not enough balance to support fee. please fund your wallet at least 0.0003 ETH!");
                                             metamaskError.appendChild(errorText);
                                             return false;
                                             
@@ -211,7 +197,6 @@ function dorea_cashback_campaign_credit()
                                         }).then(function(transaction) {
                                             let contractAddress = transaction.target;
                                             
-                                            console.log(contractAddress)
                                             // get contract address
                                             let xhr = new XMLHttpRequest();
                                     
