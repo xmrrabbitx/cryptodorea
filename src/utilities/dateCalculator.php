@@ -104,9 +104,6 @@ class dateCalculator extends dateCalculatorAbstract
         if($expDay < 9){
             $expDay = '0' . $expDay;
         }
-        if($expMonth < 9){
-            $expMonth = '0' . $expMonth;
-        }
 
         return ['expDay'=>$expDay, 'expMonth'=>(string)$expMonth ?? $startDateMonth, 'expYear' => $expYear ?? $startDateYear];
 

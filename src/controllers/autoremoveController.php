@@ -26,16 +26,18 @@ class autoremoveController extends autoremoveAbstract
         $currentTimestamp = strtotime($currentDateDay . '.' . $currentDateMonth . '.' . $currentDateYear);
 
         $cashback = new cashbackController();
-
         if($campaignName) {
             foreach ($campaignName as $campaignNames) {
                 $campainInfo = get_transient($campaignNames);
 
                 if($campainInfo['timestamp'] < $currentTimestamp){
                     $cashback->remove($campaignNames);
+                    return true;
                 }
             }
         }
+
+        return false;
 
     }
 

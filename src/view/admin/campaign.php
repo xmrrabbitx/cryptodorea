@@ -165,16 +165,6 @@ function dorea_admin_cashback_campaign(){
     //static $home_url = 'admin.php?page=crypto-dorea-cashback';
     $referer = wp_get_referer();
 
-    // check error on expired campaign
-    if(dorea_autoremove_campaign_admin()){
-
-        //throws error on not existed campaign
-        $redirect_url = add_query_arg('expiredError', urlencode('Error: campaign date is not valid!'), $referer);
-
-        wp_redirect($redirect_url);
-        return false;
-    }
-
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
        
             $campaignName = trim(htmlspecialchars($_POST['campaignName']));
@@ -202,7 +192,7 @@ function dorea_admin_cashback_campaign(){
             $dateCalculator = new dateCalculator();
             $expDate = $dateCalculator->expDateCampaign($startDateDay, $startDateMonth,$startDateYear, $expDate);
 
-            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . '2024'); //$expDate['expYear']);
+            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . '2024');//$expDate['expYear']);
 
             $cashback = new cashbackController();
             if(get_option('campaign_list')){
@@ -236,12 +226,21 @@ function dorea_admin_cashback_campaign(){
 
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay'], $timestampDate);
 
+                // check error on expired campaign
+                if(dorea_autoremove_campaign_admin() === true){
+
+                    //throws error on not existed campaign
+                    $redirect_url = add_query_arg('expiredError', urlencode('Error: campaign date is not valid!'), $referer);
+
+                    wp_redirect($redirect_url);
+                    return false;
+                }
+
                 // head to the admin page of Dorea
                 wp_redirect('admin.php?page=credit&cashbackName=' . $campaignName);
 
             }
-            
-           
+
     }else{
 
         //throws error on empty
@@ -288,10 +287,10 @@ function dorea_autoremove_campaign()
 {
 
     $campaignName = get_option('campaign_list');
-
-    $autoremove = new autoremoveController();
-    $autoremove->remove($campaignName);
-
+    if(isset($campaignName)) {
+        $autoremove = new autoremoveController();
+        $autoremove->remove($campaignName);
+    }
 }
 
 
@@ -303,12 +302,9 @@ function dorea_autoremove_campaign_admin()
 {
 
     $campaignName = get_option('campaign_list');
-
-    $autoremove = new autoremoveController();
-    $autoremove->remove($campaignName);
-
-
-    return true;
-
+    if(isset($campaignName)) {
+        $autoremove = new autoremoveController();
+        return $autoremove->remove($campaignName);
+    }
 
 }
