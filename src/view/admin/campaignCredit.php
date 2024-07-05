@@ -20,6 +20,11 @@ function dorea_cashback_campaign_credit()
 
         $campaignName = $_GET['cashbackName'];
 
+        $doreaContractAddress = get_option($campaignName . '_contract_address');
+        if($doreaContractAddress){
+            wp_redirect('admin.php?page=crypto-dorea-cashback');
+        }
+
     }else{
        wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
@@ -107,7 +112,7 @@ function dorea_cashback_campaign_credit()
                                       }]
                                   });
                                   */
-                                  
+                                  /*
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
@@ -123,8 +128,8 @@ function dorea_cashback_campaign_credit()
                                       }]
                                   });
                                   
+                                  */
                                   
-                                  /*
                                   await window.ethereum.request({
                                       method: "wallet_addEthereumChain",
                                       params: [{
@@ -139,7 +144,7 @@ function dorea_cashback_campaign_credit()
                                         blockExplorerUrls: ["http://127.0.0.1:8545"]
                                       }]
                                   });
-                                  */
+                                  
                                    
                                   
                                    

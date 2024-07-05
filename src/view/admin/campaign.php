@@ -152,6 +152,11 @@ function dorea_cashback_campaign_content(){
     if($expiredError){
         print("<span style='color:#ff5d5d;'>$expiredError</span>");
     }
+
+    $existedCampaignError = filter_input( INPUT_GET, 'existedCampaignError' );
+    if($existedCampaignError){
+        print("<span style='color:#ff5d5d;'>$existedCampaignError</span>");
+    }
 }
 
 /**
@@ -172,7 +177,7 @@ function dorea_admin_cashback_campaign(){
 
             if(!is_numeric(trim($_POST['cryptoAmount']))){
 
-                //throws error on not existed campaign
+                //throws error on amount format
                 $redirect_url = add_query_arg('cryptoAmountError', urlencode('Error: Amount must be numeric!'), $referer);
 
                 wp_redirect($redirect_url);
@@ -196,14 +201,17 @@ function dorea_admin_cashback_campaign(){
 
             $cashback = new cashbackController();
             if(get_option('campaign_list')){
-                if(array_search($campaignName, get_option('campaign_list'))){
 
-                    //throws error on not existed campaign
-                    $redirect_url = add_query_arg('campaignError', urlencode('Error: Campaign is already exists!'), $referer);
+                //throws error on existed campaign
+                if(in_array($campaignName, get_option('campaign_list'))){
+                    var_dump("okkk 2");
+                    $redirect_url = add_query_arg('existedCampaignError', urlencode('Error: Campaign is already existed!'), $referer);
 
                     wp_redirect($redirect_url);
                     return false;
+
                 }
+
             }
 
             if(strlen($campaignName) > 25 ){
@@ -213,10 +221,7 @@ function dorea_admin_cashback_campaign(){
 
                 wp_redirect($redirect_url);
 
-            }
-
-
-            else {
+            }else {
 
                 if (empty(get_option('campaign_list')) || get_option('campaign_list') === NULL) {
 
@@ -229,7 +234,7 @@ function dorea_admin_cashback_campaign(){
                 // check error on expired campaign
                 if(dorea_autoremove_campaign_admin() === true){
 
-                    //throws error on not existed campaign
+                    //throws error on date format
                     $redirect_url = add_query_arg('expiredError', urlencode('Error: campaign date is not valid!'), $referer);
 
                     wp_redirect($redirect_url);
