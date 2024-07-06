@@ -141,10 +141,10 @@ function doreaPlans()
                                                             // Get the signer from the provider metamask
                                                             const signer = await provider.getSigner();
                                                 
-                                                            const contract = new ethers.Contract("0xfeFA8693986918A1f912DfE435C2e6e9FFe37Dcc", abi, signer);
+                                                            const contract = new ethers.Contract("0xE28d84AC018F2EeAb4A33D1Ff08EbBBcf62BB9b2", abi, signer);
                                                
                                                             try{
-                                                                await contract.pay("0x825f4e19326557B6e7557FB8d639fC1346D88960",{
+                                                                await contract.pay( userAddress, {
                                                                 value:BigInt(estimatedAmount / 0.000000000000000001).toString()
                                                             }).then(function(transaction){
                                                                 
