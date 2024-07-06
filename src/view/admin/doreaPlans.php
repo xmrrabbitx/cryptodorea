@@ -27,7 +27,7 @@ function doreaPlans()
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
             let doreaPaymentModalButton = document.querySelectorAll(".doreaBuy");
-            console.log(doreaPaymentModalButton)
+        
              doreaPaymentModalButton.forEach(
                 
                 (element) =>             
@@ -94,13 +94,11 @@ function doreaPlans()
                                               });
                                               
                                                
-                                              
-                                               
                                             const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
             
                                             // get abi and bytecode
                                             let xhr = new XMLHttpRequest();
-                                    
+                                            
                                             // remove wordpress prefix on production
                                             xhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
                                             xhr.onreadystatechange = async function() {
@@ -122,28 +120,47 @@ function doreaPlans()
                                                     */
             
                                                     // check balance of metamask wallet 
-                                                    if(parseInt(userBalance) < 300000000000000){
+                                                   // if(parseInt(userBalance) < 300000000000000){
                                                         
                                                    
                                                         
-                                                    }else{
+                                                   // }else{
                                                       
-                                                    }
-                                                    
-                                   
-                                                    const provider = new BrowserProvider(window.ethereum);
-                                        
-                                                    // Get the signer from the provider metamask
-                                                    const signer = await provider.getSigner();
-                                        
-                                                    const contract = new ethers.Contract("0xFF0Ea865f6f93933500FCCB251d78F0FCE52eE2A", abi, signer);
-                                       
-                                                    // value:"4000000000000000000"
-                                                    await contract.pay({
-                                                        value:"4000000000000000000"
-                                                    });
-                                                    
+                                                   // }
+                                                   
+                                                   let xhrAmount = new XMLHttpRequest();
+                                                   xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=false");
+                                                   xhrAmount.onreadystatechange = async function() {
+                                                        if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
+                                                             let responses = JSON.parse(xhrAmount.responseText);
+                                                             let estimatedAmount = responses["summary"]["estimatedAmount"]
+                                                  
+                                                   
+                                                            const provider = new BrowserProvider(window.ethereum);
                                                 
+                                                            // Get the signer from the provider metamask
+                                                            const signer = await provider.getSigner();
+                                                
+                                                            const contract = new ethers.Contract("0xfeFA8693986918A1f912DfE435C2e6e9FFe37Dcc", abi, signer);
+                                               
+                                                            try{
+                                                                await contract.pay("0x825f4e19326557B6e7557FB8d639fC1346D88960",{
+                                                                value:BigInt(estimatedAmount / 0.000000000000000001).toString()
+                                                            }).then(function(transaction){
+                                                                
+                                                                if(transaction.hash){
+                                                                    console.log("payment succeed!")
+                                                                }
+                                                                
+                                                                
+                                                            });
+                                                            }catch(error){
+                                                                console.log(error)
+                                                            }
+                                                    
+                                                      }
+                                                   }
+                                                   xhrAmount.send();
                                           }
                                    
                             };
