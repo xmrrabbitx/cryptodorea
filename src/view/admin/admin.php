@@ -60,7 +60,7 @@ function dorea_add_menu_page(): void
             'Plans Page',
             'Dorea Plans',
             'manage_options',
-            'plans',
+            'dorea_plans',
             'doreaPlans'
         );
 

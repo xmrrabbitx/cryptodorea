@@ -204,7 +204,7 @@ function dorea_admin_cashback_campaign(){
 
                 //throws error on existed campaign
                 if(in_array($campaignName, get_option('campaign_list'))){
-                    var_dump("okkk 2");
+
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Error: Campaign is already existed!'), $referer);
 
                     wp_redirect($redirect_url);

@@ -7,7 +7,7 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class checkoutAbstract{
 
-    function __contruct(){
+    function __construct(){
 
     }
 

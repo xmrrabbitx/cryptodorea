@@ -7,7 +7,7 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class confAbstract{
 
-    function __contruct(){
+    function __construct(){
 
     }
 

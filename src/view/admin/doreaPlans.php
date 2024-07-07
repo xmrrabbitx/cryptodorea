@@ -1,5 +1,8 @@
 <?php
 
+
+use Cryptodorea\Woocryptodorea\controllers\freetrialController;
+
 /**
  * Crypto Cashback Plans
  */
@@ -141,7 +144,7 @@ function doreaPlans()
                                                             // Get the signer from the provider metamask
                                                             const signer = await provider.getSigner();
                                                 
-                                                            const contract = new ethers.Contract("0xE28d84AC018F2EeAb4A33D1Ff08EbBBcf62BB9b2", abi, signer);
+                                                            const contract = new ethers.Contract("0x243eA85c585e7be12D307401d0BEf3BCe675bc4B", abi, signer);
                                                
                                                             try{
                                                                 await contract.pay( userAddress, {
@@ -190,7 +193,6 @@ function doreaPlans()
  * Dorea Plans Loyalty Users ABI and Bytecode of smart contract
  */
 add_action('admin_post_loyalty_users_json_file', 'dorea_admin_loyalty_users_json_file');
-
 function dorea_admin_loyalty_users_json_file()
 {
 
@@ -206,5 +208,20 @@ function dorea_admin_loyalty_users_json_file()
     // Echo the JSON-encoded response
     echo json_encode($responseArray);
     exit;
+
+}
+
+/**
+ * Dorea Plans check Free Trial Period
+ */
+add_action('admin_menu', 'dorea_free_trial');
+function dorea_free_trial(){
+
+    $freetrial = new  freetrialController();
+    $freetrial->set();
+
+    if($_GET['page'] !== 'dorea_plans'){
+        $freetrial->expire();
+    }
 
 }

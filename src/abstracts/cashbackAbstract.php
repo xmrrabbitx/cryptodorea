@@ -7,7 +7,7 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class cashbackAbstract{
 
-    function __contruct(){
+    function __construct(){
 
     }
 

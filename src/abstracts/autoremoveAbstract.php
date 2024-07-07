@@ -8,7 +8,7 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
 abstract class autoremoveAbstract
 {
 
-    function __contruct()
+    function __construct()
     {
 
     }
