@@ -3,6 +3,7 @@
 
 use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 
+
 /**
  * Crypto Cashback Plans
  */
@@ -11,6 +12,11 @@ function doreaPlans()
 {
     print ("plans page");
 
+    // check how amny days remianed on free trial plan
+    $freetrial = new  freetrialController();
+    $remainedDays = $freetrial->remainedDays();
+
+    print('You have ' . $remainedDays . 'days of free trial');
 
     print("<head>Monthly</head>");
 
@@ -29,6 +35,48 @@ function doreaPlans()
     print('<script type="module">
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
+            if (window.ethereum) {
+               setTimeout(delay1, 1000)
+               function delay1(){
+                    (async () => {
+                     
+                          let userStatusXhr = new XMLHttpRequest();
+                          userStatusXhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
+                          userStatusXhr.onreadystatechange = async function() {
+                              if (userStatusXhr.readyState === 4 && userStatusXhr.status === 200) {
+                                 let response = JSON.parse(userStatusXhr.responseText);
+                                 let abi = response[0]
+                                 let bytecode = response[1]
+                                 
+                                 const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                                 const userAddress = accounts[0];
+                                 
+                                 const provider = new BrowserProvider(window.ethereum);
+                                                
+                                 // Get the signer from the provider metamask
+                                 const signer = await provider.getSigner();
+                                                
+                                 const contract = new ethers.Contract("0x0a8ac9482554B0BD2A62320C259e54883024d581", abi, signer);
+                                 
+                                                         
+                                 try{
+                                     let userStatusPlan = await contract.userCheckStatus(userAddress);
+                                     console.log(userStatusPlan);
+                                 }catch(error){
+                                        console.log(error)
+                                 }
+                                                    
+                                 
+                              }
+                          } 
+                          
+                          userStatusXhr.send();                     
+                        
+                     })();
+               }
+            }
+
+            
             let doreaPaymentModalButton = document.querySelectorAll(".doreaBuy");
         
              doreaPaymentModalButton.forEach(
@@ -132,6 +180,8 @@ function doreaPlans()
                                                    // }
                                                    
                                                    let xhrAmount = new XMLHttpRequest();
+                                                   
+                                                   // converter issue must be fixed! price is not precise!
                                                    xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=false");
                                                    xhrAmount.onreadystatechange = async function() {
                                                         if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
@@ -144,7 +194,7 @@ function doreaPlans()
                                                             // Get the signer from the provider metamask
                                                             const signer = await provider.getSigner();
                                                 
-                                                            const contract = new ethers.Contract("0x243eA85c585e7be12D307401d0BEf3BCe675bc4B", abi, signer);
+                                                            const contract = new ethers.Contract("0x0a8ac9482554B0BD2A62320C259e54883024d581", abi, signer);
                                                
                                                             try{
                                                                 await contract.pay( userAddress, {
@@ -217,6 +267,8 @@ function dorea_admin_loyalty_users_json_file()
 add_action('admin_menu', 'dorea_free_trial');
 function dorea_free_trial(){
 
+    //delete_option('trailTimestamp');
+    //var_dump(get_option('trailTimestamp'));
     $freetrial = new  freetrialController();
     $freetrial->set();
 

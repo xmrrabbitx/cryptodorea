@@ -16,4 +16,6 @@ abstract class freetrialAbstract
     abstract  function set();
     abstract  function expire();
 
+    abstract function remainedDays();
+
 }
