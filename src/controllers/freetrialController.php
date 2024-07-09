@@ -24,12 +24,8 @@ class freetrialController extends freetrialAbstract
      */
     public function set()
     {
-        $currentDateYear = date('Y');
-        $currentDateMonth = date('m');
-        $currentDateDay = date('d');
-
-        //  add 14 days free trial
-        $currentTimestamp = strtotime($currentDateDay . '.' . $currentDateMonth . '.' . $currentDateYear); //+ (14 * 86400);
+        $date = new dateCalculator();
+        $currentTimestamp = $date->currentDate();
 
         if(!get_option('trailTimestamp')){
             add_option('trailTimestamp', (int)$currentTimestamp);
@@ -42,11 +38,8 @@ class freetrialController extends freetrialAbstract
      */
     public function expire()
     {
-        $currentDateYear = date('Y');
-        $currentDateMonth = date('m');
-        $currentDateDay = date('d');
-
-        $currentTimestamp = strtotime($currentDateDay . '.' . $currentDateMonth . '.' . $currentDateYear);
+        $date = new dateCalculator();
+        $currentTimestamp = $date->currentDate();
 
         if((int)get_option('trailTimestamp') <= $currentTimestamp){
 

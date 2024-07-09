@@ -1,8 +1,10 @@
 <?php
 
 
+use Cryptodorea\Woocryptodorea\controllers\adminStatusController;
 use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 
+const doreaUserContractAddress = "0x5E15FE46766Ac7602dFa8A6E6e6cf84C0Fe8Ac5A";
 
 /**
  * Crypto Cashback Plans
@@ -10,13 +12,20 @@ use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 
 function doreaPlans()
 {
+
     print ("plans page");
 
     // check how amny days remianed on free trial plan
     $freetrial = new  freetrialController();
     $remainedDays = $freetrial->remainedDays();
 
-    print('You have ' . $remainedDays . 'days of free trial');
+    if($remainedDays !== 0){
+        print('You have ' . $remainedDays . 'days of free trial');
+    }
+
+
+    print("<button id='doreaMetamask'>connect to Metamask</button>");
+
 
     print("<head>Monthly</head>");
 
@@ -26,9 +35,9 @@ function doreaPlans()
 
     print ('
 
-        <button class="doreaBuy"  value="19">buy</button>
-        <button class="doreaBuy"  value="29">buy</button>
-        <button class="doreaBuy"  value="49">buy</button>
+        <button class="doreaBuy"  value="19_Monthly">buy</button>
+        <button class="doreaBuy"  value="29_hlafYearly">buy</button>
+        <button class="doreaBuy"  value="49_Yearly">buy</button>
 
     ');
 
@@ -39,40 +48,66 @@ function doreaPlans()
                setTimeout(delay1, 1000)
                function delay1(){
                     (async () => {
-                     
-                          let userStatusXhr = new XMLHttpRequest();
-                          userStatusXhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
-                          userStatusXhr.onreadystatechange = async function() {
-                              if (userStatusXhr.readyState === 4 && userStatusXhr.status === 200) {
-                                 let response = JSON.parse(userStatusXhr.responseText);
-                                 let abi = response[0]
-                                 let bytecode = response[1]
-                                 
-                                 const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-                                 const userAddress = accounts[0];
-                                 
-                                 const provider = new BrowserProvider(window.ethereum);
-                                                
-                                 // Get the signer from the provider metamask
-                                 const signer = await provider.getSigner();
-                                                
-                                 const contract = new ethers.Contract("0x0a8ac9482554B0BD2A62320C259e54883024d581", abi, signer);
-                                 
-                                                         
-                                 try{
-                                     let userStatusPlan = await contract.userCheckStatus(userAddress);
-                                     console.log(userStatusPlan);
-                                 }catch(error){
-                                        console.log(error)
-                                 }
+                     if(window.ethereum._state.accounts.length > 0){
+                      
+                         doreaMetamask.style.display = "none";
+                     }else{
+                   
+                            let doreaMetamask = document.getElementById("doreaMetamask");
+                            doreaMetamask.addEventListener("click", function(){
+                         
+                              let userStatusXhr = new XMLHttpRequest();
+                              userStatusXhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
+                              userStatusXhr.onreadystatechange = async function() {
+                                  if (userStatusXhr.readyState === 4 && userStatusXhr.status === 200) {
+                                     let response = JSON.parse(userStatusXhr.responseText);
+                                     let abi = response[0]
+                                     let bytecode = response[1]
+                                     
+                                     const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+                                     const userAddress = accounts[0];
+                                     
+                                     const provider = new BrowserProvider(window.ethereum);
                                                     
-                                 
-                              }
-                          } 
-                          
-                          userStatusXhr.send();                     
-                        
-                     })();
+                                     // Get the signer from the provider metamask
+                                     const signer = await provider.getSigner();
+                                                    
+                                     const contract = new ethers.Contract("'.doreaUserContractAddress.'", abi, signer);
+                                     
+                                                             
+                                     try{
+                                         let userStatusPlan = await contract.userCheckStatus(userAddress);
+                                         
+                                         console.log(userStatusPlan)
+                                         
+                                          //return userStatusPlan
+                                          let xhrUserStatusPlan = new XMLHttpRequest();
+                                          xhrUserStatusPlan.open("POST", "#", true);
+                                          xhrUserStatusPlan.setRequestHeader("Accept", "application/json");
+                                          xhrUserStatusPlan.setRequestHeader("Content-Type", "application/json");
+                                          xhrUserStatusPlan.onreadystatechange = function() {
+                                            if (xhrUserStatusPlan.readyState === 4 && xhrUserStatusPlan.status === 200) {
+            
+                                                
+                                            }
+                                          };
+                                          
+                                          xhrUserStatusPlan.send(userStatusPlan);
+                                        
+                                         doreaMetamask.style.display = "none";
+                                         // remove wordpress prefix on production 
+                                         //window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                     }catch(error){
+                                            console.log(error)
+                                     }
+                                      
+                                  }
+                              } 
+                              
+                              userStatusXhr.send();                     
+                            })
+                        }
+                  })();
                }
             }
 
@@ -89,7 +124,9 @@ function doreaPlans()
                      function delay(){
                          (async () => {
                       
-                                 let amount =  element.value;
+                                 let amount =  element.value.split("_")[0];
+                                 let planType =   element.value.split("_")[1];
+                             
                                  if (window.ethereum) {
                                               
                                               // change it to the real polygon network
@@ -179,14 +216,14 @@ function doreaPlans()
                                                       
                                                    // }
                                                    
-                                                   let xhrAmount = new XMLHttpRequest();
+                                                   //let xhrAmount = new XMLHttpRequest();
                                                    
                                                    // converter issue must be fixed! price is not precise!
-                                                   xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=false");
-                                                   xhrAmount.onreadystatechange = async function() {
-                                                        if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
-                                                             let responses = JSON.parse(xhrAmount.responseText);
-                                                             let estimatedAmount = responses["summary"]["estimatedAmount"]
+                                                  // xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=false");
+                                                  // xhrAmount.onreadystatechange = async function() {
+                                                        //if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
+                                                            // let responses = JSON.parse(xhrAmount.responseText);
+                                                             let estimatedAmount = "0.006";//responses["summary"]["estimatedAmount"]
                                                   
                                                    
                                                             const provider = new BrowserProvider(window.ethereum);
@@ -194,10 +231,10 @@ function doreaPlans()
                                                             // Get the signer from the provider metamask
                                                             const signer = await provider.getSigner();
                                                 
-                                                            const contract = new ethers.Contract("0x0a8ac9482554B0BD2A62320C259e54883024d581", abi, signer);
+                                                            const contract = new ethers.Contract("'.doreaUserContractAddress.'", abi, signer);
                                                
                                                             try{
-                                                                await contract.pay( userAddress, {
+                                                                await contract.pay( userAddress, planType, {
                                                                 value:BigInt(estimatedAmount / 0.000000000000000001).toString()
                                                             }).then(function(transaction){
                                                                 
@@ -211,9 +248,9 @@ function doreaPlans()
                                                                 console.log(error)
                                                             }
                                                     
-                                                      }
-                                                   }
-                                                   xhrAmount.send();
+                                                     // }
+                                                   //}
+                                                   //xhrAmount.send();
                                           }
                                    
                             };
@@ -261,6 +298,24 @@ function dorea_admin_loyalty_users_json_file()
 
 }
 
+
+/**
+ * Dorea Plans check User Admin Status payment
+ */
+add_action('admin_menu', 'dorea_admin_status_payment');
+
+function dorea_admin_status_payment()
+{
+
+    $timestamp = file_get_contents('php://input');
+
+    $userPayment = new adminStatusController();
+    $userPayment->set($timestamp);
+
+}
+
+
+
 /**
  * Dorea Plans check Free Trial Period
  */
@@ -272,8 +327,12 @@ function dorea_free_trial(){
     $freetrial = new  freetrialController();
     $freetrial->set();
 
-    if($_GET['page'] !== 'dorea_plans'){
-        $freetrial->expire();
-    }
+    $userPayment = new adminStatusController();
 
+    var_dump((int)get_option('adminPaymentTimestamp'));
+    if($_GET['page'] !== 'dorea_plans'){
+        if(!$userPayment->paid()) {
+            $freetrial->expire();
+        }
+    }
 }
