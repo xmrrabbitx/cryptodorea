@@ -4,7 +4,7 @@
 use Cryptodorea\Woocryptodorea\controllers\adminStatusController;
 use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 
-const doreaUserContractAddress = "0x5E15FE46766Ac7602dFa8A6E6e6cf84C0Fe8Ac5A";
+const doreaUserContractAddress = "0xBCdBdF2E097C59bBFDD27ab86AFaf40577ce4529";
 
 /**
  * Crypto Cashback Plans
@@ -15,7 +15,7 @@ function doreaPlans()
 
     print ("plans page");
 
-    // check how amny days remianed on free trial plan
+    // check how many days remianed on free trial plan
     $freetrial = new  freetrialController();
     $remainedDays = $freetrial->remainedDays();
 
@@ -78,8 +78,6 @@ function doreaPlans()
                                      try{
                                          let userStatusPlan = await contract.userCheckStatus(userAddress);
                                          
-                                         console.log(userStatusPlan)
-                                         
                                           //return userStatusPlan
                                           let xhrUserStatusPlan = new XMLHttpRequest();
                                           xhrUserStatusPlan.open("POST", "#", true);
@@ -91,12 +89,12 @@ function doreaPlans()
                                                 
                                             }
                                           };
-                                          
-                                          xhrUserStatusPlan.send(userStatusPlan);
+                                           
+                                          xhrUserStatusPlan.send(JSON.stringify({"userStatus":BigInt(userStatusPlan[0]).toString(), "userAmount":BigInt(userStatusPlan[1]).toString(), "expDate":BigInt(userStatusPlan[2]).toString()}));
                                         
-                                         doreaMetamask.style.display = "none";
-                                         // remove wordpress prefix on production 
-                                         //window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                          doreaMetamask.style.display = "none";
+                                          // remove wordpress prefix on production 
+                                          //window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                      }catch(error){
                                             console.log(error)
                                      }
@@ -307,11 +305,14 @@ add_action('admin_menu', 'dorea_admin_status_payment');
 function dorea_admin_status_payment()
 {
 
-    $timestamp = file_get_contents('php://input');
+    $jsonData = file_get_contents('php://input');
+    $json = json_decode($jsonData);
 
-    $userPayment = new adminStatusController();
-    $userPayment->set($timestamp);
-
+    if(isset($json)) {
+        // set timestamp for expire admin user
+        $userPayment = new adminStatusController();
+        $userPayment->set($json->expDate);
+    }
 }
 
 
@@ -322,14 +323,16 @@ function dorea_admin_status_payment()
 add_action('admin_menu', 'dorea_free_trial');
 function dorea_free_trial(){
 
-    //delete_option('trailTimestamp');
-    //var_dump(get_option('trailTimestamp'));
     $freetrial = new  freetrialController();
     $freetrial->set();
 
+    //delete_option("adminPaymentTimestamp");
+    //delete_option("trialTimestamp");
+    //var_dump(get_option("adminPaymentTimestamp"));
+    //var_dump(get_option("trialTimestamp"));
+
     $userPayment = new adminStatusController();
 
-    var_dump((int)get_option('adminPaymentTimestamp'));
     if($_GET['page'] !== 'dorea_plans'){
         if(!$userPayment->paid()) {
             $freetrial->expire();

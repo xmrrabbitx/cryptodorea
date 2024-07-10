@@ -27,8 +27,9 @@ class freetrialController extends freetrialAbstract
         $date = new dateCalculator();
         $currentTimestamp = $date->currentDate();
 
-        if(!get_option('trailTimestamp')){
-            add_option('trailTimestamp', (int)$currentTimestamp);
+        // it must add + 14 * 86400 (14 days free trail days)
+        if(!get_option('trialTimestamp')){
+            add_option('trialTimestamp', $currentTimestamp + (14 * 86400) );
         }
     }
 
@@ -41,7 +42,7 @@ class freetrialController extends freetrialAbstract
         $date = new dateCalculator();
         $currentTimestamp = $date->currentDate();
 
-        if((int)get_option('trailTimestamp') <= $currentTimestamp){
+        if((int)get_option('trialTimestamp') <= $currentTimestamp){
 
             // remove wordpress prefix on production
             wp_redirect('admin.php?page=dorea_plans');
@@ -57,9 +58,9 @@ class freetrialController extends freetrialAbstract
         $date = new dateCalculator();
         $currentTimestamp = $date->currentDate();
 
-        if((int)get_option('trailTimestamp') >= $currentTimestamp){
+        if((int)get_option('trialTimestamp') >= $currentTimestamp){
 
-            $endDate = (new DateTime())->setTimestamp((int)get_option('trailTimestamp'));
+            $endDate = (new DateTime())->setTimestamp((int)get_option('trialTimestamp'));
             $currentDate = (new DateTime())->setTimestamp($currentTimestamp);
 
             // Calculate the difference
