@@ -13,6 +13,9 @@ abstract class encryptAbstract
 
     }
 
-    abstract  function encrypt($data);
+    abstract  function randomSha256();
+    abstract  function sha256Salt();
+    abstract  function encryptAes($data);
+    abstract  function decryptAes($data, $key, $iv);
 
 }

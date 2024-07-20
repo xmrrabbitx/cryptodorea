@@ -6,6 +6,7 @@
 
 use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 use Cryptodorea\Woocryptodorea\controllers\checkoutController;
+use Cryptodorea\Woocryptodorea\utilities\Encrypt;
 
 // woocommerce_after_shop_loop_item_title
 // woocommerce_blocks_checkout_enqueue_data
@@ -152,6 +153,7 @@ function checkout()
  */
 add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId){
+
 
     if (is_wc_endpoint_url('order-received')) {
 

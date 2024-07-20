@@ -5,6 +5,7 @@ namespace Cryptodorea\Woocryptodorea\controllers;
 use Cryptodorea\Woocryptodorea\abstracts\checkoutAbstract;
 use Cryptodorea\Woocryptodorea\model\checkoutModel;
 use Cryptodorea\Woocryptodorea\controllers\receiptController;
+use Cryptodorea\Woocryptodorea\utilities\Encrypt;
 use WC_Order;
 
 /**

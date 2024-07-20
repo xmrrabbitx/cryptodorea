@@ -147,8 +147,11 @@ function paymentModal(){
                                  
                                         const contract = new ethers.Contract(contractAddress, abi, signer);
                            
+                                        //const adm = await contract.userAuthToken("");
+                                         
                                         const balance = await contract.getBalance();
-                                      
+                                            
+                                       return true;
                                         if(balance !== 0n){
                                             
                                             metamaskError.style.display = "none";
@@ -160,7 +163,6 @@ function paymentModal(){
                                                 
                                             }catch (error) {
                                              
-                                                console.log(error)
                                                 // show error popup message
                                                 metamaskError.style.display = "block";
                                                 const errorText = document.createTextNode(error.revert.args[0]);

@@ -3,13 +3,6 @@
 /**
  * Crypto Cashback Campaign Credit
  */
-
-
-
-use Cryptodorea\Woocryptodorea\utilities\Encrypt;
-
-
-
 function dorea_cashback_campaign_credit()
 {
 
@@ -20,6 +13,9 @@ function dorea_cashback_campaign_credit()
 
         $campaignName = $_GET['cashbackName'];
 
+        $encryptedSecretHash = "0x" . get_transient($campaignName)['secretHash'];
+        $encryptedInitKey = "0x" . get_transient($campaignName)['initKey'];
+
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
             wp_redirect('admin.php?page=crypto-dorea-cashback');
@@ -28,10 +24,6 @@ function dorea_cashback_campaign_credit()
     }else{
        wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
-
-    $encrypt = new Encrypt();
-    $encryptedSecret = $encrypt->encrypt(get_transient($campaignName));
-
 
     print('
                 
@@ -46,7 +38,7 @@ function dorea_cashback_campaign_credit()
          setTimeout(delay, 1000)
          function delay(){
              (async () => {
-          
+       
                   if(window.ethereum._state.accounts.length > 0){
                         document.getElementById("metamaskDisconnect").addEventListener("click", async () => {
                      
@@ -76,7 +68,7 @@ function dorea_cashback_campaign_credit()
              (async () => {
 
                     document.getElementById("doreaFund").addEventListener("click", async () => {
-   
+     console.log("CLICK")
                             let contractAmount = document.getElementById("creditAmount").value;
                             const metamaskError = document.getElementById("dorea_metamask_error");
                             
@@ -193,7 +185,8 @@ function dorea_cashback_campaign_credit()
                               
                                         //If your contract requires constructor args, you can specify them here
                                         const contract = await factory.deploy(
-                                            "'.$encryptedSecret.'",
+                                            "'.$encryptedSecretHash.'",
+                                            "'.$encryptedInitKey.'",
                                             {
                                               
                                               value: BigInt(contractAmount / 0.000000000000000001).toString(),
@@ -224,7 +217,7 @@ function dorea_cashback_campaign_credit()
                        
                 };
                 
-                xhr.send();
+                                xhr.send();
                 
                            
                         

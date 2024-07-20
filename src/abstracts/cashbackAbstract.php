@@ -11,7 +11,7 @@ abstract class cashbackAbstract{
 
     }
 
-    abstract function create($campaignName, $cryptoType, $cryptoAmount,  $shoppingCount, $startDateYear, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay, $timestampDate);
+    abstract function create($campaignName, $cryptoType, $cryptoAmount,  $shoppingCount, $startDateYear, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay, $timestamp);
 
     abstract function list();
 

@@ -3,6 +3,7 @@
 namespace Cryptodorea\Woocryptodorea\controllers;
 
 use Cryptodorea\Woocryptodorea\abstracts\cashbackAbstract;
+use Cryptodorea\Woocryptodorea\utilities\Encrypt;
 use Cryptodorea\Woocryptodorea\utilities\expCalculator;
 
 
@@ -21,9 +22,13 @@ class cashbackController extends cashbackAbstract
     public function create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateYear, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay, $timestamp)
     {
 
+        $encrypt = new Encrypt();
+        $encryptedSecretHash = $encrypt->randomSha256();
+        $encryptedInitKey = $encrypt->randomSha256();
+
         $expCalculator = new expCalculator();
 
-        $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDateYear'=>$startDateYear, 'startDateMonth' => $startDateMonth, 'startDateDay' => $startDateDay, 'expDateMonth' => $expDateMonth, 'expDateDay' => $expDateDay, 'timestamp' => $timestamp];
+        $arr = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'startDateYear'=>$startDateYear, 'startDateMonth' => $startDateMonth, 'startDateDay' => $startDateDay, 'expDateMonth' => $expDateMonth, 'expDateDay' => $expDateDay, "secretHash" => $encryptedSecretHash, "initKey" => $encryptedInitKey, 'timestamp' => $timestamp];
 
         if (empty($this->list()) || !in_array($campaignName, $this->list())) {
             if (isset($arr)) {

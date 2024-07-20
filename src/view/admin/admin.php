@@ -66,6 +66,7 @@ function dorea_add_menu_page(): void
 
     }
 
+
 }
 
 
@@ -90,6 +91,7 @@ function dorea_main_page_content()
             } else {
                 print('<a href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
             }
+
         }
     } else {
         // remove wordpress prefix on production
@@ -97,6 +99,7 @@ function dorea_main_page_content()
     }
 
 }
+
 /**
  * Crypto Cashback Campaign
  */
