@@ -83,7 +83,6 @@ function dorea_main_page_content()
     if (isset($cashbackList)) {
         foreach ($cashbackList as &$campaignList) {
             print($campaignList . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
-
             $doreaContractAddress = get_option($campaignList . '_contract_address');
 
             if ($doreaContractAddress) {
@@ -92,12 +91,14 @@ function dorea_main_page_content()
                 print('<a href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
             }
 
+            print('<button id="campaignPayment_'.$campaignList.'">pay</button>');
+
         }
+
     } else {
         // remove wordpress prefix on production
         print('<a href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
     }
-
 }
 
 /**

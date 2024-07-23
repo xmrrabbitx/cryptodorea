@@ -28,6 +28,7 @@ function cashback()
 
 
             // check if any campaign funded or not!
+            /*
             $funded = array_map(function($values){
                 if(get_option( $values . '_contract_address')) {
 
@@ -35,20 +36,22 @@ function cashback()
 
                 }
             }, $cashbackList);
-
-            if(in_array(true, $funded)) {
+            */
+            //if(in_array(true, $funded)) {
                 // add cash back program element to theme
                 print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
                         <p>
                             <h4>
                                 add to cash back program:
-                                
+                                <span>
+                                    <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
+                                </span>
                 ");
-            }
+            //}
 
             foreach ($cashbackList as $campaignList) {
                 // check if campaign is funded
-                if(get_option( $campaignList . '_contract_address')) {
+                //if(get_option( $campaignList . '_contract_address')) {
 
                     if (!in_array($campaignList, $campaignListUser)) {
                         print(" 
@@ -58,7 +61,7 @@ function cashback()
                             </span>
                         ");
                     }
-                }
+               // }
             }
 
             if(!$campaign->check($cashbackList)) {
@@ -66,6 +69,9 @@ function cashback()
                     <p>You already joined all cashback programs!</p>
                 ");
             }
+
+            print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
+
 
             // check and add to cash back program
             print("<script>
@@ -82,53 +88,66 @@ function cashback()
                         
                         let dorea_add_to_cashback_checked = document.getElementsByClassName('dorea_add_to_cashback_checkbox_');
                         let dorea_add_to_cashback_address = document.getElementById('dorea_add_to_cashback_address');
-                          
-                   
+                        
+                        let dorea_walletaddress = document.getElementById('dorea_walletaddress');
+                        const metamaskError = document.getElementById('dorea_metamask_error');
+                            
+                      
+                        if(dorea_walletaddress.value.length < 42){
                              
-                        if(dorea_add_to_cashback_checked.length > 0){
-                   
-                            let campaignlist = [];
-                            for(let i=0; i < dorea_add_to_cashback_checked.length;i++){ 
-                                if(dorea_add_to_cashback_checked[i].checked){
-                                    if(dorea_add_to_cashback_checked[i].value !== ''){
-                                            campaignlist.push(dorea_add_to_cashback_checked[i].value);
+                             if (metamaskError.hasChildNodes()) {
+                                  metamaskError.removeChild(metamaskError.firstChild);
+                             }
+                             metamaskError.style.display = 'block';
+                             const errorText = document.createTextNode('please insert a valid wallet address!');
+                             metamaskError.appendChild(errorText);
+                             return false;
+                        }else{
+                            metamaskError.style.display = 'none';
+                            dorea_walletaddress.style.border = '1px solid green'; 
+                            if(dorea_add_to_cashback_checked.length > 0){
+
+                                let campaignlist = [];
+                                for(let i=0; i < dorea_add_to_cashback_checked.length;i++){ 
+                                    if(dorea_add_to_cashback_checked[i].checked){
+                                        if(dorea_add_to_cashback_checked[i].value !== ''){
+                                                campaignlist.push(dorea_add_to_cashback_checked[i].value);
+                                        }
+                                        
+                                    }else {
+                                        
                                     }
-                                    
-                                }else {
-                                    
                                 }
-                            }
-                            
-                          
-                            // remove wordpress prefix on production
-                            let xhr = new XMLHttpRequest();
-                            xhr.open('POST', '#', true);
-                            xhr.setRequestHeader('Accept', 'application/json');
-                            xhr.setRequestHeader('Content-Type', 'application/json');
-                            xhr.onreadystatechange = function() {
-                                if (xhr.readyState === 4 && xhr.status === 200) {
                                 
-                                    //console.log('add to cash back session is set');
-                                   //console.log(xhr.responseText);
+                              
+                                // remove wordpress prefix on production
+                                let xhr = new XMLHttpRequest();
+                                xhr.open('POST', '#', true);
+                                xhr.setRequestHeader('Accept', 'application/json');
+                                xhr.setRequestHeader('Content-Type', 'application/json');
+                                xhr.onreadystatechange = function() {
+                                    if (xhr.readyState === 4 && xhr.status === 200) {
+                                    
+                                        //console.log('add to cash back session is set');
+                                       //console.log(xhr.responseText);
+                                    }
+                                };
+                                   
+                                if(campaignlist.length > 0){ 
+                                    xhr.send(JSON.stringify({'campaignlist':campaignlist}));
                                 }
-                            };
-                               
-                            if(campaignlist.length > 0){ 
-                                console.log(campaignlist)
-                                xhr.send(JSON.stringify({'campaignlist':campaignlist}));
-                            }
-                            
-                            // Prevent the form from submitting (optional)
-                            return false;
+                                
+                                // Prevent the form from submitting (optional)
+                                return false;
                         
                                     
-                        }
+                            }
                             
-                         
+                        }
                         
                     }
                     
-                    const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 5000);
+                    const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 3000);
                 </script>");
 
 

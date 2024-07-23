@@ -6,6 +6,8 @@
 function dorea_cashback_campaign_credit()
 {
 
+    $abi = "hadi";
+
     print("campaign credit page");
 
     $campaignName = null;
@@ -181,7 +183,7 @@ function dorea_cashback_campaign_credit()
                                         // Get the signer from the provider metamask
                                         const signer = await provider.getSigner();
                             
-                                        const factory = new ContractFactory(abi, bytecode, signer);
+                                        const factory = new ContractFactory("'.$abi.'", bytecode, signer);
                               
                                         //If your contract requires constructor args, you can specify them here
                                         const contract = await factory.deploy(
