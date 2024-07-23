@@ -111,7 +111,7 @@ function doreaPlans()
 
             
             let doreaPaymentModalButton = document.querySelectorAll(".doreaBuy");
-        
+            console.log(doreaPaymentModalButton)
              doreaPaymentModalButton.forEach(
                 
                 (element) =>             

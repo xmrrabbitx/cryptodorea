@@ -91,7 +91,7 @@ function dorea_main_page_content()
                 print('<a href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
             }
 
-            print('<button id="campaignPayment_'.$campaignList.'">pay</button>');
+            print('<button class="campaignPayment_" id="campaignPayment_'.$campaignList.'">pay</button>');
 
         }
 
@@ -99,6 +99,10 @@ function dorea_main_page_content()
         // remove wordpress prefix on production
         print('<a href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
     }
+
+    //include campaign pay js mechanism
+    dorea_campaign_pay();
+
 }
 
 /**
@@ -116,3 +120,8 @@ include('campaignCredit.php');
  * Plans
  */
 include('doreaPlans.php');
+
+/**
+ * Payment Modal
+ */
+include('payment/pay.php');
