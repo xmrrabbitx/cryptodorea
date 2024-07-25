@@ -70,7 +70,7 @@ function dorea_cashback_campaign_credit()
              (async () => {
 
                     document.getElementById("doreaFund").addEventListener("click", async () => {
-     console.log("CLICK")
+
                             let contractAmount = document.getElementById("creditAmount").value;
                             const metamaskError = document.getElementById("dorea_metamask_error");
                             

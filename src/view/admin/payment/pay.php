@@ -1,12 +1,23 @@
 <?php
 
+use Cryptodorea\Woocryptodorea\utilities\compile;
+
 /**
  * the payment modal for admin campaigns
  */
 //('admin_menu', 'dorea_campaign_pay');
 function dorea_campaign_pay(): void
 {
-    print('<script>
+
+    //$doreaContractAddress = get_option($campaignName . '_contract_address');
+
+    $compile = new compile();
+    $abi = $compile->abi();
+    $bytecode = $compile->bytecode();
+
+    print('<script type="module">
+
+         import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
          let campaignNames = document.querySelectorAll(".campaignPayment_");
        
@@ -15,31 +26,21 @@ function dorea_campaign_pay(): void
             (element) =>             
            
               element.addEventListener("click", async function(){
-                     
+                     console.log(element.value)
                 await window.ethereum.request({ method: "eth_requestAccounts" });
                 const accounts = await ethereum.request({ method: "eth_accounts" });
                 const account = accounts[0];
-                  
-              
-                try{
-                  let txHash = await window.ethereum.request({
-                      "method": "eth_sendTransaction",
-                      "params": [
-                        {
-                          "to": "0x6E94C86c6417677F4de93700681184c5f49F55BD",
-                          "from": account,
-                          "gas": "0x2DC6C0",
-                          "value": "0x8ac7230489e80000",
-                          "data": "0x",
-                          "gasPrice": "0x4a817c800"
-                        }
-                      ]
-                   });
-                 console.log("Transaction sent with hash:", txHash);
-                } catch (error) {
-                    console.error(error);
-                }
-               
+                
+                const provider = new BrowserProvider(window.ethereum);
+                            
+                const signer = await provider.getSigner();
+                let message = "sign into ethers.org?";
+                
+                let sig = await signer.signMessage(message);
+                
+                const contract = new ethers.Contract("0x29E560Ce695A65fcBC8845c33a94B7F895642542", '.$abi.', "'.$bytecode.'");
+                           
+                console.log(ethers.verifyMessage(message, sig))
                
             })
          )
