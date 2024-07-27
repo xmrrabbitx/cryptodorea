@@ -150,8 +150,7 @@ function paymentModal(){
                                         //const adm = await contract.userAuthToken("");
                                          
                                         const balance = await contract.getBalance();
-                                            
-                                       return true;
+                                       
                                         if(balance !== 0n){
                                             
                                             metamaskError.style.display = "none";
