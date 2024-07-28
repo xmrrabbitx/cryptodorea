@@ -61,15 +61,11 @@ function dorea_campaign_pay(): void
                 const r = signature.slice(0, 66);
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
-                console.log({ r, s, v });
-              
-                //console.log(ethers.verifyMessage(message, sig))
+
+                        
+                 const contract = new ethers.Contract("0x4c95823A3EA1B1681D298a6E661fac69373C53Ea",abi, signer)
                 
-                 const contract = new ethers.Contract("0x66C24D8C9716B9E5424355290FCf10679e287Fa3",abi, signer)
-                
-                 const balance = await contract.getBalance();
-                 console.log(balance)
-                 let re = await contract.claimPrize(messageHash, v, r, s);
+                 let re = await contract.pay("0xA42fF3deff677E97904BDf8733d6B90982B795e9","2000000000000000000", 1,1,messageHash, v, r, s);
                  console.log(re)
                 
                 
