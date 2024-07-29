@@ -61,12 +61,13 @@ function dorea_campaign_pay(): void
                 const r = signature.slice(0, 66);
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
-
                         
-                 const contract = new ethers.Contract("0x4c95823A3EA1B1681D298a6E661fac69373C53Ea",abi, signer)
-                
-                 let re = await contract.pay("0xA42fF3deff677E97904BDf8733d6B90982B795e9","2000000000000000000", 1,1,messageHash, v, r, s);
-                 console.log(re)
+               
+                //const contract = new ethers.Contract("0xD0F35A89b65Aa1DC3B79a2d54C49f42Dd69e7F5C",abi, signer)
+                const contract = new ethers.Contract("0x742C8E0800a53dF477173f11cf3bEaF729C304E2", '.$abi.',signer);
+
+                let re = await contract.pay(["0x445D816fbc80c270509018c7C5286B8d193A4187","0x096bc12574B265647f1441A3c01fBdA5F21cC47f"],"2000000000000000000", 1,1,messageHash, v, r, s);
+                console.log(re)
                 
                 
                 }
@@ -81,13 +82,25 @@ function dorea_campaign_pay(): void
 }
 
 /*
- * const contract = new ethers.Contract("", '.$abi.', "'.$bytecode.'");
+ * const contract = new ethers.Contract("", '.$abi.', "'.$bytecode.'")
+ * const contract = new ethers.Contract("", '.$abi.', signer)
 
                 console.log(ethers.verifyMessage(message, sig))
+
+const contract = new ethers.Contract(
+                    "0xD0F35A89b65Aa1DC3B79a2d54C49f42Dd69e7F5C",
+
+                    , "'.$bytecode.'"
+                )
 
 
  console.log(messageHash)
                 let sig = await signer.signMessage(messageHash);
+
+[0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db]
+
+["0x5B38Da6a701c568545dCfcB03FcB875f56beddC4","0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db"]
+
 
 
  */
