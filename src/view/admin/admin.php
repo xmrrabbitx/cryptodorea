@@ -80,28 +80,31 @@ function dorea_main_page_content()
     $cashbackList = $cashback->list();
 
     print("create your cash back campaign for the most loyal customers </br>");
+
     if (isset($cashbackList)) {
-        foreach ($cashbackList as &$campaignList) {
-            print($campaignList . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignList . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
-            $doreaContractAddress = get_option($campaignList . '_contract_address');
+        foreach ($cashbackList as &$campaignName) {
+
+            print($campaignName . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
+            $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
                 print ('funded!</br>');
             } else {
-                print('<a href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignList . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
+                print('<a href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
             }
 
-            print('<button class="campaignPayment_" id="campaignPayment_'.$campaignList.'">pay</button>');
-
+            if($doreaContractAddress) {
+                print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
+            }
         }
+
+        //include campaign pay js script
+        dorea_campaign_pay();
 
     } else {
         // remove wordpress prefix on production
         print('<a href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
     }
-
-    //include campaign pay js mechanism
-    dorea_campaign_pay();
 
 }
 
