@@ -98,26 +98,26 @@ class cashbackController extends cashbackAbstract
                 delete_option('campaign_list');
             }
 
-            if(get_option('dorea_campaignlist_user')) {
+            if(get_option('dorea_campaignlist_user_'. wp_get_current_user()->user_login)) {
                 // remove dorea_campaignlist_user from list
-                $key = array_search($campaignName, get_option('dorea_campaignlist_user'));
-                $campaignListUser = get_option('dorea_campaignlist_user');
+                $key = array_search($campaignName, get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login));
+                $campaignListUser = get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login);
                 unset($campaignListUser[$key]);
-                update_option('dorea_campaignlist_user', $campaignListUser);
+                update_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login, $campaignListUser);
 
-                if (empty(get_option('dorea_campaignlist_user'))) {
-                    delete_option('dorea_campaignlist_user');
+                if (empty(get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login))) {
+                    delete_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login);
                 }
             }
 
             //remove dorea_campaigninfo_user
-            $campaignInfoUser = get_option('dorea_campaigninfo_user');
+            $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
             if($campaignInfoUser) {
                 unset($campaignInfoUser[$campaignName]);
-                update_option('dorea_campaigninfo_user', $campaignInfoUser);
+                update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
             }
-            if(empty(get_option('dorea_campaigninfo_user'))){
-                delete_option('dorea_campaigninfo_user');
+            if(empty(get_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login))){
+                delete_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login);
             }
 
         }

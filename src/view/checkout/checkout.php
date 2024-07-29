@@ -14,6 +14,8 @@ add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
 function cashback()
 {
 
+    var_dump(get_option("dorea_campaignlist_user_" .  wp_get_current_user()->user_login));
+
     if (!WC()->cart->get_cart_contents_count() == 0) {
 
         // get cashback list of admin
@@ -26,9 +28,7 @@ function cashback()
 
         if ($cashbackList) {
 
-
             // check if any campaign funded or not!
-            /*
             $funded = array_map(function($values){
                 if(get_option( $values . '_contract_address')) {
 
@@ -36,8 +36,15 @@ function cashback()
 
                 }
             }, $cashbackList);
-            */
-            //if(in_array(true, $funded)) {
+
+
+            if(!$campaign->check($cashbackList)) {
+
+                print ("
+                    <p>You already joined all cashback programs!</p>
+                ");
+
+            }elseif(in_array(true, $funded)) {
                 // add cash back program element to theme
                 print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
                         <p>
@@ -47,11 +54,11 @@ function cashback()
                                     <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
                                 </span>
                 ");
-            //}
 
-            foreach ($cashbackList as $campaignList) {
-                // check if campaign is funded
-                //if(get_option( $campaignList . '_contract_address')) {
+
+                foreach ($cashbackList as $campaignList) {
+                    // check if campaign is funded
+                    //if(get_option( $campaignList . '_contract_address')) {
 
                     if (!in_array($campaignList, $campaignListUser)) {
                         print(" 
@@ -61,14 +68,10 @@ function cashback()
                             </span>
                         ");
                     }
-               // }
+                    // }
+                }
             }
 
-            if(!$campaign->check($cashbackList)) {
-                print ("
-                    <p>You already joined all cashback programs!</p>
-                ");
-            }
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
 
@@ -92,9 +95,9 @@ function cashback()
                         let dorea_walletaddress = document.getElementById('dorea_walletaddress');
                         const metamaskError = document.getElementById('dorea_metamask_error');
                             
-                      
+                        
                         if(dorea_walletaddress.value.length < 42){
-                             
+                            
                              if (metamaskError.hasChildNodes()) {
                                   metamaskError.removeChild(metamaskError.firstChild);
                              }
@@ -134,7 +137,7 @@ function cashback()
                                 };
                                    
                                 if(campaignlist.length > 0){ 
-                                    xhr.send(JSON.stringify({'campaignlist':campaignlist}));
+                                    xhr.send(JSON.stringify({'campaignlists':campaignlist,'walletAddress':dorea_walletaddress.value}));
                                 }
                                 
                                 // Prevent the form from submitting (optional)
@@ -161,6 +164,7 @@ function cashback()
 add_action('wp','checkout');
 function checkout()
 {
+
     if(is_page('checkout')) {
          $checkout = new checkoutController();
          $checkout->checkout();

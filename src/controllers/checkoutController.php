@@ -55,15 +55,18 @@ class checkoutController extends checkoutAbstract
     {
 
         // get Json Data
-        $json_data = file_get_contents('php://input');
+        $data = file_get_contents('php://input');
+        $json = json_decode($data);
 
         // issue is here
-        if (!empty($json_data)) {
-            $campaignLists = json_decode($json_data);
+        if (!empty($json)) {
+
+            $campaignLists = $json->campaignlists;
+            $userWalletAddress = $json->walletAddress;
 
             try {
 
-                $this->addtoList($campaignLists->campaignlist);
+                $this->addtoList($campaignLists, $userWalletAddress);
 
                 // throw new Exception('something went wrong!');
             } catch (Exception $error) {
