@@ -44,10 +44,10 @@ class checkoutController extends checkoutAbstract
 
     }
 
-    public function addtoList($campaignNames)
+    public function addtoList($campaignNames, $userWalletAddress)
     {
 
-        $this->checkoutModel->add($campaignNames);
+        $this->checkoutModel->add($campaignNames,$userWalletAddress);
 
     }
 

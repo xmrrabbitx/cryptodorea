@@ -98,6 +98,7 @@ class cashbackController extends cashbackAbstract
                 delete_option('campaign_list');
             }
 
+            /*
             if(get_option('dorea_campaignlist_user_'. wp_get_current_user()->user_login)) {
                 // remove dorea_campaignlist_user from list
                 $key = array_search($campaignName, get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login));
@@ -109,6 +110,7 @@ class cashbackController extends cashbackAbstract
                     delete_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login);
                 }
             }
+            */
 
             //remove dorea_campaigninfo_user
             $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);

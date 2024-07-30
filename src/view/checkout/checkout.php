@@ -14,7 +14,7 @@ add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
 function cashback()
 {
 
-    var_dump(get_option("dorea_campaignlist_user_" .  wp_get_current_user()->user_login));
+    //var_dump(delete_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
 
     if (!WC()->cart->get_cart_contents_count() == 0) {
 

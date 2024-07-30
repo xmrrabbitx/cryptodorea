@@ -15,6 +15,6 @@ abstract class checkoutModelAbstract
 
     abstract function list();
 
-    abstract function add($campaignNames);
+    abstract function add($campaignNames, $userWalletAddress);
 
 }
