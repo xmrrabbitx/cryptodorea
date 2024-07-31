@@ -15,6 +15,7 @@ function cashback()
 {
 
     //var_dump(delete_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
+    var_dump(get_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
 
     if (!WC()->cart->get_cart_contents_count() == 0) {
 
@@ -38,13 +39,14 @@ function cashback()
             }, $cashbackList);
 
 
-            if(!$campaign->check($cashbackList)) {
+            if(!$campaign->check($cashbackList) && $campaign->check($cashbackList) !== null) {
 
                 print ("
                     <p>You already joined all cashback programs!</p>
                 ");
 
             }elseif(in_array(true, $funded)) {
+
                 // add cash back program element to theme
                 print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
                         <p>
@@ -56,25 +58,24 @@ function cashback()
                 ");
 
 
-                foreach ($cashbackList as $campaignList) {
-                    // check if campaign is funded
-                    //if(get_option( $campaignList . '_contract_address')) {
-
-                    if (!in_array($campaignList, $campaignListUser)) {
+                if($campaign->check($cashbackList)) {
+                    $campaignNames = $campaign->campaignDiff($cashbackList);
+                }else {
+                    $campaignNames = $cashbackList;
+                }
+                if(!empty($campaignNames)) {
+                    foreach ($campaignNames as $campaign) {
                         print(" 
-                            <span>
-                                <label>" . $campaignList . "</label>
-                                <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaignList . "' onclick='debouncedAddToCashbackCheckbox()'>
-                            </span>
-                        ");
+                                <span>
+                                    <label>" . $campaign . "</label>
+                                    <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
+                                </span>
+                    ");
                     }
-                    // }
                 }
             }
 
-
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
-
 
             // check and add to cash back program
             print("<script>

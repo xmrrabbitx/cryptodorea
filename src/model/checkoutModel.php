@@ -24,29 +24,28 @@ class checkoutModel extends checkoutModelAbstract
     public function list()
     {
 
-        return get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) !== false ? get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) : [];
+        return get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) !== false ? get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) : null;
 
     }
 
     public function add($campaignNames, $userWalletAddress)
     {
 
-
         // add/update campaigns info user
         $campaignList = $this->list();
-        if (count($campaignList) > 0) {
-            foreach ($campaignNames as $camps) {
-                if (!in_array($camps, $campaignList)) {
-                    array_push($campaignList, $camps);
-                    $campaignInfo = [$camps=>["walletAddress"=>$userWalletAddress]];
-                    var_dump($campaignInfo);
-                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignList);
-                }
+
+        $campaignInfo = [["campaignNames"=>$campaignNames, "walletAddress" => $userWalletAddress]];
+
+        foreach ($campaignNames as $camps) {
+            if($campaignList !== null) {
+               if (!in_array($camps, $campaignList)) {
+                  $result = array_merge($campaignList, $campaignInfo);
+                  update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $result);
+               }
             }
-        } else if (count($campaignList) < 1) {
-            add_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignNames);
+            else{
+               add_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfo);
+            }
         }
-
     }
-
 }

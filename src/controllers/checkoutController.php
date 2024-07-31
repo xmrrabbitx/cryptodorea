@@ -29,19 +29,49 @@ class checkoutController extends checkoutAbstract
     public function check($campaignNames)
     {
 
-        if ($this->checkoutModel->list() && !empty($this->checkoutModel->list())){
+        if ($this->checkoutModel->list() && !empty($this->checkoutModel->list())) {
 
             $campaignList = $this->checkoutModel->list();
-            foreach ($campaignNames as $campaign) {
-                if (!in_array($campaign, $campaignList)) {
+
+            $campaignNamesList = [];
+            foreach ($campaignList as $campaign) {
+
+                $campaignNamesList = array_merge($campaignNamesList,$campaign['campaignNames']);
+
+            }
+            if(!empty($campaignNamesList)) {
+                $diff = array_diff($campaignNames, $campaignNamesList);
+                if (!empty($diff)) {
                     return true;
+                }else{
+                    return false;
                 }
             }
-            return false;
-        }else{
-            return true;
-        }
 
+        }
+    }
+
+    public function campaignDiff($campaignNames)
+    {
+
+        if ($this->checkoutModel->list() && !empty($this->checkoutModel->list())) {
+
+            $campaignList = $this->checkoutModel->list();
+
+            $campaignNamesList = [];
+            foreach ($campaignList as $campaign) {
+
+                $campaignNamesList = array_merge($campaignNamesList,$campaign['campaignNames']);
+
+            }
+            if(!empty($campaignNamesList)) {
+                $diff = array_diff($campaignNames, $campaignNamesList);
+                if (!empty($diff)) {
+                    return $diff;
+                }
+            }
+
+        }
     }
 
     public function addtoList($campaignNames, $userWalletAddress)
