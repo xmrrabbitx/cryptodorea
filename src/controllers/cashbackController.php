@@ -84,7 +84,6 @@ class cashbackController extends cashbackAbstract
 
         if (!empty($campaignName)) {
 
-            /*
             delete_transient($campaignName);
             delete_option($campaignName . '_contract_address');
 
@@ -96,7 +95,7 @@ class cashbackController extends cashbackAbstract
             if(empty(get_option('campaign_list'))){
                 delete_option('campaign_list');
             }
-            */
+
 
             // remove this maybe?
             /*
@@ -115,17 +114,28 @@ class cashbackController extends cashbackAbstract
 
             //remove dorea_campaigninfo_user
             $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
-            var_dump($campaignInfoUser);
-            die("stoppp");
-            if($campaignInfoUser) {
-                unset($campaignInfoUser[$campaignName]);
-                update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+
+            $i = 0;
+            foreach ($campaignInfoUser as $campaigns){
+
+                if(in_array($campaignName, $campaigns['campaignNames'])){
+                    $key = array_search($campaignName,  $campaigns['campaignNames']);
+                    unset($campaigns["campaignNames"][$key]);
+                    $campaignInfoUser[$i]['campaignNames'] = $campaigns["campaignNames"];
+                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+
+                }
+
+                if(empty($campaignInfoUser[$i]['campaignNames'])){
+                    unset($campaignInfoUser[$i]);
+                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                }
+                $i+=1;
             }
+
             if(empty(get_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login))){
                 delete_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login);
             }
-
-
 
         }
 

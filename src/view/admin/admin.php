@@ -81,7 +81,7 @@ function dorea_main_page_content()
 
     print("create your cash back campaign for the most loyal customers </br>");
 
-    if (isset($cashbackList)) {
+    if ($cashbackList) {
         foreach ($cashbackList as &$campaignName) {
 
             print($campaignName . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
