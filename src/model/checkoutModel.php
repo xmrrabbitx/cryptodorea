@@ -48,4 +48,18 @@ class checkoutModel extends checkoutModelAbstract
             }
         }
     }
+
+
+
+    public function addUser()
+    {
+        $users = get_option("dorea_campaigns_users");
+        $userName = wp_get_current_user()->user_login;
+        if(empty($users)){
+            add_option("dorea_campaigns_users", [$userName]);
+        }else{
+            $users[] = $userName;
+            update_option("dorea_campaigns_users", $users);
+        }
+    }
 }

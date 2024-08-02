@@ -81,6 +81,13 @@ class checkoutController extends checkoutAbstract
 
     }
 
+    public function addtoListUsers()
+    {
+
+        $this->checkoutModel->addUser();
+
+    }
+
     public function checkout()
     {
 
@@ -97,6 +104,7 @@ class checkoutController extends checkoutAbstract
             try {
 
                 $this->addtoList($campaignLists, $userWalletAddress);
+                $this->addtoListUsers();
 
                 // throw new Exception('something went wrong!');
             } catch (Exception $error) {

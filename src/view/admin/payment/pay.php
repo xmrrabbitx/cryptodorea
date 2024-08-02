@@ -1,6 +1,7 @@
 <?php
 
 use Cryptodorea\Woocryptodorea\utilities\compile;
+use Cryptodorea\Woocryptodorea\controllers\paymentController;
 
 /**
  * the payment modal for admin campaigns
@@ -9,10 +10,12 @@ use Cryptodorea\Woocryptodorea\utilities\compile;
 function dorea_campaign_pay(): void
 {
 
-
     $compile = new compile();
     $abi = $compile->abi();
     $bytecode = $compile->bytecode();
+
+    $payment = new paymentController();
+    $payment->list("test");
 
     print('<script type="module">
 

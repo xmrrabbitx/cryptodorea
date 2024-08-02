@@ -13,12 +13,6 @@ use Cryptodorea\Woocryptodorea\utilities\expCalculator;
 class cashbackController extends cashbackAbstract
 {
 
-    function __construct()
-    {
-
-
-    }
-
     public function create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $startDateYear, $startDateMonth, $startDateDay, $expDateMonth, $expDateDay, $timestamp)
     {
 
@@ -84,6 +78,7 @@ class cashbackController extends cashbackAbstract
 
         if (!empty($campaignName)) {
 
+            // remove admin DB records
             delete_transient($campaignName);
             delete_option($campaignName . '_contract_address');
 
@@ -96,23 +91,7 @@ class cashbackController extends cashbackAbstract
                 delete_option('campaign_list');
             }
 
-
-            // remove this maybe?
-            /*
-            if(get_option('dorea_campaignlist_user_'. wp_get_current_user()->user_login)) {
-                // remove dorea_campaignlist_user from list
-                $key = array_search($campaignName, get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login));
-                $campaignListUser = get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login);
-                unset($campaignListUser[$key]);
-                update_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login, $campaignListUser);
-
-                if (empty(get_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login))) {
-                    delete_option('dorea_campaignlist_user_' . wp_get_current_user()->user_login);
-                }
-            }
-            */
-
-            //remove dorea_campaigninfo_user
+            // remove user DB records
             $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
 
             $i = 0;
