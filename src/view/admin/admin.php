@@ -94,12 +94,13 @@ function dorea_main_page_content()
             }
 
             if($doreaContractAddress) {
-                print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
+               // print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
+                print('<a class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</button>');
             }
         }
 
         //include campaign pay js script
-        dorea_campaign_pay();
+        //dorea_campaign_pay();
 
     } else {
         // remove wordpress prefix on production

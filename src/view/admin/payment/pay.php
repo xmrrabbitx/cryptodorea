@@ -3,6 +3,7 @@
 use Cryptodorea\Woocryptodorea\utilities\compile;
 use Cryptodorea\Woocryptodorea\controllers\paymentController;
 
+
 /**
  * the payment modal for admin campaigns
  */
@@ -12,10 +13,10 @@ function dorea_campaign_pay(): void
 
     $compile = new compile();
     $abi = $compile->abi();
-    $bytecode = $compile->bytecode();
+    //$bytecode = $compile->bytecode();
 
     $payment = new paymentController();
-    $payment->list("test");
+    //$walletList = $payment->list($campaignName);
 
     print('<script type="module">
 
@@ -29,9 +30,10 @@ function dorea_campaign_pay(): void
            
               element.addEventListener("click", async function(){
                 
-                let contractAddress = element.id;
-                console.log(contractAddress)
-                  
+                let elmentIed = element.id;
+                const contractAddress = elmentIed.split("_")[2];
+                let campaignName = elmentIed.split("_")[1];
+
                 await window.ethereum.request({ method: "eth_requestAccounts" });
                 const accounts = await ethereum.request({ method: "eth_accounts" });
                 const account = accounts[0];
@@ -56,10 +58,28 @@ function dorea_campaign_pay(): void
                         
                 const contract = new ethers.Contract(contractAddress, '.$abi.',signer);
 
-                let re = await contract.pay(["0x445D816fbc80c270509018c7C5286B8d193A4187","0x096bc12574B265647f1441A3c01fBdA5F21cC47f"],"2000000000000000000", 1,1,messageHash, v, r, s);
+                let re = await contract.pay(["0xE805814589bdFb09E9bfbF8acF4cDA9c5BCefD17","0x096bc12574B265647f1441A3c01fBdA5F21cC47f"],"2000000000000000000", 1,1,messageHash, v, r, s);
                
             })
          )
                    
     </script>');
+}
+
+
+/**
+ * Campaign payment list wallet address users
+ */
+add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
+
+function dorea_admin_pay_campaign()
+{
+
+    $campaignName = $_GET['cashbackName'];
+
+    $doreaContractAddress = get_option($campaignName . '_contract_address');
+
+
+    print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
+    dorea_campaign_pay();
 }
