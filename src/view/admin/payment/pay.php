@@ -8,15 +8,14 @@ use Cryptodorea\Woocryptodorea\controllers\paymentController;
  * the payment modal for admin campaigns
  */
 //('admin_menu', 'dorea_campaign_pay');
-function dorea_campaign_pay(): void
+function dorea_campaign_pay($walletsList): void
 {
 
     $compile = new compile();
     $abi = $compile->abi();
     //$bytecode = $compile->bytecode();
 
-    $payment = new paymentController();
-    //$walletList = $payment->list($campaignName);
+    $walletsList = json_encode($walletsList);
 
     print('<script type="module">
 
@@ -56,9 +55,9 @@ function dorea_campaign_pay(): void
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
                         
-                const contract = new ethers.Contract(contractAddress, '.$abi.',signer);
+                const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
 
-                let re = await contract.pay(["0xE805814589bdFb09E9bfbF8acF4cDA9c5BCefD17","0x096bc12574B265647f1441A3c01fBdA5F21cC47f"],"2000000000000000000", 1,1,messageHash, v, r, s);
+                let re = await contract.pay('.$walletsList.',"2000000000000000000", 1,1,messageHash, v, r, s);
                
             })
          )
@@ -75,11 +74,29 @@ add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
 
+
+    $userList = get_option("dorea_campaigns_users");
+
+    foreach ($userList as $users){
+
+        $campaigns = get_option("dorea_campaigninfo_user_" . $users);
+        foreach ($campaigns as $campaignInfo){
+
+            print($users . "<br>");
+
+
+        }
+
+    }
+
+
     $campaignName = $_GET['cashbackName'];
+
+    $payment = new paymentController();
+    $walletsList = $payment->walletslist($campaignName);
 
     $doreaContractAddress = get_option($campaignName . '_contract_address');
 
-
     print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
-    dorea_campaign_pay();
+    dorea_campaign_pay($walletsList);
 }

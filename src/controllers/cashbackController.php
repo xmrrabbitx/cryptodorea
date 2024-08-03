@@ -94,26 +94,40 @@ class cashbackController extends cashbackAbstract
             // remove user DB records
             $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
 
-            $i = 0;
-            foreach ($campaignInfoUser as $campaigns){
+            if($campaignInfoUser){
+                $i = 0;
+                foreach ($campaignInfoUser as $campaigns){
 
-                if(in_array($campaignName, $campaigns['campaignNames'])){
-                    $key = array_search($campaignName,  $campaigns['campaignNames']);
-                    unset($campaigns["campaignNames"][$key]);
-                    $campaignInfoUser[$i]['campaignNames'] = $campaigns["campaignNames"];
-                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                    if(in_array($campaignName, $campaigns['campaignNames'])){
+                        $key = array_search($campaignName,  $campaigns['campaignNames']);
+                        unset($campaigns["campaignNames"][$key]);
+                        $campaignInfoUser[$i]['campaignNames'] = $campaigns["campaignNames"];
+                        update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
 
+                    }
+
+                    if(empty($campaignInfoUser[$i]['campaignNames'])){
+                        unset($campaignInfoUser[$i]);
+                        update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                    }
+                    $i+=1;
                 }
-
-                if(empty($campaignInfoUser[$i]['campaignNames'])){
-                    unset($campaignInfoUser[$i]);
-                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                }
-                $i+=1;
             }
 
             if(empty(get_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login))){
                 delete_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login);
+            }
+
+
+            $queueDeleteCampaigns = get_option('dorea_queue_delete_campaigns');
+
+            if($queueDeleteCampaigns === false){
+                add_option("dorea_queue_delete_campaigns", [$campaignName]);
+            }else{
+                if(!in_array($campaignName, $queueDeleteCampaigns)) {
+                    $queueDeleteCampaigns[] = $campaignName;
+                    update_option("dorea_queue_delete_campaigns", $queueDeleteCampaigns);
+                }
             }
 
         }

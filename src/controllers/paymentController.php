@@ -8,7 +8,7 @@ use Cryptodorea\Woocryptodorea\abstracts\paymentAbstract;
 class paymentController extends paymentAbstract
 {
 
-    public function list($campaignName)
+    public function walletslist($campaignName)
     {
         $userList = get_option("dorea_campaigns_users");
 
@@ -24,8 +24,8 @@ class paymentController extends paymentAbstract
 
         }
 
-        var_dump($campaignsQueue);
         return $campaignsQueue;
     }
+
 
 }

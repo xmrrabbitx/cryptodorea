@@ -75,7 +75,8 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content()
 {
-
+    $queueDeleteCampaigns = get_option('dorea_queue_delete_campaigns');
+var_dump($queueDeleteCampaigns);
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
@@ -95,7 +96,7 @@ function dorea_main_page_content()
 
             if($doreaContractAddress) {
                // print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
-                print('<a class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</button>');
+                print('<a class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>');
             }
         }
 

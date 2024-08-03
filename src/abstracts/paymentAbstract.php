@@ -14,7 +14,7 @@ abstract class paymentAbstract
 
     }
 
-    abstract function list(string $campaignName);
+    abstract function walletslist(string $campaignName);
 
 
 }
