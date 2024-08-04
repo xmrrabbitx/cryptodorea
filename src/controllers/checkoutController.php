@@ -137,7 +137,6 @@ class checkoutController extends checkoutAbstract
     public function remove()
     {
 
-        //delete_option("dorea_queue_delete_campaigns");
         $queueDeleteCampaigns = get_option('dorea_queue_delete_campaigns');
 
         if($queueDeleteCampaigns) {
@@ -148,15 +147,17 @@ class checkoutController extends checkoutAbstract
             foreach ($queueDeleteCampaigns as $campaigns) {
 
                 foreach ($campaignInfoUser as $campaignUser) {
+                    if($campaignUser['campaignNames']) {
+                        if (in_array($campaigns, $campaignUser['campaignNames'])) {
 
-                    if (in_array($campaigns, $campaignUser['campaignNames'])) {
+                            $key = array_search($campaigns, $campaignUser['campaignNames']);
+                            unset($campaignUser["campaignNames"][$key]);
+                            $campaignInfoUser[$i]['campaignNames'] = $campaignUser["campaignNames"];
+                            update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                            unset($queueDeleteCampaigns[$i]);
+                            update_option("dorea_queue_delete_campaigns", $queueDeleteCampaigns);
 
-                        $key = array_search($campaigns, $campaignUser['campaignNames']);
-                        unset($campaignUser["campaignNames"][$key]);
-                        $campaignInfoUser[$i]['campaignNames'] = $campaignUser["campaignNames"];
-                        update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                        unset($queueDeleteCampaigns[$i]);
-                        update_option("dorea_queue_delete_campaigns",$queueDeleteCampaigns);
+                        }
                     }
                 }
                 if (empty($campaignInfoUser[$i]['campaignNames'])) {
