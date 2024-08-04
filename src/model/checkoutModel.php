@@ -49,8 +49,6 @@ class checkoutModel extends checkoutModelAbstract
         }
     }
 
-
-
     public function addUser()
     {
         $users = get_option("dorea_campaigns_users");
@@ -58,8 +56,10 @@ class checkoutModel extends checkoutModelAbstract
         if(empty($users)){
             add_option("dorea_campaigns_users", [$userName]);
         }else{
-            $users[] = $userName;
-            update_option("dorea_campaigns_users", $users);
+            if(!in_array($userName, $users)) {
+                $users[] = $userName;
+                update_option("dorea_campaigns_users", $users);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 
 use Cryptodorea\Woocryptodorea\utilities\compile;
 use Cryptodorea\Woocryptodorea\controllers\paymentController;
+use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 
 
 /**
@@ -74,29 +75,43 @@ add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
 
+    $cashbackName = $_GET['cashbackName'];
+    $expireDate = get_transient($cashbackName)['timestamp'];
+
+    $expire = new expireCampaignController();
+
 
     $userList = get_option("dorea_campaigns_users");
+    if(empty($userList)){
+        print ("there is no users participant into the loyalty campaign!");
+    }else {
+        foreach ($userList as $users) {
 
-    foreach ($userList as $users){
+            $campaigns = get_option("dorea_campaigninfo_user_" . $users);
+            if($campaigns) {
+                print("<span>".$users."</span> ");
+                foreach ($campaigns as $campaignInfo) {
 
-        $campaigns = get_option("dorea_campaigninfo_user_" . $users);
-        foreach ($campaigns as $campaignInfo){
+                    print($campaignInfo['walletAddress'] . "</br>");
 
-            print($users . "<br>");
-
+                }
+            }
 
         }
 
+
+        $campaignName = $_GET['cashbackName'];
+
+        $payment = new paymentController();
+        $walletsList = $payment->walletslist($campaignName);
+
+        $doreaContractAddress = get_option($campaignName . '_contract_address');
+
+        if($expire->check($expireDate)){
+            print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
+            dorea_campaign_pay($walletsList);
+        }else{
+            die("not ready for payment!");
+        }
     }
-
-
-    $campaignName = $_GET['cashbackName'];
-
-    $payment = new paymentController();
-    $walletsList = $payment->walletslist($campaignName);
-
-    $doreaContractAddress = get_option($campaignName . '_contract_address');
-
-    print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
-    dorea_campaign_pay($walletsList);
 }

@@ -75,8 +75,7 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content()
 {
-    $queueDeleteCampaigns = get_option('dorea_queue_delete_campaigns');
-var_dump($queueDeleteCampaigns);
+
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
