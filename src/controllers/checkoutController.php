@@ -81,10 +81,10 @@ class checkoutController extends checkoutAbstract
 
     }
 
-    public function addtoListUsers()
+    public function addtoListUsers($campaignLists)
     {
 
-        $this->checkoutModel->addUser();
+        $this->checkoutModel->addUser($campaignLists);
 
     }
 
@@ -104,7 +104,7 @@ class checkoutController extends checkoutAbstract
             try {
 
                 $this->addtoList($campaignLists, $userWalletAddress);
-                $this->addtoListUsers();
+                $this->addtoListUsers($campaignLists);
 
                 // throw new Exception('something went wrong!');
             } catch (Exception $error) {
@@ -142,34 +142,35 @@ class checkoutController extends checkoutAbstract
         if($queueDeleteCampaigns) {
             // remove user DB records
             $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+            if($campaignInfoUser) {
+                $i = 0;
+                foreach ($queueDeleteCampaigns as $campaigns) {
 
-            $i = 0;
-            foreach ($queueDeleteCampaigns as $campaigns) {
+                    foreach ($campaignInfoUser as $campaignUser) {
+                        if ($campaignUser['campaignNames']) {
+                            if (in_array($campaigns, $campaignUser['campaignNames'])) {
 
-                foreach ($campaignInfoUser as $campaignUser) {
-                    if($campaignUser['campaignNames']) {
-                        if (in_array($campaigns, $campaignUser['campaignNames'])) {
+                                $key = array_search($campaigns, $campaignUser['campaignNames']);
+                                unset($campaignUser["campaignNames"][$key]);
+                                $campaignInfoUser[$i]['campaignNames'] = $campaignUser["campaignNames"];
+                                update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                                unset($queueDeleteCampaigns[$i]);
+                                update_option("dorea_queue_delete_campaigns", $queueDeleteCampaigns);
 
-                            $key = array_search($campaigns, $campaignUser['campaignNames']);
-                            unset($campaignUser["campaignNames"][$key]);
-                            $campaignInfoUser[$i]['campaignNames'] = $campaignUser["campaignNames"];
-                            update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                            unset($queueDeleteCampaigns[$i]);
-                            update_option("dorea_queue_delete_campaigns", $queueDeleteCampaigns);
-
+                            }
                         }
                     }
+                    if (empty($campaignInfoUser[$i]['campaignNames'])) {
+                        unset($campaignInfoUser[$i]);
+                        update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                    }
+                    $i += 1;
                 }
-                if (empty($campaignInfoUser[$i]['campaignNames'])) {
-                    unset($campaignInfoUser[$i]);
-                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                }
-                $i += 1;
             }
-
             if (empty(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login))) {
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
             }
+
         }
     }
 

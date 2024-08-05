@@ -80,8 +80,8 @@ function dorea_admin_pay_campaign()
 
     $expire = new expireCampaignController();
 
+    $userList = get_option("dorea_campaigns_users_" . $cashbackName);
 
-    $userList = get_option("dorea_campaigns_users");
     if(empty($userList)){
         print ("there is no users participant into the loyalty campaign!");
     }else {
@@ -90,9 +90,10 @@ function dorea_admin_pay_campaign()
             $campaigns = get_option("dorea_campaigninfo_user_" . $users);
             if($campaigns) {
                 print("<span>".$users."</span> ");
+
                 foreach ($campaigns as $campaignInfo) {
 
-                    print($campaignInfo['walletAddress'] . "</br>");
+                  //  print($campaignInfo['walletAddress'] . "</br>");
 
                 }
             }
