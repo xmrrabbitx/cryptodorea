@@ -93,7 +93,7 @@ function dorea_admin_pay_campaign()
 
                 foreach ($campaigns as $campaignInfo) {
 
-                  //  print($campaignInfo['walletAddress'] . "</br>");
+                    print($campaignInfo['walletAddress'] . "</br>");
 
                 }
             }

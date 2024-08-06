@@ -10,7 +10,7 @@ class paymentController extends paymentAbstract
 
     public function walletslist($campaignName)
     {
-        $userList = get_option("dorea_campaigns_users");
+        $userList = get_option("dorea_campaigns_users_" . $campaignName);
 
         $campaignsQueue = [];
         if(!empty($userList)) {

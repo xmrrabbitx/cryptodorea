@@ -130,8 +130,11 @@ class cashbackController extends cashbackAbstract
                 }
             }
 
+            $campaignUsers = get_option("dorea_campaigns_users_" . $campaignName);
+            if($campaignUsers){
+                delete_option("dorea_campaigns_users_" . $campaignName);
+            }
         }
-
     }
 
 }

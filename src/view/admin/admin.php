@@ -9,10 +9,12 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
 
-    //delete_option("dorea_campaigns_users_". "dorea3");
+    //delete_option("dorea_queue_delete_campaigns");
+    var_dump(get_option("dorea_queue_delete_campaigns"));
+    //var_dump(get_option("dorea_campaigns_users_". "dorea"));
     //var_dump(get_option("dorea_campaigns_users_" . "dorea"));
-    //var_dump(delete_option("dorea_campaigninfo_user_" . "usertest1"));
-    var_dump(get_option("dorea_campaigninfo_user_" . "mrrabbit"));
+    //var_dump(get_option("dorea_campaigninfo_user_" . "usertest1"));
+    //var_dump(get_option("dorea_campaigninfo_user_" . "mrrabbit"));
 
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
