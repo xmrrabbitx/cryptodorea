@@ -19,8 +19,7 @@ function cashback()
     //var_dump(delete_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
     var_dump(get_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
     //var_dump(get_option("dorea_campaigns_users"));
-
-
+    
     if (!WC()->cart->get_cart_contents_count() == 0) {
 
         // get cashback list of admin
@@ -155,7 +154,7 @@ function cashback()
                         
                     }
                     
-                    const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 0);
+                    const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 3000);
                 </script>");
 
 

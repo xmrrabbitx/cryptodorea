@@ -229,6 +229,10 @@ function dorea_admin_cashback_campaign(){
 
                 }
 
+                //set random hash to campaign name
+                $campaignName = $campaignName . "1234";
+
+                // create campaign
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay'], $timestampDate);
 
                 // check error on expired campaign
