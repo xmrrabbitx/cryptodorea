@@ -137,9 +137,8 @@ class checkoutController extends checkoutAbstract
     public function remove()
     {
 
-        $queueDeleteCampaigns = get_option('dorea_queue_delete_campaigns');
+        $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
         $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
-        $campaignsList = get_option("campaign_list");
 
         if($queueDeleteCampaigns) {
 
@@ -156,38 +155,20 @@ class checkoutController extends checkoutAbstract
 
                                 $key = array_search($campaigns, $campaignUser['campaignNames']);
                                 unset($campaignUser["campaignNames"][$key]);
-                                //unset($campaignUser["campaignNames"]);
-                                //unset($campaignUser["walletAddress"]);
                                 $campaignInfoUser[0] = $campaignUser;
-                                var_dump("trigger");
-                                //var_dump($campaignInfoUser);
-                                //$campaignInfoUser[$i]['campaignNames'] = $campaignUser["campaignNames"];
-                                //var_dump($campaignUser["campaignNames"]);
-                                //var_dump($campaignUser);
                                 update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                                //unset($queueDeleteCampaigns[$i]);
-                                //update_option("dorea_queue_delete_campaigns", $queueDeleteCampaigns);
-
 
                             }
-                            //var_dump($campaignInfoUser);
+
                             if (empty($campaignInfoUser[$i]['campaignNames'])) {
                                 unset($campaignInfoUser[$i]);
-                                var_dump("its emptyyyyy");
                                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
                             }
 
                         }
                     }
-                    //die("stoppp");
-
-
                     $i += 1;
                 }
-
-                var_dump(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login));
-                //die("stoppp");
-
             }
             if (empty(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login))) {
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);

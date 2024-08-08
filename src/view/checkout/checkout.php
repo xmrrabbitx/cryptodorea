@@ -13,11 +13,11 @@ use Cryptodorea\Woocryptodorea\utilities\Encrypt;
 add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
 function cashback()
 {
-
-    //var_dump(delete_option("dorea_queue_delete_campaigns"));
+    var_dump(get_transient("dorea_queue_delete_campaigns"));
+   // var_dump(delete_option("dorea_queue_delete_campaigns"));
     //var_dump(get_option("dorea_queue_delete_campaigns"));
     //var_dump(delete_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
-    var_dump(get_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
+    //var_dump(get_option("dorea_campaigninfo_user_". wp_get_current_user()->user_login));
     //var_dump(get_option("dorea_campaigns_users"));
     
     if (!WC()->cart->get_cart_contents_count() == 0) {
@@ -68,9 +68,11 @@ function cashback()
                 }
                 if(!empty($campaignNames)) {
                     foreach ($campaignNames as $campaign) {
+
+                        $campaignLable = explode("_",$campaign)[0];
                         print(" 
                                 <span>
-                                    <label>" . $campaign . "</label>
+                                    <label>" . $campaignLable . "</label>
                                     <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
                                 </span>
                     ");

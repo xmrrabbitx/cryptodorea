@@ -8,9 +8,13 @@ use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
-    var_dump(get_option("campaign_list"));
+    //var_dump(substr(md5(openssl_random_pseudo_bytes(20)),-7));
+    //set_transient("dorea_queue_delete_campaigns","dorea1", 10);
+    //set_transient("dorea_queue_delete_campaigns","dorea2");
+    //delete_transient("dorea_queue_delete_campaigns");
+    ///var_dump(get_option("campaign_list"));
     //delete_option("dorea_queue_delete_campaigns");
-    var_dump(get_option("dorea_queue_delete_campaigns"));
+    //var_dump(get_option("dorea_queue_delete_campaigns"));
     //var_dump(get_option("dorea_campaigns_users_". "dorea"));
     //var_dump(get_option("dorea_campaigns_users_" . "dorea"));
     //var_dump(delete_option("dorea_campaigninfo_user_" . "usertest1"));
@@ -91,7 +95,9 @@ function dorea_main_page_content()
     if ($cashbackList) {
         foreach ($cashbackList as &$campaignName) {
 
-            print($campaignName . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
+            $campaignNames = explode("_",$campaignName)[0];
+            print($campaignNames . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
+
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {

@@ -31,7 +31,7 @@ function dorea_campaign_pay($walletsList): void
               element.addEventListener("click", async function(){
                 
                 let elmentIed = element.id;
-                const contractAddress = elmentIed.split("_")[2];
+                const contractAddress = elmentIed.split("_")[3];
                 let campaignName = elmentIed.split("_")[1];
 
                 await window.ethereum.request({ method: "eth_requestAccounts" });

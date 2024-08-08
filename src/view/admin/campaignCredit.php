@@ -38,6 +38,7 @@ function dorea_cashback_campaign_credit()
         <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
 
         <p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
+        <p id="dorea_fund_error" style="display:none;color:#ff5d5d;"></p>
 
         <script>          
              // Request access to Metamask
@@ -166,45 +167,58 @@ function dorea_cashback_campaign_credit()
                                     else{
                                                 metamaskError.style.display = "none";
                                             }
-                                            
-                           
-                                    const provider = new BrowserProvider(window.ethereum);
+                                          
+                                  try{
+                                        
+                                        const provider = new BrowserProvider(window.ethereum);
                                 
-                                    // Get the signer from the provider metamask
-                                    const signer = await provider.getSigner();
+                                        // Get the signer from the provider metamask
+                                        const signer = await provider.getSigner();
                                 
-                                    const factory = new ContractFactory('.$abi.', "'.$bytecode.'", signer)
+                                        const factory = new ContractFactory('.$abi.', "'.$bytecode.'", signer)
                                   
-                                    //If your contract requires constructor args, you can specify them here
-                                    const contract = await factory.deploy(
-                                        {
-                                                  
-                                          value: BigInt(contractAmount / 0.000000000000000001).toString(),
-                                          gasLimit :3000000,
-                                                  
-                                        }
-                                    ).then(function(transaction) {
-                                                let contractAddress = transaction.target;
-                                                
-                                                // get contract address
-                                                let xhr = new XMLHttpRequest();
-                                        
-                                                // remove wordpress prefix on production
-                                                xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName='.$campaignName.'", true);
-                                                xhr.onreadystatechange = async function() {
-                                                    if (xhr.readyState === 4 && xhr.status === 200) {
-                                                        
-                                                        // remove wordpress prefix on production 
-                                                        window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                        //If your contract requires constructor args, you can specify them here
+                                        const contract = await factory.deploy(
+                                            {
+                                                      
+                                              value: BigInt(contractAmount / 0.000000000000000001).toString(),
+                                              gasLimit :3000000,
+                                                      
+                                            }
+                                        ).then(function(transaction) {
+                                                    let contractAddress = transaction.target;
                                                     
-                                                    }
-                                                }
+                                                    // get contract address
+                                                    let xhr = new XMLHttpRequest();
                                             
-                                                xhr.send(JSON.stringify({"contractAddress":contractAddress}));
+                                                    // remove wordpress prefix on production
+                                                    xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName=' . $campaignName . '", true);
+                                                    xhr.onreadystatechange = async function() {
+                                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                                            
+                                                            console.log(contractAddress)
+                                                            // remove wordpress prefix on production 
+                                                            window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                                        
+                                                        }
+                                                    }
                                                 
-                                                });
+                                                    xhr.send(JSON.stringify({"contractAddress":contractAddress}));
+                                                    
+                                                    });
+                                    
+                                  }catch (error) {
                                         
+                                       const fundError = document.getElementById("dorea_fund_error");
+                                       console.log("errorororor")
+                                       // show error popup message
+                                       fundError.style.display = "block";
+                                       fundError.innerHTML = "Funding the Contract was not successfull! please try again";
+                                       return false;
+                                           
                                   }
+                                        
+                            }
                     })
     
                  })();
@@ -248,11 +262,10 @@ add_action('admin_post_dorea_contract_address', 'dorea_contract_address');
 function dorea_contract_address()
 {
 
-    $doreaContractAddress = null;
     if(isset($_GET['cashbackName'])) {
         $campaignName = $_GET['cashbackName'];
 
-        $doreaContractAddress = get_option($campaignName . '_contract_address');
+        $doreaContractAddress = get_option($campaignName . '_contract_address') ?? null;
 
     }
 
@@ -261,15 +274,11 @@ function dorea_contract_address()
     $json = json_decode($json_data);
 
     if($doreaContractAddress){
-
         // update contract adddress of specific campaign
         update_option($campaignName . '_contract_address', $json->contractAddress);
-
     }else{
-
         // set contract adddress into option
         add_option($campaignName . '_contract_address', $json->contractAddress);
-
     }
 
 

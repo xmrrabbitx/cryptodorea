@@ -119,14 +119,14 @@ class cashbackController extends cashbackAbstract
             }
 
 
-            $queueDeleteCampaigns = get_option('dorea_queue_delete_campaigns');
+            $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
 
             if($queueDeleteCampaigns === false){
-                add_option("dorea_queue_delete_campaigns", [$campaignName]);
+                set_transient("dorea_queue_delete_campaigns", [$campaignName], 604800); //set weekly expiration
             }else{
                 if(!in_array($campaignName, $queueDeleteCampaigns)) {
                     $queueDeleteCampaigns[] = $campaignName;
-                    update_option("dorea_queue_delete_campaigns", $queueDeleteCampaigns);
+                    set_transient("dorea_queue_delete_campaigns", $queueDeleteCampaigns); //set weekly expiration
                 }
             }
 

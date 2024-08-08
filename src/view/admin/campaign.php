@@ -229,8 +229,8 @@ function dorea_admin_cashback_campaign(){
 
                 }
 
-                //set random hash to campaign name
-                $campaignName = $campaignName . "1234";
+                // add random hash to campaign name
+                $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
 
                 // create campaign
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay'], $timestampDate);
