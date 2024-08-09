@@ -8,6 +8,7 @@ use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+
     //var_dump(substr(md5(openssl_random_pseudo_bytes(20)),-7));
     //set_transient("dorea_queue_delete_campaigns","dorea1", 10);
     //set_transient("dorea_queue_delete_campaigns","dorea2");
@@ -23,6 +24,7 @@ function dorea_add_menu_page(): void
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
     if (file_exists($logo_path)) {
+
         $logo_content = file_get_contents($logo_path);
         $base64_encoded = base64_encode($logo_content);
 
@@ -30,13 +32,13 @@ function dorea_add_menu_page(): void
          * Dorea Cash Back Main Menu
          */
         add_menu_page(
-            'Dorea CashBack',   // Page title
-            'Dorea CashBack',        // Menu title
-            'manage_options',     // Capability required to access
-            'crypto-dorea-cashback',   // Menu slug (unique identifier)
-            'dorea_main_page_content', // Callback function to display page content
-            'data:image/svg+xml;base64,' . $base64_encoded, // Icon URL or dashicon class
-            30 // Menu position
+            'Dorea CashBack', // Page title
+            'Dorea CashBack', // Menu title
+            'manage_options',  // Capability required to access
+            'crypto-dorea-cashback',  // Menu slug (unique identifier)
+            'dorea_main_page_content',  // Callback function to display page content
+            'data:image/svg+xml;base64,' . $base64_encoded,  // Icon URL or dashicon class
+            10  // Menu position
         );
 
         /**
@@ -77,7 +79,7 @@ function dorea_add_menu_page(): void
 
     }
 
-
+    print('<script src="https://cdn.tailwindcss.com"></script>');
 }
 
 
@@ -90,32 +92,54 @@ function dorea_main_page_content()
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
-    print("create your cash back campaign for the most loyal customers </br>");
+    print("<h2 class='p-5 text-sm font-bold'>Home</h2> </br>");
+    print("
+        <h3 class='pl-5 text-sm font-bold'>create cashback campaign for your most loyal customers!</h3> </br>
+        <div class='container mx-auto pl-5'>
+    ");
 
     if ($cashbackList) {
         foreach ($cashbackList as &$campaignName) {
-
-            print($campaignName . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
+            print("  
+                <div class='flex flex-row pl-3'>
+                    <div class='basis-2/5'>
+                        <div class='flex flex-row'>
+            ");
+            print($campaignName . '<a class="basis-12 pl-2 hover:text-rose-500" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
                 print ('funded!</br>');
             } else {
-                print('<a href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
+                print('<a class="basis-12 pl-2 hover:text-[#71b227]" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
             }
 
             if($doreaContractAddress) {
-                print('<a class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>');
+                print('
+                  
+                        <a class="basis-12 pl-2 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>
+                
+                ');
             }
+            print("
+                    </div>
+                        </div>
+                        <div class='basis-1/2'>
+                        <!-- left blank intentional -->
+                        </div>
+                </div>
+            ");
         }
-
 
     } else {
         // remove wordpress prefix on production
-        print('<a href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
+        print('<a class="basis-12 pl-4" href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
     }
 
+    print("    
+        </div>
+    ");
 }
 
 /**
