@@ -199,6 +199,9 @@ function dorea_admin_cashback_campaign(){
 
             $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . $expDate['expYear']);
 
+            // add random hash to campaign name
+            $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
+
             $cashback = new cashbackController();
             if(get_option('campaign_list')){
 
@@ -228,9 +231,6 @@ function dorea_admin_cashback_campaign(){
                     delete_option('campaign_list');
 
                 }
-
-                // add random hash to campaign name
-                $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
 
                 // create campaign
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay'], $timestampDate);

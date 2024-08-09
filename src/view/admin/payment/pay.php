@@ -23,7 +23,8 @@ function dorea_campaign_pay($walletsList): void
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
 
          let campaignNames = document.querySelectorAll(".campaignPayment_");
-       
+         const metamaskError = document.getElementById("dorea_metamask_error");
+                            
          campaignNames.forEach(
                 
             (element) =>             
@@ -34,6 +35,25 @@ function dorea_campaign_pay($walletsList): void
                 const contractAddress = elmentIed.split("_")[3];
                 let campaignName = elmentIed.split("_")[1];
 
+                /*
+                 await window.ethereum.request({
+                                          method: "wallet_addEthereumChain",
+                                          params: [{
+                                            chainId: "0x14A34",
+                                            rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
+                                            chainName: "SEPOLIA",
+                                            nativeCurrency: {
+                                              name: "ETH",
+                                              symbol: "ETH",
+                                              decimals: 18
+                                            },
+                                            blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
+                                          }]
+                 });
+                 
+                 */
+                
+                
                 await window.ethereum.request({ method: "eth_requestAccounts" });
                 const accounts = await ethereum.request({ method: "eth_accounts" });
                 const account = accounts[0];
@@ -41,6 +61,7 @@ function dorea_campaign_pay($walletsList): void
                 const provider = new BrowserProvider(window.ethereum);
                             
                 const signer = await provider.getSigner();
+          
                 let message = "hello";
                 
                 const messageHash = ethers.id(message);
@@ -57,9 +78,35 @@ function dorea_campaign_pay($walletsList): void
                 const v = parseInt(signature.slice(130, 132), 16);
                         
                 const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
-
-                let re = await contract.pay('.$walletsList.',"2000000000000000000", 1,1,messageHash, v, r, s);
-               
+                try{
+                    const balance = await contract.getBalance();
+           
+                    if(balance !== 0n){
+                        
+                            let re = await contract.pay(' . $walletsList . ',"2000000000000000000", 1,1,messageHash, v, r, s);
+                       
+                    }else{              
+                        // show error popup message
+                        metamaskError.style.display = "block";
+                        const errorText = document.createTextNode("Sorry, this campaign fund reached to the end!");
+                        metamaskError.appendChild(errorText);
+                        return false;
+                    } 
+                }catch (error) {
+                      //"User is not Authorized!!!"
+                       let errorMessg = error.revert.args[0];
+                       if(errorMessg === "Insufficient balance"){
+                           errorMessg = "Insufficient balance";
+                       }else if(errorMessg === "User is not Authorized!!!"){
+                           errorMessg = "Insufficient balance";
+                       }else{
+                           errorMessg = "payment was  not successfull! please try again!";
+                       }
+                       // show error popup message
+                       metamaskError.style.display = "block";
+                       metamaskError.innerHTML = errorMessg;
+                       return false;
+                    }
             })
          )
                    
@@ -111,6 +158,7 @@ function dorea_admin_pay_campaign()
         if($expire->check($expireDate)){
             print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
             dorea_campaign_pay($walletsList);
+            print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
         }else{
             die("not ready for payment!");
         }

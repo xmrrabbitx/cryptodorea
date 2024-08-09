@@ -78,13 +78,17 @@ function dorea_cashback_campaign_credit()
     
                         let contractAmount = document.getElementById("creditAmount").value;
                         const metamaskError = document.getElementById("dorea_metamask_error");
-                                
-                        if(!Number.isInteger(parseInt(contractAmount))){
+                       
+                        if(contractAmount === ""){
+                            metamaskError.style.display = "block";
+                            metamaskError.innerHTML = "cryptocurrency amount could not be left empty!";
+                            return false;
+                        }
+                        else if(!Number.isInteger(parseInt(contractAmount))){
                                     
-                                    metamaskError.style.display = "block";
-                                    const errorText = document.createTextNode("cryptocurrency amount must be in the number format!");
-                                    metamaskError.appendChild(errorText);
-                                    return false;
+                           metamaskError.style.display = "block";
+                           metamaskError.innerHTML = "cryptocurrency amount must be in the decimal format!";
+                           return false;
                                     
                         }
                         else{
@@ -127,9 +131,9 @@ function dorea_cashback_campaign_credit()
                                             blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
                                           }]
                                       });
-                                      
                                       */
                                       
+                                      /*
                                       await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
                                           params: [{
@@ -145,6 +149,8 @@ function dorea_cashback_campaign_credit()
                                           }]
                                       });
                                       
+                                       */
+                                      
                                        
                                     const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                     const userAddress = accounts[0];
@@ -159,8 +165,7 @@ function dorea_cashback_campaign_credit()
                                     if(parseInt(userBalance) < 300000000000000){
                                                 
                                                 metamaskError.style.display = "block";
-                                                const errorText = document.createTextNode("not enough balance to support fee. please fund your wallet at least 0.0003 ETH!");
-                                                metamaskError.appendChild(errorText);
+                                                metamaskError.innerHTML =  "not enough balance to support fee. please fund your wallet at least 0.0003 ETH!";
                                                 return false;
                                                 
                                             }
@@ -169,19 +174,39 @@ function dorea_cashback_campaign_credit()
                                             }
                                           
                                   try{
-                                        
+                                    
                                         const provider = new BrowserProvider(window.ethereum);
-                                
+                            
                                         // Get the signer from the provider metamask
                                         const signer = await provider.getSigner();
                                 
-                                        const factory = new ContractFactory('.$abi.', "'.$bytecode.'", signer)
+                                        const factory = new ContractFactory(' .$abi.', "'.$bytecode. '", signer)
+                                         
+                                         let contractAmountBigInt;
+                                        if( (typeof(contractAmount) === "number") && (Number.isInteger(contractAmount))){
+                                            const creditAmountBigInt = BigInt(contractAmount);
+                                            const multiplier = BigInt(1e18);
+                                            contractAmountBigInt= creditAmountBigInt * multiplier;
+                                          
+                                        }else{
+                                        
+                                            const creditAmount = contractAmount; // This is a floating-point number
+                                            const multiplier = BigInt(1e18); // This is a BigInt
+                                            const factor = 1e18; // Use the same factor as the multiplier to avoid precision issues
+                                            
+                                            // Convert the floating-point number to an integer
+                                            const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
+                                            contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
                                   
+                                        }
+                                        
+                                        console.log(contractAmountBigInt)
+                                        
                                         //If your contract requires constructor args, you can specify them here
                                         const contract = await factory.deploy(
                                             {
                                                       
-                                              value: BigInt(contractAmount / 0.000000000000000001).toString(),
+                                              value: contractAmountBigInt.toString(),
                                               gasLimit :3000000,
                                                       
                                             }
@@ -196,7 +221,6 @@ function dorea_cashback_campaign_credit()
                                                     xhr.onreadystatechange = async function() {
                                                         if (xhr.readyState === 4 && xhr.status === 200) {
                                                             
-                                                            console.log(contractAddress)
                                                             // remove wordpress prefix on production 
                                                             window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                                         
@@ -209,8 +233,8 @@ function dorea_cashback_campaign_credit()
                                     
                                   }catch (error) {
                                         
+                                       console.log(error.revert.args[0])
                                        const fundError = document.getElementById("dorea_fund_error");
-                                       console.log("errorororor")
                                        // show error popup message
                                        fundError.style.display = "block";
                                        fundError.innerHTML = "Funding the Contract was not successfull! please try again";

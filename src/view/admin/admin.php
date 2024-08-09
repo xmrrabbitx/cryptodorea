@@ -95,8 +95,7 @@ function dorea_main_page_content()
     if ($cashbackList) {
         foreach ($cashbackList as &$campaignName) {
 
-            $campaignNames = explode("_",$campaignName)[0];
-            print($campaignNames . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
+            print($campaignName . '<a href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
@@ -107,13 +106,10 @@ function dorea_main_page_content()
             }
 
             if($doreaContractAddress) {
-               // print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
                 print('<a class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>');
             }
         }
 
-        //include campaign pay js script
-        //dorea_campaign_pay();
 
     } else {
         // remove wordpress prefix on production
