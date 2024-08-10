@@ -156,7 +156,7 @@ include('campaignCredit.php');
 /**
  * Plans
  */
-//include('doreaPlans.php');
+include('doreaPlans.php');
 
 /**
  * Payment Modal

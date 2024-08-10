@@ -1,17 +1,21 @@
 <?php
 
-
 use Cryptodorea\Woocryptodorea\controllers\adminStatusController;
 use Cryptodorea\Woocryptodorea\controllers\freetrialController;
+use Cryptodorea\Woocryptodorea\utilities\plansCompile;
 
-const doreaUserContractAddress = "0xBCdBdF2E097C59bBFDD27ab86AFaf40577ce4529";
+//user plan contract address
+const doreaUserContractAddress = "0xeeAEE215DC859152567432f8d54c5b87A15bf91E";
 
 /**
  * Crypto Cashback Plans
  */
-
 function doreaPlans()
 {
+
+    $plansCompile = new plansCompile();
+    $abi = $plansCompile->abi();
+    $bytecode = $plansCompile->bytecode();
 
     print ("plans page");
 
@@ -54,16 +58,17 @@ function doreaPlans()
                      }else{
                    
                             let doreaMetamask = document.getElementById("doreaMetamask");
-                            doreaMetamask.addEventListener("click", function(){
+                            doreaMetamask.addEventListener("click", async function(){
                          
-                              let userStatusXhr = new XMLHttpRequest();
-                              userStatusXhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
-                              userStatusXhr.onreadystatechange = async function() {
-                                  if (userStatusXhr.readyState === 4 && userStatusXhr.status === 200) {
-                                     let response = JSON.parse(userStatusXhr.responseText);
-                                     let abi = response[0]
-                                     let bytecode = response[1]
-                                     
+                              //let userStatusXhr = new XMLHttpRequest();
+                              //userStatusXhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
+                              //userStatusXhr.onreadystatechange = async function() {
+                                  //if (userStatusXhr.readyState === 4 && userStatusXhr.status === 200) {
+                                     //let response = JSON.parse(userStatusXhr.responseText);
+                                    // let abi = response[0]
+                                     //let bytecode = response[1]
+                                     console.log("okkk")
+                                     return false
                                      const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                      const userAddress = accounts[0];
                                      
@@ -71,8 +76,9 @@ function doreaPlans()
                                                     
                                      // Get the signer from the provider metamask
                                      const signer = await provider.getSigner();
-                                                    
-                                     const contract = new ethers.Contract("'.doreaUserContractAddress.'", abi, signer);
+                                     console.log("'.doreaUserContractAddress.'")
+                                     
+                                     const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
                                      
                                                              
                                      try{
@@ -99,19 +105,18 @@ function doreaPlans()
                                             console.log(error)
                                      }
                                       
-                                  }
-                              } 
+                                  //}
+                              //} 
                               
-                              userStatusXhr.send();                     
+                              //userStatusXhr.send();                     
                             })
                         }
                   })();
                }
             }
 
-            
             let doreaPaymentModalButton = document.querySelectorAll(".doreaBuy");
-            console.log(doreaPaymentModalButton)
+
              doreaPaymentModalButton.forEach(
                 
                 (element) =>             
@@ -181,21 +186,13 @@ function doreaPlans()
                                               
                                                
                                             const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-            
+                                            const userAddress = accounts[0];
+                                            
                                             // get abi and bytecode
                                             let xhr = new XMLHttpRequest();
-                                            
-                                            // remove wordpress prefix on production
-                                            xhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
-                                            xhr.onreadystatechange = async function() {
-                                                if (xhr.readyState === 4 && xhr.status === 200) {
-                                                        let response = JSON.parse(xhr.responseText);
-                                                        let abi = response[0]
-                                                        let bytecode = response[1]
-                                                  
-                                                   
-                                                    const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-                                                    const userAddress = accounts[0];
+                             
+                                         
+                                                    
                                                   
                                                    /*
                                                     const userBalance = await window.ethereum.request({
@@ -221,15 +218,15 @@ function doreaPlans()
                                                   // xhrAmount.onreadystatechange = async function() {
                                                         //if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
                                                             // let responses = JSON.parse(xhrAmount.responseText);
-                                                             let estimatedAmount = "0.006";//responses["summary"]["estimatedAmount"]
+                                                             let estimatedAmount = "4";//responses["summary"]["estimatedAmount"]
                                                   
                                                    
                                                             const provider = new BrowserProvider(window.ethereum);
                                                 
                                                             // Get the signer from the provider metamask
                                                             const signer = await provider.getSigner();
-                                                
-                                                            const contract = new ethers.Contract("'.doreaUserContractAddress.'", abi, signer);
+                                                           
+                                                            const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
                                                
                                                             try{
                                                                 await contract.pay( userAddress, planType, {
@@ -249,19 +246,10 @@ function doreaPlans()
                                                      // }
                                                    //}
                                                    //xhrAmount.send();
-                                          }
-                                   
-                            };
+                           
                             
-                            xhr.send();
-                            
-                                       
-                                    
                                         }
             
-            
-                         
-                      
                           })();
                       }
                       
