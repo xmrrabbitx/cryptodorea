@@ -9,6 +9,7 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
 
+    var_dump(get_option("adminPaymentTimestamp"));
     //var_dump(substr(md5(openssl_random_pseudo_bytes(20)),-7));
     //set_transient("dorea_queue_delete_campaigns","dorea1", 10);
     //set_transient("dorea_queue_delete_campaigns","dorea2");

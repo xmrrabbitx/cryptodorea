@@ -5,7 +5,7 @@ use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 use Cryptodorea\Woocryptodorea\utilities\plansCompile;
 
 //user plan contract address
-const doreaUserContractAddress = "0xeeAEE215DC859152567432f8d54c5b87A15bf91E";
+const doreaUserContractAddress = "0xD6B5e5a6f26454fc7F3F4060D3e67819b3FFdD5c";
 
 /**
  * Crypto Cashback Plans
@@ -39,36 +39,37 @@ function doreaPlans()
 
     print ('
 
-        <button class="doreaBuy"  value="19_Monthly">buy</button>
-        <button class="doreaBuy"  value="29_hlafYearly">buy</button>
-        <button class="doreaBuy"  value="49_Yearly">buy</button>
+        <button  id="doreaBuy_monthly" class="doreaBuy"  value="19_Monthly">buy</button>
+        <button  id="doreaBuy_halfYearly" class="doreaBuy"  value="29_halfYearly">buy</button>
+        <button  id="doreaBuy_Yearly" class="doreaBuy"  value="49_Yearly">buy</button>
 
     ');
 
     print('<script type="module">
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
-
+            
+            let doreaMetamask = document.getElementById("doreaMetamask");
+            
+            let doreaBuy_monthly = document.getElementById("doreaBuy_monthly");
+            let doreaBuy_halfYearly = document.getElementById("doreaBuy_halfYearly");
+            let doreaBuy_Yearly = document.getElementById("doreaBuy_Yearly");
+          
             if (window.ethereum) {
-               setTimeout(delay1, 1000)
-               function delay1(){
+               setTimeout(delay, 1000)
+               function delay(){
                     (async () => {
                      if(window.ethereum._state.accounts.length > 0){
                       
                          doreaMetamask.style.display = "none";
+                         
+                         doreaBuy_monthly.style.display = "block";
+                         doreaBuy_halfYearly.style.display = "block";
+                         doreaBuy_Yearly.style.display = "block";
+                      
                      }else{
-                   
-                            let doreaMetamask = document.getElementById("doreaMetamask");
+                           
                             doreaMetamask.addEventListener("click", async function(){
                          
-                              //let userStatusXhr = new XMLHttpRequest();
-                              //userStatusXhr.open("GET", "/wordpress/wp-admin/admin-post.php?action=loyalty_users_json_file", true);
-                              //userStatusXhr.onreadystatechange = async function() {
-                                  //if (userStatusXhr.readyState === 4 && userStatusXhr.status === 200) {
-                                     //let response = JSON.parse(userStatusXhr.responseText);
-                                    // let abi = response[0]
-                                     //let bytecode = response[1]
-                                     console.log("okkk")
-                                     return false
                                      const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                      const userAddress = accounts[0];
                                      
@@ -76,15 +77,13 @@ function doreaPlans()
                                                     
                                      // Get the signer from the provider metamask
                                      const signer = await provider.getSigner();
-                                     console.log("'.doreaUserContractAddress.'")
-                                     
+
                                      const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
                                      
                                                              
                                      try{
                                          let userStatusPlan = await contract.userCheckStatus(userAddress);
                                          
-                                          //return userStatusPlan
                                           let xhrUserStatusPlan = new XMLHttpRequest();
                                           xhrUserStatusPlan.open("POST", "#", true);
                                           xhrUserStatusPlan.setRequestHeader("Accept", "application/json");
@@ -92,28 +91,28 @@ function doreaPlans()
                                           xhrUserStatusPlan.onreadystatechange = function() {
                                             if (xhrUserStatusPlan.readyState === 4 && xhrUserStatusPlan.status === 200) {
             
-                                                
+                                                 doreaMetamask.style.display = "none";
+                                                 
+                                                 doreaBuy_monthly.style.display = "block";
+                                                 doreaBuy_halfYearly.style.display = "block";
+                                                 doreaBuy_Yearly.style.display = "block";
                                             }
                                           };
                                            
                                           xhrUserStatusPlan.send(JSON.stringify({"userStatus":BigInt(userStatusPlan[0]).toString(), "userAmount":BigInt(userStatusPlan[1]).toString(), "expDate":BigInt(userStatusPlan[2]).toString()}));
                                         
-                                          doreaMetamask.style.display = "none";
                                           // remove wordpress prefix on production 
                                           //window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
                                      }catch(error){
                                             console.log(error)
                                      }
-                                      
-                                  //}
-                              //} 
-                              
-                              //userStatusXhr.send();                     
+                                             
                             })
                         }
                   })();
                }
             }
+
 
             let doreaPaymentModalButton = document.querySelectorAll(".doreaBuy");
 
@@ -132,75 +131,18 @@ function doreaPlans()
                              
                                  if (window.ethereum) {
                                               
-                                              // change it to the real polygon network
-                                              /*
-                                               await window.ethereum.request({
-                                                  method: "wallet_addEthereumChain",
-                                                  params: [{
-                                                    //chainId: "0x2105",
-                                                    chainId: "0xE705",
-                                                    //rpcUrls: ["https://base.blockpi.network/v1/rpc/public"],
-                                                    rpcUrls: ["https://linea-sepolia.blockpi.network/v1/rpc/public"],
-                                                    chainName: "Base",
-                                                    nativeCurrency: {
-                                                      name: "ETH",
-                                                      symbol: "ETH",
-                                                      decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ["https://etherscan.io/"]
-                                                  }]
-                                              });
-                                              */
-                                              /*
-                                              await window.ethereum.request({
-                                                  method: "wallet_addEthereumChain",
-                                                  params: [{
-                                                    chainId: "0x14A34",
-                                                    rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                                                    chainName: "SEPOLIA",
-                                                    nativeCurrency: {
-                                                      name: "ETH",
-                                                      symbol: "ETH",
-                                                      decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
-                                                  }]
-                                              });
-                                              
-                                              */
-                                              
-                                              await window.ethereum.request({
-                                                  method: "wallet_addEthereumChain",
-                                                  params: [{
-                                                    chainId: "0x539",
-                                                    rpcUrls: ["http://127.0.0.1:8545"],
-                                                    chainName: "Ganache Testnet",
-                                                    nativeCurrency: {
-                                                      name: "ETH",
-                                                      symbol: "ETH",
-                                                      decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ["http://127.0.0.1:8545"]
-                                                  }]
-                                              });
-                                              
-                                               
                                             const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                             const userAddress = accounts[0];
                                             
                                             // get abi and bytecode
                                             let xhr = new XMLHttpRequest();
                              
-                                         
-                                                    
-                                                  
-                                                   /*
                                                     const userBalance = await window.ethereum.request({
                                                          method: "eth_getBalance",
                                                         params: [userAddress, "latest"]
                                                     });
                                                     
-                                                    */
+                                                    
             
                                                     // check balance of metamask wallet 
                                                    // if(parseInt(userBalance) < 300000000000000){
@@ -218,8 +160,25 @@ function doreaPlans()
                                                   // xhrAmount.onreadystatechange = async function() {
                                                         //if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
                                                             // let responses = JSON.parse(xhrAmount.responseText);
-                                                             let estimatedAmount = "4";//responses["summary"]["estimatedAmount"]
-                                                  
+                                                             let estimatedAmount = 0.00009;//responses["summary"]["estimatedAmount"]
+                                                    let contractAmountBigInt;
+                                                    if((Number.isInteger(estimatedAmount))){
+                                                        const creditAmountBigInt = BigInt(estimatedAmount);
+                                                        const multiplier = BigInt(1e18);
+                                                        contractAmountBigInt= creditAmountBigInt * multiplier;
+                                                      
+                                                    }else{
+                                                    
+                                                        const creditAmount = estimatedAmount; // This is a floating-point number
+                                                        const multiplier = BigInt(1e18); // This is a BigInt
+                                                        const factor = 1e18; // Use the same factor as the multiplier to avoid precision issues
+                                                        
+                                                        // Convert the floating-point number to an integer
+                                                        const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
+                                                        contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
+                                              
+                                                    }
+                                                    console.log(contractAmountBigInt)
                                                    
                                                             const provider = new BrowserProvider(window.ethereum);
                                                 
@@ -229,19 +188,31 @@ function doreaPlans()
                                                             const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
                                                
                                                             try{
-                                                                await contract.pay( userAddress, planType, {
-                                                                value:BigInt(estimatedAmount / 0.000000000000000001).toString()
-                                                            }).then(function(transaction){
+                                                                let res = await contract.pay( userAddress, planType, {
+                                                                    value:contractAmountBigInt.toString()
+                                                                }).then(async function(transaction){
+                                                         
+                                                                    if(transaction.hash){
+                                                                       let receipt = await transaction.wait();
+                                                                        if(receipt.status === 1){
+                                                                            
+                                                                           //send status info 
+                                                                           let userStatusPlan = await contract.userCheckStatus(userAddress);
+                                                                           let xhrUserStatusPlan = new XMLHttpRequest();
+                                                                           xhrUserStatusPlan.open("POST","#");
+                                                                           xhrUserStatusPlan.send(JSON.stringify({paymentStatus:Number(userStatusPlan[0]), paymentAmount:Number(userStatusPlan[1]), expDate:Number(userStatusPlan[2])}));
+
+                                                                        }
+                                                                    }
+                                                                  
+                                                                });
                                                                 
-                                                                if(transaction.hash){
-                                                                    console.log("payment succeed!")
-                                                                }
-                                                                
-                                                                
-                                                            });
+                                                              
                                                             }catch(error){
                                                                 console.log(error)
                                                             }
+                                                            
+                                                             
                                                     
                                                      // }
                                                    //}
@@ -256,6 +227,7 @@ function doreaPlans()
                 })
 
              )
+             
         </script>
     ');
     

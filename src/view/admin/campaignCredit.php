@@ -182,7 +182,7 @@ function dorea_cashback_campaign_credit()
                                 
                                         const factory = new ContractFactory(' .$abi.', "'.$bytecode. '", signer)
                                          
-                                         let contractAmountBigInt;
+                                        let contractAmountBigInt;
                                         if( (typeof(contractAmount) === "number") && (Number.isInteger(contractAmount))){
                                             const creditAmountBigInt = BigInt(contractAmount);
                                             const multiplier = BigInt(1e18);
@@ -199,8 +199,6 @@ function dorea_cashback_campaign_credit()
                                             contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
                                   
                                         }
-                                        
-                                        console.log(contractAmountBigInt)
                                         
                                         //If your contract requires constructor args, you can specify them here
                                         const contract = await factory.deploy(
