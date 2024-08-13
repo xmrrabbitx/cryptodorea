@@ -76,7 +76,8 @@ function dorea_campaign_pay($walletsList): void
                 const r = signature.slice(0, 66);
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
-                        
+                console.log(r,s,v)        
+                console.log(messageHash)        
                 const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
                 try{
                     const balance = await contract.getBalance();

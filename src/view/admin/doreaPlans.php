@@ -5,7 +5,7 @@ use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 use Cryptodorea\Woocryptodorea\utilities\plansCompile;
 
 //user plan contract address
-const doreaUserContractAddress = "0xD6B5e5a6f26454fc7F3F4060D3e67819b3FFdD5c";
+const doreaUserContractAddress = "0x870ACBEd09BC6f6AA27B252262A475F5c09DC340";
 
 /**
  * Crypto Cashback Plans
@@ -46,6 +46,7 @@ function doreaPlans()
     ');
 
     print('<script type="module">
+
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
             
             let doreaMetamask = document.getElementById("doreaMetamask");
@@ -59,7 +60,7 @@ function doreaPlans()
                function delay(){
                     (async () => {
                      if(window.ethereum._state.accounts.length > 0){
-                      
+
                          doreaMetamask.style.display = "none";
                          
                          doreaBuy_monthly.style.display = "block";
@@ -79,8 +80,7 @@ function doreaPlans()
                                      const signer = await provider.getSigner();
 
                                      const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
-                                     
-                                                             
+                                                 
                                      try{
                                          let userStatusPlan = await contract.userCheckStatus(userAddress);
                                          
@@ -160,7 +160,7 @@ function doreaPlans()
                                                   // xhrAmount.onreadystatechange = async function() {
                                                         //if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
                                                             // let responses = JSON.parse(xhrAmount.responseText);
-                                                             let estimatedAmount = 0.00009;//responses["summary"]["estimatedAmount"]
+                                                             let estimatedAmount = 0.0072;//responses["summary"]["estimatedAmount"]
                                                     let contractAmountBigInt;
                                                     if((Number.isInteger(estimatedAmount))){
                                                         const creditAmountBigInt = BigInt(estimatedAmount);
@@ -178,8 +178,7 @@ function doreaPlans()
                                                         contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
                                               
                                                     }
-                                                    console.log(contractAmountBigInt)
-                                                   
+                                                  
                                                             const provider = new BrowserProvider(window.ethereum);
                                                 
                                                             // Get the signer from the provider metamask
@@ -187,9 +186,20 @@ function doreaPlans()
                                                            
                                                             const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
                                                
+                                                            let latestPrice = await contract.latestPrice();
+                                                            latestPrice = latestPrice.toString();
+                                 
+                                                            let price = BigInt(parseInt(19 * 1000000000 / parseInt(latestPrice.slice(0, 4)) * 1000000000));
+                                                            
                                                             try{
+                                                                
+                                                                //let re = await contract.testprice();
+                                                                console.log(price)
+                                                             
+                                                                //return false
+                                                                
                                                                 let res = await contract.pay( userAddress, planType, {
-                                                                    value:contractAmountBigInt.toString()
+                                                                    value:price.toString()
                                                                 }).then(async function(transaction){
                                                          
                                                                     if(transaction.hash){
@@ -293,9 +303,11 @@ function dorea_free_trial(){
 
     $userPayment = new adminStatusController();
 
-    if($_GET['page'] !== 'dorea_plans'){
-        if(!$userPayment->paid()) {
-            $freetrial->expire();
+    if(isset($_GET['page'])){
+        if($_GET['page'] !== 'dorea_plans'){
+            if(!$userPayment->paid()) {
+                $freetrial->expire();
+            }
         }
     }
 }
