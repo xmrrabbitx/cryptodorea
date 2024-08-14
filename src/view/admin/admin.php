@@ -9,22 +9,6 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
 
-    //var_dump(wp_readonly("this is readonly"));
-    //die("stopppp");
-    //var_dump(get_option("adminPaymentTimestamp"));
-    //var_dump(delete_option("adminPaymentTimestamp"));
-    //var_dump(substr(md5(openssl_random_pseudo_bytes(20)),-7));
-    //set_transient("dorea_queue_delete_campaigns","dorea1", 10);
-    //set_transient("dorea_queue_delete_campaigns","dorea2");
-    //delete_transient("dorea_queue_delete_campaigns");
-    ///var_dump(get_option("campaign_list"));
-    //delete_option("dorea_queue_delete_campaigns");
-    //var_dump(get_option("dorea_queue_delete_campaigns"));
-    //var_dump(get_option("dorea_campaigns_users_". "dorea"));
-    //var_dump(get_option("dorea_campaigns_users_" . "dorea"));
-    //var_dump(delete_option("dorea_campaigninfo_user_" . "usertest1"));
-    //var_dump(get_option("dorea_campaigninfo_user_" . "mrrabbit"));
-
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
     if (file_exists($logo_path)) {
@@ -96,52 +80,99 @@ function dorea_main_page_content()
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
+
     print("<h2 class='p-5 text-sm font-bold'>Home</h2> </br>");
-    print("
-        <h3 class='pl-5 text-sm font-bold'>create cashback campaign for your most loyal customers!</h3> </br>
-        <div class='container mx-auto pl-5'>
-    ");
 
     if ($cashbackList) {
+
+        print("<h3 class='pl-5 text-sm font-bold'>Create Cashback Campaign for the Most Loyal Customers!</h3> </br>");
+
+        print("
+            <div class='container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
+        ");
+
         foreach ($cashbackList as &$campaignName) {
             print("  
-                <div class='flex flex-row pl-3'>
-                    <div class='basis-2/5'>
-                        <div class='flex flex-row'>
+                <div class='mr-5 pl-3 p-7 rounded-xl mt-3 bg-white'>
+                        <div class='grid lg:grid-cols-7 sm:grid-cols-4 grid-cols-4 gap-1 '>
             ");
-            print($campaignName . '<a class="basis-12 pl-2 hover:text-rose-500" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> delete </a>');
+
+            print('<span class="col-span-1">'.$campaignName.'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
-                print ('funded!</br>');
+                print ('<span class="text-emerald-500">funded!</span>');
             } else {
-                print('<a class="basis-12 pl-2 hover:text-[#71b227]" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>' . '</br>');
+                print('<a class="col-span-1 pl-2 hover:text-emerald-500 text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
+
+                print ('
+                    <!-- add column to fill white space in case there is no pay option -->
+                    <span class="col-span-1"></span>
+                ');
             }
 
+            // payment page
             if($doreaContractAddress) {
                 print('
                   
-                        <a class="basis-12 pl-2 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>
+                        <a class="col-span-1 pl-2 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>
                 
                 ');
             }
+
+
+            print('
+                <a class="col-span-1 hover:text-rose-500" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                </a>
+            ');
+
+            $campaignInfo = get_transient($campaignName);
+            print('
+                <!-- date of created campaign -->
+                <span class="col-span-1">
+                    '.$campaignInfo["startDateYear"] . "/" .$campaignInfo["startDateMonth"] ."/". $campaignInfo["startDateDay"] .'
+                </span>
+            ');
+
+            // payment page
+            if($doreaContractAddress) {
+
+                print('
+                    <a class="col-span-1 pl-2 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')) . '">
+                        <!-- payment campaign page link -->
+                        <span class="col-span-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                              <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </a>
+                ');
+            }
+
             print("
                     </div>
-                        </div>
-                        <div class='basis-1/2'>
-                        <!-- left blank intentional -->
-                        </div>
+                        
                 </div>
             ");
         }
 
     } else {
         // remove wordpress prefix on production
-        print('<a class="basis-12 pl-4" href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Reward Campaign</a>');
+        print('
+                <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
+                </br>
+                <p class="pt-2 mt-7 text-center">
+                    <a class="basis-12 p-10 text-black hover:text-black bg-[#faca43] text-center rounded-xl focus:ring-0" href="/wordpress/wp-admin/admin.php?page=campaigns">create your first Cashback Campaign</a>
+                </p>
+        ');
     }
 
-    print("    
+    print(" 
+
         </div>
     ");
 }

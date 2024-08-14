@@ -193,12 +193,7 @@ function doreaPlans()
                                                             
                                                             try{
                                                                 
-                                                                //let re = await contract.testprice();
-                                                                console.log(price)
-                                                             
-                                                                //return false
-                                                                
-                                                                let res = await contract.pay( userAddress, planType, {
+                                                                await contract.pay( userAddress, planType, {
                                                                     value:price.toString()
                                                                 }).then(async function(transaction){
                                                          
@@ -243,7 +238,6 @@ function doreaPlans()
     
 }
 
-
 /**
  * Dorea Plans Loyalty Users ABI and Bytecode of smart contract
  */
@@ -266,7 +260,6 @@ function dorea_admin_loyalty_users_json_file()
 
 }
 
-
 /**
  * Dorea Plans check User Admin Status payment
  */
@@ -285,8 +278,6 @@ function dorea_admin_status_payment()
     }
 }
 
-
-
 /**
  * Dorea Plans check Free Trial Period
  */
@@ -295,11 +286,6 @@ function dorea_free_trial(){
 
     $freetrial = new  freetrialController();
     $freetrial->set();
-
-    //delete_option("adminPaymentTimestamp");
-    //delete_option("trialTimestamp");
-    //var_dump(get_option("adminPaymentTimestamp"));
-    //var_dump(get_option("trialTimestamp"));
 
     $userPayment = new adminStatusController();
 
