@@ -8,8 +8,8 @@ use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 use Cryptodorea\Woocryptodorea\controllers\autoremoveController;
 use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 
-
 function dorea_cashback_campaign_content(){
+
 
     // utilities helper functions
     $dateCalculator = new dateCalculator();
@@ -27,49 +27,59 @@ function dorea_cashback_campaign_content(){
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
-    print("campaign page");
+    print("<h1 class='p-5 text-sm font-bold'>Create Campaign</h1> </br>");
     $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
     if($emptyError){
         print("<span style='color:#ff5d5d;'>$emptyError</span>");
     }
     print("
-        </br>
-        <form method='POST' action='".esc_url(admin_url('admin-post.php'))."' id='cashback_campaign'>
+      <div class='container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
+        
+        <h2 class='!text-center !text-lg !divide-y !mt-5'>Crypto Dorea Cashback</h2>
+        <hr class='border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-1'>
+
+        <form class='!grid !grid-cols-1 !mt-5' method='POST' action='".esc_url(admin_url('admin-post.php'))."' id='cashback_campaign'>
             
             <input type='hidden' name='action' value='cashback_campaign'>
            
-            <lable>campaign name</lable>
-            <input type='text' name='campaignName'>
+           <!-- campaign name field -->
+           <div class='!col-span-1 !w-12/12'>
+                <input class='!rounded-md !w-64 !p-3 !focus:ring-green-500 !border-hidden !bg-white' type='text' name='campaignName'  placeholder='campaign name'>
+           </div>
     ");
             $campaignError = filter_input( INPUT_GET, 'campaignError' );
             if($campaignError){
                 print("<span style='color:#ff5d5d;'>$campaignError</span>");
             }
     print("
-            </br>
-
-            <lable>crypto type</lable>
-            <select name='cryptoType'>
-                <option selected value='eth'>Ethereum</option>
-            </select>
-            </br>
-
-            <lable>amount</lable>
-            <input type='text' name='cryptoAmount'>
-           
+      
+            <!-- crypto type options -->
+            <div class='!col-span-1 !w-12/12 !mt-2'>
+                <lable class=''>crypto type</lable>
+                <select class='!border-hidden' name='cryptoType'>
+                    <option selected value='eth'>Ethereum</option>
+                </select>
+            </div>
+            <div class='!col-span-1 !w-12/12 !mt-2'>
+                <!-- amount options -->
+                <input class='!border-hidden !w-64 !mt-2 !p-3' type='text' name='cryptoAmount' placeholder='amount'>
+           </div>
     ");
     $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
     if($cryptoAmount){
         print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
     }
     print("
-            </br>
-            <lable>Shopping Counts</lable>
-            <input type='text' name='shoppingCount'>
-            </br>
+            <div class='!col-span-1 !w-12/12 !mt-2'>
+                <!-- Shopping Counts options -->
+                <input class='!border-hidden !w-64 !mt-2 !p-3' type='text' name='shoppingCount' placeholder='Shopping Counts'>
+            </div>
             
-            <lable>start date</lable>
-            <select name='startDateMonth' id='startDateMonth'>
+            <div class='!col-span-1 !w-12/12 !mt-2'>
+                <!-- start date options -->
+                <lable>start date</lable>
+                <select class='!border-hidden' name='startDateMonth' id='startDateMonth'>
+                
     ");
 
             $index = array_search($currentDate,$monthsList);
@@ -90,11 +100,11 @@ function dorea_cashback_campaign_content(){
                 }
 
                 if($monthsList[$index] === $currentDate){
-                    print("<option value='".$monthNum . "_" . $nextYear."' selected>".$monthsList[$index]."</option>");
+                    print("<option class='!border-hidden' value='".$monthNum . "_" . $nextYear."' selected>".$monthsList[$index]."</option>");
 
                 }
                 else{
-                    print("<option value='".$monthNum . "_" . $nextYear."'>".$monthsList[$index]."</option>");
+                    print("<option class='!border-hidden' value='".$monthNum . "_" . $nextYear."'>".$monthsList[$index]."</option>");
 
                 }
 
@@ -103,9 +113,10 @@ function dorea_cashback_campaign_content(){
 
             }
 
-            print("</select>
+            print("
+                    </select>
                     <span>
-                    <select name='startDateDay' id='startDateDay'>");
+                    <select class='!border-hidden' name='startDateDay' id='startDateDay'>");
 
             $index=0;
             for($days=1;$days <= $daysList[$currentDate]; $days++){
@@ -118,33 +129,37 @@ function dorea_cashback_campaign_content(){
 
                 if($days === $currentDay){
                     print("
-                    <option value='".$index."' selected>".$days."</option>
+                    <option class='!border-hidden' value='".$index."' selected>".$days."</option>
                     ");
                 }else {
                     print("
-                    <option value='".$index."'>" . $days . "</option>
+                    <option class='!border-hidden' value='".$index."'>" . $days . "</option>
                     ");
                 }
             }
             
-            print("</select>
-                </span>
-                </br>
-    
-                <lable>expire date</lable>
-                <select name='expDate' id='expDate'>
-                 <option value='weekly'>Weekly</option>
-                 <option value='monthly'>Monthly</option>
+            print("
+                        </select>
+                    </span>
+                </div>
+                <div class='!col-span-1 !w-12/12 !mt-2'>
+                    <!-- expire date options -->
+                    <lable>expire date</lable>
+                    <select class='!border-hidden' name='expDate' id='expDate'>
+                        <option value='weekly'>Weekly</option>
+                        <option value='monthly'>Monthly</option>
             ");
 
-            print("</select>
-                    </span>
-                    </br>
-
-            <button type='submit'>set up campaign!</button>
-        
+            print("
+                        </select>
+                      </span>
+                    </div>
+            <div class='!col-span-1 !w-12/12 !mt-2'>
+                <button class='!p-3 !bg-[#faca43] !rounded-md' type='submit'>set up campaign!</button>
+            </div>
         </form>
         </br>
+      </div>
     
         ");
 
