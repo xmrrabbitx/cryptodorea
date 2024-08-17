@@ -20,27 +20,30 @@ class receiptController extends receiptAbstract
 
     function campaignInfo()
     {
-        return get_option("dorea_campaigninfo_user");
+        return get_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login);
     }
 
     function is_paid($order, $campaignList)
     {
-
+        static $purchaseCounts;
         $displayName = $order->billing->first_name . " " . $order->billing->last_name ;
         $userEmail = $order->billing->email;
 
-        foreach ($campaignList as $campaignName) {
+        foreach ($campaignList as $campaigns) {
 
-            if (isset($this->campaignInfo()[$campaignName])) {
-                $count = $this->campaignInfo()[$campaignName]['count'] + 1;
-            } else {
-                $count = 1;
+            foreach ($campaigns['campaignNames'] as $campaignName){
+
+                if (isset($this->campaignInfo()[$campaignName])) {
+                    $purchaseCounts = [$campaignName=>$this->campaignInfo()[$campaignName]['count'] + 1];
+                } else {
+                    $purchaseCounts = [$campaignName=>1];
+                }
+
             }
 
-            $contractAddress = get_option($campaignName . '_contract_address');
-
             // it must trigger and count campaign on every each of product
-            $campaignInfo = [$campaignName => ['displayName' => $displayName, 'userEmail' => $userEmail, 'count' => $count,'contractAddress'=>$contractAddress]];
+            $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts'=>$purchaseCounts];
+            $campaignInfo = array_merge($campaigns, $items);
 
             $this->receiptModel->add($campaignInfo);
 

@@ -35,7 +35,6 @@ function cashback()
                 }
             }, $cashbackList);
 
-
             if(!$campaign->check($cashbackList) && $campaign->check($cashbackList) !== null) {
 
                 print ("
@@ -170,6 +169,7 @@ function checkout()
          $checkout->remove();
          $checkout->checkout();
     }
+    var_dump(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login));
 }
 
 /**

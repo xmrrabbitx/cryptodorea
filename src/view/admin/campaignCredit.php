@@ -12,8 +12,6 @@ function dorea_cashback_campaign_credit()
     $abi = $compile->abi();
     $bytecode = $compile->bytecode();
 
-    print("campaign credit page");
-
     $campaignName = null;
     if(isset($_GET['cashbackName'])) {
 
@@ -32,14 +30,37 @@ function dorea_cashback_campaign_credit()
     }
 
     print('
-                
-        <input id="creditAmount" type="text">
-        <button id="doreaFund" style="">Fund your Campaign</button>
-        <button id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
 
-        <p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
-        <p id="dorea_fund_error" style="display:none;color:#ff5d5d;"></p>
-
+        <h1 class="p-5 text-sm font-bold">Fund Campaign</h1> </br>
+        
+        <div class="container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md">
+          
+          <h2 class="!text-center !text-lg !divide-y !mt-5">Crypto Dorea Cashback</h2>
+          <hr class="border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-2">
+          
+          <div class="!grid !grid-cols-1 !justify-items-center">
+          
+            <div class="!col-span-1 !w-64 !mt-10">
+                <span class="">
+                    <label class="!text-pretty !text-left !float-left">Notes: Ethers must be in the Ether format e.g: 0.0004</label>
+                </span>
+                <span class="">
+                    <input class="!rounded-md !w-64 !mt-5 !p-2 !focus:ring-green-500 !border-hidden !bg-white" id="creditAmount" type="text" placeholder="Insert Ethers">
+                </span>
+            </div>
+            <div class="!col-span-1 !w-12/12 !mt-5">
+             <button class="!p-3 !w-64 !bg-[#faca43] !rounded-md" id="doreaFund" style="">Fund your Campaign</button>
+            </div>
+           
+            <button  id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
+    
+            <p class="" id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
+            <p class="" id="dorea_fund_error" style="display:none;color:#ff5d5d;"></p>
+            
+          </div>
+        </div>
+        
+        
         <script>          
              // Request access to Metamask
              setTimeout(delay, 1000)

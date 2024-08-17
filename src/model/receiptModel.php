@@ -14,7 +14,7 @@ class receiptModel extends receiptModelAbstract
     public function list()
     {
 
-        return get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) !== false ? get_option('dorea_campaigninfo_user' . wp_get_current_user()->user_login) : [];
+        return get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) !== false ? get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) : [];
 
     }
 
@@ -23,11 +23,18 @@ class receiptModel extends receiptModelAbstract
 
         $campaignInfoList = $this->list();
 
-        if (count($campaignInfoList) > 0) {
+        if ($campaignInfoList) {
             $campaignInfoKeys = array_keys($campaignInfo);
 
-            foreach ($campaignInfo as $info) {
+            update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, [$campaignInfo]);
 
+            //foreach (array_keys($campaignInfo) as $keys) {
+
+
+              //  var_dump($keys);
+
+
+                /*
                 if (!in_array($campaignInfoKeys[0], array_keys($campaignInfoList))) {
                     $campaignInfoList = $campaignInfoList + $campaignInfo;
                     update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoList);
@@ -38,10 +45,13 @@ class receiptModel extends receiptModelAbstract
                     update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoList);
                     break;
                 }
+                */
 
-            }
+            //}
 
-        } else if (count($campaignInfoList) < 1) {
+
+        } else {
+            var_dump("add to list");
             add_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login, $campaignInfo);
         }
 

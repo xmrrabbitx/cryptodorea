@@ -125,15 +125,20 @@ function dorea_admin_pay_campaign()
 
     $cashbackName = $_GET['cashbackName'];
     $expireDate = get_transient($cashbackName)['timestamp'];
+    $cashbackInfo = get_transient($cashbackName);
 
     $expire = new expireCampaignController();
 
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
 
+
     if(empty($userList)){
         print ("there is no users participant into the loyalty campaign!");
     }else {
         foreach ($userList as $users) {
+
+            $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
+            var_dump($campaignInfoUsers);
 
             $campaigns = get_option("dorea_campaigninfo_user_" . $users);
             if($campaigns) {

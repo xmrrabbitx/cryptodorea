@@ -144,7 +144,6 @@ class checkoutController extends checkoutAbstract
 
             if($campaignInfoUser) {
 
-                $i = 0;
                 foreach ($queueDeleteCampaigns as $campaigns) {
 
                     foreach ($campaignInfoUser as $campaignUser) {
@@ -152,28 +151,20 @@ class checkoutController extends checkoutAbstract
                         if (!empty($campaignUser['campaignNames'])) {
 
                             if (in_array($campaigns, $campaignUser['campaignNames'])) {
-
                                 $key = array_search($campaigns, $campaignUser['campaignNames']);
                                 unset($campaignUser["campaignNames"][$key]);
                                 $campaignInfoUser[0] = $campaignUser;
                                 update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                                    var_dump("trigger1");
                             }
 
                         }
                         if (empty($campaignUser['campaignNames'])){
-                            //unset($campaignInfoUser[$i]);
-                            var_dump($campaignInfoUser[0]['campaignNames']);
-                            //update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
                             delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
                         }
                     }
-                    $i += 1;
-
                 }
             }
             if (empty(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login))) {
-                var_dump("trigger3");
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
             }
         }

@@ -36,7 +36,7 @@ function dorea_cashback_campaign_content(){
       <div class='container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
         
         <h2 class='!text-center !text-lg !divide-y !mt-5'>Crypto Dorea Cashback</h2>
-        <hr class='border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-1'>
+        <hr class='border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-2'>
 
         <form class='!grid !grid-cols-1 !mt-5' method='POST' action='".esc_url(admin_url('admin-post.php'))."' id='cashback_campaign'>
             
@@ -44,7 +44,7 @@ function dorea_cashback_campaign_content(){
            
            <!-- campaign name field -->
            <div class='!col-span-1 !w-12/12'>
-                <input class='!rounded-md !w-64 !p-3 !focus:ring-green-500 !border-hidden !bg-white' type='text' name='campaignName'  placeholder='campaign name'>
+                <input class='!rounded-md !w-64 !p-2 !focus:ring-green-500 !border-hidden !bg-white' type='text' name='campaignName'  placeholder='campaign name'>
            </div>
     ");
             $campaignError = filter_input( INPUT_GET, 'campaignError' );
@@ -52,17 +52,16 @@ function dorea_cashback_campaign_content(){
                 print("<span style='color:#ff5d5d;'>$campaignError</span>");
             }
     print("
-      
             <!-- crypto type options -->
-            <div class='!col-span-1 !w-12/12 !mt-2'>
-                <lable class=''>crypto type</lable>
-                <select class='!border-hidden' name='cryptoType'>
-                    <option selected value='eth'>Ethereum</option>
-                </select>
+            <div class='!col-span-1 !w-12/12 !mt-5 hidden'>
+               <lable class='!pr-3'>crypto type</lable>
+               <select class='!border-hidden' name='cryptoType'>
+                  <option selected value='eth'>Ethereum</option>
+               </select>
             </div>
-            <div class='!col-span-1 !w-12/12 !mt-2'>
+            <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- amount options -->
-                <input class='!border-hidden !w-64 !mt-2 !p-3' type='text' name='cryptoAmount' placeholder='amount'>
+                <input class='!border-hidden !w-64 !mt-3 !p-2' type='text' name='cryptoAmount' placeholder='amount'>
            </div>
     ");
     $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
@@ -70,17 +69,19 @@ function dorea_cashback_campaign_content(){
         print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
     }
     print("
-            <div class='!col-span-1 !w-12/12 !mt-2'>
+            <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
-                <input class='!border-hidden !w-64 !mt-2 !p-3' type='text' name='shoppingCount' placeholder='Shopping Counts'>
+                <input class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='Shopping Counts'>
             </div>
             
-            <div class='!col-span-1 !w-12/12 !mt-2'>
-                <!-- start date options -->
-                <lable>start date</lable>
-                <select class='!border-hidden' name='startDateMonth' id='startDateMonth'>
+            <div class='!col-span-1 !w-12/12 !mt-5'>
+                <div class='!w-64 !bg-white !rounded-md !p-2 !mx-auto'>
                 
-    ");
+                    <!-- start date options -->
+                    <lable class='!float-left !pt-1 !pr-3 !text-[14px]'>Start Date</lable>
+                    <select class='!text-right !border-hidden' name='startDateMonth' id='startDateMonth'>
+                    
+        ");
 
             $index = array_search($currentDate,$monthsList);
             $nextYear = $currentYear;
@@ -115,7 +116,6 @@ function dorea_cashback_campaign_content(){
 
             print("
                     </select>
-                    <span>
                     <select class='!border-hidden' name='startDateDay' id='startDateDay'>");
 
             $index=0;
@@ -139,12 +139,13 @@ function dorea_cashback_campaign_content(){
             }
             
             print("
-                        </select>
-                    </span>
+                      </select>
+                    </div>
                 </div>
-                <div class='!col-span-1 !w-12/12 !mt-2'>
+                <div class='!col-span-1 !w-12/12 !mt-5 text-center'>
+                <div class='!w-64 !bg-white !rounded-md !p-2 !mx-auto'>
                     <!-- expire date options -->
-                    <lable>expire date</lable>
+                    <lable class='!float-left !pt-1 !text-[14px]'>Expire Date</lable>
                     <select class='!border-hidden' name='expDate' id='expDate'>
                         <option value='weekly'>Weekly</option>
                         <option value='monthly'>Monthly</option>
@@ -152,10 +153,10 @@ function dorea_cashback_campaign_content(){
 
             print("
                         </select>
-                      </span>
+                      </div>
                     </div>
-            <div class='!col-span-1 !w-12/12 !mt-2'>
-                <button class='!p-3 !bg-[#faca43] !rounded-md' type='submit'>set up campaign!</button>
+            <div class='!col-span-1 !w-12/12 !mt-5'>
+                <button class='!p-3 !w-64 !bg-[#faca43] !rounded-md' type='submit'>set up campaign</button>
             </div>
         </form>
         </br>
