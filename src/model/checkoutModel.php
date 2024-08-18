@@ -33,23 +33,26 @@ class checkoutModel extends checkoutModelAbstract
 
         // add/update campaigns info user
         $campaignList = $this->list();
-        $campaignsAmin = get_option("campaign_list");
+        $campaignsAdmin = get_option("campaign_list");
 
         $campaignInfo = [["campaignNames"=>$campaignNames, "walletAddress" => $userWalletAddress]];
 
-        if($campaignsAmin) {
+        if($campaignsAdmin) {
             foreach ($campaignNames as $camps) {
-                if (in_array($camps, $campaignsAmin)) {
+                if (in_array($camps, $campaignsAdmin)) {
+                    if ($campaignList) {
+                        foreach ($campaignList as $campaigns) {
 
-                    if ($campaignList['campaignNames'] !== null) {
+                           if (!in_array($camps, $campaigns['campaignNames'])) {
 
-                        if (!in_array($camps, $campaignList['campaignNames'])) {
+                              $result = array_merge($campaignList, $campaignInfo);
+                              update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $result);
 
-                            $result = array_merge($campaignList, $campaignInfo);
-                            update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $result);
+                           }
+
                         }
-
                     } else {
+
                         add_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfo);
                     }
                 }
