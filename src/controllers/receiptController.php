@@ -31,21 +31,31 @@ class receiptController extends receiptAbstract
 
         foreach ($campaignList as $campaigns) {
 
-            foreach ($campaigns['campaignNames'] as $campaignName){
 
-                if (isset($this->campaignInfo()[$campaignName])) {
-                    $purchaseCounts = [$campaignName=>$this->campaignInfo()[$campaignName]['count'] + 1];
-                } else {
-                    $purchaseCounts = [$campaignName=>1];
+            if(!in_array($order->id,$campaigns['order_ids'])) {
+                foreach ($campaigns['campaignNames'] as $campaignName) {
+
+                    if (isset($campaigns['purchaseCounts'][$campaignName])) {
+                        $purchaseCounts = [$campaignName => $campaigns['purchaseCounts'][$campaignName] + 1];
+                    } else {
+                        $purchaseCounts = [$campaignName => 1];
+                    }
+
                 }
 
+                if ($campaigns['order_ids']) {
+                    $campaigns['order_ids'][] = $order->id;
+
+                } else {
+                    $campaigns['order_ids'] = $order->id;
+                }
+
+                // it must trigger and count campaign on every each of product
+                $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts' => $purchaseCounts];
+                $campaignInfo = array_merge($campaigns, $items);
+
+                $this->receiptModel->add($campaignInfo);
             }
-
-            // it must trigger and count campaign on every each of product
-            $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts'=>$purchaseCounts];
-            $campaignInfo = array_merge($campaigns, $items);
-
-            $this->receiptModel->add($campaignInfo);
 
         }
 

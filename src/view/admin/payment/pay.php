@@ -134,13 +134,21 @@ function dorea_admin_pay_campaign()
     print('<script src="https://cdn.tailwindcss.com"></script>');
 
     print('
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
         <style>
             body{
                 background: #f6f6f6;
             }
+            main{
+                font-family: "Poppins", sans-serif !important;
+            }
         </style>
     ');
 
+    print("<main>");
     print("
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
     ");
@@ -149,7 +157,7 @@ function dorea_admin_pay_campaign()
 
     if(empty($userList)){
         print ("
-            <div class='!text-center !text-sm !mx-auto !w-64 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+            <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
                  <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
@@ -161,7 +169,18 @@ function dorea_admin_pay_campaign()
         ");
     }else {
         print('
-           <div class="!flex !grid-flex !pl-5 !w-64 !mr-5 !mt-3 !pl-3 !p-10 !gap-3 !text-center !rounded-xl  !bg-white !shadow-sm !border">
+           <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
+           <div class="!col-span-1 !grid !grid-cols-3">
+            <span class="!text-center !pl-3">
+                Username
+            </span>
+            <span class="!text-center">
+                Wallet Address
+            </span>
+            <span class="!text-center">
+                Purchase Counts
+            </span>
+           </div>
         ');
         foreach ($userList as $users) {
 
@@ -172,10 +191,12 @@ function dorea_admin_pay_campaign()
             if($campaigns ) {
                 foreach ($campaigns as $campaignInfo) {
                     if (in_array($cashbackName, $campaignInfo['campaignNames'])){
-                        print("<span>".$users."</span> ");
 
-                            print($campaignInfo['walletAddress'] . "</br>");
-
+                        print("<div class='!col-span-1 !grid !grid-cols-3 !text-center'>");
+                            print("<span class='!pl-3 !col-span-1'>".$users."</span> ");
+                            print("<span class='!pl-3 !col-span-1'>".substr($campaignInfo['walletAddress'],0,4) ."****" . substr($campaignInfo['walletAddress'],28,34)."</span>");
+                            print("<span class='!pl-3 !col-span-1'>".$campaignInfo['purchaseCounts'][$cashbackName]."</span>");
+                        print("</div>");
                     }
                 }
             }
@@ -193,7 +214,11 @@ function dorea_admin_pay_campaign()
         $doreaContractAddress = get_option($campaignName . '_contract_address');
 
         if($expire->check($expireDate)){
-            print('<button class="campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>');
+            print('
+                <div class="!grid !grid-cols-1 !mt-5">
+                    <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '">pay</button>
+                </div>
+            ');
             dorea_campaign_pay($walletsList);
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
         }else{
@@ -202,6 +227,7 @@ function dorea_admin_pay_campaign()
     }
 
     print("    
-        </div>
+            </div>
+        </main>
     ");
 }

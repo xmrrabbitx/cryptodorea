@@ -11,6 +11,17 @@ use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 function dorea_cashback_campaign_content(){
 
 
+    print('
+        <style>
+            body{
+                background: #f6f6f6;
+            }
+            main{
+                font-family: "Poppins", sans-serif !important;
+            }
+        </style>
+    ');
+
     // utilities helper functions
     $dateCalculator = new dateCalculator();
     $currentTime = $dateCalculator->currentDate();
@@ -27,6 +38,7 @@ function dorea_cashback_campaign_content(){
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
+    print("<main>");
     print("<h1 class='p-5 text-sm font-bold'>Create Campaign</h1> </br>");
     $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
     if($emptyError){
@@ -173,6 +185,8 @@ function dorea_cashback_campaign_content(){
     if($existedCampaignError){
         print("<span style='color:#ff5d5d;'>$existedCampaignError</span>");
     }
+
+    print("</main>");
 }
 
 /**

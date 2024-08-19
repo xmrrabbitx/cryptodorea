@@ -8,6 +8,12 @@ use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+    // load poppins font
+    print ('        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    ');
 
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
@@ -81,12 +87,7 @@ function dorea_main_page_content()
     $cashbackList = $cashback->list();
 
     print('
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
         <style>
-
             body{
                 background: #f6f6f6 !important;
             }
