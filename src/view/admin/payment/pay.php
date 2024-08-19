@@ -133,16 +133,17 @@ function dorea_admin_pay_campaign()
     // load tailwind cdn
     print('<script src="https://cdn.tailwindcss.com"></script>');
 
-    print('<style>
-        body{
-            background: #f6f6f6;
-        }
-
-    </style>');
+    print('
+        <style>
+            body{
+                background: #f6f6f6;
+            }
+        </style>
+    ');
 
     print("
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
-        ");
+    ");
     print("<h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>");
     print("<h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>");
 
@@ -159,6 +160,9 @@ function dorea_admin_pay_campaign()
             </div>
         ");
     }else {
+        print('
+           <div class="!flex !grid-flex !pl-5 !w-64 !mr-5 !mt-3 !pl-3 !p-10 !gap-3 !text-center !rounded-xl  !bg-white !shadow-sm !border">
+        ');
         foreach ($userList as $users) {
 
             $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
@@ -178,6 +182,8 @@ function dorea_admin_pay_campaign()
 
         }
 
+        print("</div>");
+
 
         $campaignName = $_GET['cashbackName'];
 
@@ -194,4 +200,8 @@ function dorea_admin_pay_campaign()
             die("not ready for payment!");
         }
     }
+
+    print("    
+        </div>
+    ");
 }

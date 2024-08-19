@@ -20,8 +20,8 @@ function dorea_add_menu_page(): void
          * Dorea Cash Back Main Menu
          */
         add_menu_page(
-            'Dorea CashBack', // Page title
-            'Dorea CashBack', // Menu title
+            'WooCryptoDorea', // Page title
+            'WooCryptoDorea', // Menu title
             'manage_options',  // Capability required to access
             'crypto-dorea-cashback',  // Menu slug (unique identifier)
             'dorea_main_page_content',  // Callback function to display page content
@@ -35,7 +35,7 @@ function dorea_add_menu_page(): void
         add_submenu_page(
             'crypto-dorea-cashback',
             'Campaign Page',
-            'cashback campaigns',
+            'Cashback Campaigns',
             'manage_options',
             'campaigns',
             'dorea_cashback_campaign_content'
@@ -47,7 +47,7 @@ function dorea_add_menu_page(): void
         add_submenu_page(
             'crypto-dorea-cashback',
             'Campaign Page',
-            'campaign credit',
+            'Campaign Credit',
             'manage_options',
             'credit',
             'dorea_cashback_campaign_credit'
@@ -80,19 +80,40 @@ function dorea_main_page_content()
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
+    print('
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
+        <style>
+
+            body{
+                background: #f6f6f6 !important;
+            }
+            main{
+                font-family: "Poppins", sans-serif !important;
+            }
+        </style>
+    ');
+
+    print("<main>");
     print("<h1 class='p-5 text-sm font-bold'>Home</h1> </br>");
 
     if ($cashbackList) {
 
-        print("<h2 class='pl-5 text-sm font-bold'>Create Cashback Campaign for the Most Loyal Customers!</h2> </br>");
+        print("
+            <h2 class='pl-5 text-sm font-bold'>
+                DOREA CASHBACK GROWS YOUR BUSINESS TO THE MOON 🚀  
+            </h2> 
+            <p class='pl-5 !text-sm !mt-2 !text-slate-500'>Create Cashback Campaign for the Most Loyal Customers!</p>
+            </br>");
 
         print("
-            <div class='container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
+            <div class='!container !mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
         ");
         foreach ($cashbackList as &$campaignName) {
             print("  
-                <div class='mr-5 pl-3 p-10 rounded-xl mt-3 bg-white'>
+                <div class='mr-5 pl-3 p-10 rounded-xl mt-3 !bg-white !shadow-sm !border'>
                         <div class='grid lg:grid-cols-6 sm:grid-cols-4 grid-cols-4 gap-1 '>
             ");
 
@@ -101,7 +122,7 @@ function dorea_main_page_content()
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
-                print ('<span class="text-emerald-500">funded!</span>');
+                print ('<span class="text-emerald-500 ">funded!</span>');
             } else {
                 print('<a class="col-span-1 pl-2 focus:ring-0 hover:text-emerald-500 text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
 
@@ -123,7 +144,8 @@ function dorea_main_page_content()
             ');
 
             print('
-                <div class="flex grid-flex gap-3 text-center">');
+                <div class="flex grid-flex gap-3 text-center">
+            ');
             if($doreaContractAddress) {
 
                 print('
@@ -202,7 +224,8 @@ function dorea_main_page_content()
 
     print(" 
 
-        </div>
+            </div>  
+        </main>
     ");
 }
 
