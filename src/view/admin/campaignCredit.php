@@ -213,7 +213,7 @@ function dorea_cashback_campaign_credit()
                                         
                                             const creditAmount = contractAmount; // This is a floating-point number
                                             const multiplier = BigInt(1e18); // This is a BigInt
-                                            const factor = 1e18; // Use the same factor as the multiplier to avoid precision issues
+                                            const factor = 1e18; 
                                             
                                             // Convert the floating-point number to an integer
                                             const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
