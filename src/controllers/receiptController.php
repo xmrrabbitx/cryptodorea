@@ -26,19 +26,24 @@ class receiptController extends receiptAbstract
     function is_paid($order, $campaignList)
     {
         static $purchaseCounts;
+        static $resultInfo;
+
         $displayName = $order->billing->first_name . " " . $order->billing->last_name ;
         $userEmail = $order->billing->email;
 
         foreach ($campaignList as $campaigns) {
 
-
-            if (!($campaigns['order_ids']) || !in_array($order->id, $campaigns['order_ids'] ?? [])) {
+            if (!isset($campaigns['order_ids']) || !in_array($order->id, $campaigns['order_ids'])) {
                 foreach ($campaigns['campaignNames'] as $campaignName) {
 
                     if (isset($campaigns['purchaseCounts'][$campaignName])) {
-                        $purchaseCounts = [$campaignName => $campaigns['purchaseCounts'][$campaignName] + 1];
+
+                        // issue here
+                        $purchaseCounts[$campaignName] =  $campaigns['purchaseCounts'][$campaignName] + 1;
+
                     } else {
-                        $purchaseCounts = [$campaignName => 1];
+                        $purchaseCounts[$campaignName] = 1;
+
                     }
 
                 }
@@ -49,9 +54,14 @@ class receiptController extends receiptAbstract
                 $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts' => $purchaseCounts];
                 $campaignInfo = array_merge($campaigns, $items);
 
-                $this->receiptModel->add($campaignInfo);
+                $resultInfo[] = $campaignInfo;
+
 
             }
+        }
+        if($resultInfo) {
+            // store campaign info into model
+            $this->receiptModel->add($resultInfo);
         }
 
     }

@@ -24,12 +24,11 @@ class receiptModel extends receiptModelAbstract
         $campaignInfoList = $this->list();
 
         if ($campaignInfoList) {
-            $campaignInfoKeys = array_keys($campaignInfo);
 
-            update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, [$campaignInfo]);
+            update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfo);
 
         } else {
-            var_dump("add to list");
+            // actually do nothing because add before in checkout step
             add_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login, $campaignInfo);
         }
 
