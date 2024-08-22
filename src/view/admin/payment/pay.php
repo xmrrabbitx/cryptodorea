@@ -216,7 +216,6 @@ function dorea_admin_pay_campaign()
             $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
 
             $campaigns = get_option("dorea_campaigninfo_user_" . $users);
-//delete_option("dorea_campaigninfo_user_" . $users);
 
             if($campaigns ) {
                 foreach ($campaigns as $campaignInfo) {

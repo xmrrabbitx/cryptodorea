@@ -115,7 +115,7 @@ function dorea_main_page_content()
         foreach ($cashbackList as &$campaignName) {
             print("  
                 <div class='mr-5 pl-3 p-10 rounded-xl mt-3 !bg-white !shadow-sm !border'>
-                        <div class='grid lg:grid-cols-6 sm:grid-cols-4 grid-cols-4 gap-1 '>
+                   <div class='grid lg:grid-cols-6 sm:grid-cols-4 grid-cols-4 gap-1 '>
             ");
 
             print('<span class="col-span-1">'.$campaignName.'</span>');
@@ -155,7 +155,6 @@ function dorea_main_page_content()
                         <svg class="size-6 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                           <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
                         </svg>
-    
                     </span>
                 ');
             }else {
@@ -218,7 +217,7 @@ function dorea_main_page_content()
                 <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
                 </br>
                 <p class="pt-2 mt-7 text-center">
-                    <a class="basis-12 p-10 text-black text-black hover:text-black bg-[#faca43] text-center rounded-xl focus:ring-0" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
+                    <a class="!basis-12 !p-10 !text-black !text-black !hover:text-black !bg-[#faca43] !text-center !rounded-xl !focus:ring-0" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
                 </p>
         ');
     }

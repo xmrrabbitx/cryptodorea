@@ -15,9 +15,7 @@ function doreaPlans()
 
     $plansCompile = new plansCompile();
     $abi = $plansCompile->abi();
-    $bytecode = $plansCompile->bytecode();
-
-    print ("plans page");
+    //$bytecode = $plansCompile->bytecode();
 
     // check how many days remianed on free trial plan
     $freetrial = new  freetrialController();
@@ -28,22 +26,72 @@ function doreaPlans()
     }
 
 
-    print("<button id='doreaMetamask'>connect to Metamask</button>");
-
-
-    print("<head>Monthly</head>");
-
-    print("<head>6 Months</head>");
-
-    print("<head>Yearly</head>");
-
-    print ('
-
-        <button  id="doreaBuy_monthly" class="doreaBuy"  value="19_Monthly">buy</button>
-        <button  id="doreaBuy_halfYearly" class="doreaBuy"  value="29_halfYearly">buy</button>
-        <button  id="doreaBuy_Yearly" class="doreaBuy"  value="49_Yearly">buy</button>
-
+    print('
+        <style>
+            body{
+                background: #f6f6f6 !important;
+            }
+            main{
+                font-family: "Poppins", sans-serif !important;
+            }
+        </style>
     ');
+
+    print("<main>");
+    print("<h1 class='p-5 text-sm font-bold'>Dorea Plans</h1> </br>");
+
+    print("<div class='!container !mx-auto pl-5 pt-2 pb-5 shadow-transparent rounded-md'>");
+
+    print("<button class='text-center' id='doreaMetamask'>connect to Metamask</button>");
+
+
+    print("
+        <div class='!grid !grid-cols-3 !gap-5'>
+           <div class='!p-5 !bg-[#ECECEC] !rounded-md'>
+               <header class='!text-sm !font-bold'>Monthly</header>
+               <p class='!text-xl !mt-5'>$29 USD</p>
+               <p class='!text-sm !mt-5'>Perfect for starting</p>
+               
+               <div class='!text-sm !mt-5'>
+                    <p class='!flex !flex-grid'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-sm !pl-1'>
+                            Create Cashback 
+                        </span>
+                    </p>
+                    <p class='!flex !flex-grid'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-sm !pl-1'>
+                            Managing Loyal Customers
+                        </span>
+                    </p>
+                    <p class='!flex !flex-grid'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-sm !pl-1'>
+                            Pay with Ethereum
+                        </span>
+                    </p>
+               </div>
+               <div class='!text-center !mt-5'>
+                    <button  id='doreaBuy_monthly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='19_Monthly'>get started</button>
+                </div>
+           </div>
+           <div>
+               <header>6 Months</header>
+               <button  id='doreaBuy_halfYearly' class='doreaBuy'  value='29_halfYearly'>buy</button>
+           </div><div>
+              <header>Yearly</header>
+              <button  id='doreaBuy_Yearly' class='doreaBuy'  value='49_Yearly'>buy</button>
+           </div>
+       </div>
+    ");
+
 
     print('<script type="module">
 
@@ -235,6 +283,12 @@ function doreaPlans()
              
         </script>
     ');
+
+
+    print("
+            </div>
+        </main>
+    ");
     
 }
 
