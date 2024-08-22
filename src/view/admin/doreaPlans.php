@@ -40,54 +40,138 @@ function doreaPlans()
     print("<main>");
     print("<h1 class='p-5 text-sm font-bold'>Dorea Plans</h1> </br>");
 
-    print("<div class='!container !mx-auto pl-5 pt-2 pb-5 shadow-transparent rounded-md'>");
-
-    print("<button class='text-center' id='doreaMetamask'>connect to Metamask</button>");
-
+    print("<div class='!container !mx-auto !pl-5 !pr-5 !pt-2 pb-5 shadow-transparent rounded-md'>");
 
     print("
-        <div class='!grid !grid-cols-3 !gap-5'>
+        <div class='!text-center !grid !grid-cols-1'>
+           <div  class='!text-center'>
+               <button id='processingIcon' type='button' class='!mx-auto !p-2 !text-center !rounded-md !bg-[#faca43] !p-3' disabled>
+                 <div class='!flex !text-center'>
+                 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='animate-spin h-5 w-5 mr-1'>
+                   <path fill-rule='evenodd' d='M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z' clip-rule='evenodd' />
+                 </svg>
+                Processing...
+                </div>
+               </button>
+           </div>
+           <div class='!text-center'>
+                <button class='!text-center !p-3 !w-64 !bg-[#faca43] !rounded-md' id='doreaMetamask'>connect to Metamask</button>
+           </div>
+        </div>
+    ");
+
+    print("
+        <div id='plansContent'  style='display: none !important;' class='!grid !grid-cols-3 !gap-5'>
            <div class='!p-5 !bg-[#ECECEC] !rounded-md'>
                <header class='!text-sm !font-bold'>Monthly</header>
-               <p class='!text-xl !mt-5'>$29 USD</p>
+               <p class='!text-xl !mt-5'>$19 USD</p>
                <p class='!text-sm !mt-5'>Perfect for starting</p>
-               
                <div class='!text-sm !mt-5'>
-                    <p class='!flex !flex-grid'>
+                    <p class='!flex !flex-grid !pt-2'>
                         <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                           <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
                         </svg>
-                        <span class='!text-sm !pl-1'>
+                        <span class='!text-[13px] !pl-1'>
                             Create Cashback 
                         </span>
                     </p>
-                    <p class='!flex !flex-grid'>
+                    <p class='!flex !flex-grid !pt-2'>
                         <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                           <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
                         </svg>
-                        <span class='!text-sm !pl-1'>
+                        <span class='!text-[13px] !pl-1'>
                             Managing Loyal Customers
                         </span>
                     </p>
-                    <p class='!flex !flex-grid'>
+                    <p class='!flex !flex-grid !pt-2'>
                         <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                           <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
                         </svg>
-                        <span class='!text-sm !pl-1'>
+                        <span class='!text-[13px] !pl-1'>
                             Pay with Ethereum
                         </span>
                     </p>
                </div>
                <div class='!text-center !mt-5'>
                     <button  id='doreaBuy_monthly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='19_Monthly'>get started</button>
-                </div>
+               </div>
            </div>
            <div>
-               <header>6 Months</header>
-               <button  id='doreaBuy_halfYearly' class='doreaBuy'  value='29_halfYearly'>buy</button>
-           </div><div>
-              <header>Yearly</header>
-              <button  id='doreaBuy_Yearly' class='doreaBuy'  value='49_Yearly'>buy</button>
+           <div class='!p-5 !bg-[#ECECEC] !rounded-md'>
+               <header class='!text-sm !font-bold'>6 Months</header>
+               <p class='!text-xl !mt-5'>$29 USD</p>
+               <p class='!text-sm !mt-5'>Perfect for starting</p>
+               
+               <div class='!text-sm !mt-5'>
+                    <p class='!flex !flex-grid !pt-2'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-[13px] !pl-1'>
+                            Create Cashback 
+                        </span>
+                    </p>
+                    <p class='!flex !flex-grid !pt-2'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-[13px] !pl-1'>
+                            Managing Loyal Customers
+                        </span>
+                    </p>
+                    <p class='!flex !flex-grid !pt-2'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-[13px] !pl-1'>
+                            Pay with Ethereum
+                        </span>
+                    </p>
+               </div>
+               <div class='!text-center !mt-5'>
+                    <button  id='doreaBuy_halfYearly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='29_halfYearly'>get started</button>
+               </div>
+           </div>
+              
+           </div>
+           <div>
+           <div class='!p-5 !bg-[#ECECEC] !rounded-md'>
+                   <header class='!text-sm !font-bold'>Yearly</header>
+               <p class='!text-xl !mt-5'>$49 USD</p>
+               <p class='!text-sm !mt-5'>Perfect for starting</p>
+               
+               <div class='!text-sm !mt-5'>
+                    <p class='!flex !flex-grid !pt-2'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-[13px] !pl-1'>
+                            Create Cashback 
+                        </span>
+                    </p>
+                    <p class='!flex !flex-grid !pt-2'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-[13px] !pl-1'>
+                            Managing Loyal Customers
+                        </span>
+                    </p>
+                    <p class='!flex !flex-grid !pt-2'>
+                        <svg class='!size-4 !text-black-500 !mt-[1px]' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                        </svg>
+                        <span class='!text-[13px] !pl-1'>
+                            Pay with Ethereum
+                        </span>
+                    </p>
+               </div>
+               <div class='!text-center !mt-5'>
+                    <button  id='doreaBuy_Yearly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='49_Yearly'>get started</button>
+               </div>
+           </div>
+             
+             
            </div>
        </div>
     ");
@@ -97,7 +181,11 @@ function doreaPlans()
 
          import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
             
+            let processingIcon = document.getElementById("processingIcon");
+
             let doreaMetamask = document.getElementById("doreaMetamask");
+            let plansContent = document.getElementById("plansContent");
+
             
             let doreaBuy_monthly = document.getElementById("doreaBuy_monthly");
             let doreaBuy_halfYearly = document.getElementById("doreaBuy_halfYearly");
@@ -107,18 +195,23 @@ function doreaPlans()
                setTimeout(delay, 1000)
                function delay(){
                     (async () => {
+                         
+                     // fade out Processing Icon
+                     processingIcon.style.display = "none";  
+                     // fade In Dorea metamask Icon
+                     //doreaMetamask.style.display = "block";  
+                     
                      if(window.ethereum._state.accounts.length > 0){
 
                          doreaMetamask.style.display = "none";
+                         plansContent.style.display = "block";
                          
-                         doreaBuy_monthly.style.display = "block";
-                         doreaBuy_halfYearly.style.display = "block";
-                         doreaBuy_Yearly.style.display = "block";
-                      
                      }else{
                            
                             doreaMetamask.addEventListener("click", async function(){
-                         
+                                    
+                                    console.log("click")                                      
+                       
                                      const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                      const userAddress = accounts[0];
                                      
