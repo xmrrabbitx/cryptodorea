@@ -90,7 +90,8 @@ function dorea_cashback_campaign_content(){
                 <div class='!w-64 !bg-white !rounded-md !p-2 !mx-auto'>
                 
                     <!-- start date options -->
-                    <lable class='!float-left !pt-1 !pr-3 !text-[14px]'>Start Date</lable>
+                  <lable class='!float-left !pt-1 !pr-3 !text-[14px]'>Start Date</lable>
+                  <div class='!flex !flex-grid !gap-1'>
                     <select class='!text-right !border-hidden' name='startDateMonth' id='startDateMonth'>
                     
         ");
@@ -141,17 +142,18 @@ function dorea_cashback_campaign_content(){
 
                 if($days === $currentDay){
                     print("
-                    <option class='!border-hidden' value='".$index."' selected>".$days."</option>
+                      <option class='!border-hidden' value='".$index."' selected>".$days."</option>
                     ");
                 }else {
                     print("
-                    <option class='!border-hidden' value='".$index."'>" . $days . "</option>
+                      <option class='!border-hidden' value='".$index."'>" . $days . "</option>
                     ");
                 }
             }
             
             print("
                       </select>
+                      </div>
                     </div>
                 </div>
                 <div class='!col-span-1 !w-12/12 !mt-5 text-center'>

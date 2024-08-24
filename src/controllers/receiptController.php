@@ -27,6 +27,7 @@ class receiptController extends receiptAbstract
     {
         static $purchaseCounts;
         static $resultInfo;
+        static $total;
 
         $displayName = $order->billing->first_name . " " . $order->billing->last_name ;
         $userEmail = $order->billing->email;
@@ -38,13 +39,16 @@ class receiptController extends receiptAbstract
 
                     if (isset($campaigns['purchaseCounts'][$campaignName])) {
 
-                        // issue here
                         $purchaseCounts[$campaignName] =  $campaigns['purchaseCounts'][$campaignName] + 1;
 
                     } else {
+
                         $purchaseCounts[$campaignName] = 1;
 
                     }
+
+                    // add sum of total to list
+                    $campaigns['total'][$campaignName][] =  $order->total;
 
                 }
 

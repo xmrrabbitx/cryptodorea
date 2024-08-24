@@ -139,6 +139,7 @@ class checkoutController extends checkoutAbstract
 
         $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
         $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+        $campaignsList = get_option('campaign_list');
 
         if($queueDeleteCampaigns) {
 
@@ -150,6 +151,7 @@ class checkoutController extends checkoutAbstract
 
                         if (!empty($campaignUser['campaignNames'])) {
 
+                            // remove campaign in delete queue
                             if (in_array($campaigns, $campaignUser['campaignNames'])) {
                                 $key = array_search($campaigns, $campaignUser['campaignNames']);
                                 unset($campaignUser["campaignNames"][$key]);
@@ -163,11 +165,37 @@ class checkoutController extends checkoutAbstract
                         }
                     }
                 }
+
             }
             if (empty(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login))) {
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
             }
         }
+
+        foreach ($campaignInfoUser as $campaigns){
+            foreach ($campaigns['campaignNames'] as $campaignNames) {
+
+                // remove redundant old campaigns
+                if (!in_array($campaignNames, $campaignsList)) {
+
+
+                    $keyCamp = array_search($campaignNames, $campaigns['campaignNames']);
+
+                    unset($campaigns["campaignNames"][$keyCamp]);
+                    unset($campaigns["total"][$campaignNames]);
+                    unset($campaigns["purchaseCounts"][$campaignNames]);
+
+                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaigns);
+
+                }
+
+                if (empty($campaignUser['campaignNames'])){
+
+                    delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+                }
+            }
+        }
+
     }
 
 }

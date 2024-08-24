@@ -8,6 +8,8 @@ use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+
+
     // load poppins font
     print ('        
         <link rel="preconnect" href="https://fonts.googleapis.com">

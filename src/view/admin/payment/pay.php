@@ -8,7 +8,7 @@ use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 /**
  * the payment modal for admin campaigns
  */
-function dorea_campaign_pay($walletsList, $cryptoAmount, $shoppingCount): void
+function dorea_campaign_pay($walletsList, $cryptoAmount, $total, $shoppingCount): void
 {
 
     $compile = new compile();
@@ -17,6 +17,16 @@ function dorea_campaign_pay($walletsList, $cryptoAmount, $shoppingCount): void
 
     $walletsList = json_encode($walletsList);
 
+    $finalAmount = [];
+    foreach ($total as $sumPrices) {
+
+        // calculate percentage of final price
+        $finalAmount[] = ($sumPrices * $cryptoAmount) / 100;
+
+    }
+
+    $sumAmount = array_sum($finalAmount);
+    $finalAmount = json_encode($finalAmount);
 
     print('<script type="module">
 
@@ -77,31 +87,40 @@ function dorea_campaign_pay($walletsList, $cryptoAmount, $shoppingCount): void
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
                 
+        
                 // convert ether to wei
-                let cryptoAmount = '.$cryptoAmount.';
-                let cryptoAmountBigInt;
-                if( (typeof(cryptoAmount) === "number") && (Number.isInteger(cryptoAmount))){
-                    
-                    const creditAmountBigInt = BigInt(cryptoAmount);
-                    const multiplier = BigInt(1e18);
-                    cryptoAmountBigInt = creditAmountBigInt * multiplier;
-                                          
-                }else{
-                                        
-                    const creditAmount = cryptoAmount; // This is a floating-point number
-                    const multiplier = BigInt(1e18); // This is a BigInt
-                    const factor = 1e18; 
+                let cryptoAmount = '.$finalAmount.'; 
+                let cryptoAmountBigInt = [];
+              
+                for(const amount of  cryptoAmount){
+               
+                    if( (typeof(amount) === "number") && (Number.isInteger(amount))){
+                        
+                        const creditAmountBigInt = BigInt(amount);
+                        const multiplier = BigInt(1e18);
+                        cryptoAmountBigInt.push(creditAmountBigInt * multiplier);
+                                              
+                    }
+                    else{
                                             
-                    // Convert the floating-point number to an integer
-                    const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                    cryptoAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
-                                  
+                        const creditAmount = amount; // This is a floating-point number
+                        const multiplier = BigInt(1e18); // This is a BigInt
+                        const factor = 1e18; 
+                                                
+                        // Convert the floating-point number to an integer
+                        const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
+                        cryptoAmountBigInt.push(creditAmountInt * multiplier / BigInt(factor));
+                                      
+                    }
                 }
-  
+               
+             console.log(cryptoAmountBigInt)
+         
                 const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
                  
                 try{
                    const balance = await contract.getBalance();
+                   console.log(balance)
                    // issue here
                    let qualifiedWalletsCounts = parseInt(balance / cryptoAmountBigInt); //parseInt((balance / BigInt('.$walletsList.'.length)) / (balance / BigInt('.$walletsList.'.length)));
                
@@ -109,7 +128,15 @@ function dorea_campaign_pay($walletsList, $cryptoAmount, $shoppingCount): void
                     
                     if(balance !== 0n){
                         
-                        let re = await contract.pay(' . $walletsList . '.slice(0,qualifiedWalletsCounts), cryptoAmountBigInt.toString(), messageHash, v, r, s);
+                        let re = await contract.pay(
+                            ' . $walletsList . '.slice(0,qualifiedWalletsCounts), 
+                            cryptoAmountBigInt, 
+                            '.$sumAmount.',
+                            messageHash, 
+                            v, 
+                            r, 
+                            s
+                        );
                        
                     }else{              
                         // show error popup message
@@ -146,6 +173,8 @@ function dorea_campaign_pay($walletsList, $cryptoAmount, $shoppingCount): void
 add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
+    static $total;
+    static $userEther;
 
     $cashbackName = $_GET['cashbackName'];
     $expireDate = get_transient($cashbackName)['timestamp'];
@@ -199,7 +228,7 @@ function dorea_admin_pay_campaign()
     }else {
         print('
            <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
-           <div class="!col-span-1 !grid !grid-cols-3">
+           <div class="!col-span-1 !grid !grid-cols-4">
             <span class="!text-center !pl-3">
                 Username
             </span>
@@ -209,25 +238,45 @@ function dorea_admin_pay_campaign()
             <span class="!text-center">
                 Purchase Counts
             </span>
+            <span class="!text-center">
+                Amount
+            </span>
            </div>
         ');
+
         foreach ($userList as $users) {
 
             $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
 
             $campaigns = get_option("dorea_campaigninfo_user_" . $users);
 
+            $contractAmount = get_transient($cashbackName)['contractAmount'];
+
+            //hypothetical price of eth _ get this from an online service
+            $ethBasePrice = 0.00036;
+
             if($campaigns ) {
                 foreach ($campaigns as $campaignInfo) {
                     //var_dump($campaignInfo);
-                    //var_dump($campaignInfo['campaignNames']);
                     if(isset($campaignInfo['order_ids'])) {
                         if (in_array($cashbackName, $campaignInfo['campaignNames'])) {
-                            print("<div class='!col-span-1 !grid !grid-cols-3 !text-center'>");
+                            print("<div class='!col-span-1 !grid !grid-cols-4 !text-center'>");
                             print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
                             print("<span class='!pl-3 !col-span-1'>" . substr($campaignInfo['walletAddress'], 0, 4) . "****" . substr($campaignInfo['walletAddress'], 28, 34) . "</span>");
                             print("<span class='!pl-3 !col-span-1'>" . $campaignInfo['purchaseCounts'][$cashbackName] . "</span>");
+                            print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignInfo['total'][$cashbackName]) . "</span>");
                             print("</div>");
+
+                            $total[] = array_sum($campaignInfo['total'][$cashbackName]);
+                            $userEther = array_sum($campaignInfo['total'][$cashbackName]) * $ethBasePrice;
+                            $sumUserEthers[] = $userEther;
+
+                           if(array_sum($sumUserEthers) <= $contractAmount){
+                               var_dump("elgible");
+                           }else{
+                               var_dump("not eligible");
+                           }
+
                         }
                     }
                 }
@@ -242,6 +291,8 @@ function dorea_admin_pay_campaign()
         $payment = new paymentController();
         $walletsList = $payment->walletslist($campaignName);
 
+
+
         $doreaContractAddress = get_option($campaignName . '_contract_address');
 
         if($expire->check($expireDate)){
@@ -252,7 +303,7 @@ function dorea_admin_pay_campaign()
             ');
 
             // payment js modal
-            dorea_campaign_pay($walletsList, $cryptoAmount, $shoppingCount);
+            dorea_campaign_pay($walletsList, $cryptoAmount, $total, $shoppingCount);
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
         }else{
