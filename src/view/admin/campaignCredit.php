@@ -22,7 +22,7 @@ function dorea_cashback_campaign_credit()
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
-            wp_redirect('admin.php?page=crypto-dorea-cashback');
+            //wp_redirect('admin.php?page=crypto-dorea-cashback');
         }
 
     }else{
@@ -222,16 +222,21 @@ function dorea_cashback_campaign_credit()
                                         }
                                         
                                         //If your contract requires constructor args, you can specify them here
-                                        const contract = await factory.deploy(
+                                        await factory.deploy(
                                             {
                                                       
                                               value: contractAmountBigInt.toString(),
                                               gasLimit :3000000,
                                                       
                                             }
-                                        ).then(function(transaction) {
-                                                    let contractAddress = transaction.target;
-                                                    
+                                        ).then(async function(response) {
+                                        
+                                            let contractAddress = response.target;
+                                            
+                                            // wait for deployment
+                                            response.waitForDeployment().then(async (receipt) => {
+                                             console.log(receipt)
+                                                if(receipt){
                                                     // get contract address
                                                     let xhr = new XMLHttpRequest();
                                             
@@ -247,11 +252,13 @@ function dorea_cashback_campaign_credit()
                                                     }
                                                 
                                                     xhr.send(JSON.stringify({"contractAddress":contractAddress,"contractAmount":contractAmount}));
-                                                    
-                                                    });
+                                                }
+                                            });        
+                                        });
                                     
                                   }catch (error) {
                                        
+                                       console.log(error)
                                        console.log(error.revert.args[0])
                                        const fundError = document.getElementById("dorea_fund_error");
                                        // show error popup message
