@@ -449,9 +449,11 @@ function dorea_admin_pay_campaign()
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
 
+        // check expiration of campaign
         if($expire->check($expireDate)){
 
-            if(array_sum($sumUserEthers) > $contractAmount){
+            // check for funding campaign
+            if(array_sum($sumUserEthers) > $contractAmount || empty($sumUserEthers)){
 
                 print("
                     <!-- Fund Again -->
