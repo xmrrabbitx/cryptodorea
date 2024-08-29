@@ -497,7 +497,12 @@ function dorea_admin_pay_campaign()
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
         }else{
-            die("not ready for payment!");
+            print('
+                <!-- Not Ready to Pay -->
+                <div class="!grid !grid-cols-1 !mt-5">
+                    <p class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">Not Ready to Pay</p>
+                </div>
+            ');
         }
     }
 

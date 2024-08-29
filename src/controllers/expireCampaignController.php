@@ -15,7 +15,7 @@ class expireCampaignController extends expireCampaignAbstract
         $datecCalculator = new dateCalculator();
 
         $currentTime = $datecCalculator->currentDate();
-
+;
         // remove $currentTime after test
         if($currentTime >= $currentTime){//$timestamp){
             return true;
