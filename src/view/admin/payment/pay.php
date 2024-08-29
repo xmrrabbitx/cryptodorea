@@ -409,7 +409,7 @@ function dorea_admin_pay_campaign()
                                 if($userEther < $contractAmount){
 
                                     $sumUserEthers[] = $userEther;
-                                    if( array_sum($sumUserEthers) < $contractAmount){
+                                    if(array_sum($sumUserEthers) < $contractAmount){
                                         // set qualified users to pay
                                         $qualifiedUserEthers[] = $userEther;
                                         $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
@@ -419,6 +419,7 @@ function dorea_admin_pay_campaign()
                                               <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
                                             </svg>
                                         ");
+
                                     }else{
                                         print("
                                             <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
@@ -427,6 +428,12 @@ function dorea_admin_pay_campaign()
                                         ");
                                     }
 
+                                }elseif(empty($sumUserEthers)) {
+                                    print("
+                                         <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                              <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                                            </svg>
+                                        ");
                                 }else{
                                     print("
                                         <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
@@ -453,7 +460,7 @@ function dorea_admin_pay_campaign()
         if($expire->check($expireDate)){
 
             // check for funding campaign
-            if(array_sum($sumUserEthers) > $contractAmount || empty($sumUserEthers)){
+            if(array_sum($sumUserEthers) > $contractAmount){
 
                 print("
                     <!-- Fund Again -->
@@ -463,15 +470,23 @@ function dorea_admin_pay_campaign()
                     <p class='!text-center !mt-5 !text-slate-500'>Or</p>
                 ");
 
+            }elseif(empty($sumUserEthers)) {
+                print('
+                    <!-- End Campaign -->
+                    <div class="!grid !grid-cols-1 !mt-5">
+                        <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
+                    </div>
+                ');
+
+            }else{
+
+                print('
+                    <!-- Pay Anyway -->
+                    <div class="!grid !grid-cols-1 !mt-5">
+                        <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . '">Pay Anyway</button>
+                    </div>
+                ');
             }
-
-            print('
-                <!-- Pay Anyway -->
-                <div class="!grid !grid-cols-1 !mt-5">
-                    <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . '">Pay Anyway</button>
-                </div>
-            ');
-
 
             // calculate remaining amount eth to pay
             $remainingAmount = (float)$contractAmount - array_sum($sumUserEthers);
