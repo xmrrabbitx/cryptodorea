@@ -181,14 +181,37 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                     if(balance !== 0n){
                         if(paymentStatus === "pay"){
                    
-                            let re = await contract.pay(
+                            await contract.pay(
                                 ' . $qualifiedWalletAddresses . ',
                                 cryptoAmountBigInt, 
                                 messageHash, 
                                 v, 
                                 r, 
                                 s
-                            );
+                            ).then(async function(response){
+                                response.wait().then(async (receipt) => {
+                                      // transaction on confirmed and mined
+                                      if (receipt) {
+                                           let balance = await contract.getBalance();
+                                           balance = convertWeiToEther(parseInt(balance));
+                                    
+                                           // get contract address
+                                           let xhr = new XMLHttpRequest();
+                                                    
+                                           // remove wordpress prefix on production
+                                           xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
+                                           xhr.onreadystatechange = async function() {
+                                              if (xhr.readyState === 4 && xhr.status === 200) {
+                                                  window.location.reload();        
+                                              }
+                                           }
+                                                        
+                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName}));
+                                             
+                                      }
+                                      
+                                });
+                            });
                             
                        }else if(paymentStatus === "fund"){
                        
@@ -208,7 +231,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                   response.wait().then(async (receipt) => {
                                       // transaction on confirmed and mined
                                       if (receipt) {
-                                         let balance = await contract.getBalance();
+                                           let balance = await contract.getBalance();
                                            balance = convertWeiToEther(parseInt(balance));
                                     
                                            // get contract address
@@ -350,6 +373,7 @@ function dorea_admin_pay_campaign()
            </div>
         ');
 
+        $sumUserEthers = [];
         foreach ($userList as $users) {
 
             $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
@@ -378,21 +402,31 @@ function dorea_admin_pay_campaign()
 
                                 // calculate final price in ETH format
                                 $userEther = (array_sum($campaignInfo['total'][$cashbackName]) / $cryptoAmount) * $ethBasePrice;
-                                $sumUserEthers[] = $userEther;
 
                                 print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
-                                if(array_sum($sumUserEthers) <= $contractAmount){
+                                // maybe this: array_sum($sumUserEthers)
+                                if($userEther < $contractAmount){
 
-                                    // set qualified users to pay
-                                    $qualifiedUserEthers[] = $userEther;
-                                    $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
+                                    $sumUserEthers[] = $userEther;
+                                    if( array_sum($sumUserEthers) < $contractAmount){
+                                        // set qualified users to pay
+                                        $qualifiedUserEthers[] = $userEther;
+                                        $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
 
-                                    print("
-                                        <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                          <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
-                                        </svg>
-                                    ");
+                                        print("
+                                            <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                              <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                                            </svg>
+                                        ");
+                                    }else{
+                                        print("
+                                            <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                              <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                                            </svg>
+                                        ");
+                                    }
+
                                 }else{
                                     print("
                                         <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
