@@ -409,7 +409,7 @@ function dorea_admin_pay_campaign()
                                 if($userEther < $contractAmount){
 
                                     $sumUserEthers[] = $userEther;
-                                    if(array_sum($sumUserEthers) < $contractAmount){
+                                    if(array_sum($sumUserEthers) <= $contractAmount){
                                         // set qualified users to pay
                                         $qualifiedUserEthers[] = $userEther;
                                         $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
@@ -468,6 +468,10 @@ function dorea_admin_pay_campaign()
                         <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $campaignName . '_' . $doreaContractAddress . '_fund' . "'>Fund Again</a>
                     </div>
                     <p class='!text-center !mt-5 !text-slate-500'>Or</p>
+                    <!-- Pay Anyway -->
+                    <div class='!grid !grid-cols-1 !mt-5'>
+                        <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . ''>Pay Anyway</button>
+                    </div>
                 ");
 
             }elseif(empty($sumUserEthers)) {
@@ -481,9 +485,9 @@ function dorea_admin_pay_campaign()
             }else{
 
                 print('
-                    <!-- Pay Anyway -->
+                    <!-- Pay All -->
                     <div class="!grid !grid-cols-1 !mt-5">
-                        <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . '">Pay Anyway</button>
+                        <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . '">Pay All</button>
                     </div>
                 ');
             }

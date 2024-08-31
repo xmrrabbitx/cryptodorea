@@ -40,10 +40,7 @@ function dorea_cashback_campaign_content(){
 
     print("<main>");
     print("<h1 class='p-5 text-sm font-bold'>Create Campaign</h1> </br>");
-    $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
-    if($emptyError){
-        print("<span style='color:#ff5d5d;'>$emptyError</span>");
-    }
+
     print("
       <div class='container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
         
@@ -56,13 +53,10 @@ function dorea_cashback_campaign_content(){
            
            <!-- campaign name field -->
            <div class='!col-span-1 !w-12/12'>
-                <input class='!rounded-md !w-64 !p-2 !focus:ring-green-500 !border-hidden !bg-white' type='text' name='campaignName'  placeholder='campaign name'>
+                <input id='campaignName' class='!rounded-md !w-64 !p-2 !focus:ring-green-500 !border-hidden !focus:ring-0 !focus:outline-none !outline-none!bg-white' type='text' name='campaignName'  placeholder='campaign name'>
            </div>
     ");
-            $campaignError = filter_input( INPUT_GET, 'campaignError' );
-            if($campaignError){
-                print("<span style='color:#ff5d5d;'>$campaignError</span>");
-            }
+
     print("
             <!-- crypto type options -->
             <div class='!col-span-1 !w-12/12 !mt-5 hidden'>
@@ -76,10 +70,7 @@ function dorea_cashback_campaign_content(){
                 <input class='!border-hidden !w-64 !mt-3 !p-2' type='text' name='cryptoAmount' placeholder='amount'>
            </div>
     ");
-    $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
-    if($cryptoAmount){
-        print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
-    }
+
     print("
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
@@ -166,17 +157,36 @@ function dorea_cashback_campaign_content(){
             ");
 
             print("
-                        </select>
-                      </div>
+                                </select>
+                              </div>
+                            </div>
+                    <div class='!col-span-1 !w-12/12 !mt-5'>
+                        <button class='!p-3 !w-64 !bg-[#faca43] !rounded-md' type='submit'>set up campaign</button>
                     </div>
-            <div class='!col-span-1 !w-12/12 !mt-5'>
-                <button class='!p-3 !w-64 !bg-[#faca43] !rounded-md' type='submit'>set up campaign</button>
-            </div>
-        </form>
-        </br>
-      </div>
-    
-        ");
+                </form>
+                </br>
+              </div>
+            ");
+
+    print("
+            <script>
+                document.getElementById('error').style.display = 'none';
+            </script>
+    ");
+    $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
+    if($emptyError){
+        print("<span id='error' style='color:#ff5d5d;display: block'>$emptyError</span>");
+    }
+
+    $campaignError = filter_input( INPUT_GET, 'campaignError' );
+    if($campaignError){
+        print("<span style='color:#ff5d5d;'>$campaignError</span>");
+    }
+
+    $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
+    if($cryptoAmount){
+        print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
+    }
 
     $expiredError = filter_input( INPUT_GET, 'expiredError' );
     if($expiredError){
@@ -185,7 +195,7 @@ function dorea_cashback_campaign_content(){
 
     $existedCampaignError = filter_input( INPUT_GET, 'existedCampaignError' );
     if($existedCampaignError){
-        print("<span style='color:#ff5d5d;'>$existedCampaignError</span>");
+        print("<span style='color:#ff5d5d;' class='!'>$existedCampaignError</span>");
     }
 
     print("</main>");
@@ -200,10 +210,11 @@ function dorea_admin_cashback_campaign(){
 
 
     //static $home_url = 'admin.php?page=crypto-dorea-cashback';
-    $referer = wp_get_referer();
+    $referer = explode("&", wp_get_referer())[0];
 
-    if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
-       
+    if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['cryptoAmount'] && $_POST['shoppingCount'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
+
+
             $campaignName = trim(htmlspecialchars($_POST['campaignName']));
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
 
@@ -285,7 +296,7 @@ function dorea_admin_cashback_campaign(){
     }else{
 
         //throws error on empty
-        $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('Error: some feilds left empty!'), $referer);
+        $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('Error: some fields left empty!'), $referer);
 
         wp_redirect($redirect_url);
         return false;

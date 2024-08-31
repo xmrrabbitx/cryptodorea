@@ -219,7 +219,7 @@ function dorea_main_page_content()
                 <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
                 </br>
                 <p class="pt-2 mt-7 text-center">
-                    <a class="!basis-12 !p-10 !text-black !text-black !hover:text-black !bg-[#faca43] !text-center !rounded-xl !focus:ring-0" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
+                    <a class="!basis-12 !p-10 !text-black !text-black !hover:text-black !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
                 </p>
         ');
     }

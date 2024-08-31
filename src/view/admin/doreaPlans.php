@@ -5,7 +5,7 @@ use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 use Cryptodorea\Woocryptodorea\utilities\plansCompile;
 
 //user plan contract address
-const doreaUserContractAddress = "0x870ACBEd09BC6f6AA27B252262A475F5c09DC340";
+const doreaUserContractAddress = "0x3B53105320D82aB3b3dfa8447eD1Fec1F9aA145F";
 
 /**
  * Crypto Cashback Plans
@@ -44,8 +44,8 @@ function doreaPlans()
 
     print("
         <div class='!text-center !grid !grid-cols-1'>
-           <div  class='!text-center'>
-               <button id='processingIcon' type='button' class='!mx-auto !p-2 !text-center !rounded-md !bg-[#faca43] !p-3' disabled>
+           <div id='processingIcon'  class='!text-center !mt-40'>
+               <button type='button' class='!mx-auto !p-2 !text-center !rounded-md !bg-[#faca43] !p-3' disabled>
                  <div class='!flex !text-center'>
                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='animate-spin h-5 w-5 mr-1'>
                    <path fill-rule='evenodd' d='M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z' clip-rule='evenodd' />
@@ -54,7 +54,7 @@ function doreaPlans()
                 </div>
                </button>
            </div>
-           <div class='!text-center'>
+           <div class='!text-center !mt-3'>
                 <button class='!text-center !p-3 !w-64 !bg-[#faca43] !rounded-md' id='doreaMetamask'>connect to Metamask</button>
            </div>
         </div>
@@ -205,13 +205,11 @@ function doreaPlans()
 
                          doreaMetamask.style.display = "none";
                          plansContent.style.display = "block";
-                         
+                               
                      }else{
                            
                             doreaMetamask.addEventListener("click", async function(){
                                     
-                                    console.log("click")                                      
-                       
                                      const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                      const userAddress = accounts[0];
                                      
@@ -237,6 +235,8 @@ function doreaPlans()
                                                  doreaBuy_monthly.style.display = "block";
                                                  doreaBuy_halfYearly.style.display = "block";
                                                  doreaBuy_Yearly.style.display = "block";
+                                                 
+                                                 window.location.reload();  
                                             }
                                           };
                                            
