@@ -157,11 +157,10 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                         }
                     }
                    
-                   
                    let sumWei = convertToWei(sumAmount);
-                     console.log(cryptoAmountBigInt)
+
                 }
-  console.log(cryptoAmountBigInt)
+
                 try{
                  
                     const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
@@ -180,9 +179,8 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                     
                     if(balance !== 0n){
                         if(paymentStatus === "pay"){
-                   
                             await contract.pay(
-                                ' . $qualifiedWalletAddresses . ',
+                                '.$qualifiedWalletAddresses.',
                                 cryptoAmountBigInt, 
                                 messageHash, 
                                 v, 
@@ -206,10 +204,8 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                               }
                                            }
                                                         
-                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName}));
-                                             
+                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName}));      
                                       }
-                                      
                                 });
                             });
                             
@@ -226,8 +222,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                         value: fundAgainAmount.toString(),
                                         gasLimit :3000000,                
                                     },
-                                    
-                                ).then(async function(response){
+                               ).then(async function(response){
                                   response.wait().then(async (receipt) => {
                                       // transaction on confirmed and mined
                                       if (receipt) {
@@ -251,8 +246,6 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                   });
                                   
                                 })
-                                
-                                
                        }
                         
                     }else{              
@@ -263,8 +256,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                         return false;
                     } 
                 }catch (error) {
-                    console.log(error)
-                      //"User is not Authorized!!!"
+                       console.log(error)
                        let errorMessg = error.revert.args[0];
                        if(errorMessg === "Insufficient balance"){
                            errorMessg = "Insufficient balance";
@@ -273,10 +265,12 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                        }else{
                            errorMessg = "payment was  not successfull! please try again!";
                        }
+                       
                        // show error popup message
                        metamaskError.style.display = "block";
                        metamaskError.innerHTML = errorMessg;
                        return false;
+                       
                     }
             })
          )
@@ -374,6 +368,7 @@ function dorea_admin_pay_campaign()
         ');
 
         $sumUserEthers = [];
+        $totalEthers = [];
         foreach ($userList as $users) {
 
             $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
@@ -403,13 +398,15 @@ function dorea_admin_pay_campaign()
                                 // calculate final price in ETH format
                                 $userEther = (array_sum($campaignInfo['total'][$cashbackName]) / $cryptoAmount) * $ethBasePrice;
 
+                                $totalEthers[] = $userEther;
+
                                 print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
-                                // maybe this: array_sum($sumUserEthers)
-                                if($userEther < $contractAmount){
+                                if($userEther < (float)$contractAmount){
 
                                     $sumUserEthers[] = $userEther;
                                     if(array_sum($sumUserEthers) <= $contractAmount){
+
                                         // set qualified users to pay
                                         $qualifiedUserEthers[] = $userEther;
                                         $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
@@ -428,12 +425,12 @@ function dorea_admin_pay_campaign()
                                         ");
                                     }
 
-                                }elseif(empty($sumUserEthers)) {
+                                }elseif((int)$contractAmount===0){
                                     print("
-                                         <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                              <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
-                                            </svg>
-                                        ");
+                                       <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                         <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                                       </svg>
+                                    ");
                                 }else{
                                     print("
                                         <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
@@ -441,13 +438,14 @@ function dorea_admin_pay_campaign()
                                         </svg>
                                     ");
                                 }
-                                print ("</span>");
-                            print("</div>");
+                                print ("
+                                    </span>
+                                  </div>
+                                ");
                         }
                     }
                 }
             }
-
         }
 
         print("</div>");
@@ -459,8 +457,19 @@ function dorea_admin_pay_campaign()
         // check expiration of campaign
         if($expire->check($expireDate)){
 
+            // check if campaign is ended!
+            if(empty($sumUserEthers) || (int)$contractAmount === 0) {
+
+                print('
+                    <!-- End Campaign -->
+                    <div class="!grid !grid-cols-1 !mt-5">
+                        <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
+                    </div>
+                ');
+
+            }
             // check for funding campaign
-            if(array_sum($sumUserEthers) > $contractAmount){
+            elseif((float)array_sum($totalEthers) > (float)$contractAmount){
 
                 print("
                     <!-- Fund Again -->
@@ -474,16 +483,7 @@ function dorea_admin_pay_campaign()
                     </div>
                 ");
 
-            }elseif(empty($sumUserEthers)) {
-                print('
-                    <!-- End Campaign -->
-                    <div class="!grid !grid-cols-1 !mt-5">
-                        <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
-                    </div>
-                ');
-
             }else{
-
                 print('
                     <!-- Pay All -->
                     <div class="!grid !grid-cols-1 !mt-5">
@@ -493,7 +493,7 @@ function dorea_admin_pay_campaign()
             }
 
             // calculate remaining amount eth to pay
-            $remainingAmount = (float)$contractAmount - array_sum($sumUserEthers);
+            $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
             $remainingAmount *= -1;
 
             // payment js modal
