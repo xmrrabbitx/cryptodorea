@@ -39,10 +39,10 @@ function dorea_cashback_campaign_content(){
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
     print("<main>");
-    print("<h1 class='p-5 text-sm font-bold'>Create Campaign</h1> </br>");
+    print("<h1 class='!p-5 !text-sm !font-bold'>Create Campaign</h1> </br>");
 
     print("
-      <div class='container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
+      <div class='!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md'>
         
         <h2 class='!text-center !text-lg !divide-y !mt-5'>Crypto Dorea Cashback</h2>
         <hr class='border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-2'>
@@ -168,14 +168,9 @@ function dorea_cashback_campaign_content(){
               </div>
             ");
 
-    print("
-            <script>
-                document.getElementById('error').style.display = 'none';
-            </script>
-    ");
     $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
     if($emptyError){
-        print("<span id='error' style='color:#ff5d5d;display: block'>$emptyError</span>");
+        print("<span style='color:#ff5d5d;'>$emptyError</span>");
     }
 
     $campaignError = filter_input( INPUT_GET, 'campaignError' );
@@ -304,8 +299,6 @@ function dorea_admin_cashback_campaign(){
     }
     
 }
-
-
 
 /**
  * delete a campaign
