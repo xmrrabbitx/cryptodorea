@@ -8,7 +8,7 @@ use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 /**
  * the payment modal for admin campaigns
  */
-function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, $qualifiedUserEthers=null, $remainingAmount=null): void
+function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, $qualifiedUserEthers=null, $remainingAmount=null, $usersList=null): void
 {
 
     $compile = new compile();
@@ -21,14 +21,17 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
 
         $sumAmount = array_sum($qualifiedUserEthers);
         $sumUserEthers = json_encode($qualifiedUserEthers);
+        $usersList = json_encode($usersList);
 
     }else{
 
         $sumAmount = "null";
         $sumUserEthers = "null";
         $qualifiedWalletAddresses = "null";
+        $usersList = 'null';
 
     }
+
 
     print('<script type="module">
 
@@ -177,8 +180,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                         
                     }
                     
-                    if(balance !== 0n){
-                        if(paymentStatus === "pay"){
+                    if(paymentStatus === "pay"){
                             await contract.pay(
                                 '.$qualifiedWalletAddresses.',
                                 cryptoAmountBigInt, 
@@ -200,11 +202,11 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
                                            xhr.onreadystatechange = async function() {
                                               if (xhr.readyState === 4 && xhr.status === 200) {
-                                                  window.location.reload();        
+                                                  //window.location.reload();        
                                               }
                                            }
                                                         
-                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName}));      
+                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName, "usersList":  '.$usersList.' }));      
                                       }
                                 });
                             });
@@ -236,7 +238,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
                                            xhr.onreadystatechange = async function() {
                                               if (xhr.readyState === 4 && xhr.status === 200) {
-                                                  window.location.reload();        
+                                                  //window.location.reload();        
                                               }
                                            }
                                                         
@@ -246,22 +248,15 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                   });
                                   
                                 })
-                       }
-                        
-                    }else{              
-                        // show error popup message
-                        metamaskError.style.display = "block";
-                        const errorText = document.createTextNode("Sorry, the campaign fund reached to the end!");
-                        metamaskError.appendChild(errorText);
-                        return false;
-                    } 
+                       } 
+                    
                 }catch (error) {
                        console.log(error)
                        let errorMessg = error.revert.args[0];
                        if(errorMessg === "Insufficient balance"){
                            errorMessg = "Insufficient balance";
                        }else if(errorMessg === "User is not Authorized!!!"){
-                           errorMessg = "Insufficient balance";
+                           errorMessg = "You dont have permission to pay!";
                        }else{
                            errorMessg = "payment was  not successfull! please try again!";
                        }
@@ -369,6 +364,8 @@ function dorea_admin_pay_campaign()
 
         $sumUserEthers = [];
         $totalEthers = [];
+        $usersList = [];
+
         foreach ($userList as $users) {
 
             $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
@@ -402,7 +399,7 @@ function dorea_admin_pay_campaign()
 
                                 print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
-                                if($userEther < (float)$contractAmount){
+                                if($userEther <= (float)$contractAmount){
 
                                     $sumUserEthers[] = $userEther;
                                     if(array_sum($sumUserEthers) <= $contractAmount){
@@ -410,6 +407,7 @@ function dorea_admin_pay_campaign()
                                         // set qualified users to pay
                                         $qualifiedUserEthers[] = $userEther;
                                         $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
+                                        $usersList[] = $users;
 
                                         print("
                                             <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
@@ -456,9 +454,12 @@ function dorea_admin_pay_campaign()
 
         // check expiration of campaign
         if($expire->check($expireDate)){
+            var_dump($sumUserEthers);
+            var_dump((float)$contractAmount);
 
             // check if campaign is ended!
-            if(empty($sumUserEthers) || (int)$contractAmount === 0) {
+            /*
+            if((float)$contractAmount == 0) {
 
                 print('
                     <!-- End Campaign -->
@@ -468,20 +469,28 @@ function dorea_admin_pay_campaign()
                 ');
 
             }
+            */
+
             // check for funding campaign
-            elseif((float)array_sum($totalEthers) > (float)$contractAmount){
+            if((float)array_sum($totalEthers) > (float)$contractAmount){
 
                 print("
                     <!-- Fund Again -->
                     <div class='!mx-auto !text-center !mt-5'>
                         <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $campaignName . '_' . $doreaContractAddress . '_fund' . "'>Fund Again</a>
                     </div>
-                    <p class='!text-center !mt-5 !text-slate-500'>Or</p>
-                    <!-- Pay Anyway -->
-                    <div class='!grid !grid-cols-1 !mt-5'>
-                        <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . ''>Pay Anyway</button>
-                    </div>
+                   
                 ");
+
+                if($qualifiedWalletAddresses){
+                    print("
+                        <p class='!text-center !mt-5 !text-slate-500'>Or</p>
+                        <!-- Pay Anyway -->
+                        <div class='!grid !grid-cols-1 !mt-5'>
+                            <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . ''>Pay Anyway</button>
+                        </div>
+                    ");
+                }
 
             }else{
                 print('
@@ -495,9 +504,10 @@ function dorea_admin_pay_campaign()
             // calculate remaining amount eth to pay
             $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
             $remainingAmount *= -1;
-
+var_dump($usersList);
+var_dump($qualifiedWalletAddresses);
             // payment js modal
-            dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount);
+            dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList);
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
         }else{
@@ -532,6 +542,9 @@ function dorea_new_contractBalance()
         $campaignInfo['contractAmount'] = $json->balance;
 
         set_transient($json->campaignName, $campaignInfo);
+
+        $usersList = $json->usersList;
+
     }
 
 }
