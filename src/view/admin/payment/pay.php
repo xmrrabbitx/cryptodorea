@@ -280,18 +280,17 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
 add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
-    static $total;
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
     static $sumUserEthers;
     static $contractAmount;
+    static $total;
 
     $cashbackName = $_GET['cashbackName'];
     $expireDate = get_transient($cashbackName)['timestamp'];
     $cashbackInfo = get_transient($cashbackName);
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
-    $shoppingCount = $cashbackInfo['shoppingCount'];
 
     $expire = new expireCampaignController();
 
@@ -366,36 +365,47 @@ function dorea_admin_pay_campaign()
         $totalEthers = [];
         $usersList = [];
 
+        $contractAmount = $cashbackInfo['contractAmount'];
+        $shoppingCount = $cashbackInfo['shoppingCount'];
+
+
         foreach ($userList as $users) {
 
-            $campaignInfoUsers = get_option('dorea_campaigninfo_user_' . $users);
+            $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-            $campaigns = get_option("dorea_campaigninfo_user_" . $users);
-
-            $contractAmount = get_transient($cashbackName)['contractAmount'];
-            $cryptoAmount = get_transient($cashbackName)['cryptoAmount'];
+            //$campaigns = get_option("dorea_campaigninfo_user_" . $users);
 
             //hypothetical price of eth _ get this from an online service
-            $ethBasePrice = 0.0003;
+            $ethBasePrice = 0.0004;
 
-            if($campaigns ) {
-                foreach ($campaigns as $campaignInfo) {
+            if($campaignUser) {
+                foreach ($campaignUser as $campaignInfoUser) {
 
-                    if(isset($campaignInfo['order_ids'])) {
-                        if (in_array($cashbackName, $campaignInfo['campaignNames'])) {
+                    if(isset($campaignInfoUser['order_ids']) && $campaignInfoUser['purchaseCounts'][$cashbackName] >= $shoppingCount) {
+                        if (in_array($cashbackName, $campaignInfoUser['campaignNames'])) {
                             print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
                                 print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                                print("<span class='!pl-3 !col-span-1'>" . substr($campaignInfo['walletAddress'], 0, 4) . "****" . substr($campaignInfo['walletAddress'], 28, 34) . "</span>");
-                                print("<span class='!pl-3 !col-span-1'>" . $campaignInfo['purchaseCounts'][$cashbackName] . "</span>");
-                                print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignInfo['total'][$cashbackName]) . "</span>");
+                                print("<span class='!pl-3 !col-span-1'>" . substr($campaignInfoUser['walletAddress'], 0, 4) . "****" . substr($campaignInfoUser['walletAddress'], 28, 34) . "</span>");
+                                print("<span class='!pl-3 !col-span-1'>" . $campaignInfoUser['purchaseCounts'][$cashbackName] . "</span>");
+                                print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignInfoUser['total'][$cashbackName]) . "</span>");
 
-
-                                $total[] = array_sum($campaignInfo['total'][$cashbackName]);
+                                $total[] = array_sum($campaignInfoUser['total'][$cashbackName]);
 
                                 // calculate final price in ETH format
-                                $userEther = (array_sum($campaignInfo['total'][$cashbackName]) / $cryptoAmount) * $ethBasePrice;
+                                $qualifiedPurchases = array_chunk($campaignInfoUser['total'][$cashbackName],$cryptoAmount);
+                                array_map(function($value) use ($cryptoAmount, &$qualifiedPurchasesTotal) {
+                                    if(count($value) == $cryptoAmount){
+                                        // calculate percentage of each value
+                                        $qualifiedPurchasesTotal[] = array_sum($value);
+                                    }
+                                },$qualifiedPurchases);
+                                $qualifiedPurchasesTotal = array_sum($qualifiedPurchasesTotal);
+
+                               // var_dump($result);
+                                $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice;
 
                                 $totalEthers[] = $userEther;
+
 
                                 print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
@@ -406,7 +416,7 @@ function dorea_admin_pay_campaign()
 
                                         // set qualified users to pay
                                         $qualifiedUserEthers[] = $userEther;
-                                        $qualifiedWalletAddresses[] = $campaignInfo['walletAddress'];
+                                        $qualifiedWalletAddresses[] = $campaignInfoUser['walletAddress'];
                                         $usersList[] = $users;
 
                                         print("
@@ -444,6 +454,8 @@ function dorea_admin_pay_campaign()
                     }
                 }
             }
+
+
         }
 
         print("</div>");
@@ -454,8 +466,6 @@ function dorea_admin_pay_campaign()
 
         // check expiration of campaign
         if($expire->check($expireDate)){
-            var_dump($sumUserEthers);
-            var_dump((float)$contractAmount);
 
             // check if campaign is ended!
             /*
@@ -504,8 +514,7 @@ function dorea_admin_pay_campaign()
             // calculate remaining amount eth to pay
             $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
             $remainingAmount *= -1;
-var_dump($usersList);
-var_dump($qualifiedWalletAddresses);
+
             // payment js modal
             dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList);
 
@@ -538,10 +547,10 @@ function dorea_new_contractBalance()
     $json = json_decode($json_data);
 
     if ($json) {
-        $campaignInfo = get_transient($json->campaignName);
-        $campaignInfo['contractAmount'] = $json->balance;
+        $campaignInfoUser = get_transient($json->campaignName);
+        $campaignInfoUser['contractAmount'] = $json->balance;
 
-        set_transient($json->campaignName, $campaignInfo);
+        set_transient($json->campaignName, $campaignInfoUser);
 
         $usersList = $json->usersList;
 
