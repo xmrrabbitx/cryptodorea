@@ -334,7 +334,7 @@ function dorea_autoremove_campaign()
     $campaignName = get_option('campaign_list');
     if(isset($campaignName)) {
         $autoremove = new autoremoveController();
-        $autoremove->remove($campaignName);
+        //$autoremove->remove($campaignName);
     }
 }
 
@@ -349,7 +349,7 @@ function dorea_autoremove_campaign_admin()
     $campaignName = get_option('campaign_list');
     if(isset($campaignName)) {
         $autoremove = new autoremoveController();
-        return $autoremove->remove($campaignName);
+        //return $autoremove->remove($campaignName);
     }
 
 }

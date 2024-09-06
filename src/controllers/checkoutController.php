@@ -36,7 +36,7 @@ class checkoutController extends checkoutAbstract
             $campaignNamesList = [];
             foreach ($campaignList as $campaign) {
 
-                $campaignNamesList = array_merge($campaignNamesList,$campaign['campaignNames']);
+                $campaignNamesList = array_merge($campaignNamesList,$campaign[$campaign]);
 
             }
             if(!empty($campaignNamesList)) {
@@ -61,7 +61,7 @@ class checkoutController extends checkoutAbstract
             $campaignNamesList = [];
             foreach ($campaignList as $campaign) {
 
-                $campaignNamesList = array_merge($campaignNamesList,$campaign['campaignNames']);
+                $campaignNamesList = array_merge($campaignNamesList,$campaign[$campaign]);
 
             }
             if(!empty($campaignNamesList)) {
@@ -106,9 +106,9 @@ class checkoutController extends checkoutAbstract
                 $this->addtoList($campaignLists, $userWalletAddress);
                 $this->addtoListUsers($campaignLists);
 
-                // throw new Exception('something went wrong!');
+
             } catch (Exception $error) {
-                //
+                //throw exception
             }
 
 
@@ -116,7 +116,6 @@ class checkoutController extends checkoutAbstract
 
 
     }
-
 
     public function orederReceived($orderId)
     {
@@ -138,7 +137,8 @@ class checkoutController extends checkoutAbstract
     {
 
         $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
-        $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+        $campaignInfoUser = $this->list();
+        $campaignInfoUserKeys = array_keys($campaignInfoUser);
         $campaignsList = get_option('campaign_list');
 
         if($queueDeleteCampaigns) {
@@ -147,31 +147,32 @@ class checkoutController extends checkoutAbstract
 
                 foreach ($queueDeleteCampaigns as $campaigns) {
 
-                    foreach ($campaignInfoUser as $campaignUser) {
+                    //foreach ($campaignInfoUser as $campaignUser) {
 
-                        if (!empty($campaignUser['campaignNames'])) {
+                        //if (!empty($campaignUser['campaignNames'])) {
 
                             // remove campaign in delete queue
-                            if (in_array($campaigns, $campaignUser['campaignNames'])) {
-                                $key = array_search($campaigns, $campaignUser['campaignNames']);
-                                unset($campaignUser["campaignNames"][$key]);
-                                $campaignInfoUser[0] = $campaignUser;
-                                update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
+                            if (in_array($campaigns, $campaignInfoUserKeys)) {
+                                //$key = array_search($campaigns, $campaignUser['campaignNames']);
+                                unset($campaignInfoUser[$campaigns]);
+                                var_dump($campaignInfoUser);
+                                //$campaignInfoUser[0] = $campaignUser;
+                                //update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
                             }
 
-                        }
-                        if (empty($campaignUser['campaignNames'])){
+                        //}
+                        if (empty($campaignUser[$campaigns])){
                             delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
                         }
-                    }
+                   // }
                 }
 
             }
-            if (empty(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login))) {
+            if (empty($campaignInfoUser)) {
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
             }
         }
-
+/*
         if($campaignInfoUser) {
             foreach ($campaignInfoUser as $campaigns) {
                 foreach ($campaigns['campaignNames'] as $campaignNames) {
@@ -197,6 +198,7 @@ class checkoutController extends checkoutAbstract
                 }
             }
         }
+ */
     }
 
 }

@@ -9,10 +9,6 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
 abstract class usersAbstract
 {
 
-    function __construct()
-    {
-
-    }
-
+    abstract function  remove(string $campaignName, array $usersList);
 
 }

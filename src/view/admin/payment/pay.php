@@ -2,6 +2,7 @@
 
 use Cryptodorea\Woocryptodorea\utilities\compile;
 use Cryptodorea\Woocryptodorea\controllers\paymentController;
+use Cryptodorea\Woocryptodorea\controllers\usersController;
 use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 
 
@@ -378,10 +379,23 @@ function dorea_admin_pay_campaign()
             //hypothetical price of eth _ get this from an online service
             $ethBasePrice = 0.0004;
 
+            var_dump($campaignUser);
+            /*
             if($campaignUser) {
                 foreach ($campaignUser as $campaignInfoUser) {
 
-                    if(isset($campaignInfoUser['order_ids']) && $campaignInfoUser['purchaseCounts'][$cashbackName] >= $shoppingCount) {
+                    // calculate final price in ETH format
+                    $qualifiedPurchases = array_chunk($campaignInfoUser['total'][$cashbackName],$cryptoAmount);
+                    array_map(function($value) use ($shoppingCount, &$qualifiedPurchasesTotal) {
+                        if(count($value) == $shoppingCount){
+                            // calculate percentage of each value
+                            $qualifiedPurchasesTotal[] = array_sum($value);
+                        }
+                    },$qualifiedPurchases);
+
+                    $qualifiedPurchasesTotal = array_sum($qualifiedPurchasesTotal);
+
+                    if(isset($campaignInfoUser['order_ids']) && $campaignInfoUser['purchaseCounts'][$cashbackName] >= $shoppingCount && count($qualifiedPurchases) === $shoppingCount) {
                         if (in_array($cashbackName, $campaignInfoUser['campaignNames'])) {
                             print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
                                 print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
@@ -391,21 +405,10 @@ function dorea_admin_pay_campaign()
 
                                 $total[] = array_sum($campaignInfoUser['total'][$cashbackName]);
 
-                                // calculate final price in ETH format
-                                $qualifiedPurchases = array_chunk($campaignInfoUser['total'][$cashbackName],$cryptoAmount);
-                                array_map(function($value) use ($cryptoAmount, &$qualifiedPurchasesTotal) {
-                                    if(count($value) == $cryptoAmount){
-                                        // calculate percentage of each value
-                                        $qualifiedPurchasesTotal[] = array_sum($value);
-                                    }
-                                },$qualifiedPurchases);
-                                $qualifiedPurchasesTotal = array_sum($qualifiedPurchasesTotal);
 
-                               // var_dump($result);
                                 $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice;
 
                                 $totalEthers[] = $userEther;
-
 
                                 print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
@@ -454,7 +457,7 @@ function dorea_admin_pay_campaign()
                     }
                 }
             }
-
+            */
 
         }
 
@@ -529,6 +532,7 @@ function dorea_admin_pay_campaign()
         }
     }
 
+
     print("    
             </div>
         </main>
@@ -539,7 +543,7 @@ function dorea_admin_pay_campaign()
  * get the new contract balance
  */
 add_action('admin_post_dorea_new_contractBalance', 'dorea_new_contractBalance');
-function dorea_new_contractBalance()
+function dorea_new_contractBalance():void
 {
 
     // get Json Data
@@ -554,6 +558,8 @@ function dorea_new_contractBalance()
 
         $usersList = $json->usersList;
 
-    }
+        $users = new usersController();
+        $users->remove($json->campaignName,$usersList);
 
+    }
 }

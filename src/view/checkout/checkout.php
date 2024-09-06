@@ -35,13 +35,13 @@ function cashback()
                 }
             }, $cashbackList);
 
-            if(!$campaign->check($cashbackList) && $campaign->check($cashbackList) !== null) {
+            //if(!$campaign->check($cashbackList) && $campaign->check($cashbackList) !== null) {
 
                 print ("
                     <p>You already joined all cashback programs!</p>
                 ");
 
-            }elseif(in_array(true, $funded)) {
+            //}elseif(in_array(true, $funded)) {
 
                 // add cash back program element to theme
                 print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
@@ -54,11 +54,15 @@ function cashback()
                 ");
 
 
+                /*
                 if($campaign->check($cashbackList)) {
                     $campaignNames = $campaign->campaignDiff($cashbackList);
                 }else {
                     $campaignNames = $cashbackList;
                 }
+            */
+            $campaignNames = $cashbackList;
+
                 if(!empty($campaignNames)) {
                     foreach ($campaignNames as $campaign) {
 
@@ -71,7 +75,7 @@ function cashback()
                     ");
                     }
                 }
-            }
+            //}
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
 
@@ -166,9 +170,9 @@ function checkout()
 
     if(is_page('checkout')) {
          $campaigns = get_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login);
-         //var_dump($campaigns);
+         var_dump($campaigns);
          $checkout = new checkoutController();
-         $checkout->remove();
+         //$checkout->remove();
          $checkout->checkout();
     }
 

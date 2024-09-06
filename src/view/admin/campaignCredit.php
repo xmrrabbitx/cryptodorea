@@ -17,9 +17,6 @@ function dorea_cashback_campaign_credit()
 
         $campaignName = $_GET['cashbackName'];
 
-        $encryptedSecretHash = "0x" . get_transient($campaignName)['secretHash'];
-        $encryptedInitKey = "0x" . get_transient($campaignName)['initKey'];
-
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
             //wp_redirect('admin.php?page=crypto-dorea-cashback');

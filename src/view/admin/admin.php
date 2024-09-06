@@ -173,7 +173,7 @@ function dorea_main_page_content()
                      </span>
                 ');
             }
-//href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '">
+
             print ('
                       <span class="">
                         <!-- delete campaign -->
