@@ -130,7 +130,6 @@ class checkoutController extends checkoutAbstract
             $receipt->is_paid($order, $this->list());
 
         }
-
     }
 
     public function remove()

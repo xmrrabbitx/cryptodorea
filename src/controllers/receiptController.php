@@ -31,42 +31,38 @@ class receiptController extends receiptAbstract
 
         $displayName = $order->billing->first_name . " " . $order->billing->last_name ;
         $userEmail = $order->billing->email;
+        $campaignListKeys = array_keys($campaignList);
 
-        foreach ($campaignList as $campaigns) {
+        foreach ($campaignListKeys as $campaignName) {
 
-            if (!isset($campaigns['order_ids']) || !in_array($order->id, $campaigns['order_ids'])) {
-                foreach ($campaigns['campaignNames'] as $campaignName) {
+            if (!isset($campaignList[$campaignName]['order_ids'])) {
 
-                    if (isset($campaigns['purchaseCounts'][$campaignName])) {
+                    if (isset($campaignList[$campaignName]['purchaseCounts'])) {
 
-                        $purchaseCounts[$campaignName] =  $campaigns['purchaseCounts'][$campaignName] + 1;
+                        $purchaseCounts =  $campaignList[$campaignName]['purchaseCounts'] + 1;
 
                     } else {
 
-                        $purchaseCounts[$campaignName] = 1;
+                        $purchaseCounts = 1;
 
                     }
 
                     // add sum of total to list
-                    $campaigns['total'][$campaignName][] =  $order->total;
-
-                }
-
-                $campaigns['order_ids'][] = $order->id;
-
-                // it must trigger and count campaign on every each of product
-                $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts' => $purchaseCounts];
-                $campaignInfo = array_merge($campaigns, $items);
-
-                $resultInfo[] = $campaignInfo;
-
+                    $campaignList[$campaignName]['total'][] =  $order->total;
 
             }
-        }
-        if($resultInfo) {
-            // store campaign info into model
-            $this->receiptModel->add($resultInfo);
+
+            $campaignList[$campaignName]['order_ids'][] = $order->id;
+
+            // it must trigger and count campaign on every each of product
+            $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts' => $purchaseCounts];
+            $campaignInfo = array_merge($campaignList[$campaignName], $items);
+
+            $campaignList[$campaignName] = $campaignInfo;
+
         }
 
+        // store campaign info into model
+        $this->receiptModel->add($campaignList);
     }
 }

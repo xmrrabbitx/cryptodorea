@@ -35,45 +35,21 @@ class checkoutModel extends checkoutModelAbstract
         $campaignList = $this->list();
         $campaignsAdmin = get_option("campaign_list");
 
+        $campaignInfo = [];
         if($campaignsAdmin) {
+
             foreach ($campaignNames as $campaign) {
-
-                $campaignInfo = [$campaign=>["walletAddress" => $userWalletAddress]];
-
-                var_dump($campaignInfo);
-                if (!empty($campaignList)) {
-                    var_dump("update trigger");
-                    $result = array_merge($campaignList, $campaignInfo);
-                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $result);
-
-                }else{
-                    var_dump("add trigger");
-                    add_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfo);
-
-                }
-
+                $campaignInfo[$campaign] = ["walletAddress" => $userWalletAddress];
             }
-            /*
-            foreach ($campaignNames as $camps) {
-                if (in_array($camps, $campaignsAdmin)) {
-                    if ($campaignList) {
-                        foreach ($campaignList as $campaigns) {
 
-                           if (!in_array($camps, $campaigns['campaignNames'])) {
+            if (!empty($campaignList)) {
+                $result = array_merge($campaignList, $campaignInfo);
+                update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $result);
 
-                              $result = array_merge($campaignList, $campaignInfo);
-                              update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $result);
-
-                           }
-
-                        }
-                    } else {
-
-                        add_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfo);
-                    }
-                }
+            }else{
+                add_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfo);
             }
-            */
+
         }
     }
 

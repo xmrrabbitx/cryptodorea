@@ -170,6 +170,7 @@ function checkout()
 
     if(is_page('checkout')) {
          $campaigns = get_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login);
+         //var_dump(delete_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login));
          var_dump($campaigns);
          $checkout = new checkoutController();
          //$checkout->remove();

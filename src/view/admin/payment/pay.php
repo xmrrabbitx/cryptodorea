@@ -374,18 +374,13 @@ function dorea_admin_pay_campaign()
 
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-            //$campaigns = get_option("dorea_campaigninfo_user_" . $users);
-
             //hypothetical price of eth _ get this from an online service
             $ethBasePrice = 0.0004;
 
-            var_dump($campaignUser);
-            /*
             if($campaignUser) {
-                foreach ($campaignUser as $campaignInfoUser) {
 
                     // calculate final price in ETH format
-                    $qualifiedPurchases = array_chunk($campaignInfoUser['total'][$cashbackName],$cryptoAmount);
+                    $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'],$cryptoAmount);
                     array_map(function($value) use ($shoppingCount, &$qualifiedPurchasesTotal) {
                         if(count($value) == $shoppingCount){
                             // calculate percentage of each value
@@ -395,15 +390,16 @@ function dorea_admin_pay_campaign()
 
                     $qualifiedPurchasesTotal = array_sum($qualifiedPurchasesTotal);
 
-                    if(isset($campaignInfoUser['order_ids']) && $campaignInfoUser['purchaseCounts'][$cashbackName] >= $shoppingCount && count($qualifiedPurchases) === $shoppingCount) {
-                        if (in_array($cashbackName, $campaignInfoUser['campaignNames'])) {
+                    /*
+                    if(isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount && count($qualifiedPurchases) === $shoppingCount) {
+                        if (in_array($cashbackName, $campaignUser[$cashbackName]['campaignNames'])) {
                             print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
                                 print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                                print("<span class='!pl-3 !col-span-1'>" . substr($campaignInfoUser['walletAddress'], 0, 4) . "****" . substr($campaignInfoUser['walletAddress'], 28, 34) . "</span>");
-                                print("<span class='!pl-3 !col-span-1'>" . $campaignInfoUser['purchaseCounts'][$cashbackName] . "</span>");
-                                print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignInfoUser['total'][$cashbackName]) . "</span>");
+                                print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 28, 34) . "</span>");
+                                print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts']. "</span>");
+                                print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
 
-                                $total[] = array_sum($campaignInfoUser['total'][$cashbackName]);
+                                $total[] = array_sum($campaignUser[$cashbackName]['total']);
 
 
                                 $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice;
@@ -419,7 +415,7 @@ function dorea_admin_pay_campaign()
 
                                         // set qualified users to pay
                                         $qualifiedUserEthers[] = $userEther;
-                                        $qualifiedWalletAddresses[] = $campaignInfoUser['walletAddress'];
+                                        $qualifiedWalletAddresses[] = $campaignUser[$cashbackName]['walletAddress'];
                                         $usersList[] = $users;
 
                                         print("
@@ -455,9 +451,9 @@ function dorea_admin_pay_campaign()
                                 ");
                         }
                     }
-                }
+                    */
+
             }
-            */
 
         }
 
