@@ -380,7 +380,8 @@ function dorea_admin_pay_campaign()
             if($campaignUser) {
 
                     // calculate final price in ETH format
-                    $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'],$cryptoAmount);
+                    $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'],$shoppingCount);
+
                     array_map(function($value) use ($shoppingCount, &$qualifiedPurchasesTotal) {
                         if(count($value) == $shoppingCount){
                             // calculate percentage of each value
@@ -390,9 +391,9 @@ function dorea_admin_pay_campaign()
 
                     $qualifiedPurchasesTotal = array_sum($qualifiedPurchasesTotal);
 
-                    /*
-                    if(isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount && count($qualifiedPurchases) === $shoppingCount) {
-                        if (in_array($cashbackName, $campaignUser[$cashbackName]['campaignNames'])) {
+                    if(isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
+
+
                             print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
                                 print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
                                 print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 28, 34) . "</span>");
@@ -400,7 +401,6 @@ function dorea_admin_pay_campaign()
                                 print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
 
                                 $total[] = array_sum($campaignUser[$cashbackName]['total']);
-
 
                                 $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice;
 
@@ -449,9 +449,9 @@ function dorea_admin_pay_campaign()
                                     </span>
                                   </div>
                                 ");
-                        }
+
                     }
-                    */
+
 
             }
 
@@ -512,9 +512,9 @@ function dorea_admin_pay_campaign()
 
             // calculate remaining amount eth to pay
             $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
-            $remainingAmount *= -1;
+            //$remainingAmount *= -1;
 
-            // payment js modal
+            // trigger payment js modal
             dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList);
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
