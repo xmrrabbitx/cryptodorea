@@ -11,7 +11,7 @@ abstract class checkoutAbstract{
 
     }
 
-    abstract function check($campaignNames);
+    abstract function check($cashbackList);
     abstract function campaignDiff($campaignNames);
     abstract function addtoList($campaignNames, $userWalletAddress);
     abstract function remove();

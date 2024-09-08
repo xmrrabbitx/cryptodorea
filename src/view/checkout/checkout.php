@@ -11,7 +11,7 @@ use Cryptodorea\Woocryptodorea\utilities\Encrypt;
 // woocommerce_after_shop_loop_item_title
 // woocommerce_blocks_checkout_enqueue_data
 add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
-function cashback()
+function cashback(): void
 {
 
     if (!WC()->cart->get_cart_contents_count() == 0) {
@@ -24,58 +24,56 @@ function cashback()
         $campaign = new checkoutController;
         $campaignListUser = $campaign->list();
 
+        $diffCampaignsList = $campaign->check($cashbackList);
+
         if ($cashbackList) {
 
-            // check if any campaign funded or not!
-            $funded = array_map(function($values){
-                if(get_option( $values . '_contract_address')) {
-
-                    return true;
-
-                }
-            }, $cashbackList);
-
-            //if(!$campaign->check($cashbackList) && $campaign->check($cashbackList) !== null) {
+            if(empty($diffCampaignsList)) {
 
                 print ("
                     <p>You already joined all cashback programs!</p>
                 ");
 
-            //}elseif(in_array(true, $funded)) {
+            }else {
 
                 // add cash back program element to theme
-                print("<div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
-                        <p>
-                            <h4>
-                                add to cash back program:
-                                <span>
-                                    <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
-                                </span>
+                print("
+                        <div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
+                            <p>
+                                <h4>
+                                    add to cash back program:
+                                    <span>
+                                        <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
+                                    </span>
                 ");
 
-
-                /*
+/*
                 if($campaign->check($cashbackList)) {
                     $campaignNames = $campaign->campaignDiff($cashbackList);
                 }else {
                     $campaignNames = $cashbackList;
                 }
-            */
-            $campaignNames = $cashbackList;
+*/
 
-                if(!empty($campaignNames)) {
-                    foreach ($campaignNames as $campaign) {
+                // show campaigns in view
+                if (!empty($cashbackList)) {
+                    foreach ($diffCampaignsList as $campaign) {
+                        // check if any campaign funded or not!
+                        if (get_option($campaign . '_contract_address')) {
 
-                        $campaignLable = explode("_",$campaign)[0];
-                        print(" 
-                                <span>
-                                    <label>" . $campaignLable . "</label>
-                                    <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
-                                </span>
-                    ");
+
+                            $campaignLable = explode("_", $campaign)[0];
+                            print(" 
+                                    <span>
+                                        <label>" . $campaignLable . "</label>
+                                        <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
+                                    </span>
+                           ");
+
+                        }
                     }
                 }
-            //}
+            }
 
             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
 

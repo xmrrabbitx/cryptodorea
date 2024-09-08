@@ -12,6 +12,8 @@ class usersController extends usersAbstract
 
     function remove($campaignName, array $usersList): void
     {
+
+        /*
         array_map(function($users) use ($campaignName,&$output) {
 
             // remove user DB records
@@ -37,6 +39,7 @@ class usersController extends usersAbstract
                 }
             }
         },$usersList);
+        */
 
     }
 

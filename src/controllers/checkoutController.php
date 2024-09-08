@@ -26,29 +26,16 @@ class checkoutController extends checkoutAbstract
         return $this->checkoutModel->list();
     }
 
-    public function check($campaignNames)
+    public function check($cashbackList): array
     {
 
-        if ($this->checkoutModel->list() && !empty($this->checkoutModel->list())) {
+        $cashbackList = $cashbackList !== false ? $cashbackList : [];
 
-            $campaignList = $this->checkoutModel->list();
+        $campaignListUser = $this->checkoutModel->list();
+        $campaignListUserKeys = array_keys($campaignListUser);
 
-            $campaignNamesList = [];
-            foreach ($campaignList as $campaign) {
+        return array_diff($cashbackList, $campaignListUserKeys) ?? [];
 
-                $campaignNamesList = array_merge($campaignNamesList,$campaign[$campaign]);
-
-            }
-            if(!empty($campaignNamesList)) {
-                $diff = array_diff($campaignNames, $campaignNamesList);
-                if (!empty($diff)) {
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-
-        }
     }
 
     public function campaignDiff($campaignNames)
@@ -154,7 +141,7 @@ class checkoutController extends checkoutAbstract
                             if (in_array($campaigns, $campaignInfoUserKeys)) {
                                 //$key = array_search($campaigns, $campaignUser['campaignNames']);
                                 unset($campaignInfoUser[$campaigns]);
-                                var_dump($campaignInfoUser);
+
                                 //$campaignInfoUser[0] = $campaignUser;
                                 //update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
                             }

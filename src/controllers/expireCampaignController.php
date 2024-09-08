@@ -9,13 +9,12 @@ use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 class expireCampaignController extends expireCampaignAbstract
 {
 
-
-    public function check(int $timestamp)
+    public function check(int $timestamp): bool
     {
         $datecCalculator = new dateCalculator();
 
         $currentTime = $datecCalculator->currentDate();
-;
+
         // remove $currentTime after test
         if($currentTime >= $currentTime){//$timestamp){
             return true;
@@ -23,6 +22,5 @@ class expireCampaignController extends expireCampaignAbstract
             return false;
         }
     }
-
 
 }

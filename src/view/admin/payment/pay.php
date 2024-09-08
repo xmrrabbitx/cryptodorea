@@ -203,7 +203,8 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
                                            xhr.onreadystatechange = async function() {
                                               if (xhr.readyState === 4 && xhr.status === 200) {
-                                                  //window.location.reload();        
+                                           
+                                                  window.location.reload();        
                                               }
                                            }
                                                         
@@ -239,7 +240,8 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
                                            xhr.onreadystatechange = async function() {
                                               if (xhr.readyState === 4 && xhr.status === 200) {
-                                                  //window.location.reload();        
+                                            
+                                                  window.location.reload();        
                                               }
                                            }
                                                         
@@ -395,20 +397,20 @@ function dorea_admin_pay_campaign()
 
 
                             print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-                                print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                                print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 28, 34) . "</span>");
-                                print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts']. "</span>");
-                                print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
+                            print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
+                            print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 28, 34) . "</span>");
+                            print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts']. "</span>");
+                            print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
 
-                                $total[] = array_sum($campaignUser[$cashbackName]['total']);
+                            $total[] = array_sum($campaignUser[$cashbackName]['total']);
 
-                                $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice;
+                            $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) ) * $ethBasePrice;
 
-                                $totalEthers[] = $userEther;
+                            $totalEthers[] = $userEther;
 
-                                print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
+                            print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
-                                if($userEther <= (float)$contractAmount){
+                            if($userEther <= (float)$contractAmount){
 
                                     $sumUserEthers[] = $userEther;
                                     if(array_sum($sumUserEthers) <= $contractAmount){
@@ -479,7 +481,8 @@ function dorea_admin_pay_campaign()
 
             }
             */
-
+var_dump(($totalEthers));
+var_dump($contractAmount);
             // check for funding campaign
             if((float)array_sum($totalEthers) > (float)$contractAmount){
 
@@ -512,7 +515,7 @@ function dorea_admin_pay_campaign()
 
             // calculate remaining amount eth to pay
             $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
-            //$remainingAmount *= -1;
+            $remainingAmount *= -1;
 
             // trigger payment js modal
             dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList);
@@ -545,17 +548,17 @@ function dorea_new_contractBalance():void
     // get Json Data
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
-
+    var_dump($json);
     if ($json) {
         $campaignInfoUser = get_transient($json->campaignName);
         $campaignInfoUser['contractAmount'] = $json->balance;
 
         set_transient($json->campaignName, $campaignInfoUser);
 
-        $usersList = $json->usersList;
-
-        $users = new usersController();
-        $users->remove($json->campaignName,$usersList);
-
+        if (isset($json->usersList)){
+            $usersList = $json->usersList;
+            $users = new usersController();
+            $users->remove($json->campaignName,$usersList);
+        }
     }
 }
