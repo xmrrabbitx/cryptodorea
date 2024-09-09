@@ -167,11 +167,8 @@ function checkout()
 {
 
     if(is_page('checkout')) {
-         $campaigns = get_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login);
-         //var_dump(delete_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login));
-         var_dump($campaigns);
          $checkout = new checkoutController();
-         //$checkout->remove();
+         $checkout->autoRemove();
          $checkout->checkout();
     }
 
@@ -181,7 +178,7 @@ function checkout()
  * callback function on order received
  */
 add_action('woocommerce_thankyou','orderReceived');
-function orderReceived($orderId){
+function orderReceived($orderId):void{
 
 
     if (is_wc_endpoint_url('order-received')) {

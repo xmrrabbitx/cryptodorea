@@ -19,10 +19,10 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
     if($qualifiedWalletAddresses && $cryptoAmount && $qualifiedUserEthers) {
 
         $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
-
         $sumAmount = array_sum($qualifiedUserEthers);
         $sumUserEthers = json_encode($qualifiedUserEthers);
         $usersList = json_encode($usersList);
+        $qualifiedUserEthers = json_encode($qualifiedUserEthers);
 
     }else{
 
@@ -30,7 +30,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
         $sumUserEthers = "null";
         $qualifiedWalletAddresses = "null";
         $usersList = 'null';
-
+        $qualifiedUserEthers = 'null';
     }
 
 
@@ -208,7 +208,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                               }
                                            }
                                                         
-                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName, "usersList":  '.$usersList.' }));      
+                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName, "usersList":  '.$usersList.' , "amount":'.$qualifiedUserEthers.' }));      
                                       }
                                 });
                             });
@@ -376,6 +376,8 @@ function dorea_admin_pay_campaign()
 
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
+            //var_dump($campaignUser['claimedReward']);
+
             //hypothetical price of eth _ get this from an online service
             $ethBasePrice = 0.0004;
 
@@ -384,14 +386,15 @@ function dorea_admin_pay_campaign()
                     // calculate final price in ETH format
                     $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'],$shoppingCount);
 
-                    array_map(function($value) use ($shoppingCount, &$qualifiedPurchasesTotal) {
+                    array_map(function($value) use ($shoppingCount, &$result) {
                         if(count($value) == $shoppingCount){
+                           $value = array_sum($value);
                             // calculate percentage of each value
-                            $qualifiedPurchasesTotal[] = array_sum($value);
+                            $result[] = $value;
                         }
                     },$qualifiedPurchases);
 
-                    $qualifiedPurchasesTotal = array_sum($qualifiedPurchasesTotal);
+                    $qualifiedPurchasesTotal = array_sum($result);
 
                     if(isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
@@ -404,9 +407,10 @@ function dorea_admin_pay_campaign()
 
                             $total[] = array_sum($campaignUser[$cashbackName]['total']);
 
-                            $userEther = (float)(($qualifiedPurchasesTotal * $cryptoAmount) ) * $ethBasePrice;
+                            $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice),10);
 
                             $totalEthers[] = $userEther;
+
 
                             print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
@@ -474,21 +478,6 @@ function dorea_admin_pay_campaign()
         // check expiration of campaign
         if($expire->check($expireDate)){
 
-            // check if campaign is ended!
-            /*
-            if((float)$contractAmount == 0) {
-
-                print('
-                    <!-- End Campaign -->
-                    <div class="!grid !grid-cols-1 !mt-5">
-                        <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
-                    </div>
-                ');
-
-            }
-            */
-var_dump(($totalEthers));
-var_dump($contractAmount);
             // check for funding campaign
             if((float)array_sum($totalEthers) > (float)$contractAmount){
 
@@ -535,6 +524,13 @@ var_dump($contractAmount);
                 </div>
             ');
         }
+
+        print('
+           <!-- End Campaign -->
+           <div class="!grid !grid-cols-1 !mt-5">
+                <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
+           </div>
+        ');
     }
 
 
@@ -554,17 +550,19 @@ function dorea_new_contractBalance():void
     // get Json Data
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
-    var_dump($json);
+
     if ($json) {
         $campaignInfoUser = get_transient($json->campaignName);
         $campaignInfoUser['contractAmount'] = $json->balance;
+
+        $amount = $json->amount;
 
         set_transient($json->campaignName, $campaignInfoUser);
 
         if (isset($json->usersList)){
             $usersList = $json->usersList;
             $users = new usersController();
-            $users->remove($json->campaignName,$usersList);
+            $users->paid($json->campaignName,$usersList,$amount);
         }
     }
 }

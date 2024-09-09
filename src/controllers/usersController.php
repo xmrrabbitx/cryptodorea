@@ -10,36 +10,20 @@ use Cryptodorea\Woocryptodorea\abstracts\usersAbstract;
 class usersController extends usersAbstract
 {
 
-    function remove($campaignName, array $usersList): void
+    function paid($campaignName, array $usersList, array $amount): void
     {
 
-        /*
-        array_map(function($users) use ($campaignName,&$output) {
+        $i = 0;
+        foreach ($usersList as $users){
 
-            // remove user DB records
-            $campaignInfoUser = get_option('dorea_campaigninfo_user_' . $users);
+            $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-            if($campaignInfoUser){
-                $i = 0;
-                foreach ($campaignInfoUser as $campaigns){
+            $campaignUser['claimedReward'] = $amount[$i];
 
-                    if(in_array($campaignName, $campaigns['campaignNames'])){
-                        $key = array_search($campaignName,  $campaigns['campaignNames']);
-                        unset($campaigns["campaignNames"][$key]);
-                        $campaignInfoUser[$i]['campaignNames'] = $campaigns["campaignNames"];
-                        update_option('dorea_campaigninfo_user_' . $users, $campaignInfoUser);
+            update_option('dorea_campaigninfo_user_' . $users, $campaignUser);
 
-                    }
-
-                    if(empty($campaignInfoUser[$i]['campaignNames'])){
-                        unset($campaignInfoUser[$i]);
-                        update_option('dorea_campaigninfo_user_' . $users, $campaignInfoUser);
-                    }
-                    $i+=1;
-                }
-            }
-        },$usersList);
-        */
+            $i += 1;
+        }
 
     }
 
