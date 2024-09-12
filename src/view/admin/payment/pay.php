@@ -9,7 +9,7 @@ use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 /**
  * the payment modal for admin campaigns
  */
-function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, $qualifiedUserEthers=null, $remainingAmount=null, $usersList=null): void
+function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, $qualifiedUserEthers=null, $remainingAmount=null, $usersList=null, $totalPurchases=null): void
 {
 
     $compile = new compile();
@@ -23,6 +23,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
         $sumUserEthers = json_encode($qualifiedUserEthers);
         $usersList = json_encode($usersList);
         $qualifiedUserEthers = json_encode($qualifiedUserEthers);
+        $totalPurchases = json_encode($totalPurchases);
 
     }else{
 
@@ -31,8 +32,8 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
         $qualifiedWalletAddresses = "null";
         $usersList = 'null';
         $qualifiedUserEthers = 'null';
+        $totalPurchases = 'null';
     }
-
 
     print('<script type="module">
 
@@ -81,13 +82,13 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
          
                   
                 let elmentIed = element.id;
+                console.log(elmentIed)
                 const contractAddress = elmentIed.split("_")[3];
                 let campaignNameFirst = elmentIed.split("_")[1];
                 let campaignNameSecond = elmentIed.split("_")[2];
                 let campaignName = campaignNameFirst + "_" + campaignNameSecond;
                 let paymentStatus = elmentIed.split("_")[4];
                 
-   
                 /*
                  await window.ethereum.request({
                                           method: "wallet_addEthereumChain",
@@ -164,7 +165,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                    let sumWei = convertToWei(sumAmount);
 
                 }
-
+  console.log(cryptoAmountBigInt)
                 try{
                  
                     const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
@@ -180,8 +181,9 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                         return false;
                         
                     }
-                    
+              
                     if(paymentStatus === "pay"){
+                        console.log(messageHash)
                             await contract.pay(
                                 '.$qualifiedWalletAddresses.',
                                 cryptoAmountBigInt, 
@@ -208,7 +210,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                               }
                                            }
                                                         
-                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName, "usersList":  '.$usersList.' , "amount":'.$qualifiedUserEthers.' }));      
+                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName, "usersList":  '.$usersList.' , "amount":'.$qualifiedUserEthers.' , "totalPurchases":'.$totalPurchases.' }));      
                                       }
                                 });
                             });
@@ -285,9 +287,6 @@ function dorea_admin_pay_campaign()
 {
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
-    static $sumUserEthers;
-    static $contractAmount;
-    static $total;
 
     $cashbackName = $_GET['cashbackName'];
     $expireDate = get_transient($cashbackName)['timestamp'];
@@ -337,200 +336,229 @@ function dorea_admin_pay_campaign()
                
             </div>
         ");
-    }else {
-        print('
-           <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
-           <div class="!col-span-1 !grid !grid-cols-5">
-            <span class="!text-center !pl-3">
-                Username
-                <hr>
-            </span>
-            <span class="!text-center">
-                Wallet Address
-                <hr>
-            </span>
-            <span class="!text-center">
-                Purchase Counts
-                <hr>
-            </span>
-            <span class="!text-center">
-                Amount
-                <hr>
-            </span>
-            <span class="!text-center">
-                Eligibility to Pay
-                <hr>
-            </span>
-           </div>
-        ');
+    }
+    else{
 
-        $sumUserEthers = [];
         $totalEthers = [];
         $usersList = [];
 
         $contractAmount = $cashbackInfo['contractAmount'];
         $shoppingCount = $cashbackInfo['shoppingCount'];
 
-
+        $addtoPaymentSection = true;
+        $paymentButtonsSection = true;
+        $paidUserSection= true;
         foreach ($userList as $users) {
 
+            $sumUserEthers = [];
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
-
-            //var_dump($campaignUser['claimedReward']);
 
             //hypothetical price of eth _ get this from an online service
             $ethBasePrice = 0.0004;
 
             if($campaignUser) {
 
-                    // calculate final price in ETH format
-                    $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'],$shoppingCount);
+                if(isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
-                    array_map(function($value) use ($shoppingCount, &$result) {
-                        if(count($value) == $shoppingCount){
-                           $value = array_sum($value);
-                            // calculate percentage of each value
-                            $result[] = $value;
+                        if($addtoPaymentSection){
+                            print('
+                                <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
+                                    <div class="!col-span-1 !grid !grid-cols-5">
+                                         <span class="!text-center !pl-3">
+                                            Username
+                                            <hr>
+                                         </span>
+                                         <span class="!text-center">
+                                             Wallet Address
+                                             <hr>
+                                         </span>
+                                         <span class="!text-center">
+                                            Purchase Counts
+                                            <hr>
+                                         </span>
+                                         <span class="!text-center">
+                                             Amount
+                                             <hr>
+                                         </span>
+                                          <span class="!text-center">
+                                             Eligibility to Pay
+                                             <hr>
+                                         </span>
+                                    </div>
+                            ');
+                            $addtoPaymentSection = false;
                         }
-                    },$qualifiedPurchases);
 
-                    $qualifiedPurchasesTotal = array_sum($result);
+                        // calculate final price in ETH format
+                        $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'],$shoppingCount);
+                        $result = [];
+                        array_map(function($value) use ($shoppingCount, &$result) {
+                            if(count($value) == $shoppingCount){
+                                $value = array_sum($value);
+                                // calculate percentage of each value
+                                $result[] = $value;
+                            }
+                        },$qualifiedPurchases);
 
-                    if(isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
+                        $totalPurchases[] = count($result) * $shoppingCount;
+                        $qualifiedPurchasesTotal = array_sum($result);
 
-
-                            print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-                            print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                            print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 28, 34) . "</span>");
-                            print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts']. "</span>");
-                            print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
-
-                            $total[] = array_sum($campaignUser[$cashbackName]['total']);
-
-                            $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice),10);
-
-                            $totalEthers[] = $userEther;
-
-
-                            print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
-
-                            //if($userEther <= (float)$contractAmount){
-
-                                    $sumUserEthers[] = $userEther;
-                                    if(array_sum($sumUserEthers) <= $contractAmount){
-
-                                        // set qualified users to pay
-                                        $qualifiedUserEthers[] = $userEther;
-                                        $qualifiedWalletAddresses[] = $campaignUser[$cashbackName]['walletAddress'];
-                                        $usersList[] = $users;
+                        print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
+                        print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
+                        print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 30, 6) . "</span>");
+                        print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts']. "</span>");
+                        print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
 
 
-                                        print("
-                                            <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                              <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
-                                            </svg>
-                                        ");
+                        $userEther = number_format( ( ( ($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice),10);
 
-                                    }else{
+                        $totalEthers[] = $userEther;
 
-                                        print("
-                                            <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                              <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
-                                            </svg>
-                                        ");
+                        print ("<span class='!pl-3 !pt-1 !col-span-1 !mx-auto'>");
 
-                                    }
+                        $sumUserEthers[] = $userEther;
 
-                           // }elseif((int)$contractAmount===0){
-                                /*
-                                    print("
-                                       <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                         <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
-                                       </svg>
-                                    ");
-                                */
-                           // }else{
-                                /*
-                                    print("
-                                        <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                          <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
-                                        </svg>
-                                    ");
-                                */
-                           // }
-                            print ("
-                                    </span>
-                                  </div>
-                            ");
+                        if(array_sum($totalEthers) <= $contractAmount && array_sum($sumUserEthers) <= $contractAmount){
+
+                             // set qualified users to pay
+                             $qualifiedUserEthers[] = $userEther;
+                             $qualifiedWalletAddresses[] = $campaignUser[$cashbackName]['walletAddress'];
+                             $usersList[] = $users;
+
+                             print("
+                                   <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                        <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                                   </svg>
+                             ");
+
+                        }else{
+
+                             print("
+                                 <svg class='size-5 text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                                 </svg>
+                             ");
+
+                        }
+
+                        print ("
+                               </span>
+                            </div>
+                        ");
 
                     }
-
-
             }
-        }
 
-        print("</div>");
+            if($paymentButtonsSection){
+                print("</div>");
+                // get contract address of campaign
+                $doreaContractAddress = get_option($cashbackName . '_contract_address');
+                if(!empty($totalEthers)) {
 
-        $campaignName = $_GET['cashbackName'];
+                    // check expiration of campaign
+                    if ($expire->check($expireDate)) {
 
-        $doreaContractAddress = get_option($campaignName . '_contract_address');
+                        // check for funding campaign
+                        if ((float)array_sum($totalEthers) > (float)$contractAmount) {
 
-        // check expiration of campaign
-        if($expire->check($expireDate)){
+                            print("
+                                <!-- Fund Again -->
+                                <div class='!mx-auto !text-center !mt-5'>
+                                    <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_fund" . "'>Fund Again</a>
+                                </div>
+                            ");
 
-            // check for funding campaign
-            if((float)array_sum($totalEthers) > (float)$contractAmount){
+                            if ($qualifiedWalletAddresses) {
+                                print("
+                                    <p class='!text-center !mt-5 !text-slate-500'>Or</p>
+                                    <!-- Pay Anyway -->
+                                    <div class='!grid !grid-cols-1 !mt-5'>
+                                        <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_pay" . "'>Pay Anyway</button>
+                                    </div>
+                                ");
+                            }
 
-                print("
-                    <!-- Fund Again -->
-                    <div class='!mx-auto !text-center !mt-5'>
-                        <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $campaignName . '_' . $doreaContractAddress . '_fund' . "'>Fund Again</a>
-                    </div>
-                   
-                ");
+                        } else {
+                            print('
+                                <!-- Pay All -->
+                                <div class="!grid !grid-cols-1 !mt-5">
+                                    <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $cashbackName . '_' . $doreaContractAddress . '_pay' . '">Pay All</button>
+                                </div>
+                            ');
+                        }
 
-                if($qualifiedWalletAddresses){
-                    print("
-                        <p class='!text-center !mt-5 !text-slate-500'>Or</p>
-                        <!-- Pay Anyway -->
-                        <div class='!grid !grid-cols-1 !mt-5'>
-                            <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . ''>Pay Anyway</button>
+                        // calculate remaining amount eth to pay
+                        $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
+                        $remainingAmount *= -1;
+
+                        // trigger payment js modal
+                        dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList, $totalPurchases);
+
+                        print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
+                    } else {
+                        print('
+                            <!-- Not Ready to Pay -->
+                            <div class="!grid !grid-cols-1 !mt-5">
+                                <p class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">Not Ready to Pay</p>
+                            </div>
+                        ');
+                    }
+
+                    print('
+                       <!-- End Campaign -->
+                       <div class="!grid !grid-cols-1 !mt-5">
+                            <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
+                       </div>
+                    ');
+                }
+                else{
+                    print ("
+                        <!-- error on no users -->
+                        <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+                             <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                 <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                            </svg>
+                            <p class='!pt-3 !pb-2'>
+                              there is no users eligible to pay in the loyalty campaign!
+                            </p>
+                           
                         </div>
                     ");
                 }
-
-            }else{
-                print('
-                    <!-- Pay All -->
-                    <div class="!grid !grid-cols-1 !mt-5">
-                        <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '_pay' . '">Pay All</button>
-                    </div>
-                ');
+                $paymentButtonsSection = false;
             }
 
-            // calculate remaining amount eth to pay
-            $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
-            $remainingAmount *= -1;
+            if($paidUserSection){
+                print('
+                    <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
+                        <div class="!col-span-1 !grid !grid-cols-5">
+                             <span class="!text-center !pl-3">
+                                 Username
+                                 <hr>
+                             </span>
+                             <span class="!text-center">
+                                 Claimed Rewards
+                                 <hr>
+                             </span>
+                    </div>
+                ');
 
-            // trigger payment js modal
-            dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList);
 
-            print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
-        }else{
-            print('
-                <!-- Not Ready to Pay -->
-                <div class="!grid !grid-cols-1 !mt-5">
-                    <p class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">Not Ready to Pay</p>
-                </div>
-            ');
+                print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
+                print("<span class='!pl-3 !col-span-1 !text-sm'>" . $users . "</span> ");
+                print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward']. " ETH</span>");
+
+                print("
+                        </div>
+                    </div>
+                ");
+                $paidUserSection = false;
+            }
+
         }
 
-        print('
-           <!-- End Campaign -->
-           <div class="!grid !grid-cols-1 !mt-5">
-                <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
-           </div>
-        ');
+
+
     }
 
 
@@ -556,13 +584,14 @@ function dorea_new_contractBalance():void
         $campaignInfoUser['contractAmount'] = $json->balance;
 
         $amount = $json->amount;
+        $totalPurchases = $json->totalPurchases;
 
         set_transient($json->campaignName, $campaignInfoUser);
 
         if (isset($json->usersList)){
             $usersList = $json->usersList;
             $users = new usersController();
-            $users->paid($json->campaignName,$usersList,$amount);
+            $users->is_paid($json->campaignName,$usersList,$amount,$totalPurchases);
         }
     }
 }

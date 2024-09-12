@@ -11,8 +11,6 @@ abstract class receiptAbstract{
 
     }
 
-    abstract function campaignInfo();
-
     abstract function is_paid($order, $campaignList);
     
 }

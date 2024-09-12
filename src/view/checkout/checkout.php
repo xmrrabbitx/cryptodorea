@@ -35,39 +35,33 @@ function cashback(): void
                 ");
 
             }else {
-
-                // add cash back program element to theme
-                print("
-                        <div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
-                            <p>
-                                <h4>
-                                    add to cash back program:
-                                    <span>
-                                        <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
-                                    </span>
-                ");
-
-/*
-                if($campaign->check($cashbackList)) {
-                    $campaignNames = $campaign->campaignDiff($cashbackList);
-                }else {
-                    $campaignNames = $cashbackList;
-                }
-*/
-
+                $addtoCashback = true;
                 // show campaigns in view
                 if (!empty($cashbackList)) {
                     foreach ($diffCampaignsList as $campaign) {
                         // check if any campaign funded or not!
                         if (get_option($campaign . '_contract_address')) {
 
+                            // add to cash back program option
+                            if($addtoCashback) {
+                                print("
+                                  <div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
+                                     <p>
+                                        <h4>
+                                           add to cash back program:
+                                           <span>
+                                               <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
+                                           </span>
+                                ");
+                                $addtoCashback = false;
+                            }
 
                             $campaignLable = explode("_", $campaign)[0];
                             print(" 
-                                    <span>
-                                        <label>" . $campaignLable . "</label>
-                                        <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
-                                    </span>
+                                  <span>
+                                     <label>" . $campaignLable . "</label>
+                                     <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
+                                  </span>
                            ");
 
                         }

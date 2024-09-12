@@ -10,7 +10,7 @@ use Cryptodorea\Woocryptodorea\abstracts\usersAbstract;
 class usersController extends usersAbstract
 {
 
-    function paid($campaignName, array $usersList, array $amount): void
+    function is_paid($campaignName, array $usersList, array $amount, array $totalPurchases): void
     {
 
         $i = 0;
@@ -18,15 +18,14 @@ class usersController extends usersAbstract
 
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-            $campaignUser['claimedReward'] = $amount[$i];
+            $campaignUser[$campaignName]['claimedReward'] = $amount[$i];
+            $campaignUser[$campaignName]['purchaseCounts'] = $campaignUser[$campaignName]['purchaseCounts'] - (int)$totalPurchases[$i];
 
             update_option('dorea_campaigninfo_user_' . $users, $campaignUser);
 
             $i += 1;
         }
-
     }
-
 }
 
 

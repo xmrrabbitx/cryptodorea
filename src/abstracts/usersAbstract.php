@@ -9,6 +9,6 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
 abstract class usersAbstract
 {
 
-    abstract function paid(string $campaignName, array $usersList, array $amount);
+    abstract function is_paid(string $campaignName, array $usersList, array $amount, array $totalPurchases);
 
 }

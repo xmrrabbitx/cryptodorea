@@ -18,11 +18,6 @@ class receiptController extends receiptAbstract
 
     }
 
-    function campaignInfo()
-    {
-        return get_option("dorea_campaigninfo_user_" . wp_get_current_user()->user_login);
-    }
-
     function is_paid($order, $campaignList)
     {
 
@@ -51,6 +46,8 @@ class receiptController extends receiptAbstract
                 // add sum of total to list
                 $campaignList[$campaignName]['total'][] = (int)$order->total;
 
+
+                //die('stoppp');
                 $campaignList[$campaignName]['order_ids'][] = $order->id;
 
                 // it must trigger and count campaign on every each of product
@@ -59,6 +56,7 @@ class receiptController extends receiptAbstract
 
                 $campaignList[$campaignName] = $campaignInfo;
                 $campaignInfoResult = $campaignList;
+
             }
 
         }
