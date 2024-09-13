@@ -5,25 +5,24 @@ use Cryptodorea\Woocryptodorea\utilities\compile;
 /**
  * Crypto Cashback Campaign Credit
  */
-function dorea_cashback_campaign_credit()
+function dorea_cashback_campaign_credit():void
 {
 
     $compile = new compile();
     $abi = $compile->abi();
     $bytecode = $compile->bytecode();
 
-    $campaignName = null;
-    if(isset($_GET['cashbackName'])) {
+    if(!empty($_GET['cashbackName'])) {
 
         $campaignName = $_GET['cashbackName'];
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
-            //wp_redirect('admin.php?page=crypto-dorea-cashback');
+            wp_redirect('admin.php?page=crypto-dorea-cashback');
         }
 
     }else{
-       wp_redirect('admin.php?page=crypto-dorea-cashback');
+        wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
 
     print('

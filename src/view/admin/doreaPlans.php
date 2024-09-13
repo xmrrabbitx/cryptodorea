@@ -10,7 +10,7 @@ const doreaUserContractAddress = "0x3B53105320D82aB3b3dfa8447eD1Fec1F9aA145F";
 /**
  * Crypto Cashback Plans
  */
-function doreaPlans()
+function doreaPlans():void
 {
 
     $plansCompile = new plansCompile();
@@ -390,7 +390,7 @@ function doreaPlans()
  */
 add_action('admin_menu', 'dorea_admin_status_payment');
 
-function dorea_admin_status_payment()
+function dorea_admin_status_payment():void
 {
 
     $jsonData = file_get_contents('php://input');
@@ -407,7 +407,8 @@ function dorea_admin_status_payment()
  * Dorea Plans check Free Trial Period
  */
 add_action('admin_menu', 'dorea_free_trial');
-function dorea_free_trial(){
+function dorea_free_trial():void
+{
 
     $freetrial = new  freetrialController();
     $freetrial->set();
@@ -416,7 +417,7 @@ function dorea_free_trial(){
 
     if(isset($_GET['page'])){
         if($_GET['page'] !== 'dorea_plans'){
-            if(!$userPayment->paid()) {
+            if(!$userPayment->is_paid()) {
                 $freetrial->expire();
             }
         }

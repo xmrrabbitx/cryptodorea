@@ -13,8 +13,7 @@ use WC_Order;
  */
 class checkoutController extends checkoutAbstract
 {
-
-    function __construct()
+    public function __construct()
     {
 
         $this->checkoutModel = new checkoutModel();
@@ -102,16 +101,12 @@ class checkoutController extends checkoutAbstract
 
     public function orederReceived($orderId):void
     {
-        global $woocommerce, $post;
-
         $order = json_decode(new WC_Order($orderId));
 
         if(isset($order->id)){
-
             // call receipt controller
             $receipt = new receiptController();
             $receipt->is_paid($order, $this->checkoutModel->list());
-
         }
     }
 

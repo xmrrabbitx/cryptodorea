@@ -7,10 +7,6 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class checkoutAbstract{
 
-    function __construct(){
-
-    }
-
     abstract function check($cashbackList);
     abstract function campaignDiff($campaignNames);
     abstract function addtoList($campaignNames, $userWalletAddress);

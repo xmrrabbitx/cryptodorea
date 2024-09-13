@@ -285,12 +285,19 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
 add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
+    static $home_url = 'admin.php?page=crypto-dorea-cashback';
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
 
     $cashbackName = $_GET['cashbackName'];
+    $cashbackInfo = get_transient($cashbackName) ?? null;
+    
+    // redirect to admin page if no campaign existed!
+    if(!$cashbackInfo){
+        wp_redirect($home_url);
+    }
+
     $expireDate = get_transient($cashbackName)['timestampExpire'];
-    $cashbackInfo = get_transient($cashbackName);
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
 
@@ -529,7 +536,8 @@ function dorea_admin_pay_campaign()
             }
 
             if($paidUserSection){
-                print('
+                if(isset($campaignUser[$cashbackName]['claimedReward'])) {
+                    print('
                     <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
                         <div class="!col-span-1 !grid !grid-cols-5">
                              <span class="!text-center !pl-3">
@@ -544,15 +552,16 @@ function dorea_admin_pay_campaign()
                 ');
 
 
-                print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-                print("<span class='!pl-3 !col-span-1 !text-sm'>" . $users . "</span> ");
-                print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward']. " ETH</span>");
+                    print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
+                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . $users . "</span> ");
+                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
 
-                print("
+                    print("
+                            </div>
                         </div>
-                    </div>
-                ");
-                $paidUserSection = false;
+                    ");
+                    $paidUserSection = false;
+                }
             }
 
         }

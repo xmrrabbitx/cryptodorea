@@ -8,12 +8,5 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class expireCampaignAbstract
 {
-
-    function __construct()
-    {
-
-    }
-
     abstract function check(int $timestamp);
-
 }

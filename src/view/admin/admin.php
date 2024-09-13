@@ -46,7 +46,7 @@ function dorea_add_menu_page(): void
         add_submenu_page(
             'crypto-dorea-cashback',
             'Campaign Page',
-            'Cashback Campaigns',
+            'Create Campaigns',
             'manage_options',
             'campaigns',
             'dorea_cashback_campaign_content'
@@ -86,7 +86,7 @@ function dorea_add_menu_page(): void
 /**
  *  main page content
  */
-function dorea_main_page_content()
+function dorea_main_page_content():void
 {
 
     $cashback = new cashbackController();
@@ -245,7 +245,6 @@ function dorea_main_page_content()
 
 }
 
-
 /**
  * Crypto Cashback Campaign
  */
@@ -260,7 +259,7 @@ include('campaignCredit.php');
 /**
  * Plans
  */
-//include('doreaPlans.php');
+include('doreaPlans.php');
 
 /**
  * Payment Modal

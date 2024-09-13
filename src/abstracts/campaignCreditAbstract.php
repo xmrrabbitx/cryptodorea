@@ -8,11 +8,4 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
 abstract class campaignCreditAbstract
 {
 
-    function __construct()
-    {
-
-    }
-
-
-
 }

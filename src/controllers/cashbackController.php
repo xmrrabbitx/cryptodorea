@@ -3,8 +3,6 @@
 namespace Cryptodorea\Woocryptodorea\controllers;
 
 use Cryptodorea\Woocryptodorea\abstracts\cashbackAbstract;
-use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
-use Cryptodorea\Woocryptodorea\utilities\Encrypt;
 
 /**
  * Controller to create_modify_delete cashback campaign
@@ -14,7 +12,6 @@ class cashbackController extends cashbackAbstract
 
     public function create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount, $timestampStart, $timestampExpire):void
     {
-
         $campaignInfo = ['campaignName' => $campaignName, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, "timestampStart"=>$timestampStart, "timestampExpire"=>$timestampExpire] ?? null;
 
         if (empty($this->list()) || !in_array($campaignName, $this->list())) {

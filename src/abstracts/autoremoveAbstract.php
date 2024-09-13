@@ -7,12 +7,5 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class autoremoveAbstract
 {
-
-    function __construct()
-    {
-
-    }
-
     abstract  function remove($campaignName);
-
 }

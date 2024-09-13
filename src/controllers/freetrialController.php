@@ -37,14 +37,13 @@ class freetrialController extends freetrialAbstract
      * expire free trial timestamp and redirect to plans page
      * @return void
      */
-    public function expire()
+    public function expire():void
     {
         $date = new dateCalculator();
         $currentTimestamp = $date->currentDate();
 
         if((int)get_option('trialTimestamp') <= $currentTimestamp){
 
-            // remove wordpress prefix on production
             wp_redirect('admin.php?page=dorea_plans');
 
         }

@@ -9,13 +9,9 @@ use Cryptodorea\Woocryptodorea\abstracts\model\checkoutModelAbstract;
  */
 class checkoutModel extends checkoutModelAbstract
 {
-
-
     function __construct()
     {
-
         $_SESSION['time'] = time();
-
     }
 
     /*
@@ -23,14 +19,11 @@ class checkoutModel extends checkoutModelAbstract
      */
     public function list()
     {
-
         return get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) !== false ? get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login) : [];
-
     }
 
-    public function add($campaignNames, $userWalletAddress)
+    public function add($campaignNames, $userWalletAddress):void
     {
-
         // add/update campaigns info user
         $campaignList = $this->list();
         $campaignsAdmin = get_option("campaign_list");
@@ -53,7 +46,7 @@ class checkoutModel extends checkoutModelAbstract
         }
     }
 
-    public function addUser($campaignLists)
+    public function addUser($campaignLists):void
     {
         foreach ($campaignLists as $campaigns) {
 

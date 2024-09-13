@@ -8,13 +8,5 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class paymentAbstract
 {
-
-    function __construct()
-    {
-
-    }
-
     abstract function walletslist(string $campaignName);
-
-
 }

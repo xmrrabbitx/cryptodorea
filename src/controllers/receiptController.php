@@ -18,7 +18,7 @@ class receiptController extends receiptAbstract
 
     }
 
-    function is_paid($order, $campaignList)
+    function is_paid($order, $campaignList):void
     {
 
         static $campaignInfoResult;

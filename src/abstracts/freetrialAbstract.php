@@ -7,12 +7,6 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class freetrialAbstract
 {
-
-    function __construct()
-    {
-
-    }
-
     abstract  function set();
     abstract  function expire();
 

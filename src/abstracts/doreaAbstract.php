@@ -7,11 +7,6 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class doreaAbstract{
 
-    public function __construct(){
-
-
-    }
-
     abstract function checkPlaceOrder();
     abstract function timeToPay();
 

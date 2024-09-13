@@ -8,33 +8,23 @@ use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 class adminStatusController extends adminStatusAbstract
 {
 
-    function __construct()
-    {
-
-
-    }
-
-    public function set($timestamp)
+    public function set($timestamp):void
     {
         if(!empty($timestamp)){
             if(!get_option('adminPaymentTimestamp')){
-                    add_option('adminPaymentTimestamp', $timestamp);
+                add_option('adminPaymentTimestamp', $timestamp);
             }else{
                 update_option('adminPaymentTimestamp', $timestamp);
             }
         }
     }
 
-    public function paid()
+    public function is_paid():bool
     {
         $date = new dateCalculator();
         $currentTimestamp = $date->currentDate();
 
-        if($currentTimestamp >= ((int)get_option('adminPaymentTimestamp'))){
-            return false;
-        }
-
-        return true;
+        return $currentTimestamp >= (int)get_option('adminPaymentTimestamp') ?? false;
     }
 
 }

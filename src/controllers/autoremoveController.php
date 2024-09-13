@@ -10,12 +10,6 @@ use Cryptodorea\Woocryptodorea\abstracts\autoremoveAbstract;
 class autoremoveController extends autoremoveAbstract
 {
 
-    function __construct()
-    {
-
-
-    }
-
     public function remove($campaignName)
     {
 

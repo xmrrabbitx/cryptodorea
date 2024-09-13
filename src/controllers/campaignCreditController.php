@@ -10,11 +10,5 @@ use Cryptodorea\Woocryptodorea\abstracts\campaignCreditAbstract;
 class campaignCreditController extends campaignCreditAbstract
 {
 
-    function __construct()
-    {
-
-
-    }
-
 
 }

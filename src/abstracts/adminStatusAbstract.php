@@ -15,6 +15,6 @@ abstract class adminStatusAbstract
     }
 
     abstract function set(int $timestamp);
-    abstract function paid();
+    abstract function is_paid();
 
 }
