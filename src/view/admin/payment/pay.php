@@ -289,7 +289,7 @@ function dorea_admin_pay_campaign()
     static $qualifiedWalletAddresses;
 
     $cashbackName = $_GET['cashbackName'];
-    $expireDate = get_transient($cashbackName)['timestamp'];
+    $expireDate = get_transient($cashbackName)['timestampExpire'];
     $cashbackInfo = get_transient($cashbackName);
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];

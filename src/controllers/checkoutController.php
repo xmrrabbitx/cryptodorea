@@ -97,11 +97,7 @@ class checkoutController extends checkoutAbstract
             } catch (Exception $error) {
                 //throw exception
             }
-
-
         }
-
-
     }
 
     public function orederReceived($orderId):void
@@ -114,7 +110,7 @@ class checkoutController extends checkoutAbstract
 
             // call receipt controller
             $receipt = new receiptController();
-            $receipt->is_paid($order, $this->list());
+            $receipt->is_paid($order, $this->checkoutModel->list());
 
         }
     }
@@ -123,7 +119,7 @@ class checkoutController extends checkoutAbstract
     {
 
         $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
-        $campaignInfoUser = $this->list();
+        $campaignInfoUser = $this->checkoutModel->list();
         $campaignInfoUserKeys = array_keys($campaignInfoUser);
 
         if($queueDeleteCampaigns) {
@@ -147,5 +143,15 @@ class checkoutController extends checkoutAbstract
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
             }
         }
+    }
+
+    public function expire($campaign):bool
+    {
+        $camapaignInfo = get_transient($campaign);
+
+        $currentDate = (int)strtotime(date("d.m.Y") . " 00:00:00");
+
+        return $camapaignInfo['timestampExpire'] >= $currentDate && $camapaignInfo['timestampStart'] <= $currentDate ?? false;
+
     }
 }

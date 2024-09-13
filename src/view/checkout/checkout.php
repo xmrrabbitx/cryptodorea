@@ -21,10 +21,9 @@ function cashback(): void
         $cashbackList = $cashback->list();
 
         // get campaign list of user
-        $campaign = new checkoutController;
-        $campaignListUser = $campaign->list();
+        $checkoutController = new checkoutController;
 
-        $diffCampaignsList = $campaign->check($cashbackList);
+        $diffCampaignsList = $checkoutController->check($cashbackList);
 
         if ($cashbackList) {
 
@@ -42,9 +41,12 @@ function cashback(): void
                         // check if any campaign funded or not!
                         if (get_option($campaign . '_contract_address')) {
 
-                            // add to cash back program option
-                            if($addtoCashback) {
-                                print("
+                            // check if campaign started or not
+                            if($checkoutController->expire($campaign)) {
+
+                                // add to cash back program option
+                                if ($addtoCashback) {
+                                    print("
                                   <div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
                                      <p>
                                         <h4>
@@ -53,16 +55,18 @@ function cashback(): void
                                                <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' onclick='debouncedAddToCashbackCheckbox()'>
                                            </span>
                                 ");
-                                $addtoCashback = false;
-                            }
+                                    $addtoCashback = false;
+                                }
 
-                            $campaignLable = explode("_", $campaign)[0];
-                            print(" 
+                                $campaignLable = explode("_", $campaign)[0];
+                                print(" 
                                   <span>
                                      <label>" . $campaignLable . "</label>
                                      <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "' onclick='debouncedAddToCashbackCheckbox()'>
                                   </span>
-                           ");
+                               ");
+
+                            }
 
                         }
                     }

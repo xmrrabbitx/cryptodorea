@@ -8,29 +8,36 @@ function deleteModal():bool
 {
     return print ('
         <script>
-            let deleteButt = document.getElementById("deleteCampaign");
+            
+                let deleteCampaignModal = document.querySelectorAll(".deleteCampaign_");
 
-             deleteButt.addEventListener("click", async () => {
-                  let deleteModal = document.getElementById("deleteModal");
-                  let url = deleteButt.getAttribute("name");    
-                  deleteModal.style.display = "block";
-                  
-                let cancelDeleteButt = document.getElementById("cancelDeleteCampaign");
-                let conformDeleteButt = document.getElementById("DeleteCampaignConfirm");
+                deleteCampaignModal.forEach(
                 
-                cancelDeleteButt.addEventListener("click", async () => {
-                    let deleteModal = document.getElementById("deleteModal");
-                    deleteModal.style.display = "none";
-                  
-                });
-                
-                conformDeleteButt.addEventListener("click", async () => {
+                    (element) =>             
+               
+                     element.addEventListener("click", function(){
+           
+                        let deleteModal = document.getElementById("deleteModal");
+                        let url = element.getAttribute("name");    
+                        deleteModal.style.display = "block";
+                      
+                        let cancelDeleteButt = document.getElementById("cancelDeleteCampaign");
+                        let conformDeleteButt = document.getElementById("DeleteCampaignConfirm");
+                        
+                        cancelDeleteButt.addEventListener("click", async () => {
+                            let deleteModal = document.getElementById("deleteModal");
+                            deleteModal.style.display = "none";
+                          
+                        });
+                        
+                        conformDeleteButt.addEventListener("click", async () => {
+                            
+                            window.location.replace(url);
+                          
+                        });
                     
-                    window.location.replace(url);
-                  
-                });
-                
-             });      
+                     })  
+                )
         </script>
        
        <!-- delete campaign modal -->

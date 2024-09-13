@@ -28,12 +28,7 @@ function dorea_cashback_campaign_content(){
     $currentDate = $dateCalculator->unixToMonth($currentTime);
     $currentYear = $dateCalculator->unixToYear($currentTime);
 
-    //remove  after test
-    //$currentDate = "January";
-
     $currentDay = (int) $dateCalculator->unixToDay($currentTime);
-    //$futureDate = $dateCalculator->futureDate(7,1,2022);
-    //$futureDate = $dateCalculator->unixToMonth($futureDate);
 
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
@@ -228,14 +223,10 @@ function dorea_admin_cashback_campaign(){
             $startDate = htmlspecialchars($_POST['startDateMonth']);
             $startDateMonth = explode('_',$startDate)[0];
             $startDateYear = explode('_',$startDate)[1];
-
             $startDateDay = htmlspecialchars($_POST['startDateDay']);
-            $expDate = htmlspecialchars($_POST['expDate']);
 
-            $dateCalculator = new dateCalculator();
-            $expDate = $dateCalculator->expDateCampaign($startDateDay, $startDateMonth,$startDateYear, $expDate);
-
-            $timestampDate = strtotime($expDate['expDay'] . '.' . $expDate['expMonth'] . '.' . $expDate['expYear']);
+            $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . " 00:00:00");
+            $timestampExpire = $timestampStart + 691199; // calculate next 7 days of timestamp
 
             // add random hash to campaign name
             $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
@@ -271,7 +262,7 @@ function dorea_admin_cashback_campaign(){
                 }
 
                 // create campaign
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$startDateYear, $startDateMonth, $startDateDay, $expDate['expMonth'], $expDate['expDay'], $timestampDate);
+                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
 
                 // check error on expired campaign
                 if(dorea_autoremove_campaign_admin() === true){

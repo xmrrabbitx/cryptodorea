@@ -15,5 +15,6 @@ abstract class checkoutAbstract{
     abstract function campaignDiff($campaignNames);
     abstract function addtoList($campaignNames, $userWalletAddress);
     abstract function autoRemove();
+    abstract function expire(string $campaign);
 
 }

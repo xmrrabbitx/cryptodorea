@@ -386,28 +386,6 @@ function doreaPlans()
 }
 
 /**
- * Dorea Plans Loyalty Users ABI and Bytecode of smart contract
- */
-add_action('admin_post_loyalty_users_json_file', 'dorea_admin_loyalty_users_json_file');
-function dorea_admin_loyalty_users_json_file()
-{
-
-    $loyaltyJson = file_get_contents(WP_PLUGIN_DIR . '/woo-cryptodorea/users.json');
-    $compiledContract = json_decode($loyaltyJson);
-
-    $abi = $compiledContract->abi;
-    $bytecode = $compiledContract->bytecode->object;
-
-    $responseArray = [$abi, $bytecode];
-    header('Content-Type: application/json');
-
-    // Echo the JSON-encoded response
-    echo json_encode($responseArray);
-    exit;
-
-}
-
-/**
  * Dorea Plans check User Admin Status payment
  */
 add_action('admin_menu', 'dorea_admin_status_payment');
