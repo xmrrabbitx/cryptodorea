@@ -34,9 +34,36 @@ function dorea_cashback_campaign_content(){
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
     print("<main>");
-    print("<h1 class='!p-5 !text-sm !font-bold'>Create Campaign</h1> </br>");
+    print("<h1 class='!p-5 !text-sm !font-bold'>Create Campaign</h1>");
+
+    print("<p class='!pl-5 !col-span-12 h-3 w-full'>");
+    $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
+    if($emptyError){
+        print("<span style='color:#ff5d5d;'>$emptyError</span>");
+    }
+
+    $campaignError = filter_input( INPUT_GET, 'campaignError' );
+    if($campaignError){
+        print("<span style='color:#ff5d5d;'>$campaignError</span>");
+    }
+
+    $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
+    if($cryptoAmount){
+        print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
+    }
+
+    $expiredError = filter_input( INPUT_GET, 'expiredError' );
+    if($expiredError){
+        print("<span style='color:#ff5d5d;'>$expiredError</span>");
+    }
+
+    $existedCampaignError = filter_input( INPUT_GET, 'existedCampaignError' );
+    if($existedCampaignError){
+        print("<span style='color:#ff5d5d;' class=''>$existedCampaignError</span>");
+    }
 
     print("
+      </p>
       <div class='!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md'>
         
         <h2 class='!text-center !text-lg !divide-y !mt-5'>Crypto Dorea Cashback</h2>
@@ -163,31 +190,6 @@ function dorea_cashback_campaign_content(){
               </div>
             ");
 
-    $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
-    if($emptyError){
-        print("<span style='color:#ff5d5d;'>$emptyError</span>");
-    }
-
-    $campaignError = filter_input( INPUT_GET, 'campaignError' );
-    if($campaignError){
-        print("<span style='color:#ff5d5d;'>$campaignError</span>");
-    }
-
-    $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
-    if($cryptoAmount){
-        print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
-    }
-
-    $expiredError = filter_input( INPUT_GET, 'expiredError' );
-    if($expiredError){
-        print("<span style='color:#ff5d5d;'>$expiredError</span>");
-    }
-
-    $existedCampaignError = filter_input( INPUT_GET, 'existedCampaignError' );
-    if($existedCampaignError){
-        print("<span style='color:#ff5d5d;' class='!'>$existedCampaignError</span>");
-    }
-
     print("</main>");
 }
 
@@ -208,10 +210,10 @@ function dorea_admin_cashback_campaign(){
             $campaignName = trim(htmlspecialchars($_POST['campaignName']));
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
 
-            if(!is_numeric(trim($_POST['cryptoAmount']))){
+            if(!is_numeric(trim($_POST['cryptoAmount'])) || !is_numeric(trim($_POST['shoppingCount']))){
 
                 //throws error on amount format
-                $redirect_url = add_query_arg('cryptoAmountError', urlencode('Error: Amount must be numeric!'), $referer);
+                $redirect_url = add_query_arg('cryptoAmountError', urlencode('amount and shopping counts must be numeric!'), $referer);
 
                 wp_redirect($redirect_url);
                 return false;
@@ -237,7 +239,7 @@ function dorea_admin_cashback_campaign(){
                 //throws error on existed campaign
                 if(in_array($campaignName, get_option('campaign_list'))){
 
-                    $redirect_url = add_query_arg('existedCampaignError', urlencode('Error: Campaign is already existed!'), $referer);
+                    $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
 
                     wp_redirect($redirect_url);
                     return false;
@@ -249,7 +251,7 @@ function dorea_admin_cashback_campaign(){
             if(strlen($campaignName) > 25 ){
 
                 //throws error on character exceed!
-                $redirect_url = add_query_arg('campaignError', urlencode('Error: no more than 25 characters allowed!'), $referer);
+                $redirect_url = add_query_arg('campaignError', urlencode('no more than 25 characters allowed!'), $referer);
 
                 wp_redirect($redirect_url);
 
@@ -268,7 +270,7 @@ function dorea_admin_cashback_campaign(){
                 if(dorea_autoremove_campaign_admin() === true){
 
                     //throws error on date format
-                    $redirect_url = add_query_arg('expiredError', urlencode('Error: campaign date is not valid!'), $referer);
+                    $redirect_url = add_query_arg('expiredError', urlencode('campaign date is not valid!'), $referer);
 
                     wp_redirect($redirect_url);
                     return false;
@@ -282,7 +284,7 @@ function dorea_admin_cashback_campaign(){
     }else{
 
         //throws error on empty
-        $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('Error: some fields left empty!'), $referer);
+        $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('some fields left empty!'), $referer);
 
         wp_redirect($redirect_url);
         return false;
