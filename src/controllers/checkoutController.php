@@ -81,33 +81,24 @@ class checkoutController extends checkoutAbstract
         $data = file_get_contents('php://input');
         $json = json_decode($data);
 
-        // issue is here
         if (!empty($json)) {
 
-            $campaignLists = $json->campaignlists;
-            $userWalletAddress = $json->walletAddress;
+            $campaignLists = (array)$json->campaignlists;
+            $userWalletAddress = htmlspecialchars($json->walletAddress);
 
-            try {
+            $this->addtoList($campaignLists, $userWalletAddress);
+            $this->addtoListUsers($campaignLists);
 
-                $this->addtoList($campaignLists, $userWalletAddress);
-                $this->addtoListUsers($campaignLists);
-
-
-            } catch (Exception $error) {
-                //throw exception
-            }
         }
     }
 
-    public function orederReceived($orderId):void
+    public function orederReceived($order,$orderId):void
     {
-        $order = json_decode(new WC_Order($orderId));
 
-        if(isset($order->id)){
-            // call receipt controller
-            $receipt = new receiptController();
-            $receipt->is_paid($order, $this->checkoutModel->list());
-        }
+       // call receipt controller
+       $receipt = new receiptController();
+       $receipt->is_paid($order, $this->checkoutModel->list());
+
     }
 
     public function autoRemove():void

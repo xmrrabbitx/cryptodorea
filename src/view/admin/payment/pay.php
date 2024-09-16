@@ -82,7 +82,6 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
          
                   
                 let elmentIed = element.id;
-                console.log(elmentIed)
                 const contractAddress = elmentIed.split("_")[3];
                 let campaignNameFirst = elmentIed.split("_")[1];
                 let campaignNameSecond = elmentIed.split("_")[2];
@@ -165,7 +164,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                    let sumWei = convertToWei(sumAmount);
 
                 }
-  console.log(cryptoAmountBigInt)
+
                 try{
                  
                     const contract = new ethers.Contract(contractAddress, '.$abi.',signer)

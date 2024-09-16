@@ -266,16 +266,6 @@ function dorea_admin_cashback_campaign(){
                 // create campaign
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
 
-                // check error on expired campaign
-                if(dorea_autoremove_campaign_admin() === true){
-
-                    //throws error on date format
-                    $redirect_url = add_query_arg('expiredError', urlencode('campaign date is not valid!'), $referer);
-
-                    wp_redirect($redirect_url);
-                    return false;
-                }
-
                 // head to the admin page of Dorea
                 wp_redirect('admin.php?page=credit&cashbackName=' . $campaignName);
 
@@ -298,7 +288,8 @@ function dorea_admin_cashback_campaign(){
  */
 add_action('admin_post_delete_campaign', 'dorea_admin_delete_campaign');
 
-function dorea_admin_delete_campaign(){
+function dorea_admin_delete_campaign():void
+{
 
     if ( !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'delete_campaign_nonce') ) {
         die('Security check failed');
@@ -314,35 +305,5 @@ function dorea_admin_delete_campaign(){
     // Redirect back to the previous page after deletion
     wp_redirect(wp_get_referer());
     exit;
-
-}
-
-/**
- * auto remove outdated campaign trigger on website
- */
-add_action('wp', 'dorea_autoremove_campaign');
-function dorea_autoremove_campaign()
-{
-
-    $campaignName = get_option('campaign_list');
-    if(isset($campaignName)) {
-        $autoremove = new autoremoveController();
-        //$autoremove->remove($campaignName);
-    }
-}
-
-
-/**
- * auto remove outdated campaign trigger in admin menu
- */
-add_action('admin_menu', 'dorea_autoremove_campaign_admin');
-function dorea_autoremove_campaign_admin()
-{
-
-    $campaignName = get_option('campaign_list');
-    if(isset($campaignName)) {
-        $autoremove = new autoremoveController();
-        //return $autoremove->remove($campaignName);
-    }
 
 }
