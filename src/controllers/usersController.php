@@ -20,6 +20,7 @@ class usersController extends usersAbstract
 
             $campaignUser[$campaignName]['claimedReward'] = $amount[$i];
             $campaignUser[$campaignName]['purchaseCounts'] = $campaignUser[$campaignName]['purchaseCounts'] - (int)$totalPurchases[$i];
+            $campaignUser[$campaignName]['total'] = [];
 
             update_option('dorea_campaigninfo_user_' . $users, $campaignUser);
 

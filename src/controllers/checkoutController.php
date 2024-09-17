@@ -74,22 +74,15 @@ class checkoutController extends checkoutAbstract
 
     }
 
-    public function checkout()
+    public function checkout($json)
     {
 
-        // get Json Data
-        $data = file_get_contents('php://input');
-        $json = json_decode($data);
+        $campaignLists = (array)$json->campaignlists;
+        $userWalletAddress = htmlspecialchars($json->walletAddress);
 
-        if (!empty($json)) {
+        $this->addtoList($campaignLists, $userWalletAddress);
+        $this->addtoListUsers($campaignLists);
 
-            $campaignLists = (array)$json->campaignlists;
-            $userWalletAddress = htmlspecialchars($json->walletAddress);
-
-            $this->addtoList($campaignLists, $userWalletAddress);
-            $this->addtoListUsers($campaignLists);
-
-        }
     }
 
     public function orederReceived($order,$orderId):void
@@ -122,8 +115,8 @@ class checkoutController extends checkoutAbstract
 
                     }
                 }
-
             }
+
             // remove empty campaign record
             if (empty($campaignInfoUser)) {
                 delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);

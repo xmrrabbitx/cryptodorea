@@ -243,7 +243,7 @@ function orderReceived($orderId):void{
             print ('
                 <script>
                     let campaignInfo = JSON.parse(sessionStorage.getItem("doreaCampaignInfo"));
-    
+                    
                     // remove wordpress prefix on production
                     let xhr = new XMLHttpRequest();
                     xhr.open("POST", "#", true);
@@ -262,10 +262,16 @@ function orderReceived($orderId):void{
                 </script>
             ');
 
-            // save doreaCampaignInfo
-            $checkout = new checkoutController();
-            $checkout->autoRemove();
-            $checkout->checkout();
+            // get Json Data
+            $data = file_get_contents('php://input');
+            $json = json_decode($data) ?? null;
+
+            if (!empty($json)) {
+                // save doreaCampaignInfo
+                $checkout = new checkoutController();
+                $checkout->autoRemove();
+                $checkout->checkout($json);
+            }
 
             // receive order details
             $checkout = new checkoutController();
