@@ -3,7 +3,7 @@
 
     "autoload": {
         "psr-4": {
-            "Cryptodorea\\Woocryptodorea\\": "src/"
+            "Cryptodorea\\Woocryptodorea\\": "./src"
         }
     },
     "authors": [
@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-
+        "kornrunner/keccak": "dev-main"
     },
     "minimum-stability": "dev"
 }

@@ -6,7 +6,19 @@ namespace Composer\Autoload;
 
 class ComposerStaticInita83944fa3e8c7d5187bef2f2d8520751
 {
+    public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        'k' => 
+        array (
+            'kornrunner\\' => 11,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+        ),
         'C' => 
         array (
             'Cryptodorea\\Woocryptodorea\\' => 27,
@@ -14,6 +26,14 @@ class ComposerStaticInita83944fa3e8c7d5187bef2f2d8520751
     );
 
     public static $prefixDirsPsr4 = array (
+        'kornrunner\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kornrunner/keccak/src',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
         'Cryptodorea\\Woocryptodorea\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',

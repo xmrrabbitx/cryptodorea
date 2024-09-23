@@ -7,5 +7,6 @@ namespace Cryptodorea\Woocryptodorea\abstracts;
  */
 abstract class campaignCreditAbstract
 {
+    abstract function encryptionGeneration($campaignName, $key, $value, $encryptionMessage);
 
 }

@@ -130,6 +130,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
                 
+                return false
                 // convert ether to wei
                 let sumAmount = '.$sumAmount.';
                 let sumWei = null;
@@ -182,7 +183,6 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                     }
               
                     if(paymentStatus === "pay"){
-                        console.log(messageHash)
                             await contract.pay(
                                 '.$qualifiedWalletAddresses.',
                                 cryptoAmountBigInt, 
@@ -194,6 +194,17 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                 response.wait().then(async (receipt) => {
                                       // transaction on confirmed and mined
                                       if (receipt) {
+                                      
+                                           let succMessage = "payment has been successfull!";
+                                           Toastify({
+                                                  text: succMessage,
+                                                  duration: 3000,
+                                                  style: {
+                                                    background: "linear-gradient(to right, #32DC98, #2EC4A1)",
+                                                  },
+                                           }).showToast();
+                                           
+                                           await new Promise(r => setTimeout(r, 1500));
                                            let balance = await contract.getBalance();
                                            balance = convertWeiToEther(parseInt(balance));
                                     
@@ -231,6 +242,17 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                                   response.wait().then(async (receipt) => {
                                       // transaction on confirmed and mined
                                       if (receipt) {
+                                           let succMessage = "payment has been successfull!";
+                                           Toastify({
+                                                  text: succMessage,
+                                                  duration: 3000,
+                                                  style: {
+                                                    background: "linear-gradient(to right, #32DC98, #2EC4A1)",
+                                                  },
+                                           }).showToast();
+                                           
+                                           await new Promise(r => setTimeout(r, 1500));
+                                           
                                            let balance = await contract.getBalance();
                                            balance = convertWeiToEther(parseInt(balance));
                                     
@@ -255,21 +277,44 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                        } 
                     
                 }catch (error) {
-                       console.log(error)        
-                       let errorMessg = error.revert.args[0];
-                       if(errorMessg === "Insufficient balance"){
+                       if(typeof error.revert === "undefined")   {
                            Toastify({
-                                  text: "Insufficient balance in Campaign",
-                                  duration: 3000,
-                                  style: {
-                                    background: "linear-gradient(to right, #00b09b, #96c93d)",
-                                  },
+                               text: "Something went wrong. please try again!",
+                               duration: 3000,
+                               style: {
+                                    background: "linear-gradient(to right, #FF4E41, #E22D2D)",
+                               },
                            }).showToast();
-                           errorMessg = "Insufficient balance";
-                       }else if(errorMessg === "User is not Authorized!!!"){
-                           errorMessg = "You dont have permission to pay!";
                        }else{
-                           errorMessg = "payment was  not successfull! please try again!";
+                           let errorMessg = error.revert.args[0];
+                           if(errorMessg === "Insufficient balance"){
+                               errorMessg = "Insufficient balance";
+                               Toastify({
+                                      text: "Insufficient balance in Campaign",
+                                      duration: 3000,
+                                      style: {
+                                         background: "linear-gradient(to right, #FF4E41, #E22D2D)",
+                                      },
+                               }).showToast();
+                           }else if(errorMessg === "User is not Authorized!!!"){
+                                errorMessg = "You dont have permission to pay!";
+                                Toastify({
+                                      text: "Insufficient balance in Campaign",
+                                      duration: 3000,
+                                      style: {
+                                         background: "linear-gradient(to right, #FF4E41, #E22D2D)",
+                                      },
+                               }).showToast();
+                           }else{
+                               errorMessg = "payment was not successfull! please try again!";
+                               Toastify({
+                                      text: errorMessg,
+                                      duration: 3000,
+                                      style: {
+                                        background: "linear-gradient(to right, #FF4E41, #E22D2D)",
+                                      },
+                               }).showToast();
+                           }
                        }
                        
                        // show error popup message
@@ -291,6 +336,41 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
 add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
+
+    print ("<script>let counter = document.getElementById('counter');</script>");
+    $userList = get_option("dorea_campaigns_users_dorea_9b46841");
+
+    //var_dump(count($userList));
+    /*
+    //die;
+    // set 1 mil records
+    for ($i=0;$i<=170000;$i++){
+
+        $users = base64_encode(random_bytes(8));
+        $userList[] = $users;
+        update_option("dorea_campaigns_users_dorea_9b46841",$userList);
+        add_option('dorea_campaigninfo_user_' . $users, [base64_encode(random_bytes(8))]);
+
+    }
+
+    die;
+    //var_dump($userList);
+    //var_dump(get_option('dorea_campaigninfo_user_' . 'Vl44+zx5l6U='));
+    // remove 1 mil records
+    /*
+    foreach ($userList as $users){
+
+        delete_option('dorea_campaigninfo_user_' . $users);
+
+        print("<script>
+             counter.innerHTML ='$i';
+        </script>");
+    }
+    array_splice($userList,1,1000000);
+    update_option("dorea_campaigns_users_dorea_9b46841",$userList);
+*/
+
+
     static $home_url = 'admin.php?page=crypto-dorea-cashback';
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
@@ -317,9 +397,6 @@ function dorea_admin_pay_campaign()
     ');
 
     print('
-        <!-- load toastify library -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
          <!-- load poppins font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -368,11 +445,14 @@ function dorea_admin_pay_campaign()
         $addtoPaymentSection = true;
         $paymentButtonsSection = true;
         $paidUserSection= true;
+
+        $i = 0;
+        $cache = [];
         foreach ($userList as $users) {
 
             $sumUserEthers = [];
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
-//var_dump($campaignUser);
+
             //hypothetical price of eth _ get this from an online service
             $ethBasePrice = 0.0004;
 
@@ -425,7 +505,7 @@ function dorea_admin_pay_campaign()
 
                     print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
                     print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                    print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 30, 6) . "</span>");
+                    print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6) . "</span>");
                     print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts'] . "</span>");
                     print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
 
@@ -467,74 +547,71 @@ function dorea_admin_pay_campaign()
                     ");
                 }
 
-            }
 
+                if ($users === end($userList)) {
 
-        }
+                    //print("</div>");
+                    // get contract address of campaign
+                    $doreaContractAddress = get_option($cashbackName . '_contract_address');
+                    if (!empty($totalEthers)) {
 
-        if ($paymentButtonsSection) {
-            //print("</div>");
-            // get contract address of campaign
-            $doreaContractAddress = get_option($cashbackName . '_contract_address');
-            if (!empty($totalEthers)) {
+                        // check expiration of campaign
+                        if ($expire->check($expireDate)) {
 
-                // check expiration of campaign
-                if ($expire->check($expireDate)) {
+                            // check for funding campaign
+                            if ((float)array_sum($totalEthers) > (float)$contractAmount) {
 
-                    // check for funding campaign
-                    if ((float)array_sum($totalEthers) > (float)$contractAmount) {
-
-                        print("
+                                print("
                                 <!-- Fund Again -->
                                 <div class='!mx-auto !text-center !mt-5'>
                                     <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_fund" . "'>Fund Again</a>
                                 </div>
                             ");
 
-                        if ($qualifiedWalletAddresses) {
-                            print("
+                                if ($qualifiedWalletAddresses) {
+                                    print("
                                     <p class='!text-center !mt-5 !text-slate-500'>Or</p>
                                     <!-- Pay Anyway -->
                                     <div class='!grid !grid-cols-1 !mt-5'>
                                         <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_pay" . "'>Pay Anyway</button>
                                     </div>
                                 ");
-                        }
+                                }
 
-                    } else {
-                        print('
+                            } else {
+                                print('
                                 <!-- Pay All -->
                                 <div class="!grid !grid-cols-1 !mt-5">
                                     <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $cashbackName . '_' . $doreaContractAddress . '_pay' . '">Pay All</button>
                                 </div>
                             ');
-                    }
+                            }
 
-                    // calculate remaining amount eth to pay
-                    $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
-                    $remainingAmount *= -1;
+                            // calculate remaining amount eth to pay
+                            $remainingAmount = (float)$contractAmount - array_sum($totalEthers);
+                            $remainingAmount *= -1;
 
-                    // trigger payment js modal
-                    dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList, $totalPurchases);
+                            // trigger payment js modal
+                            dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList, $totalPurchases);
 
-                    print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
-                } else {
-                    print('
+                            print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
+                        } else {
+                            print('
                             <!-- Not Ready to Pay -->
                             <div class="!grid !grid-cols-1 !mt-5">
                                 <p class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">Not Ready to Pay</p>
                             </div>
                         ');
-                }
+                        }
 
-                print('
+                        print('
                        <!-- End Campaign -->
                        <div class="!grid !grid-cols-1 !mt-5">
                             <p class="!p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto !text-center">campaign is finished!</p>
                        </div>
                     ');
-            } else {
-                print ("
+                    } else {
+                        print ("
                         <!-- error on no users -->
                         <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
                              <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
@@ -546,38 +623,43 @@ function dorea_admin_pay_campaign()
                            
                         </div>
                     ");
-            }
-            $paymentButtonsSection = false;
-        }
+                    }
 
-        if ($paidUserSection) {
-            if (isset($campaignUser[$cashbackName]['claimedReward'])) {
-                print('
-                    <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
-                        <div class="!col-span-1 !grid !grid-cols-5">
-                             <span class="!text-center !pl-3">
-                                 Username
-                                 <hr>
-                             </span>
-                             <span class="!text-center">
-                                 Claimed Rewards
-                                 <hr>
-                             </span>
-                    </div>
-                ');
+                }
 
 
-                print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-                print("<span class='!pl-3 !col-span-1 !text-sm'>" . $users . "</span> ");
-                print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
-
-                print("
+                // list claimed rewards
+                if (isset($campaignUser[$cashbackName]['claimedReward'])) {
+                    print('
+                            <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
+                                <div class="!col-span-1 !grid !grid-cols-5">
+                                     <span class="!text-center !pl-3">
+                                         Username
+                                         <hr>
+                                     </span>
+                                     <span class="!text-center">
+                                         Claimed Rewards
+                                         <hr>
+                                     </span>
                             </div>
-                        </div>
-                    ");
-                $paidUserSection = false;
+                        ');
+
+                    print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
+                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . $users . "</span> ");
+                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
+
+                    print("
+                                </div>
+                            </div>
+                        ");
+                }
+
+
             }
+
+
         }
+
 
     }
 

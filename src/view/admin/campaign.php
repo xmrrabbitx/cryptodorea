@@ -5,7 +5,6 @@
  */
 
 use Cryptodorea\Woocryptodorea\controllers\cashbackController;
-use Cryptodorea\Woocryptodorea\controllers\autoremoveController;
 use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 
 function dorea_cashback_campaign_content(){

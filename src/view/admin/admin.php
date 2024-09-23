@@ -87,7 +87,6 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content():void
 {
-
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
@@ -253,7 +252,6 @@ include('campaign.php');
  * Credit
  */
 include('campaignCredit.php');
-
 
 /**
  * Plans

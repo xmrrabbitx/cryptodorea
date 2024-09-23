@@ -4,24 +4,28 @@
  * loader class for dorea file
  */
 
-namespace Cryptodorea\Woocryptodorea;
-
 // check security
 defined( 'ABSPATH' ) || exit;
 
-// load initial classes
-use Cryptodorea\Woocryptodorea\abstracts\doreaAbstract;
-use Cryptodorea\Woocryptodorea\config\config;
-
+/*
+// load initial libraries
+print(' 
+         <!-- load toastify library -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+');
+*/
 
 // load necessary files
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';
+include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/modals/claimCampaign.php';
+
 
 /**
  * a Class for handling the Cash Back program
  */
-class loader extends doreaAbstract{
+class loader{
 
     public function __construct(){
 
@@ -62,73 +66,6 @@ class loader extends doreaAbstract{
 
     }
 
-    /**
-     * test
-     */
-    public function test(){
-        $self = $this;
-        add_action('wp',function() use($self){
-            $self->testing();
-        });
-
-    }
-
-    public function testing(){
-        //var_dump(delete_option('campaignlist_user'));
-        //var_dump(get_option('dorea_queue_pay'));
-        //var_dump(delete_option('dorea_queue_pay'));
-        //$time = '1708068853';//time();
-        //$date = date('F j, Y, g:i a',$time);
-        //echo mktime(0, 0, 0, 7, 1, 2000);
-        //var_dump(delete_transient('dorea'));
-        //var_dump(delete_transient('dorea 1'));
-        //var_dump(delete_transient('dorea 2'));
-        //var_dump(delete_transient('dorea 3'));
-        //var_dump(delete_transient('dorea 4'));
-        //var_dump(delete_transient('dorea 5'));
-        //var_dump(delete_option('campaigninfo_user'));
-        //var_dump(delete_option('campaign_list'));
-        //var_dump(get_transient('dorea'));
-        //var_dump(get_transient('dorea 2'));
-        //var_dump(get_transient('dorea 3'));
-        //var_dump(get_option('campaigninfo_user'));
-        //add_option('test_option',["name"=>"hadi"]);
-        //var_dump(get_option('test_option')['name']);
-
-    }
-
-    /**
-     * remove Cash Back option from the Cart page
-     */
-
-
-    /**
-     * place order actions
-     */
-    public function checkPlaceOrder(){
-
-        $queuePay = get_option('dorea_queue_pay');
-        if($queuePay){
-            $self = $this;
-            add_action('wp',function() use($self){
-                $self->timeToPay();
-            });
-        }
-    }
-
-    /**
-     * call back for place order
-     * check if order paid or not!
-     */
-    public function timeToPay(){
-
-        //$pay = new Pay();
-        //$paymentStatus = $pay->pay();
-        //if($paymentStatus){
-        //    var_dump("time to delete all campaign info");
-       // }
-
-    }
 
 
 }

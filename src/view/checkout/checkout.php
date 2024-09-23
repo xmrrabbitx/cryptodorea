@@ -2,8 +2,6 @@
 
 use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 use Cryptodorea\Woocryptodorea\controllers\checkoutController;
-use Cryptodorea\Woocryptodorea\utilities\Encrypt;
-
 
 add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
 /**

@@ -3,13 +3,14 @@
 namespace Cryptodorea\Woocryptodorea\utilities;
 
 use Cryptodorea\Woocryptodorea\abstracts\utilities\encryptAbstract;
+use Exception;
+use kornrunner\Keccak;
 
 /**
  * encrypt data
  */
-class Encrypt extends encryptAbstract
+class encrypt extends encryptAbstract
 {
-
     /**
      * create sha256 hash for secret hash on smart contract deployment
      * @param $data
@@ -74,4 +75,23 @@ class Encrypt extends encryptAbstract
 
     }
 
+    /**
+     * create key-value for encryption
+     */
+    public function encryptGenerate():array
+    {
+        $key = random_bytes(16);
+        $value = random_bytes(16);
+
+        return ['key'=>$key, 'value'=>$value];
+    }
+
+    /**
+     * Keccake sha-3 encryption
+     * @throws Exception
+     */
+    public function keccak($key, $value):string
+    {
+        return '0x' . Keccak::hash($key . $value, 256);
+    }
 }

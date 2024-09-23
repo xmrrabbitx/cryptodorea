@@ -1,20 +1,34 @@
 <?php
 
+use Cryptodorea\Woocryptodorea\controllers\campaignCreditController;
 use Cryptodorea\Woocryptodorea\utilities\compile;
+use Cryptodorea\Woocryptodorea\utilities\encrypt;
 
 /**
  * Crypto Cashback Campaign Credit
+ * @throws Exception
  */
 function dorea_cashback_campaign_credit():void
 {
 
-    $compile = new compile();
-    $abi = $compile->abi();
-    $bytecode = $compile->bytecode();
-
     if(!empty($_GET['cashbackName'])) {
 
         $campaignName = $_GET['cashbackName'];
+
+        // compile abd && bytecode
+        $compile = new compile();
+        $abi = $compile->abi();
+        $bytecode = $compile->bytecode();
+
+        // get key-value encryption
+        $encrypt = new encrypt();
+        $encryptGeneration = $encrypt->encryptGenerate();
+        $encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
+
+        $campaigCredit = new campaignCreditController();
+        $campaigCredit->encryptionGeneration($campaignName,$encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
+
+        $_encValue = "0x" . bin2hex($encryptGeneration['value']);
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
@@ -24,6 +38,7 @@ function dorea_cashback_campaign_credit():void
     }else{
         wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
+
 
     print('
         <style>
@@ -137,9 +152,14 @@ function dorea_cashback_campaign_credit():void
         
                                         // check balance of metamask wallet 
                                       if(parseInt(userBalance) < 300000000000000){
-                                                    
-                                                    metamaskError.style.display = "block";
-                                                    metamaskError.innerHTML =  "not enough balance to support fee. please fund your wallet at least 0.0003 ETH!";
+                                                    let err = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
+                                                    Toastify({
+                                                          text: err,
+                                                          duration: 3000,
+                                                          style: {
+                                                            background: "#ff5d5d",
+                                                          },
+                                                    }).showToast();
                                                     return false;
                                                     
                                       }else{
@@ -170,11 +190,12 @@ function dorea_cashback_campaign_credit():void
                                                 // Convert the floating-point number to an integer
                                                 const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
                                                 contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
-                                      
                                             }
                                             
                                             //If your contract requires constructor args, you can specify them here
                                             await factory.deploy(
+                                            "'.$_encValue.'",
+                                            "'.$encryptionMessage.'",
                                                 {
                                                           
                                                   value: contractAmountBigInt.toString(),
@@ -209,11 +230,15 @@ function dorea_cashback_campaign_credit():void
                                             });
                                         
                                       }catch (error) {
-                                           
-                                           const fundError = document.getElementById("dorea_fund_error");
-                                           // show error popup message
-                                           fundError.style.display = "block";
-                                           fundError.innerHTML = "Funding the Contract was not successfull! please try again";
+                                           console.log(error)
+                                           let err = "Funding the Contract was not successfull! please try again";
+                                           Toastify({
+                                                  text: err,
+                                                  duration: 3000,
+                                                  style: {
+                                                    background: "#ff5d5d",
+                                                  },
+                                           }).showToast();
                                            return false;
                                                
                                       }
