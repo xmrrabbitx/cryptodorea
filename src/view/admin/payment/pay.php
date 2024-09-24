@@ -14,7 +14,6 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
 
     $compile = new compile();
     $abi = $compile->abi();
-    //$bytecode = $compile->bytecode();
 
     if($qualifiedWalletAddresses && $cryptoAmount && $qualifiedUserEthers) {
 
@@ -115,7 +114,7 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
                             
                 const signer = await provider.getSigner();
           
-                let message = "hello";
+                let message = "you are siging message to fund the contract!";
                 
                 const messageHash = ethers.id(message);
                
