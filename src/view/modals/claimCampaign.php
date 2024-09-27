@@ -4,9 +4,42 @@
  * Claim Campaign Modal
  */
 
+use Cryptodorea\Woocryptodorea\controllers\campaignCreditController;
 use Cryptodorea\Woocryptodorea\utilities\compile;
+use Cryptodorea\Woocryptodorea\utilities\encrypt;
+use kornrunner\Keccak;
 
+/**
+ * return next encryption info
+ * @return array
+ * @throws Exception
+ */
+function nextEncryption():array
+{
+    // generate key-value encryption
+    $encrypt = new encrypt();
+    $encryptGeneration = $encrypt->encryptGenerate();
+
+    $encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
+
+    $_nextValue = json_encode($encryptGeneration['value']);
+    $_nextMessage = json_encode($encryptionMessage);
+
+    $nextEncrypt = new campaignCreditController();
+
+    // set next encryption for further usage!
+    //$nextEncrypt->nextEncryption($encryptGeneration['key'],$encryptGeneration['value'],$encryptionMessage);
+
+    return ['nextValue'=>$_nextValue, "nextMessage"=>$_nextMessage];
+}
+
+/**
+ * a modal to claim cashback
+ */
 add_action('wp', 'claimModal');
+/**
+ * @throws Exception
+ */
 function claimModal()
 {
 
@@ -21,10 +54,25 @@ function claimModal()
     static $qualifiedWalletAddresses;
 
     if($campaignUser) {
+
+        $encryptionInfo = get_option('encryptionCampaign');
+        if($encryptionInfo) {
+            // generate key-value encryption
+            $encrypt = new encrypt();
+            $encryptGeneration = $encrypt->encryptGenerate();
+            $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value']);
+
+            $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
+            $_encMessage = json_encode($encryptionMessage);
+        }
+        //delete_option('encryptionCampaign');
+var_dump($encryptionInfo);
+var_dump($_encValue);
+var_dump($_encMessage);
         foreach ($campaignUser as $campaignName => $campaignValue) {
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-
+//var_dump($doreaContractAddress);
             $cashbackInfo = get_transient($campaignName) ?? null;
             $shoppingCount = $cashbackInfo['shoppingCount'];
             $cryptoAmount = $cashbackInfo['cryptoAmount'];
@@ -55,7 +103,8 @@ function claimModal()
 
         $sumUserEthers = json_encode($sumUserEthers) ?? "null";
         $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
-var_dump($qualifiedWalletAddresses);
+
+
         return print ('
                <script type="module">
                
@@ -131,7 +180,7 @@ var_dump($qualifiedWalletAddresses);
                               
                                 const creditAmountBigInt = BigInt(amount);
                                 const multiplier = BigInt(1e18);
-                                cryptoAmountBigInt.push(creditAmountBigInt * multiplier);
+                                cryptoAmountBigInt.push((creditAmountBigInt * multiplier).toString());
                                
                             }
                             else{
@@ -142,16 +191,18 @@ var_dump($qualifiedWalletAddresses);
                                                         
                                 // Convert the floating-point number to an integer
                                 const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                                cryptoAmountBigInt.push(creditAmountInt * multiplier / BigInt(factor));
+                                cryptoAmountBigInt.push((creditAmountInt * multiplier / BigInt(factor)).toString());
                             }
                             
                         }
+                        
                         console.log(cryptoAmountBigInt)
                         if('.$sumUserEthers.' !== null){
                             try{
-                                let contractAddress = '.$doreaContractAddress.';
-                                const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
-                 
+                                let contractAddress = "'.$doreaContractAddress.'";
+                         
+                                const contract = new ethers.Contract(contractAddress, '.$abi.',signer);
+                                
                                  await contract.pay(
                                     '.$qualifiedWalletAddresses.',
                                     cryptoAmountBigInt, 
@@ -159,11 +210,12 @@ var_dump($qualifiedWalletAddresses);
                                     v, 
                                     r, 
                                     s,
+                                    '.$_encValue.',
+                                    '.$_encMessage.'
                                 ).then(async function(response){
                                     response.wait().then(async (receipt) => {
                                       // transaction on confirmed and mined
                                       if (receipt) {
-                                      
                                            let succMessage = "payment has been successfull!";
                                            Toastify({
                                                   text: succMessage,
@@ -181,7 +233,7 @@ var_dump($qualifiedWalletAddresses);
                                            let xhr = new XMLHttpRequest();
                                                     
                                            // remove wordpress prefix on production
-                                           xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
+                                           xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed_cashback", true);
                                            xhr.onreadystatechange = async function() {
                                               if (xhr.readyState === 4 && xhr.status === 200) {
                                            
@@ -193,10 +245,28 @@ var_dump($qualifiedWalletAddresses);
                                       }
                                 });
                             });
+                            
+                            
                             }catch (error) {
+                                 
                                 console.log(error)
+                                // reload on any error
+                                // get contract address
+                                let xhr = new XMLHttpRequest();
+                                                    
+                                // remove wordpress prefix on production
+                                xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed_cashback", true);
+                                xhr.onreadystatechange = async function() {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                           
+                                     // window.location.reload();        
+                                   }
+                                }
+                                xhr.send(JSON.stringify({"test":"testing!"}));
+                                
                             }
                         }
+                        
                     })     
                </script>
                <!-- claim campaign modal -->
@@ -207,3 +277,18 @@ var_dump($qualifiedWalletAddresses);
     }
 }
 
+
+/**
+ * check if cashback claimed by user!
+ */
+add_action('admin_post_dorea_claimed_cashback', 'dorea_claimed_cashback');
+function dorea_claimed_cashback()
+{
+    // get Json Data
+    $json_data = file_get_contents('php://input');
+    $json = json_decode($json_data);
+    var_dump($json);
+    var_dump(get_option('nextEncryptionCampaign'));
+
+    die;
+}

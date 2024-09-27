@@ -83,11 +83,12 @@ class encrypt extends encryptAbstract
         $key = random_bytes(16);
         $value = random_bytes(16);
 
-        return ['key'=>$key, 'value'=>$value];
+        return ['key'=> $key, 'value'=> $value];
     }
 
     /**
      * Keccake sha-3 encryption
+     * paramewters must be binary!
      * @throws Exception
      */
     public function keccak($key, $value):string

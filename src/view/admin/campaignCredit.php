@@ -20,15 +20,15 @@ function dorea_cashback_campaign_credit():void
         $abi = $compile->abi();
         $bytecode = $compile->bytecode();
 
-        // get key-value encryption
+        // generate key-value encryption
         $encrypt = new encrypt();
         $encryptGeneration = $encrypt->encryptGenerate();
         $encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
 
         $campaigCredit = new campaignCreditController();
-        $campaigCredit->encryptionGeneration($campaignName,$encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
+        $campaigCredit->encryptionGeneration($encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
 
-        $_encValue = "0x" . bin2hex($encryptGeneration['value']);
+        $_encKey = '0x' . bin2hex($encryptGeneration['key']);
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
@@ -194,8 +194,7 @@ function dorea_cashback_campaign_credit():void
                                             
                                             //If your contract requires constructor args, you can specify them here
                                             await factory.deploy(
-                                            "'.$_encValue.'",
-                                            "'.$encryptionMessage.'",
+                                            "'.$_encKey.'",
                                                 {
                                                           
                                                   value: contractAmountBigInt.toString(),
