@@ -195,8 +195,7 @@ function dorea_cashback_campaign_credit():void
                                             //If your contract requires constructor args, you can specify them here
                                             await factory.deploy(
                                             "'.$_encKey.'",
-                                                {
-                                                          
+                                                {       
                                                   value: contractAmountBigInt.toString(),
                                                   gasLimit :3000000,
                                                           

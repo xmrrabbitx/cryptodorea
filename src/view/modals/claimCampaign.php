@@ -55,24 +55,10 @@ function claimModal()
 
     if($campaignUser) {
 
-        $encryptionInfo = get_option('encryptionCampaign');
-        if($encryptionInfo) {
-            // generate key-value encryption
-            $encrypt = new encrypt();
-            $encryptGeneration = $encrypt->encryptGenerate();
-            $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value']);
-
-            $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
-            $_encMessage = json_encode($encryptionMessage);
-        }
-        //delete_option('encryptionCampaign');
-var_dump($encryptionInfo);
-var_dump($_encValue);
-var_dump($_encMessage);
         foreach ($campaignUser as $campaignName => $campaignValue) {
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-//var_dump($doreaContractAddress);
+
             $cashbackInfo = get_transient($campaignName) ?? null;
             $shoppingCount = $cashbackInfo['shoppingCount'];
             $cryptoAmount = $cashbackInfo['cryptoAmount'];
@@ -101,10 +87,39 @@ var_dump($_encMessage);
             }
         }
 
+        $amountsBinary = '';
+        foreach ($sumUserEthers as $amount) {
+            $wei = bcmul($amount, "1000000000000000000",0);
+
+            // Convert the decimal value to a 32-byte (256-bit) padded hex string
+            $hexAmount = str_pad(gmp_strval(gmp_init($wei, 10), 16), 64, '0', STR_PAD_LEFT);
+            $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
+        }
+        var_dump($amountsBinary);
+
         $sumUserEthers = json_encode($sumUserEthers) ?? "null";
         $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
 
+        $encryptionInfo = get_option('encryptionCampaign');
+        if($encryptionInfo) {
+            // generate key-value encryption
+            $encrypt = new encrypt();
+            $encryptGeneration = $encrypt->encryptGenerate();
+            $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value'],$amountsBinary);
 
+            $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
+            $_encMessage = json_encode($encryptionMessage);
+        }
+
+        //delete_option('encryptionCampaign');
+        //var_dump($encryptionInfo);
+        //var_dump($hexAmount);
+        //var_dump(hex2bin($encryptionInfo['key']));
+        var_dump('0x' . Keccak::hash(hex2bin($encryptionInfo['key']) . hex2bin('91dc685cc0d9ac9e313eb06719446238') . $amountsBinary, 256));
+        //var_dump($_encValue);
+        //var_dump($_encMessage);
+
+//die;
         return print ('
                <script type="module">
                
@@ -207,9 +222,6 @@ var_dump($_encMessage);
                                     '.$qualifiedWalletAddresses.',
                                     cryptoAmountBigInt, 
                                     messageHash, 
-                                    v, 
-                                    r, 
-                                    s,
                                     '.$_encValue.',
                                     '.$_encMessage.'
                                 ).then(async function(response){
