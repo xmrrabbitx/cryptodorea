@@ -7,7 +7,8 @@
 use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 
-function dorea_cashback_campaign_content(){
+function dorea_cashback_campaign_content():void
+{
 
 
     print('

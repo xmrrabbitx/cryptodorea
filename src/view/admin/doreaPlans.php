@@ -5,7 +5,7 @@ use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 use Cryptodorea\Woocryptodorea\utilities\plansCompile;
 
 //user plan contract address
-const doreaUserContractAddress = "0x3B53105320D82aB3b3dfa8447eD1Fec1F9aA145F";
+const doreaUserContractAddress = "0x35eeEa7b870E1882c6B65CAe7125Ed13f90fc778";
 
 /**
  * Crypto Cashback Plans
@@ -297,29 +297,32 @@ function doreaPlans():void
                                                    //let xhrAmount = new XMLHttpRequest();
                                                    
                                                    // converter issue must be fixed! price is not precise!
-                                                  // xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=false");
-                                                  // xhrAmount.onreadystatechange = async function() {
+                                                   //xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=true");
+                                                   //xhrAmount.onreadystatechange = async function() {
                                                         //if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
                                                             // let responses = JSON.parse(xhrAmount.responseText);
-                                                             let estimatedAmount = 0.0072;//responses["summary"]["estimatedAmount"]
-                                                    let contractAmountBigInt;
-                                                    if((Number.isInteger(estimatedAmount))){
-                                                        const creditAmountBigInt = BigInt(estimatedAmount);
-                                                        const multiplier = BigInt(1e18);
-                                                        contractAmountBigInt= creditAmountBigInt * multiplier;
-                                                      
-                                                    }else{
-                                                    
-                                                        const creditAmount = estimatedAmount; // This is a floating-point number
-                                                        const multiplier = BigInt(1e18); // This is a BigInt
-                                                        const factor = 1e18; // Use the same factor as the multiplier to avoid precision issues
+                                                             //let estimatedAmount = responses["summary"]["estimatedAmount"]
+                                                            //console.log(estimatedAmount)
+                                                            /*
+                                                        let contractAmountBigInt;
+                                                        if((Number.isInteger(estimatedAmount))){
+                                                            const creditAmountBigInt = BigInt(estimatedAmount);
+                                                            const multiplier = BigInt(1e18);
+                                                            contractAmountBigInt= creditAmountBigInt * multiplier;
+                                                          
+                                                        }else{
                                                         
-                                                        // Convert the floating-point number to an integer
-                                                        const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                                                        contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
-                                              
-                                                    }
+                                                            const creditAmount = estimatedAmount; // This is a floating-point number
+                                                            const multiplier = BigInt(1e18); // This is a BigInt
+                                                            const factor = 1e18; // Use the same factor as the multiplier to avoid precision issues
+                                                            
+                                                            // Convert the floating-point number to an integer
+                                                            const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
+                                                            contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
                                                   
+                                                        }
+                                                        console.log(contractAmountBigInt)
+                                                        */
                                                             const provider = new BrowserProvider(window.ethereum);
                                                 
                                                             // Get the signer from the provider metamask
@@ -327,16 +330,22 @@ function doreaPlans():void
                                                            
                                                             const contract = new ethers.Contract("'.doreaUserContractAddress.'", '.$abi.', signer);
                                                
+                                                            // get latetst base ETH price
                                                             let latestPrice = await contract.latestPrice();
                                                             latestPrice = latestPrice.toString();
-                                 
-                                                            let price = BigInt(parseInt(19 * 1000000000 / parseInt(latestPrice.slice(0, 4)) * 1000000000));
+                                                            
+                                                            // convert based ETH price to plans price
+                                                            let price = BigInt(parseInt(amount * 1000000000 / parseInt(latestPrice.slice(0, 4)) * 1000000000));
+                                                           
+                                                            console.log(price)
                                                             
                                                             try{
                                                                 
-                                                                await contract.pay( userAddress, planType, {
-                                                                    value:price.toString()
-                                                                }).then(async function(transaction){
+                                                                await contract.pay( userAddress, planType, 
+                                                                    {
+                                                                        value:price.toString()
+                                                                    }
+                                                                ).then(async function(transaction){
                                                          
                                                                     if(transaction.hash){
                                                                        let receipt = await transaction.wait();
@@ -377,7 +386,6 @@ function doreaPlans():void
         </script>
     ');
 
-
     print("
             </div>
         </main>
@@ -386,30 +394,30 @@ function doreaPlans():void
 }
 
 /**
- * Dorea Plans check User Admin Status payment
+ * check User Admin Status payment
  */
 add_action('admin_menu', 'dorea_admin_status_payment');
-
 function dorea_admin_status_payment():void
 {
-
     $jsonData = file_get_contents('php://input');
     $json = json_decode($jsonData);
+    if($json) {
+        $timestamp = (int)$json->expDate ?? null;
 
-    if(isset($json)) {
-        // set timestamp for expire admin user
-        $userPayment = new adminStatusController();
-        $userPayment->set($json->expDate);
+        if (is_numeric($timestamp)) {
+            // set timestamp for expire admin user
+            $userPayment = new adminStatusController();
+            $userPayment->set($timestamp);
+        }
     }
 }
 
 /**
- * Dorea Plans check Free Trial Period
+ * check Free Trial Period
  */
 add_action('admin_menu', 'dorea_free_trial');
 function dorea_free_trial():void
 {
-
     $freetrial = new  freetrialController();
     $freetrial->set();
 
