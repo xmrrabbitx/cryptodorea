@@ -119,19 +119,23 @@ function dorea_cashback_campaign_credit():void
                      (async () => {
         
                         document.getElementById("doreaFund").addEventListener("click", async () => {
-        
+                            console.log("click")
+                            document.getElementById("doreaFund").disabled = true;
+                             
                             let contractAmount = document.getElementById("creditAmount").value;
                             const metamaskError = document.getElementById("dorea_metamask_error");
                            
                             if(contractAmount === ""){
                                 metamaskError.style.display = "block";
                                 metamaskError.innerHTML = "cryptocurrency amount could not be left empty!";
+                                document.getElementById("doreaFund").disabled = false;
                                 return false;
                             }
                             else if(!Number.isInteger(parseInt(contractAmount))){
                                         
                                metamaskError.style.display = "block";
                                metamaskError.innerHTML = "cryptocurrency amount must be in the decimal format!";
+                               document.getElementById("doreaFund").disabled = false;
                                return false;
                                         
                             }
@@ -140,8 +144,7 @@ function dorea_cashback_campaign_credit():void
                             }
                                    
                             if (window.ethereum) {
-                             
-                                           
+                                       
                                       const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                                       const userAddress = accounts[0];
                                               
@@ -152,6 +155,8 @@ function dorea_cashback_campaign_credit():void
         
                                         // check balance of metamask wallet 
                                       if(parseInt(userBalance) < 300000000000000){
+                                          
+                                                    document.getElementById("doreaFund").disabled = false;
                                                     let err = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
                                                     Toastify({
                                                           text: err,
@@ -224,11 +229,12 @@ function dorea_cashback_campaign_credit():void
                                                     
                                                         xhr.send(JSON.stringify({"contractAddress":contractAddress,"contractAmount":contractAmount}));
                                                     }
-                                                });        
+                                                });  
+                                                
                                             });
                                         
                                       }catch (error) {
-                                           console.log(error)
+                                           document.getElementById("doreaFund").disabled = false;
                                            let err = "Funding the Contract was not successfull! please try again";
                                            Toastify({
                                                   text: err,
@@ -240,10 +246,11 @@ function dorea_cashback_campaign_credit():void
                                            return false;
                                                
                                       }
-                                            
-                                }
+                            }
+                               
+                             document.getElementById("doreaFund").disabled = false;
                         })
-        
+                        
                      })();
                  }
             </script>

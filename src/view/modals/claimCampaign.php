@@ -58,7 +58,7 @@ function claimModal()
         foreach ($campaignUser as $campaignName => $campaignValue) {
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-
+var_dump($doreaContractAddress);
             $cashbackInfo = get_transient($campaignName) ?? null;
             $shoppingCount = $cashbackInfo['shoppingCount'];
             $cryptoAmount = $cashbackInfo['cryptoAmount'];
@@ -90,12 +90,11 @@ function claimModal()
         $amountsBinary = '';
         foreach ($sumUserEthers as $amount) {
             $wei = bcmul($amount, "1000000000000000000",0);
-
+var_dump($wei);
             // Convert the decimal value to a 32-byte (256-bit) padded hex string
             $hexAmount = str_pad(gmp_strval(gmp_init($wei, 10), 16), 64, '0', STR_PAD_LEFT);
             $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
         }
-        var_dump($amountsBinary);
 
         $sumUserEthers = json_encode($sumUserEthers) ?? "null";
         $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
@@ -110,14 +109,14 @@ function claimModal()
             $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
             $_encMessage = json_encode($encryptionMessage);
         }
-
+var_dump($sumUserEthers);
         //delete_option('encryptionCampaign');
         //var_dump($encryptionInfo);
         //var_dump($hexAmount);
         //var_dump(hex2bin($encryptionInfo['key']));
-        var_dump('0x' . Keccak::hash(hex2bin($encryptionInfo['key']) . hex2bin('91dc685cc0d9ac9e313eb06719446238') . $amountsBinary, 256));
-        //var_dump($_encValue);
-        //var_dump($_encMessage);
+        //var_dump('0x' . Keccak::hash(hex2bin($encryptionInfo['key']) . hex2bin('fa033cd30d2eedc174fd2571c7251a4d') . $amountsBinary, 256));
+        var_dump($_encValue);
+        var_dump($_encMessage);
 
 //die;
         return print ('
@@ -128,7 +127,7 @@ function claimModal()
                     
                     let doreaClaim = document.getElementById("doreaClaim");
                     doreaClaim.addEventListener("click", async function (){
-                           
+          
                         let amounts = '.$sumUserEthers.';
                         function convertToWei(amount){
                
@@ -221,8 +220,7 @@ function claimModal()
                                  await contract.pay(
                                     '.$qualifiedWalletAddresses.',
                                     cryptoAmountBigInt, 
-                                    messageHash, 
-                                    '.$_encValue.',
+                                     '.$_encValue.',
                                     '.$_encMessage.'
                                 ).then(async function(response){
                                     response.wait().then(async (receipt) => {
