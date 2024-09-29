@@ -7,15 +7,6 @@
 // check security
 defined( 'ABSPATH' ) || exit;
 
-/*
-// load initial libraries
-print(' 
-         <!-- load toastify library -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-');
-*/
-
 // load necessary files
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';

@@ -1,4 +1,0 @@
- '.$qualifiedWalletAddresses.',
-                                    [400000000000000],//cryptoAmountBigInt,
-                                    '.$_encValue.',
-                                    '.$_encMessage.'

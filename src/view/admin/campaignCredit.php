@@ -119,7 +119,7 @@ function dorea_cashback_campaign_credit():void
                      (async () => {
         
                         document.getElementById("doreaFund").addEventListener("click", async () => {
-                            console.log("click")
+                           
                             document.getElementById("doreaFund").disabled = true;
                              
                             let contractAmount = document.getElementById("creditAmount").value;
@@ -127,14 +127,28 @@ function dorea_cashback_campaign_credit():void
                            
                             if(contractAmount === ""){
                                 metamaskError.style.display = "block";
-                                metamaskError.innerHTML = "cryptocurrency amount could not be left empty!";
-                                document.getElementById("doreaFund").disabled = false;
-                                return false;
+                                let err = "cryptocurrency amount could not be left empty!";
+                                Toastify({
+                                   text: err,
+                                   duration: 3000,
+                                   style: {
+                                         background: "#ff5d5d",
+                                   },
+                               }).showToast();
+                               document.getElementById("doreaFund").disabled = false;
+                               return false;
                             }
                             else if(!Number.isInteger(parseInt(contractAmount))){
                                         
                                metamaskError.style.display = "block";
-                               metamaskError.innerHTML = "cryptocurrency amount must be in the decimal format!";
+                               let err = "cryptocurrency amount must be in the decimal format!";
+                               Toastify({
+                                   text: err,
+                                   duration: 3000,
+                                   style: {
+                                         background: "#ff5d5d",
+                                   },
+                               }).showToast();
                                document.getElementById("doreaFund").disabled = false;
                                return false;
                                         
@@ -167,8 +181,6 @@ function dorea_cashback_campaign_credit():void
                                                     }).showToast();
                                                     return false;
                                                     
-                                      }else{
-                                                    metamaskError.style.display = "none";
                                       }
                                               
                                       try{
