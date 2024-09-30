@@ -20,6 +20,43 @@ function dorea_cashback_campaign_content():void
                 font-family: "Poppins", sans-serif !important;
             }
         </style>
+        <script type="module">
+            let setupCampaign = document.getElementById("setupCampaign");
+            setupCampaign.addEventListener("click", function(event){
+                event.preventDefault();
+                let campaignName = document.getElementById("campaignName");
+                let cryptoAmount = document.getElementById("cryptoAmount");
+                let shoppingCount = document.getElementById("shoppingCount");
+                
+                if(campaignName.value === "" || cryptoAmount.value === "" || shoppingCount.value === ""){
+                  
+                    let err = "some fields left empty!";
+                    Toastify({
+                       text: err,
+                       duration: 3000,
+                       style: {
+                           background: "#ff5d5d",
+                       },
+                    }).showToast();
+                    return false;
+                    
+                }else if(/[a-zA-Z]/.test(cryptoAmount.value) || /[a-zA-Z]/.test(shoppingCount.value)){
+                    let err = "amount and shopping counts must be numeric!";
+                    Toastify({
+                       text: err,
+                       duration: 3000,
+                       style: {
+                           background: "#ff5d5d",
+                       },
+                    }).showToast();
+                    return false;
+                }
+          
+                // submit form
+                document.getElementById("cashback_campaign").submit();
+                
+            });
+        </script>
     ');
 
     // utilities helper functions
@@ -89,14 +126,14 @@ function dorea_cashback_campaign_content():void
             </div>
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- amount options -->
-                <input class='!border-hidden !w-64 !mt-3 !p-2' type='text' name='cryptoAmount' placeholder='amount'>
+                <input id='cryptoAmount' class='!border-hidden !w-64 !mt-3 !p-2' type='text' name='cryptoAmount' placeholder='amount'>
            </div>
     ");
 
     print("
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
-                <input class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='Shopping Counts'>
+                <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='Shopping Counts'>
             </div>
             
             <div class='!col-span-1 !w-12/12 !mt-5'>
@@ -183,7 +220,7 @@ function dorea_cashback_campaign_content():void
                               </div>
                             </div>
                     <div class='!col-span-1 !w-12/12 !mt-5'>
-                        <button class='!p-3 !w-64 !bg-[#faca43] !rounded-md' type='submit'>set up campaign</button>
+                        <button id='setupCampaign' class='!p-3 !w-64 !bg-[#faca43] !rounded-md' type='submit'>set up campaign</button>
                     </div>
                 </form>
                 </br>
@@ -240,7 +277,6 @@ function dorea_admin_cashback_campaign(){
                 if(in_array($campaignName, get_option('campaign_list'))){
 
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
-
                     wp_redirect($redirect_url);
                     return false;
 
@@ -252,7 +288,6 @@ function dorea_admin_cashback_campaign(){
 
                 //throws error on character exceed!
                 $redirect_url = add_query_arg('campaignError', urlencode('no more than 25 characters allowed!'), $referer);
-
                 wp_redirect($redirect_url);
 
             }else {

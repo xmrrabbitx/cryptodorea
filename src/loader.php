@@ -61,11 +61,12 @@ class loader{
 
 }
 
-add_action('admin_menu','deploy');
+
+// remove after testting
+//add_action('admin_menu','deploy');
 function deploy():void
 {
-// remove after testting
-    print('<script type="module">
+print('<script type="module">
 
 let abi = [
 	{
