@@ -5,7 +5,7 @@ use Cryptodorea\Woocryptodorea\controllers\freetrialController;
 use Cryptodorea\Woocryptodorea\utilities\plansCompile;
 
 //user plan contract address
-const doreaUserContractAddress = "0x35eeEa7b870E1882c6B65CAe7125Ed13f90fc778";
+const doreaUserContractAddress = "0xE3CBd3F4af44E7B15AAcF84E4054EDc43a8c1B21";
 
 /**
  * Crypto Cashback Plans
@@ -93,7 +93,7 @@ function doreaPlans():void
                     </p>
                </div>
                <div class='!text-center !mt-5'>
-                    <button  id='doreaBuy_monthly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='19_Monthly'>get started</button>
+                    <button  id='doreaBuy_monthly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='0.0009_Monthly'>get started</button>
                </div>
            </div>
            <div>
@@ -129,7 +129,7 @@ function doreaPlans():void
                     </p>
                </div>
                <div class='!text-center !mt-5'>
-                    <button  id='doreaBuy_halfYearly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='29_halfYearly'>get started</button>
+                    <button  id='doreaBuy_halfYearly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='0.00029_halfYearly'>get started</button>
                </div>
            </div>
               
@@ -167,7 +167,7 @@ function doreaPlans():void
                     </p>
                </div>
                <div class='!text-center !mt-5'>
-                    <button  id='doreaBuy_Yearly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='49_Yearly'>get started</button>
+                    <button  id='doreaBuy_Yearly' class='doreaBuy !w-32 !bg-[#faca43] !rounded-md !p-3 !mt-5'  value='0.00049_Yearly'>get started</button>
                </div>
            </div>
              
@@ -286,43 +286,19 @@ function doreaPlans():void
                                                     
             
                                                     // check balance of metamask wallet 
-                                                   // if(parseInt(userBalance) < 300000000000000){
+                                                    if(parseInt(userBalance) < 300000000000000){
                                                         
+                                                        let err = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
+                                                        Toastify({
+                                                              text: err,
+                                                              duration: 3000,
+                                                              style: {
+                                                                background: "#ff5d5d",
+                                                              },
+                                                        }).showToast();
+                                                        return false;
+                                                    }
                                                    
-                                                        
-                                                   // }else{
-                                                      
-                                                   // }
-                                                   
-                                                   //let xhrAmount = new XMLHttpRequest();
-                                                   
-                                                   // converter issue must be fixed! price is not precise!
-                                                   //xhrAmount.open("GET","https://vip-api.changenow.io/v1.6/exchange/estimate?fromCurrency=usdt&fromNetwork=eth&fromAmount="+amount+"&toCurrency=eth&toNetwork=eth&type=direct&promoCode=&withoutFee=true");
-                                                   //xhrAmount.onreadystatechange = async function() {
-                                                        //if (xhrAmount.readyState === 4 && xhrAmount.status === 200) {
-                                                            // let responses = JSON.parse(xhrAmount.responseText);
-                                                             //let estimatedAmount = responses["summary"]["estimatedAmount"]
-                                                            //console.log(estimatedAmount)
-                                                            /*
-                                                        let contractAmountBigInt;
-                                                        if((Number.isInteger(estimatedAmount))){
-                                                            const creditAmountBigInt = BigInt(estimatedAmount);
-                                                            const multiplier = BigInt(1e18);
-                                                            contractAmountBigInt= creditAmountBigInt * multiplier;
-                                                          
-                                                        }else{
-                                                        
-                                                            const creditAmount = estimatedAmount; // This is a floating-point number
-                                                            const multiplier = BigInt(1e18); // This is a BigInt
-                                                            const factor = 1e18; // Use the same factor as the multiplier to avoid precision issues
-                                                            
-                                                            // Convert the floating-point number to an integer
-                                                            const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                                                            contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
-                                                  
-                                                        }
-                                                        console.log(contractAmountBigInt)
-                                                        */
                                                             const provider = new BrowserProvider(window.ethereum);
                                                 
                                                             // Get the signer from the provider metamask
@@ -346,11 +322,20 @@ function doreaPlans():void
                                                                         value:price.toString()
                                                                     }
                                                                 ).then(async function(transaction){
-                                                         
+                                                                    
                                                                     if(transaction.hash){
-                                                                       let receipt = await transaction.wait();
+                                                                        let receipt = await transaction.wait();
                                                                         if(receipt.status === 1){
                                                                             
+                                                                            let success = "Payment was successfull!";
+                                                                            Toastify({
+                                                                                  text: success,
+                                                                                  duration: 3000,
+                                                                                  style: {
+                                                                                    background: "linear-gradient(to right, #32DC98, #2EC4A1)",
+                                                                                  },
+                                                                            }).showToast();
+                                                                           
                                                                            //send status info 
                                                                            let userStatusPlan = await contract.userCheckStatus(userAddress);
                                                                            let xhrUserStatusPlan = new XMLHttpRequest();
@@ -365,14 +350,17 @@ function doreaPlans():void
                                                               
                                                             }catch(error){
                                                                 console.log(error)
+                                                                let err = error.revert.args[0] ?? "something went wrong";
+                                                                Toastify({
+                                                                      text: err,
+                                                                      duration: 3000,
+                                                                      style: {
+                                                                        background: "#ff5d5d",
+                                                                      },
+                                                                }).showToast();
+                                                                return false;
                                                             }
-                                                            
-                                                             
-                                                    
-                                                     // }
-                                                   //}
-                                                   //xhrAmount.send();
-                           
+                                                          
                             
                                         }
             
