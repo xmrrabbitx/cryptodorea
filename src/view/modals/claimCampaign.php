@@ -52,6 +52,8 @@ function claimModal()
     static $totalPurchases;
     static $doreaContractAddress;
     static $qualifiedWalletAddresses;
+    static $_encValue;
+    static $_encMessage;
 
     if($campaignUser) {
 
@@ -80,46 +82,57 @@ var_dump($doreaContractAddress);
                 $totalPurchases += count($result) * $shoppingCount;
                 $qualifiedPurchasesTotal = array_sum($result);
                 $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
-                $sumUserEthers[] = $userEther;
+                //$sumUserEthers[] = $userEther;
 
-                $qualifiedWalletAddresses[] = $campaignValue['walletAddress'];
+                //$qualifiedWalletAddresses[] = $campaignValue['walletAddress'];
 
             }
-        }
 
-        $amountsBinary = '';
-        foreach ($sumUserEthers as $amount) {
-            $wei = bcmul($amount, "1000000000000000000",0);
+            $amountsBinary = '';
+            //foreach ($sumUserEthers as $amount) {
+                $wei = bcmul($userEther, "1000000000000000000",0);
 var_dump($wei);
-            // Convert the decimal value to a 32-byte (256-bit) padded hex string
-            $hexAmount = str_pad(gmp_strval(gmp_init($wei, 10), 16), 64, '0', STR_PAD_LEFT);
-            $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
+
+                // Convert the decimal value to a 32-byte (256-bit) padded hex string
+                $hexAmount = str_pad(gmp_strval(gmp_init($wei, 10), 16), 64, '0', STR_PAD_LEFT);
+                $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
+            //}
+
+            $sumUserEthers = json_encode($sumUserEthers) ?? "null";
+            $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
+
+            $encryptionInfo = get_option('encryptionCampaign');
+            if($encryptionInfo) {
+                // generate key-value encryption
+                $encrypt = new encrypt();
+                $encryptGeneration = $encrypt->encryptGenerate();
+                $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value'],$amountsBinary);
+
+                $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
+                $_encMessage = json_encode($encryptionMessage);
+
+
+            }
+            print('            
+               <!-- claim campaign modal -->
+               <div class="!grid !grid-cols-1 !mt-5">
+                    <button value=' .$doreaContractAddress. "_" . $campaignValue['walletAddress'] . "_" . $wei . "_" . $_encValue . "_" . $_encMessage .' class="campaignPayment_ doreaClaim !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto">Claim Reward</button>
+               </div>
+            ');
         }
 
-        $sumUserEthers = json_encode($sumUserEthers) ?? "null";
-        $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
 
-        $encryptionInfo = get_option('encryptionCampaign');
-        if($encryptionInfo) {
-            // generate key-value encryption
-            $encrypt = new encrypt();
-            $encryptGeneration = $encrypt->encryptGenerate();
-            $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value'],$amountsBinary);
-
-            $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
-            $_encMessage = json_encode($encryptionMessage);
-        }
-var_dump($sumUserEthers);
+//var_dump($sumUserEthers);
         //delete_option('encryptionCampaign');
         //var_dump($encryptionInfo);
         //var_dump($hexAmount);
         //var_dump(hex2bin($encryptionInfo['key']));
         //var_dump('0x' . Keccak::hash(hex2bin($encryptionInfo['key']) . hex2bin('fa033cd30d2eedc174fd2571c7251a4d') . $amountsBinary, 256));
-        var_dump($_encValue);
-        var_dump($_encMessage);
+        //var_dump($_encValue);
+        //var_dump($_encMessage);
 
 //die;
-        return print ('
+         print ('
 
                <!-- load toastify library -->
                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -130,188 +143,200 @@ var_dump($sumUserEthers);
                     // load etherJs library
                     import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
                     
-                    let doreaClaim = document.getElementById("doreaClaim");
-                    doreaClaim.addEventListener("click", async function (){
-          
-                        let amounts = '.$sumUserEthers.';
-                        function convertToWei(amount){
+                    let deleteCampaignModal = document.querySelectorAll(".doreaClaim");
+
+                    deleteCampaignModal.forEach(
+                
+                      (element) =>             
                
-                            if( (typeof(amount) === "number") && (Number.isInteger(amount))){
-                                  
-                                    const creditAmountBigInt = BigInt(amount);
-                                    const multiplier = BigInt(1e18);
-                                    return creditAmountBigInt * multiplier;
-                                   
-                            }
-                            else{
-                                 
-                                    const creditAmount = amount; // This is a floating-point number
-                                    const multiplier = BigInt(1e18); // This is a BigInt
-                                    const factor = 1e18; 
-                                                            
-                                    // Convert the floating-point number to an integer
-                                    const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                                    return creditAmountInt * multiplier / BigInt(factor);
-                                    
-                            }
-                        } 
-                        
-                        function convertWeiToEther(amount){
-                       
-                            const creditAmountBigInt = amount;
-                            const multiplier = 1e18;
-                            return creditAmountBigInt / multiplier;
-                                   
-                        } 
-                        
-                        await window.ethereum.request({ method: "eth_requestAccounts" });
-                        const accounts = await ethereum.request({ method: "eth_accounts" });
-      
-                        if (window.ethereum) {
-                                    
-                            const userAddress = accounts[0];
-                                              
-                            const userBalance = await window.ethereum.request({
-                                  method: "eth_getBalance",
-                                  params: [userAddress, "latest"]
-                            });
-        
-                            // check balance of metamask wallet 
-                            if(parseInt(userBalance) < 300000000000000){
-                                          
-                                
-                                let err = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
-                                Toastify({
-                                   text: err,
-                                   duration: 3000,
-                                   style: {
-                                         background: "#ff5d5d",
-                                   },
-                                }).showToast();
-                                return false;          
-                            }
-                        
-                            const provider = new BrowserProvider(window.ethereum);
-                                
-                            const signer = await provider.getSigner();
-                      
-                            let message = "Dorea Cashback: you are claiming your cashback now!";
-                            
-                            const messageHash = ethers.id(message);
-                           
-                            // sign hashed message
-                            const signature = await ethereum.request({
-                              method: "personal_sign",
-                              params: [messageHash, accounts[0]],
-                            });
-                        
-                            // split signature
-                            const r = signature.slice(0, 66);
-                            const s = "0x" + signature.slice(66, 130);
-                            const v = parseInt(signature.slice(130, 132), 16);
-                            
-                            console.log(messageHash)
-                            console.log(r)
-                            console.log(s)
-                            console.log(v)
-                      
-                            let cryptoAmountBigInt = [];
-                            for(const amount of amounts){
-                            
-                                if((typeof(amount) === "number") && (Number.isInteger(amount))){
-                                  
-                                    const creditAmountBigInt = BigInt(amount);
-                                    const multiplier = BigInt(1e18);
-                                    cryptoAmountBigInt.push((creditAmountBigInt * multiplier).toString());
-                                   
+                        element.addEventListener("click", async function(){
+                          
+                            let contractAddress = element.value.split("_")[0] ?? null;
+                            let walletAddress = element.value.split("_")[1] ?? null;
+                            let amount =  element.value.split("_")[2] ?? null;
+                            let _encValue = element.value.split("_")[3] ?? null;
+                            let _encMessage = element.value.split("_")[4] ?? null;
+                            console.log(_encMessage)
+                            function convertToWei(amount){
+                   
+                                if( (typeof(amount) === "number") && (Number.isInteger(amount))){
+                                      
+                                        const creditAmountBigInt = BigInt(amount);
+                                        const multiplier = BigInt(1e18);
+                                        return creditAmountBigInt * multiplier;
+                                       
                                 }
                                 else{
-                       
-                                    const creditAmount = amount; // This is a floating-point number
-                                    const multiplier = BigInt(1e18); // This is a BigInt
-                                    const factor = 1e18; 
-                                                            
-                                    // Convert the floating-point number to an integer
-                                    const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                                    cryptoAmountBigInt.push((creditAmountInt * multiplier / BigInt(factor)).toString());
-                                }
-                                
-                            }
-                            
-                            console.log(cryptoAmountBigInt)
-                            if(' . $sumUserEthers . ' !== null){
-                                try{
-                                    let contractAddress = "' . $doreaContractAddress . '";
-                             
-                                    const contract = new ethers.Contract(contractAddress, ' . $abi . ',signer);
-                                    
-                                     await contract.pay(
-                                        ' . $qualifiedWalletAddresses . ',
-                                        cryptoAmountBigInt, 
-                                         ' . $_encValue . ',
-                                        ' . $_encMessage . '
-                                    ).then(async function(response){
-                                        response.wait().then(async (receipt) => {
-                                          // transaction on confirmed and mined
-                                          if (receipt) {
-                                               let succMessage = "payment has been successfull!";
-                                               Toastify({
-                                                      text: succMessage,
-                                                      duration: 3000,
-                                                      style: {
-                                                        background: "linear-gradient(to right, #32DC98, #2EC4A1)",
-                                                      },
-                                               }).showToast();
-                                               
-                                               await new Promise(r => setTimeout(r, 1500));
-                                               let balance = await contract.getBalance();
-                                               balance = convertWeiToEther(parseInt(balance));
-                                        
-                                               // get contract address
-                                               let xhr = new XMLHttpRequest();
-                                                        
-                                               // remove wordpress prefix on production
-                                               xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed_cashback", true);
-                                               xhr.onreadystatechange = async function() {
-                                                  if (xhr.readyState === 4 && xhr.status === 200) {
-                                               
-                                                      window.location.reload();        
-                                                  }
-                                               }
-                                                           
-                                               
-                                          }
-                                    });
-                                });
-                                
-                                
-                                }catch (error) {
                                      
-                                    console.log(error)
-                                    // reload on any error
-                                    // get contract address
-                                    let xhr = new XMLHttpRequest();
-                                                        
-                                    // remove wordpress prefix on production
-                                    xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed_cashback", true);
-                                    xhr.onreadystatechange = async function() {
-                                    if (xhr.readyState === 4 && xhr.status === 200) {
-                                               
-                                         // window.location.reload();        
-                                       }
+                                        const creditAmount = amount; // This is a floating-point number
+                                        const multiplier = BigInt(1e18); // This is a BigInt
+                                        const factor = 1e18; 
+                                                                
+                                        // Convert the floating-point number to an integer
+                                        const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
+                                        return creditAmountInt * multiplier / BigInt(factor);
+                                        
+                                }
+                            } 
+                            
+                            function convertWeiToEther(amount){
+                           
+                                const creditAmountBigInt = amount;
+                                const multiplier = 1e18;
+                                return creditAmountBigInt / multiplier;
+                                       
+                            } 
+                            
+                            await window.ethereum.request({ method: "eth_requestAccounts" });
+                            const accounts = await ethereum.request({ method: "eth_accounts" });
+          
+                            if (window.ethereum) {
+                                        
+                                const userAddress = accounts[0];
+                                                  
+                                const userBalance = await window.ethereum.request({
+                                      method: "eth_getBalance",
+                                      params: [userAddress, "latest"]
+                                });
+            
+                                // check balance of metamask wallet 
+                                if(parseInt(userBalance) < 300000000000000){
+                                              
+                                    
+                                    let err = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
+                                    Toastify({
+                                       text: err,
+                                       duration: 3000,
+                                       style: {
+                                             background: "#ff5d5d",
+                                       },
+                                    }).showToast();
+                                    return false;          
+                                }
+                            
+                                const provider = new BrowserProvider(window.ethereum);
+                                    
+                                const signer = await provider.getSigner();
+                          
+                                let message = "Dorea Cashback: you are claiming your cashback now!";
+                                
+                                const messageHash = ethers.id(message);
+                               
+                                // sign hashed message
+                                const signature = await ethereum.request({
+                                  method: "personal_sign",
+                                  params: [messageHash, accounts[0]],
+                                });
+                            
+                                // split signature
+                                const r = signature.slice(0, 66);
+                                const s = "0x" + signature.slice(66, 130);
+                                const v = parseInt(signature.slice(130, 132), 16);
+                                
+                                console.log(messageHash)
+                                console.log(r)
+                                console.log(s)
+                                console.log(v)
+                          
+                                /*
+                                let cryptoAmountBigInt = [];
+                                for(const amount of amounts){
+                                
+                                    if((typeof(amount) === "number") && (Number.isInteger(amount))){
+                                      
+                                        const creditAmountBigInt = BigInt(amount);
+                                        const multiplier = BigInt(1e18);
+                                        cryptoAmountBigInt.push((creditAmountBigInt * multiplier).toString());
+                                       
                                     }
-                                    xhr.send(JSON.stringify({"test":"testing!"}));
+                                    else{
+                           
+                                        const creditAmount = amount; // This is a floating-point number
+                                        const multiplier = BigInt(1e18); // This is a BigInt
+                                        const factor = 1e18; 
+                                                                
+                                        // Convert the floating-point number to an integer
+                                        const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
+                                        cryptoAmountBigInt.push((creditAmountInt * multiplier / BigInt(factor)).toString());
+                                    }
                                     
                                 }
+                                */
+                             
+                                if(amount !== null){
+                                    try{
+                                        
+                                        const contract = new ethers.Contract(contractAddress, ' . $abi . ',signer);
+                                        
+                                         await contract.pay(
+                                            walletAddress,
+                                            amount, 
+                                            _encValue,
+                                            _encMessage,
+                                            message,
+                                            r,
+                                            s,
+                                            v
+                                        ).then(async function(response){
+                                            response.wait().then(async (receipt) => {
+                                              // transaction on confirmed and mined
+                                              if (receipt) {
+                                                   let succMessage = "payment has been successfull!";
+                                                   Toastify({
+                                                          text: succMessage,
+                                                          duration: 3000,
+                                                          style: {
+                                                            background: "linear-gradient(to right, #32DC98, #2EC4A1)",
+                                                          },
+                                                   }).showToast();
+                                                   
+                                                   await new Promise(r => setTimeout(r, 1500));
+                                                   let balance = await contract.getBalance();
+                                                   balance = convertWeiToEther(parseInt(balance));
+                                            
+                                                   // get contract address
+                                                   let xhr = new XMLHttpRequest();
+                                                            
+                                                   // remove wordpress prefix on production
+                                                   xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed_cashback", true);
+                                                   xhr.onreadystatechange = async function() {
+                                                      if (xhr.readyState === 4 && xhr.status === 200) {
+                                                   
+                                                          window.location.reload();        
+                                                      }
+                                                   }
+                                                               
+                                                   
+                                              }
+                                        });
+                                    });
+                                    
+                                    
+                                    }catch (error) {
+                                         
+                                        console.log(error)
+                                        // reload on any error
+                                        // get contract address
+                                        let xhr = new XMLHttpRequest();
+                                                            
+                                        // remove wordpress prefix on production
+                                        xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed_cashback", true);
+                                        xhr.onreadystatechange = async function() {
+                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                                   
+                                             // window.location.reload();        
+                                           }
+                                        }
+                                        xhr.send(JSON.stringify({"test":"testing!"}));
+                                        
+                                    }
+                                }
+                                
                             }
-                            
-                        }
-                    })     
+                        }) 
+                    )    
                </script>
-               <!-- claim campaign modal -->
-               <div class="!grid !grid-cols-1 !mt-5">
-                    <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="doreaClaim">Claim Reward</button>
-               </div>
+   
         ');
     }
 }

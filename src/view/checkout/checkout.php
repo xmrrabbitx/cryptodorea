@@ -267,8 +267,21 @@ function orderReceived($orderId):void{
             if (!empty($json)) {
                 // save doreaCampaignInfo
                 $checkout = new checkoutController();
-                $checkout->autoRemove();
-                $checkout->checkout($json);
+
+                // check if campaign
+                $statusCampaigns = [];
+                $campaignLists = (array)$json->campaignlists;
+                foreach ($campaignLists as $campaign){
+
+                    $statusCampaigns[] = $checkout->expire($campaign);
+
+                }
+                if(in_array(true, $statusCampaigns)){
+                    $checkout->autoRemove();
+                    $checkout->checkout($json);
+                }else{
+                    wp_redirect('/');
+                }
             }
 
             // receive order details
