@@ -91,8 +91,8 @@ class encrypt extends encryptAbstract
      * paramewters must be binary!
      * @throws Exception
      */
-    public function keccak($key, $value, $amounts = null):string
+    public function keccak($key, $value, $amount = null):string
     {
-        return '0x' . Keccak::hash($key . $value . $amounts, 256);
+        return '0x' . Keccak::hash($key . $value . $amount, 256);
     }
 }

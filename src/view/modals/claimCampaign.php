@@ -60,14 +60,14 @@ function claimModal()
         foreach ($campaignUser as $campaignName => $campaignValue) {
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-var_dump($doreaContractAddress);
+
             $cashbackInfo = get_transient($campaignName) ?? null;
             $shoppingCount = $cashbackInfo['shoppingCount'];
             $cryptoAmount = $cashbackInfo['cryptoAmount'];
             $ethBasePrice = 0.0004;
 
             if ($campaignValue['purchaseCounts'] >= $shoppingCount) {
-
+var_dump($doreaContractAddress);
                 // calculate final price in ETH format
                 $qualifiedPurchases = array_chunk($campaignValue['total'], $cashbackInfo['shoppingCount']);
                 $result = [];
@@ -102,16 +102,19 @@ var_dump($wei);
             $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
 
             $encryptionInfo = get_option('encryptionCampaign');
+            $encryptionInfo = $encryptionInfo[$campaignName];
             if($encryptionInfo) {
                 // generate key-value encryption
                 $encrypt = new encrypt();
                 $encryptGeneration = $encrypt->encryptGenerate();
                 $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value'],$amountsBinary);
 
-                $_encValue = json_encode('0x' . bin2hex($encryptGeneration['value']));
-                $_encMessage = json_encode($encryptionMessage);
-
-
+                $_encValue = '0x' . bin2hex($encryptGeneration['value']);
+                $_encMessage = $encryptionMessage;
+var_dump(($encryptionInfo));
+var_dump($encrypt->keccak(hex2bin($encryptionInfo['key']), hex2bin('f3280ff83d50feba0a23378bddad8340'), $amountsBinary));
+var_dump($_encValue);
+var_dump($_encMessage);
             }
             print('            
                <!-- claim campaign modal -->
@@ -156,7 +159,7 @@ var_dump($wei);
                             let amount =  element.value.split("_")[2] ?? null;
                             let _encValue = element.value.split("_")[3] ?? null;
                             let _encMessage = element.value.split("_")[4] ?? null;
-                            console.log(_encMessage)
+                         
                             function convertToWei(amount){
                    
                                 if( (typeof(amount) === "number") && (Number.isInteger(amount))){
@@ -237,7 +240,7 @@ var_dump($wei);
                                 console.log(r)
                                 console.log(s)
                                 console.log(v)
-                          
+                                
                                 /*
                                 let cryptoAmountBigInt = [];
                                 for(const amount of amounts){
@@ -262,21 +265,24 @@ var_dump($wei);
                                     
                                 }
                                 */
-                             
+                                //console.log(parseInt(amount))
+                                console.log(_encValue)
+                                //console.log(_encMessage.toString())
                                 if(amount !== null){
                                     try{
                                         
                                         const contract = new ethers.Contract(contractAddress, ' . $abi . ',signer);
-                                        
+                                        //let test = await contract.test2(_encValue.toString(),parseInt(amount))
+                                        //console.log(test)
                                          await contract.pay(
                                             walletAddress,
-                                            amount, 
-                                            _encValue,
-                                            _encMessage,
-                                            message,
+                                            parseInt(amount), 
+                                            _encValue.toString(),
+                                            _encMessage.toString(),
+                                            messageHash,
+                                            v,
                                             r,
-                                            s,
-                                            v
+                                            s
                                         ).then(async function(response){
                                             response.wait().then(async (receipt) => {
                                               // transaction on confirmed and mined

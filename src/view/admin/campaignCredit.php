@@ -26,7 +26,7 @@ function dorea_cashback_campaign_credit():void
         $encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
 
         $campaigCredit = new campaignCreditController();
-        $campaigCredit->encryptionGeneration($encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
+        $campaigCredit->encryptionGeneration($campaignName, $encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
 
         $_encKey = '0x' . bin2hex($encryptGeneration['key']);
 
