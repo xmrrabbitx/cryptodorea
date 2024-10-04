@@ -248,7 +248,7 @@ var_dump($_encMessage);
                                     try{
                                         
                                         const contract = new ethers.Contract(contractAddress, ' . $abi . ',signer);
-                                        //let test = await contract.test2(_encValue.toString(),parseInt(amount))
+                                        //let test = await contract.expireToken(walletAddress, _encValue.toString())
                                         //console.log(test)
                                          await contract.pay(
                                             walletAddress,
