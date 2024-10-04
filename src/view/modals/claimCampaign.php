@@ -1,48 +1,24 @@
 <?php
 
+
+namespace Cryptodorea\Woocryptodorea\view\modals\claimCampaign;
+
 /**
  * Claim Campaign Modal
  */
 
-use Cryptodorea\Woocryptodorea\controllers\campaignCreditController;
 use Cryptodorea\Woocryptodorea\utilities\compile;
 use Cryptodorea\Woocryptodorea\utilities\encrypt;
-use kornrunner\Keccak;
-
-/**
- * return next encryption info
- * @return array
- * @throws Exception
- */
-function nextEncryption():array
-{
-    // generate key-value encryption
-    $encrypt = new encrypt();
-    $encryptGeneration = $encrypt->encryptGenerate();
-
-    $encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
-
-    $_nextValue = json_encode($encryptGeneration['value']);
-    $_nextMessage = json_encode($encryptionMessage);
-
-    $nextEncrypt = new campaignCreditController();
-
-    // set next encryption for further usage!
-    //$nextEncrypt->nextEncryption($encryptGeneration['key'],$encryptGeneration['value'],$encryptionMessage);
-
-    return ['nextValue'=>$_nextValue, "nextMessage"=>$_nextMessage];
-}
 
 /**
  * a modal to claim cashback
  */
-add_action('wp', 'claimModal');
+//add_action('wp', 'claimModal');
 /**
  * @throws Exception
  */
 function claimModal()
 {
-
     $compile = new compile();
     $abi = $compile->abi();
 

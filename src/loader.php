@@ -7,8 +7,11 @@
 // check security
 defined( 'ABSPATH' ) || exit;
 
-// load necessary files
+/**
+ * load necessary admin files
+ */
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
+include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/wp/wp.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/modals/claimCampaign.php';
 

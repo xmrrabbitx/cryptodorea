@@ -3,7 +3,7 @@
 use Cryptodorea\Woocryptodorea\controllers\cashbackController;
 use Cryptodorea\Woocryptodorea\controllers\checkoutController;
 
-add_action('woocommerce_blocks_checkout_enqueue_data','cashback',10,3);
+add_action('woocommerce_blocks_checkout_enqueue_data','cashback', 10, 3);
 /**
  * Crypto Cashback Checkout View
  */

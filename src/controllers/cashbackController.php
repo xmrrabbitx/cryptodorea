@@ -92,7 +92,6 @@ class cashbackController extends cashbackAbstract
                 if(in_array($campaignName,$campaignInfoUserKeys)){
                     unset($campaignInfoUser[$campaignName]);
                     update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
-                    var_dump($campaignInfoUser);
                 }
             }
             if(empty(get_option('dorea_campaigninfo_user_'. wp_get_current_user()->user_login))){
