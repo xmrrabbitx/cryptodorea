@@ -108,11 +108,11 @@ function dorea_cashback_campaign_credit():void
                      })();
                  }
             </script>
-            
+           
             <script type="module">
-            
+                  
                  import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
-        
+               
                  // Request access to Metamask
                  setTimeout(delay, 1000)
                  function delay(){
@@ -265,8 +265,9 @@ function dorea_cashback_campaign_credit():void
                         
                      })();
                  }
+                 
             </script>
-        
+            
         </main>
     ');
 

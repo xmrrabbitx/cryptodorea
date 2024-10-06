@@ -99,6 +99,7 @@ class checkoutController extends checkoutAbstract
         $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
         $campaignInfoUser = $this->checkoutModel->list();
         $campaignInfoUserKeys = array_keys($campaignInfoUser);
+        $campaignList = get_option("campaign_list");
 
         if($queueDeleteCampaigns) {
 
@@ -115,11 +116,20 @@ class checkoutController extends checkoutAbstract
                     }
                 }
             }
+        }
+        if($campaignList){
+            foreach ($campaignInfoUserKeys as $campaigns) {
+                if (!in_array($campaigns, $campaignList)) {
+                    unset($campaignInfoUser[$campaigns]);
+                    update_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login, $campaignInfoUser);
 
-            // remove empty campaign record
-            if (empty($campaignInfoUser)) {
-                delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+                }
             }
+        }
+
+        // remove empty campaign record
+        if (empty($campaignInfoUser)) {
+            delete_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
         }
     }
 

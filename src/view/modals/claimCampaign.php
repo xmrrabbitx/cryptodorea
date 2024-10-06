@@ -30,9 +30,10 @@ function claimModal()
     static $qualifiedWalletAddresses;
     static $_encValue;
     static $_encMessage;
+    static $userEther;
 
     if($campaignUser) {
-
+//var_dump($campaignUser);
         foreach ($campaignUser as $campaignName => $campaignValue) {
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
@@ -43,7 +44,7 @@ function claimModal()
             $ethBasePrice = 0.0004;
 
             if ($campaignValue['purchaseCounts'] >= $shoppingCount) {
-var_dump($doreaContractAddress);
+//var_dump($doreaContractAddress);
                 // calculate final price in ETH format
                 $qualifiedPurchases = array_chunk($campaignValue['total'], $cashbackInfo['shoppingCount']);
                 $result = [];
@@ -63,65 +64,66 @@ var_dump($doreaContractAddress);
                 //$qualifiedWalletAddresses[] = $campaignValue['walletAddress'];
 
             }
-
-            $amountsBinary = '';
-            //foreach ($sumUserEthers as $amount) {
-                $wei = bcmul($userEther, "1000000000000000000",0);
-var_dump($wei);
+            if ($userEther) {
+//var_dump($userEther);
+                $amountsBinary = '';
+                //foreach ($sumUserEthers as $amount) {
+                $wei = bcmul($userEther, "1000000000000000000", 0);
+//var_dump($wei);
 
                 // Convert the decimal value to a 32-byte (256-bit) padded hex string
                 $hexAmount = str_pad(gmp_strval(gmp_init($wei, 10), 16), 64, '0', STR_PAD_LEFT);
                 $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
-            //}
+                //}
 
-            $sumUserEthers = json_encode($sumUserEthers) ?? "null";
-            $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
+                $sumUserEthers = json_encode($sumUserEthers) ?? "null";
+                $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses) ?? "null";
 
-            $encryptionInfo = get_option('encryptionCampaign');
-            $encryptionInfo = $encryptionInfo[$campaignName];
-            if($encryptionInfo) {
-                // generate key-value encryption
-                $encrypt = new encrypt();
-                $encryptGeneration = $encrypt->encryptGenerate();
-                $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value'],$amountsBinary);
+                $encryptionInfo = get_option('encryptionCampaign');
+                $encryptionInfo = $encryptionInfo[$campaignName];
+                if ($encryptionInfo) {
+                    // generate key-value encryption
+                    $encrypt = new encrypt();
+                    $encryptGeneration = $encrypt->encryptGenerate();
+                    $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), $encryptGeneration['value'], $amountsBinary);
 
-                $_encValue = '0x' . bin2hex($encryptGeneration['value']);
-                $_encMessage = $encryptionMessage;
+                    $_encValue = '0x' . bin2hex($encryptGeneration['value']);
+                    $_encMessage = $encryptionMessage;
 var_dump(($encryptionInfo));
-var_dump($encrypt->keccak(hex2bin($encryptionInfo['key']), hex2bin('f3280ff83d50feba0a23378bddad8340'), $amountsBinary));
-var_dump($_encValue);
-var_dump($_encMessage);
-            }
-            print('            
+//var_dump($encrypt->keccak(hex2bin($encryptionInfo['key']), hex2bin('f3280ff83d50feba0a23378bddad8340'), $amountsBinary));
+//var_dump($_encValue);
+//var_dump($_encMessage);
+                }
+                print('            
                <!-- claim campaign modal -->
                <div class="!grid !grid-cols-1 !mt-5">
-                    <button value=' .$doreaContractAddress. "_" . $campaignValue['walletAddress'] . "_" . $wei . "_" . $_encValue . "_" . $_encMessage .' class="campaignPayment_ doreaClaim !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto">Claim Reward</button>
+                    <button value=' . $doreaContractAddress . "_" . $campaignValue['walletAddress'] . "_" . $wei . "_" . $_encValue . "_" . $_encMessage . ' class="campaignPayment_ doreaClaim !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto">Claim Reward</button>
                </div>
             ');
-        }
+            }
 
 
 //var_dump($sumUserEthers);
-        //delete_option('encryptionCampaign');
-        //var_dump($encryptionInfo);
-        //var_dump($hexAmount);
-        //var_dump(hex2bin($encryptionInfo['key']));
-        //var_dump('0x' . Keccak::hash(hex2bin($encryptionInfo['key']) . hex2bin('fa033cd30d2eedc174fd2571c7251a4d') . $amountsBinary, 256));
-        //var_dump($_encValue);
-        //var_dump($_encMessage);
+            //delete_option('encryptionCampaign');
+            //var_dump($encryptionInfo);
+            //var_dump($hexAmount);
+            //var_dump(hex2bin($encryptionInfo['key']));
+            //var_dump('0x' . Keccak::hash(hex2bin($encryptionInfo['key']) . hex2bin('fa033cd30d2eedc174fd2571c7251a4d') . $amountsBinary, 256));
+            //var_dump($_encValue);
+            //var_dump($_encMessage);
 
 //die;
-         print ('
+            print ('
 
                <!-- load toastify library -->
                <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
                <script type="module">
-               
+            
                     // load etherJs library
                     import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
-                    
+                     
                     let deleteCampaignModal = document.querySelectorAll(".doreaClaim");
 
                     deleteCampaignModal.forEach(
@@ -129,7 +131,7 @@ var_dump($_encMessage);
                       (element) =>             
                
                         element.addEventListener("click", async function(){
-                          
+                            
                             let contractAddress = element.value.split("_")[0] ?? null;
                             let walletAddress = element.value.split("_")[1] ?? null;
                             let amount =  element.value.split("_")[2] ?? null;
@@ -166,9 +168,10 @@ var_dump($_encMessage);
                                        
                             } 
                             
+                            
                             await window.ethereum.request({ method: "eth_requestAccounts" });
                             const accounts = await ethereum.request({ method: "eth_accounts" });
-          
+                            
                             if (window.ethereum) {
                                         
                                 const userAddress = accounts[0];
@@ -246,10 +249,9 @@ var_dump($_encMessage);
                                 //console.log(_encMessage.toString())
                                 if(amount !== null){
                                     try{
-                                        
+                                       
                                         const contract = new ethers.Contract(contractAddress, ' . $abi . ',signer);
-                                        //let test = await contract.expireToken(walletAddress, _encValue.toString())
-                                        //console.log(test)
+                                        
                                          await contract.pay(
                                             walletAddress,
                                             parseInt(amount), 
@@ -319,7 +321,8 @@ var_dump($_encMessage);
                     )    
                </script>
    
-        ');
+            ');
+        }
     }
 }
 
