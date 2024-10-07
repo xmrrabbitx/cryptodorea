@@ -9,55 +9,11 @@ use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
 
 function dorea_cashback_campaign_content():void
 {
+    // load campaign css styles
+    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/woo-cryptodorea/css/campaign.css'));
 
-
-    print('
-        <style>
-            body{
-                background: #f6f6f6;
-            }
-            main{
-                font-family: "Poppins", sans-serif !important;
-            }
-        </style>
-        <script type="module">
-            let setupCampaign = document.getElementById("setupCampaign");
-            setupCampaign.addEventListener("click", function(event){
-                event.preventDefault();
-                let campaignName = document.getElementById("campaignName");
-                let cryptoAmount = document.getElementById("cryptoAmount");
-                let shoppingCount = document.getElementById("shoppingCount");
-                
-                if(campaignName.value === "" || cryptoAmount.value === "" || shoppingCount.value === ""){
-                  
-                    let err = "some fields left empty!";
-                    Toastify({
-                       text: err,
-                       duration: 3000,
-                       style: {
-                           background: "#ff5d5d",
-                       },
-                    }).showToast();
-                    return false;
-                    
-                }else if(/[a-zA-Z]/.test(cryptoAmount.value) || /[a-zA-Z]/.test(shoppingCount.value)){
-                    let err = "amount and shopping counts must be numeric!";
-                    Toastify({
-                       text: err,
-                       duration: 3000,
-                       style: {
-                           background: "#ff5d5d",
-                       },
-                    }).showToast();
-                    return false;
-                }
-          
-                // submit form
-                document.getElementById("cashback_campaign").submit();
-                
-            });
-        </script>
-    ');
+    // load campaign scripts
+    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',plugins_url('/woo-cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'));
 
     // utilities helper functions
     $dateCalculator = new dateCalculator();
@@ -73,7 +29,13 @@ function dorea_cashback_campaign_content():void
     print("<main>");
     print("<h1 class='!p-5 !text-sm !font-bold'>Create Campaign</h1>");
 
-    print("<p class='!pl-5 !col-span-12 h-3 w-full'>");
+    print("
+        <p class='!pl-5 !col-span-12 h-3 w-full'>
+        <p id='errorMessg' style='display: none'></p>
+    ");
+
+    // remove any error handling here beacuse wordpress errors must be disposable
+    /*
     $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
     if($emptyError){
         print("<span style='color:#ff5d5d;'>$emptyError</span>");
@@ -98,6 +60,7 @@ function dorea_cashback_campaign_content():void
     if($existedCampaignError){
         print("<span style='color:#ff5d5d;' class=''>$existedCampaignError</span>");
     }
+    */
 
     print("
       </p>
@@ -235,9 +198,8 @@ function dorea_cashback_campaign_content():void
  */
 add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
 
-function dorea_admin_cashback_campaign(){
-
-
+function dorea_admin_cashback_campaign()
+{
     //static $home_url = 'admin.php?page=crypto-dorea-cashback';
     $referer = explode("&", wp_get_referer())[0];
 

@@ -15,6 +15,33 @@ include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/wp/wp.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';
 include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/modals/claimCampaign.php';
 
+// core js style
+wp_enqueue_script('DOREA_CORE_STYLE',plugins_url('/woo-cryptodorea/js/style.min.js'));
+
+// add module type to scripts
+add_filter('script_loader_tag', 'add_type_campaigncredit' , 10, 3);
+function add_type_campaigncredit($tag, $handle, $src) {
+
+    // if not your script, do nothing and return original $tag
+    if ( 'DOREA_CAMPAIGNCREDIT_SCRIPT' !== $handle ) {
+        return $tag;
+    }
+    // change the script tag by adding type="module" and return it.
+    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+    return $tag;
+}
+// add module type to script
+add_filter('script_loader_tag', 'add_type_claimcampaign' , 10, 3);
+function add_type_claimcampaign($tag, $handle, $src) {
+
+    // if not your script, do nothing and return original $tag
+    if ( 'DOREA_CLAIMCAMPAIGN_SCRIPT' !== $handle ) {
+        return $tag;
+    }
+    // change the script tag by adding type="module" and return it.
+    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+    return $tag;
+}
 
 /**
  * a Class for handling the Cash Back program

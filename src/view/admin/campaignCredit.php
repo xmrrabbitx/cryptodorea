@@ -11,6 +11,9 @@ use Cryptodorea\Woocryptodorea\utilities\encrypt;
 function dorea_cashback_campaign_credit():void
 {
 
+    // load campaign credit Style
+    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/woo-cryptodorea/css/campaignCredit.css'));
+
     if(!empty($_GET['cashbackName'])) {
 
         $campaignName = $_GET['cashbackName'];
@@ -35,25 +38,21 @@ function dorea_cashback_campaign_credit():void
             wp_redirect('admin.php?page=crypto-dorea-cashback');
         }
 
+        // load campaign credit scripts
+        wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT',plugins_url('/woo-cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
+        // set  enc value for deployment
+        $params = array('_encKey' => $_encKey, 'campaignName'=>$campaignName);
+        wp_localize_script( 'DOREA_CAMPAIGNCREDIT_SCRIPT', 'OBJECT', $params );
+
     }else{
         wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
 
-
-    print('
-        <style>
-            body{
-                background: #f6f6f6;
-            }
-            main{
-                font-family: "Poppins", sans-serif !important;
-            }
-        </style>
-    ');
-
     print('
         <main>
             <h1 class="p-5 text-sm font-bold">Fund Campaign</h1> </br>
+            
+             <p id="errorMessg" style="display: none"></p>
             
             <div class="container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md">
               
@@ -81,193 +80,7 @@ function dorea_cashback_campaign_credit():void
                 
               </div>
             </div>
-            
-            
-            <script>          
-                 // Request access to Metamask
-                 setTimeout(delay, 1000)
-                 function delay(){
-                     (async () => {
-               
-                          if(window.ethereum._state.accounts.length > 0){
-                                document.getElementById("metamaskDisconnect").addEventListener("click", async () => {
-                             
-                                    // disconnect user 
-                                    const result = await window.ethereum.request({
-                                    method: "wallet_revokePermissions",
-                                    params: [{
-                                      eth_accounts: {}
-                                    }]
-                                  });
-                                  
-                                  // remove wordpress prefix on production
-                                  window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
-                                  
-                                })
-                          }
-                     })();
-                 }
-            </script>
            
-            <script type="module">
-                  
-                 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
-               
-                 // Request access to Metamask
-                 setTimeout(delay, 1000)
-                 function delay(){
-                     (async () => {
-        
-                        document.getElementById("doreaFund").addEventListener("click", async () => {
-                           
-                            document.getElementById("doreaFund").disabled = true;
-                             
-                            let contractAmount = document.getElementById("creditAmount").value;
-                            const metamaskError = document.getElementById("dorea_metamask_error");
-                           
-                            if(contractAmount === ""){
-                                metamaskError.style.display = "block";
-                                let err = "cryptocurrency amount could not be left empty!";
-                                Toastify({
-                                   text: err,
-                                   duration: 3000,
-                                   style: {
-                                         background: "#ff5d5d",
-                                   },
-                               }).showToast();
-                               document.getElementById("doreaFund").disabled = false;
-                               return false;
-                            }
-                            else if(!Number.isInteger(parseInt(contractAmount))){
-                                        
-                               metamaskError.style.display = "block";
-                               let err = "cryptocurrency amount must be in the decimal format!";
-                               Toastify({
-                                   text: err,
-                                   duration: 3000,
-                                   style: {
-                                         background: "#ff5d5d",
-                                   },
-                               }).showToast();
-                               document.getElementById("doreaFund").disabled = false;
-                               return false;
-                                        
-                            }
-                            else{
-                                metamaskError.style.display = "none";
-                            }
-                                   
-                            if (window.ethereum) {
-                                       
-                                      const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-                                      const userAddress = accounts[0];
-                                              
-                                      const userBalance = await window.ethereum.request({
-                                              method: "eth_getBalance",
-                                              params: [userAddress, "latest"]
-                                      });
-        
-                                        // check balance of metamask wallet 
-                                      if(parseInt(userBalance) < 300000000000000){
-                                          
-                                                    document.getElementById("doreaFund").disabled = false;
-                                                    let err = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
-                                                    Toastify({
-                                                          text: err,
-                                                          duration: 3000,
-                                                          style: {
-                                                            background: "#ff5d5d",
-                                                          },
-                                                    }).showToast();
-                                                    return false;
-                                                    
-                                      }
-                                              
-                                      try{
-                                        
-                                            const provider = new BrowserProvider(window.ethereum);
-                                
-                                            // Get the signer from the provider metamask
-                                            const signer = await provider.getSigner();
-                                    
-                                            const factory = new ContractFactory(' .$abi.', "'.$bytecode. '", signer)
-                                             
-                                            let contractAmountBigInt;
-                                            if( (typeof(contractAmount) === "number") && (Number.isInteger(contractAmount))){
-                                                const creditAmountBigInt = BigInt(contractAmount);
-                                                const multiplier = BigInt(1e18);
-                                                contractAmountBigInt= creditAmountBigInt * multiplier;
-                                              
-                                            }else{
-                                            
-                                                const creditAmount = contractAmount; // This is a floating-point number
-                                                const multiplier = BigInt(1e18); // This is a BigInt
-                                                const factor = 1e18; 
-                                                
-                                                // Convert the floating-point number to an integer
-                                                const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                                                contractAmountBigInt= creditAmountInt * multiplier / BigInt(factor);
-                                            }
-                                            
-                                            //If your contract requires constructor args, you can specify them here
-                                            await factory.deploy(
-                                            "'.$_encKey.'",
-                                                {       
-                                                  value: contractAmountBigInt.toString(),
-                                                  gasLimit :3000000,
-                                                          
-                                                }
-                                            ).then(async function(response) {
-                                            
-                                                let contractAddress = response.target;
-                                                
-                                                // wait for deployment
-                                                response.waitForDeployment().then(async (receipt) => {
-                                       
-                                                    if(receipt){
-                                                        // get contract address
-                                                        let xhr = new XMLHttpRequest();
-                                                
-                                                        // remove wordpress prefix on production
-                                                        xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName=' . $campaignName . '", true);
-                                                        xhr.onreadystatechange = async function() {
-                                                            if (xhr.readyState === 4 && xhr.status === 200) {
-                                                                
-                                                                // remove wordpress prefix on production 
-                                                                window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
-                                                            
-                                                            }
-                                                        }
-                                                    
-                                                        xhr.send(JSON.stringify({"contractAddress":contractAddress,"contractAmount":contractAmount}));
-                                                    }
-                                                });  
-                                                
-                                            });
-                                        
-                                      }catch (error) {
-                                           document.getElementById("doreaFund").disabled = false;
-                                           let err = "Funding the Contract was not successfull! please try again";
-                                           Toastify({
-                                                  text: err,
-                                                  duration: 3000,
-                                                  style: {
-                                                    background: "#ff5d5d",
-                                                  },
-                                           }).showToast();
-                                           return false;
-                                               
-                                      }
-                            }
-                               
-                             document.getElementById("doreaFund").disabled = false;
-                        })
-                        
-                     })();
-                 }
-                 
-            </script>
-            
         </main>
     ');
 
@@ -284,7 +97,6 @@ function dorea_contract_address()
 
     static $doreaContractAddress;
     static $contractAmount;
-    static $campaignName;
 
     if(isset($_GET['cashbackName'])) {
         $campaignName = $_GET['cashbackName'];

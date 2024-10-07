@@ -16,15 +16,8 @@ function dorea_add_menu_page(): void
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-         
-        <!-- load toastify library -->
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-   
-    ');
 
-    // load Tailwind Library
-    print('<script src="https://cdn.tailwindcss.com"></script>');
+    ');
 
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
@@ -95,16 +88,8 @@ function dorea_main_page_content():void
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
-    print('
-        <style>
-            body{
-                background: #f6f6f6 !important;
-            }
-            main{
-                font-family: "Poppins", sans-serif !important;
-            }
-        </style>
-    ');
+    // load admin css styles
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/woo-cryptodorea/css/admin.css'));
 
     print("
         <main>

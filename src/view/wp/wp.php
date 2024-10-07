@@ -13,6 +13,7 @@ add_action('wp','wpRequest');
  */
 function wpRequest()
 {
+
     if(is_user_logged_in()) {
 
         // autoremove deleted campaigns
