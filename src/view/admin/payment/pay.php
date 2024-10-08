@@ -11,7 +11,6 @@ use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
  */
 function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, $qualifiedUserEthers=null, $remainingAmount=null, $usersList=null, $totalPurchases=null): void
 {
-
     $compile = new compile();
     $abi = $compile->abi();
 
@@ -34,341 +33,18 @@ function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, 
         $totalPurchases = 'null';
     }
 
-    print('<script type="module">
-          
-         // load etherJs library
-         import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
-         
-         
-         let campaignNames = document.querySelectorAll(".campaignPayment_");
-         const metamaskError = document.getElementById("dorea_metamask_error");
-                            
-         campaignNames.forEach(
-                
-            (element) =>             
-           
-              element.addEventListener("click", async function(){
-                
-                  
-                function convertToWei(amount){
-               
-                    if( (typeof(amount) === "number") && (Number.isInteger(amount))){
-                          
-                            const creditAmountBigInt = BigInt(amount);
-                            const multiplier = BigInt(1e18);
-                            return creditAmountBigInt * multiplier;
-                           
-                    }
-                    else{
-                         
-                            const creditAmount = amount; // This is a floating-point number
-                            const multiplier = BigInt(1e18); // This is a BigInt
-                            const factor = 1e18; 
-                                                    
-                            // Convert the floating-point number to an integer
-                            const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                            return creditAmountInt * multiplier / BigInt(factor);
-                            
-                    }
-                } 
-                
-                function convertWeiToEther(amount){
-               
-                    const creditAmountBigInt = amount;
-                    const multiplier = 1e18;
-                    return creditAmountBigInt / multiplier;
-                           
-                } 
-                  
-                let elmentIed = element.id;
-                const contractAddress = elmentIed.split("_")[3];
-                let campaignNameFirst = elmentIed.split("_")[1];
-                let campaignNameSecond = elmentIed.split("_")[2];
-                let campaignName = campaignNameFirst + "_" + campaignNameSecond;
-                let paymentStatus = elmentIed.split("_")[4];
-                
-                /*
-                 await window.ethereum.request({
-                                          method: "wallet_addEthereumChain",
-                                          params: [{
-                                            chainId: "0x14A34",
-                                            rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                                            chainName: "SEPOLIA",
-                                            nativeCurrency: {
-                                              name: "ETH",
-                                              symbol: "ETH",
-                                              decimals: 18
-                                            },
-                                            blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
-                                          }]
-                 });
-                 
-                 */
-                
-                
-                await window.ethereum.request({ method: "eth_requestAccounts" });
-                const accounts = await ethereum.request({ method: "eth_accounts" });
-                const account = accounts[0];
-          
-                const provider = new BrowserProvider(window.ethereum);
-                            
-                const signer = await provider.getSigner();
-          
-                let message = "you are siging message to fund the contract!";
-                
-                const messageHash = ethers.id(message);
-               
-                // sign hashed message
-                const signature = await ethereum.request({
-                  method: "personal_sign",
-                  params: [messageHash, accounts[0]],
-                });
-            
-                // split signature
-                const r = signature.slice(0, 66);
-                const s = "0x" + signature.slice(66, 130);
-                const v = parseInt(signature.slice(130, 132), 16);
-                
-                return false
-                // convert ether to wei
-                let sumAmount = '.$sumAmount.';
-                let sumWei = null;
-                let cryptoAmountBigInt = [];
-                
-                if(sumAmount !== null){
-                
-                    let cryptoAmount = ' . $sumUserEthers . ';
-                   
-                    for(const amount of  cryptoAmount){
-                      
-                        if( (typeof(amount) === "number") && (Number.isInteger(amount))){
-                          
-                            const creditAmountBigInt = BigInt(amount);
-                            const multiplier = BigInt(1e18);
-                            cryptoAmountBigInt.push(creditAmountBigInt * multiplier);
-                           
-                        }
-                        else{
-               
-                            const creditAmount = amount; // This is a floating-point number
-                            const multiplier = BigInt(1e18); // This is a BigInt
-                            const factor = 1e18; 
-                                                    
-                            // Convert the floating-point number to an integer
-                            const creditAmountInt  = BigInt(Math.round(creditAmount * factor));
-                            cryptoAmountBigInt.push(creditAmountInt * multiplier / BigInt(factor));
-                            
-                        }
-                    }
-                   
-                   sumWei = convertToWei(sumAmount);
-
-                }
-
-                try{
-                 
-                    const contract = new ethers.Contract(contractAddress, '.$abi.',signer)
-                 
-                    // check if transaction exceeds the contract balance
-                    const balance = await contract.getBalance();
-                 
-                    if(sumWei > balance){
-                        
-                        metamaskError.style.display = "block";
-                        const errorText = document.createTextNode("Sorry, the campaign has not enough fund!");
-                        metamaskError.appendChild(errorText);
-                        return false;
-                        
-                    }
-              
-                    if(paymentStatus === "pay"){
-                            await contract.pay(
-                                '.$qualifiedWalletAddresses.',
-                                cryptoAmountBigInt, 
-                                messageHash, 
-                                v, 
-                                r, 
-                                s
-                            ).then(async function(response){
-                                response.wait().then(async (receipt) => {
-                                      // transaction on confirmed and mined
-                                      if (receipt) {
-                                      
-                                           let succMessage = "payment has been successfull!";
-                                           Toastify({
-                                                  text: succMessage,
-                                                  duration: 3000,
-                                                  style: {
-                                                    background: "linear-gradient(to right, #32DC98, #2EC4A1)",
-                                                  },
-                                           }).showToast();
-                                           
-                                           await new Promise(r => setTimeout(r, 1500));
-                                           let balance = await contract.getBalance();
-                                           balance = convertWeiToEther(parseInt(balance));
-                                    
-                                           // get contract address
-                                           let xhr = new XMLHttpRequest();
-                                                    
-                                           // remove wordpress prefix on production
-                                           xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
-                                           xhr.onreadystatechange = async function() {
-                                              if (xhr.readyState === 4 && xhr.status === 200) {
-                                           
-                                                  window.location.reload();        
-                                              }
-                                           }
-                                                        
-                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName, "usersList":  '.$usersList.' , "amount":'.$qualifiedUserEthers.' , "totalPurchases":'.$totalPurchases.' }));      
-                                      }
-                                });
-                            });
-                            
-                       }else if(paymentStatus === "fund"){
-                       
-                          let fundAgainAmount = convertToWei('.$remainingAmount.');
-                          
-                               await contract.fundAgain(
-                                    messageHash, 
-                                    v, 
-                                    r, 
-                                    s,
-                                    {              
-                                        value: fundAgainAmount.toString(),
-                                        gasLimit :3000000,                
-                                    },
-                               ).then(async function(response){
-                                  response.wait().then(async (receipt) => {
-                                      // transaction on confirmed and mined
-                                      if (receipt) {
-                                           let succMessage = "payment has been successfull!";
-                                           Toastify({
-                                                  text: succMessage,
-                                                  duration: 3000,
-                                                  style: {
-                                                    background: "linear-gradient(to right, #32DC98, #2EC4A1)",
-                                                  },
-                                           }).showToast();
-                                           
-                                           await new Promise(r => setTimeout(r, 1500));
-                                           
-                                           let balance = await contract.getBalance();
-                                           balance = convertWeiToEther(parseInt(balance));
-                                    
-                                           // get contract address
-                                           let xhr = new XMLHttpRequest();
-                                                    
-                                           // remove wordpress prefix on production
-                                           xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
-                                           xhr.onreadystatechange = async function() {
-                                              if (xhr.readyState === 4 && xhr.status === 200) {
-                                            
-                                                  window.location.reload();        
-                                              }
-                                           }
-                                                        
-                                           xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName}));
-                                             
-                                      }
-                                  });
-                                  
-                                })
-                       } 
-                    
-                }catch (error) {
-                       if(typeof error.revert === "undefined")   {
-                           Toastify({
-                               text: "Something went wrong. please try again!",
-                               duration: 3000,
-                               style: {
-                                    background: "linear-gradient(to right, #FF4E41, #E22D2D)",
-                               },
-                           }).showToast();
-                       }else{
-                           let errorMessg = error.revert.args[0];
-                           if(errorMessg === "Insufficient balance"){
-                               errorMessg = "Insufficient balance";
-                               Toastify({
-                                      text: "Insufficient balance in Campaign",
-                                      duration: 3000,
-                                      style: {
-                                         background: "linear-gradient(to right, #FF4E41, #E22D2D)",
-                                      },
-                               }).showToast();
-                           }else if(errorMessg === "User is not Authorized!!!"){
-                                errorMessg = "You dont have permission to pay!";
-                                Toastify({
-                                      text: "Insufficient balance in Campaign",
-                                      duration: 3000,
-                                      style: {
-                                         background: "linear-gradient(to right, #FF4E41, #E22D2D)",
-                                      },
-                               }).showToast();
-                           }else{
-                               errorMessg = "payment was not successfull! please try again!";
-                               Toastify({
-                                      text: errorMessg,
-                                      duration: 3000,
-                                      style: {
-                                        background: "linear-gradient(to right, #FF4E41, #E22D2D)",
-                                      },
-                               }).showToast();
-                           }
-                       }
-                       
-                       // show error popup message
-                       metamaskError.style.display = "block";
-                       metamaskError.innerHTML = errorMessg;
-                       return false;
-                       
-                    }
-            })
-         )
-                   
-    </script>');
 
 }
 
 /**
  * Campaign payment list wallet address users
  */
-add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
+//add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
 function dorea_admin_pay_campaign()
 {
 
-    print ("<script>let counter = document.getElementById('counter');</script>");
-    $userList = get_option("dorea_campaigns_users_dorea_9b46841");
-
-    //var_dump(count($userList));
-    /*
-    //die;
-    // set 1 mil records
-    for ($i=0;$i<=170000;$i++){
-
-        $users = base64_encode(random_bytes(8));
-        $userList[] = $users;
-        update_option("dorea_campaigns_users_dorea_9b46841",$userList);
-        add_option('dorea_campaigninfo_user_' . $users, [base64_encode(random_bytes(8))]);
-
-    }
-
-    die;
-    //var_dump($userList);
-    //var_dump(get_option('dorea_campaigninfo_user_' . 'Vl44+zx5l6U='));
-    // remove 1 mil records
-    /*
-    foreach ($userList as $users){
-
-        delete_option('dorea_campaigninfo_user_' . $users);
-
-        print("<script>
-             counter.innerHTML ='$i';
-        </script>");
-    }
-    array_splice($userList,1,1000000);
-    update_option("dorea_campaigns_users_dorea_9b46841",$userList);
-*/
-
+    // load admin css styles
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/woo-cryptodorea/css/pay.css'));
 
     static $home_url = 'admin.php?page=crypto-dorea-cashback';
     static $qualifiedUserEthers;
@@ -390,10 +66,7 @@ function dorea_admin_pay_campaign()
 
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
 
-    print('
-         <!-- load tailwinf library -->
-        <script src="https://cdn.tailwindcss.com"></script>
-    ');
+
 
     print('
 
@@ -402,14 +75,6 @@ function dorea_admin_pay_campaign()
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-        <style>
-            body{
-                background: #f6f6f6;
-            }
-            main{
-                font-family: "Poppins", sans-serif !important;
-            }
-        </style>
     ');
 
     print("<main>");
@@ -561,29 +226,11 @@ function dorea_admin_pay_campaign()
                             if ((float)array_sum($totalEthers) > (float)$contractAmount) {
 
                                 print("
-                                <!-- Fund Again -->
-                                <div class='!mx-auto !text-center !mt-5'>
-                                    <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_fund" . "'>Fund Again</a>
-                                </div>
-                            ");
-
-                                if ($qualifiedWalletAddresses) {
-                                    print("
-                                    <p class='!text-center !mt-5 !text-slate-500'>Or</p>
-                                    <!-- Pay Anyway -->
-                                    <div class='!grid !grid-cols-1 !mt-5'>
-                                        <button class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_pay" . "'>Pay Anyway</button>
+                                    <!-- Fund Again -->
+                                    <div class='!mx-auto !text-center !mt-5'>
+                                        <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_fund" . "'>Fund Again</a>
                                     </div>
                                 ");
-                                }
-
-                            } else {
-                                print('
-                                <!-- Pay All -->
-                                <div class="!grid !grid-cols-1 !mt-5">
-                                    <button class="campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md !mx-auto" id="campaignPayment_' . $cashbackName . '_' . $doreaContractAddress . '_pay' . '">Pay All</button>
-                                </div>
-                            ');
                             }
 
                             // calculate remaining amount eth to pay
@@ -591,7 +238,21 @@ function dorea_admin_pay_campaign()
                             $remainingAmount *= -1;
 
                             // trigger payment js modal
-                            dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList, $totalPurchases);
+                            //dorea_campaign_pay($qualifiedWalletAddresses, $cryptoAmount, $qualifiedUserEthers, $remainingAmount, $usersList, $totalPurchases);
+
+                            // load campaign credit scripts
+                            wp_enqueue_script('DOREA_PAY_SCRIPT',plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+                            // set  enc value for deployment
+                            $params = array(
+                                'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
+                                'qualifiedUserEthers'=>$qualifiedUserEthers,
+                                'cryptoAmount'=>$cryptoAmount,
+                                'remainingAmount'=>$remainingAmount,
+                                'usersList'=>$usersList,
+                                'totalPurchases'=>$totalPurchases,
+                            );
+                            wp_localize_script( 'DOREA_PAY_SCRIPT', 'OBJECT', $params );
+
 
                             print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
                         } else {
@@ -626,7 +287,6 @@ function dorea_admin_pay_campaign()
 
                 }
 
-
                 // list claimed rewards
                 if (isset($campaignUser[$cashbackName]['claimedReward'])) {
                     print('
@@ -659,9 +319,7 @@ function dorea_admin_pay_campaign()
 
         }
 
-
     }
-
 
     print("    
             </div>
@@ -679,7 +337,7 @@ function dorea_new_contractBalance():void
     // get Json Data
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
-
+var_dump($json);
     if ($json) {
         $campaignInfoUser = get_transient($json->campaignName);
         $campaignInfoUser['contractAmount'] = $json->balance;

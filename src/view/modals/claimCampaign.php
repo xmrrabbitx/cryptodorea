@@ -46,7 +46,7 @@ function claimModal()
             $ethBasePrice = 0.0004;
 
             if ($campaignValue['purchaseCounts'] >= $shoppingCount) {
-//var_dump($doreaContractAddress);
+var_dump($doreaContractAddress);
                 // calculate final price in ETH format
                 $qualifiedPurchases = array_chunk($campaignValue['total'], $cashbackInfo['shoppingCount']);
                 $result = [];
@@ -91,11 +91,12 @@ function claimModal()
 
                     $_encValue = '0x' . bin2hex($encryptGeneration['value']);
                     $_encMessage = $encryptionMessage;
-var_dump(($encryptionInfo));
+//var_dump(($encryptionInfo));
 //var_dump($encrypt->keccak(hex2bin($encryptionInfo['key']), hex2bin('f3280ff83d50feba0a23378bddad8340'), $amountsBinary));
 //var_dump($_encValue);
 //var_dump($_encMessage);
                 }
+                var_dump($campaignValue);
                 print('            
                <!-- claim campaign modal -->
                <div class="!grid !grid-cols-1 !mt-5">

@@ -66,13 +66,27 @@ function dorea_add_menu_page(): void
         /**
          * Dorea Plans
          */
+        /*
         add_submenu_page(
             'crypto-dorea-cashback',
             'Plans Page',
             'Dorea Plans',
             'manage_options',
             'dorea_plans',
-            'doreaPlans'
+            ''
+        );
+*/
+
+        /**
+         * Dorea campaign payment list
+         */
+        add_submenu_page(
+            'crypto-dorea-cashback',
+            'Campaign Page',
+            'Dorea Payment',
+            'manage_options',
+            'dorea_payment',
+            'dorea_admin_pay_campaign'
         );
 
     }
@@ -132,7 +146,7 @@ function dorea_main_page_content():void
             // payment page
             if($doreaContractAddress) {
                 print('
-                     <a class="col-span-1 pl-2 focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')).'">pay</a>
+                     <a class="col-span-1 pl-2 focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'">pay</a>
                 ');
             }
 
@@ -191,7 +205,7 @@ function dorea_main_page_content():void
             if($doreaContractAddress) {
                 print('
            
-                    <a class="col-span-1 self-center focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=pay_campaign')) . '">
+                    <a class="col-span-1 self-center focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
                         <!-- payment campaign page link -->
                         <span class="float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -252,3 +266,4 @@ include('doreaPlans.php');
  * Payment Modal
  */
 include('payment/pay.php');
+

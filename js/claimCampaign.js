@@ -4,6 +4,7 @@ import {
     BrowserProvider
 } from "./ethers.min.js";
 
+import {abi} from "./compile.js";
 
 let deleteCampaignModal = document.querySelectorAll(".doreaClaim");
 
@@ -96,10 +97,10 @@ deleteCampaignModal.forEach(
                 const s = "0x" + signature.slice(66, 130);
                 const v = parseInt(signature.slice(130, 132), 16);
 
-                console.log(messageHash)
-                console.log(r)
-                console.log(s)
-                console.log(v)
+                //console.log(messageHash)
+                //console.log(r)
+                //console.log(s)
+                //console.log(v)
 
                 /*
                 let cryptoAmountBigInt = [];
@@ -126,12 +127,13 @@ deleteCampaignModal.forEach(
                 }
                 */
                 //console.log(parseInt(amount))
-                console.log(_encValue)
+
                 //console.log(_encMessage.toString())
                 if(amount !== null){
                     try{
+                        console.log(walletAddress)
 
-                        const contract = new ethers.Contract(contractAddress, ' . $abi . ',signer);
+                        const contract = new ethers.Contract(contractAddress, abi, signer);
 
                         await contract.pay(
                             walletAddress,

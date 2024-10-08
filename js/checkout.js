@@ -75,35 +75,6 @@ function setSession(){
 
 }
 
-
-/*
- dorea_add_to_cashback_checked.addEventListener('click',function (){
-     console.log('click')
-     if(dorea_add_to_cashback_checked.length < 1){
-
-         metamaskError.style.display = 'block';
-         dorea_walletaddress.style.border = '1px solid red';
-         const errorText = document.createTextNode('please choose one of compaigns!');
-         metamaskError.appendChild(errorText);
-         return false;
-     }else{
-         let campaignlist = [];
-            for(let i=0; i < dorea_add_to_cashback_checked.length;i++){
-                if(dorea_add_to_cashback_checked[i].checked){
-                    if(dorea_add_to_cashback_checked[i].value !== ''){
-                            campaignlist.push(dorea_add_to_cashback_checked[i].value);
-                    }
-
-                }else {
-
-                }
-            }
-            console.log(campaignlist)
-     }
- })
-
- */
-
 function add_to_cashback_checkbox() {
 
     let dorea_walletaddress = document.getElementById('dorea_walletaddress');
