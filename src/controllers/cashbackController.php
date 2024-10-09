@@ -115,6 +115,17 @@ class cashbackController extends cashbackAbstract
                 delete_option("dorea_campaigns_users_" . $campaignName);
             }
 
+            //remove encryption campaign
+            $encryptionCampaign = get_option("encryptionCampaign");
+
+            if($encryptionCampaign[$campaignName]){
+                unset($encryptionCampaign[$campaignName]);
+                update_option("encryptionCampaign" , $encryptionCampaign);
+            }
+            if(empty($encryptionCampaign)){
+                delete_option("encryptionCampaign");
+            }
+
         }
     }
 

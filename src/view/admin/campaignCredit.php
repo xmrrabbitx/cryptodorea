@@ -1,7 +1,6 @@
 <?php
 
 use Cryptodorea\Woocryptodorea\controllers\campaignCreditController;
-use Cryptodorea\Woocryptodorea\utilities\compile;
 use Cryptodorea\Woocryptodorea\utilities\encrypt;
 
 /**
@@ -17,11 +16,6 @@ function dorea_cashback_campaign_credit():void
     if(!empty($_GET['cashbackName'])) {
 
         $campaignName = $_GET['cashbackName'];
-
-        // compile abd && bytecode
-        $compile = new compile();
-        $abi = $compile->abi();
-        $bytecode = $compile->bytecode();
 
         // generate key-value encryption
         $encrypt = new encrypt();

@@ -1,46 +1,12 @@
 <?php
 
-use Cryptodorea\Woocryptodorea\utilities\compile;
-use Cryptodorea\Woocryptodorea\controllers\paymentController;
 use Cryptodorea\Woocryptodorea\controllers\usersController;
 use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 
-
 /**
- * the payment modal for admin campaigns
+ * Campaign payment list users
  */
-function dorea_campaign_pay($qualifiedWalletAddresses=null, $cryptoAmount=null, $qualifiedUserEthers=null, $remainingAmount=null, $usersList=null, $totalPurchases=null): void
-{
-    $compile = new compile();
-    $abi = $compile->abi();
-
-    if($qualifiedWalletAddresses && $cryptoAmount && $qualifiedUserEthers) {
-
-        $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
-        $sumAmount = array_sum($qualifiedUserEthers);
-        $sumUserEthers = json_encode($qualifiedUserEthers);
-        $usersList = json_encode($usersList);
-        $qualifiedUserEthers = json_encode($qualifiedUserEthers);
-        $totalPurchases = json_encode($totalPurchases);
-
-    }else{
-
-        $sumAmount = "null";
-        $sumUserEthers = "null";
-        $qualifiedWalletAddresses = "null";
-        $usersList = 'null';
-        $qualifiedUserEthers = 'null';
-        $totalPurchases = 'null';
-    }
-
-
-}
-
-/**
- * Campaign payment list wallet address users
- */
-//add_action('admin_post_pay_campaign', 'dorea_admin_pay_campaign');
-function dorea_admin_pay_campaign()
+function dorea_admin_pay_campaign():void
 {
 
     // load admin css styles
@@ -50,12 +16,32 @@ function dorea_admin_pay_campaign()
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
 
-    $cashbackName = $_GET['cashbackName'];
+    $cashbackName = $_GET['cashbackName'] ?? null;
     $cashbackInfo = get_transient($cashbackName) ?? null;
-    
+
+    print("
+        <main>
+            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
+            <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
+            <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
+    ");
+
     // redirect to admin page if no campaign existed!
     if(!$cashbackInfo){
-        wp_redirect($home_url);
+        //wp_redirect($home_url);
+
+        print("
+            <!-- error on no campaign -->
+            <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+                 <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                     <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                </svg>
+                <p class='!pt-3 !pb-2 !text-balance'>
+                  no campaign choosen. please select or create one in main page! 
+                </p>
+               
+            </div>");
+        return;
     }
 
     $expireDate = get_transient($cashbackName)['timestampExpire'];
@@ -65,24 +51,6 @@ function dorea_admin_pay_campaign()
     $expire = new expireCampaignController();
 
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
-
-
-
-    print('
-
-         <!-- load poppins font -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
-    ');
-
-    print("<main>");
-    print("
-            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
-    ");
-    print("<h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>");
-    print("<h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>");
 
     if(empty($userList)){
         print ("
@@ -211,10 +179,8 @@ function dorea_admin_pay_campaign()
                     ");
                 }
 
-
                 if ($users === end($userList)) {
 
-                    //print("</div>");
                     // get contract address of campaign
                     $doreaContractAddress = get_option($cashbackName . '_contract_address');
                     if (!empty($totalEthers)) {
@@ -337,7 +303,7 @@ function dorea_new_contractBalance():void
     // get Json Data
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
-var_dump($json);
+
     if ($json) {
         $campaignInfoUser = get_transient($json->campaignName);
         $campaignInfoUser['contractAmount'] = $json->balance;

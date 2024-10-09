@@ -11,6 +11,10 @@ include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/modals/deleteCampaign.ph
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+
+    var_dump(get_option('encryptionCampaign') );
+    //var_dump(delete_option('encryptionCampaign') );
+
     // load poppins font
     print ('        
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,7 +96,6 @@ function dorea_add_menu_page(): void
     }
 
 }
-
 
 /**
  *  main page content

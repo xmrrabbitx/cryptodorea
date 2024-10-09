@@ -1,0 +1,23 @@
+body{
+    background: #f6f6f6 !important;
+}
+main{
+    font-family: "Poppins", sans-serif !important;
+}
+#doreaClaimModal{
+    z-index: 10;
+    display: none
+}
+
+#doreaModalContent{
+    display: none
+}
+#doreaInfoMessg{
+    display: none;
+}
+#doreaClaimSuccess{
+    display: none;
+}
+#doreaClaimError{
+    display: none;
+}

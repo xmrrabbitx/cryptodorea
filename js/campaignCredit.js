@@ -27,7 +27,7 @@ function delay(){
                     errorMessg.innerHTML = "cryptocurrency amount could not be left empty!";
 
                     $(errorMessg).show("slow");
-                    await new Promise(r => setTimeout(r, 1500));
+                    await new Promise(r => setTimeout(r, 2500));
                     $(errorMessg).hide("slow");
 
                     document.getElementById("doreaFund").disabled = false;
