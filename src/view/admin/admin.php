@@ -56,20 +56,6 @@ function dorea_add_menu_page(): void
         );
 
         /**
-         * Dorea Plans
-         */
-        /*
-        add_submenu_page(
-            'crypto-dorea-cashback',
-            'Plans Page',
-            'Dorea Plans',
-            'manage_options',
-            'dorea_plans',
-            ''
-        );
-*/
-
-        /**
          * Dorea campaign payment list
          */
         add_submenu_page(
@@ -98,62 +84,63 @@ function dorea_main_page_content():void
 
     print("
         <main>
-        <h1 class='p-5 text-sm font-bold'>Home</h1> </br>
+        <h1 class='!p-5 !text-sm !font-bold'>Home</h1> </br>
     ");
 
     if ($cashbackList) {
 
         print("
-            <h2 class='pl-5 text-sm font-bold'>
+            <h2 class='!pl-5 !text-sm !font-bold'>
                 DOREA CASHBACK GROWS YOUR BUSINESS TO THE MOON 🚀  
             </h2> 
-            <p class='pl-5 !text-sm !mt-2 !text-slate-500'>Create Cashback Campaign for the Most Loyal Customers!</p>
+            <p class='!pl-5 !text-sm !mt-2 !text-slate-500'>Create Cashback Campaign for the Most Loyal Customers!</p>
             </br>");
 
         print("
-            <div class='!container !mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md'>
+            <div class='!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md'>
         ");
         foreach ($cashbackList as &$campaignName) {
             print("  
-                <div class='mr-5 pl-3 p-10 rounded-xl mt-3 !bg-white !shadow-sm !border'>
-                   <div class='grid lg:grid-cols-6 sm:grid-cols-4 grid-cols-4 gap-1 '>
+                <div class='!mr-5 !pl-3 !p-10 !mt-3 !rounded-xl !bg-white !shadow-sm !border'>
+                   <div class='!grid xl:!grid-cols-12 lg:!grid-cols-12 md:!grid-cols-12 sm:!grid-cols-12 !grid-cols-12 !gap-1'>
+                    <div class='xl:!col-span-11 lg:!col-span-11 !col-span-10 !grid xl:!grid-cols-6 lg:!grid-cols-6 md:!grid-cols-6 sm:!grid-cols-6 !grid-cols-2'>
             ");
 
-            print('<span class="col-span-1">'.$campaignName.'</span>');
+            print('<span class="!col-span-1">'.$campaignName.'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
-                print ('<span class="text-emerald-500 ">funded!</span>');
+                print ('<span class="!col-span-1 !text-emerald-500 lg:!block !hidden">funded!</span>');
             } else {
-                print('<a class="col-span-1 pl-2 focus:ring-0 hover:text-emerald-500 text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
+                print('<a class="!col-span-1 !pl-2 !focus:ring-0 !hover:text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
 
                 print ('
                     <!-- add column to fill white space in case there is no pay option -->
-                    <span class="col-span-1"></span>
+                    <span class="!col-span-1"></span>
                 ');
             }
 
             // payment page
             if($doreaContractAddress) {
                 print('
-                     <a class="col-span-1 pl-2 focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'">pay</a>
+                     <a class="!col-span-1 !pl-2 lg:!block !hidden focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'">pay</a>
                 ');
             }
 
             print ('
-                <span class="col-span-1"></span>
+                <span class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden"></span>
             ');
 
             print('
-                <div class="flex grid-flex gap-3 text-center">
+                <div class="!flex !grid-flex lg:!gap-3 !gap-1 lg:!pl-0 !pl-2 !text-center">
             ');
             if($doreaContractAddress) {
 
                 print('
                     <!-- success status of campaign -->
                     <span class="col-span-1">
-                        <svg class="size-6 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <svg class="lg:!size-6 !size-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                           <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
                         </svg>
                     </span>
@@ -195,8 +182,9 @@ function dorea_main_page_content():void
             // payment page
             if($doreaContractAddress) {
                 print('
-           
-                    <a class="col-span-1 self-center focus:ring-0 hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
+                    </div>
+                    <div class="lg:!col-span-1 !col-span-2">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
                         <!-- payment campaign page link -->
                         <span class="float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -209,8 +197,8 @@ function dorea_main_page_content():void
             }
 
             print("
-                    </div>
-                        
+                        </div>
+                    </div>   
                 </div>
             ");
         }
@@ -221,7 +209,7 @@ function dorea_main_page_content():void
                 <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
                 </br>
                 <p class="pt-2 mt-7 text-center">
-                    <a class="!basis-12 !p-10 !text-black !text-black !hover:text-black !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
+                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none " href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
                 </p>
         ');
     }

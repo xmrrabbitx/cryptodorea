@@ -118,7 +118,7 @@ var_dump($encryptionInfo);
                         $encryptionInfo['value'] = substr($_encValue,2);
                         $encryptionInfo['encryptedMessage'] = $_encMessage;
                         $encryptionInfoCampaigns[$campaignName] = $encryptionInfo;
-                        var_dump($encryptionInfoCampaigns);
+//var_dump($encryptionInfoCampaigns);
                         update_option('encryptionCampaign',$encryptionInfoCampaigns);
 
 //var_dump(($encryptionInfo));

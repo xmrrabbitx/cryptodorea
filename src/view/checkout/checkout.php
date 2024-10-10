@@ -33,6 +33,7 @@ function cashback(): void
                 $addtoCashback = true;
                 // show campaigns in view
                 if (!empty($cashbackList)) {
+
                     foreach ($diffCampaignsList as $campaign) {
                         // check if any campaign funded or not!
                         if (get_option($campaign . '_contract_address')) {
