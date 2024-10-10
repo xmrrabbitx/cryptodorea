@@ -34,34 +34,6 @@ function dorea_cashback_campaign_content():void
         <p id='errorMessg' style='display: none'></p>
     ");
 
-    // remove any error handling here beacuse wordpress errors must be disposable
-    /*
-    $emptyError = filter_input( INPUT_GET, 'emptyErrorFeilds' );
-    if($emptyError){
-        print("<span style='color:#ff5d5d;'>$emptyError</span>");
-    }
-
-    $campaignError = filter_input( INPUT_GET, 'campaignError' );
-    if($campaignError){
-        print("<span style='color:#ff5d5d;'>$campaignError</span>");
-    }
-
-    $cryptoAmount = filter_input( INPUT_GET, 'cryptoAmountError' );
-    if($cryptoAmount){
-        print("<span style='color:#ff5d5d;'>$cryptoAmount</span>");
-    }
-
-    $expiredError = filter_input( INPUT_GET, 'expiredError' );
-    if($expiredError){
-        print("<span style='color:#ff5d5d;'>$expiredError</span>");
-    }
-
-    $existedCampaignError = filter_input( INPUT_GET, 'existedCampaignError' );
-    if($existedCampaignError){
-        print("<span style='color:#ff5d5d;' class=''>$existedCampaignError</span>");
-    }
-    */
-
     print("
       </p>
       <div class='!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md'>
