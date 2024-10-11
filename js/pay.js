@@ -99,17 +99,10 @@ campaignNames.forEach(
                 const contract = new ethers.Contract(contractAddress, abi, signer)
 
                 // check if transaction exceeds the contract balance
-                const balance = await contract.getBalance();
-                console.log(balance)
-                if(fundAgainAmount > balance){
+                //const balance = await contract.getBalance();
 
-                    metamaskError.style.display = "block";
-                    const errorText = document.createTextNode("Sorry, the campaign has not enough fund!");
-                    metamaskError.appendChild(errorText);
-                    return false;
-
-                }
-
+                console.log(OBJECT.remainingAmount)
+                console.log(fundAgainAmount.toString())
                 await contract.fundAgain(
                         messageHash,
                         v,

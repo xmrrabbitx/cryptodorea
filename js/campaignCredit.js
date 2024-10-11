@@ -1,7 +1,7 @@
 
 import {
     BrowserProvider,
-    ContractFactory,
+    ContractFactory, ethers,
 } from "./ethers.min.js";
 
 import {abi,bytecode} from "./compile.js";
@@ -13,6 +13,14 @@ function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
             document.getElementById("doreaFund").addEventListener("click", async () => {
+
+                function convertWeiToEther(amount){
+
+                    const creditAmountBigInt = amount;
+                    const multiplier = 1e18;
+                    return creditAmountBigInt / multiplier;
+
+                }
 
                 let campaignName = OBJECT.campaignName;
 
@@ -82,6 +90,10 @@ function delay(){
                         const factory = new ContractFactory(abi, bytecode, signer)
 
                         let contractAmountBigInt;
+
+                        // calculate 10% of amount
+                        contractAmount = parseFloat(contractAmount) / (1-0.1)
+
                         if ((typeof (contractAmount) === "number") && (Number.isInteger(contractAmount))) {
                             const creditAmountBigInt = BigInt(contractAmount);
                             const multiplier = BigInt(1e18);
@@ -97,7 +109,7 @@ function delay(){
                             const creditAmountInt = BigInt(Math.round(creditAmount * factor));
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
-
+                        console.log(contractAmountBigInt)
                         //If your contract requires constructor args, you can specify them here
                         await factory.deploy(
                             OBJECT._encKey,
@@ -114,6 +126,12 @@ function delay(){
                             response.waitForDeployment().then(async (receipt) => {
 
                                 if (receipt) {
+
+                                    const contract = new ethers.Contract(contractAddress, abi, signer);
+
+                                    let balance = await contract.getBalance();
+                                    balance = convertWeiToEther(parseInt(balance));
+
                                     // get contract address
                                     let xhr = new XMLHttpRequest();
 
@@ -130,7 +148,7 @@ function delay(){
 
                                     xhr.send(JSON.stringify({
                                         "contractAddress": contractAddress,
-                                        "contractAmount": contractAmount
+                                        "contractAmount": balance
                                     }));
                                 }
                             });
@@ -148,6 +166,8 @@ function delay(){
                         return false;
 
                     }
+
+
                 }
 
                 document.getElementById("doreaFund").disabled = false;

@@ -120,7 +120,7 @@ function dorea_main_page_content():void
                     <span class="!col-span-1"></span>
                 ');
             }
-
+var_dump($doreaContractAddress);
             // payment page
             if($doreaContractAddress) {
                 print('
@@ -184,9 +184,9 @@ function dorea_main_page_content():void
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
                         <!-- payment campaign page link -->
-                        <span class="float-right">
+                        <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                               <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                             </svg>
@@ -209,7 +209,7 @@ function dorea_main_page_content():void
                 <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
                 </br>
                 <p class="pt-2 mt-7 text-center">
-                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none " href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
+                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
                 </p>
         ');
     }

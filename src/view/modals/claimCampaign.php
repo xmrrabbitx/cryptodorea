@@ -23,7 +23,7 @@ function claimModal():void
         $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
         $encryptionInfo = get_option('encryptionCampaign');
         $encryptionInfo = $encryptionInfo[$json->campaignName];
-var_dump($encryptionInfo);
+
         $amountsBinary = '';
         $hexAmount = str_pad(gmp_strval(gmp_init($json->amount, 10), 16), 64, '0', STR_PAD_LEFT);
         $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
@@ -31,8 +31,6 @@ var_dump($encryptionInfo);
         $encrypt = new encrypt();
         $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), hex2bin(substr($json->_encValue,2)), $amountsBinary);
 
-        var_dump($encryptionMessage);
-        var_dump($encryptionInfo['encryptedMessage']);
         if($encryptionMessage === $encryptionInfo['encryptedMessage']){
 
             // check is_paid
@@ -150,7 +148,7 @@ var_dump($encryptionInfo);
                 //var_dump($_encMessage);
 
             }
-
+var_dump($userEther);
             if ($userEther) {
                 print('
                 <div id="doreaClaimModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
