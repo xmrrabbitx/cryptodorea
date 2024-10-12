@@ -16,6 +16,7 @@ function dorea_admin_pay_campaign():void
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
     static $fundOption;
+    static $claimedRewardHeader = true;
 
     $cashbackName = $_GET['cashbackName'] ?? null;
     $cashbackInfo = get_transient($cashbackName) ?? null;
@@ -27,9 +28,8 @@ function dorea_admin_pay_campaign():void
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
     ");
 
-    // redirect to admin page if no campaign existed!
+    // check if no campaign existed!
     if(!$cashbackInfo){
-        //wp_redirect($home_url);
 
         print("
             <!-- error on no campaign -->
@@ -45,12 +45,11 @@ function dorea_admin_pay_campaign():void
         return;
     }
 
-    $expireDate = get_transient($cashbackName)['timestampExpire'];
+    //$expireDate = get_transient($cashbackName)['timestampExpire'];
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
 
-    $expire = new expireCampaignController();
-
+    //$expire = new expireCampaignController();
 
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
 
@@ -72,7 +71,7 @@ function dorea_admin_pay_campaign():void
 
         $totalEthers = [];
         $usersList = [];
-var_dump($cashbackInfo);
+
         $contractAmount = $cashbackInfo['contractAmount'];
         $shoppingCount = $cashbackInfo['shoppingCount'];
 
@@ -137,8 +136,12 @@ var_dump($cashbackInfo);
                     print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
                     print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6) . "</span>");
                     print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts'] . "</span>");
-                    print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
+                    //print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
+                    if (isset($campaignUser[$cashbackName]['claimedReward'])) {
 
+                        print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
+
+                    }
 
                     $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
 
@@ -177,63 +180,44 @@ var_dump($cashbackInfo);
                     ");
                 }
 
-                    // get contract address of campaign
-                    $doreaContractAddress = get_option($cashbackName . '_contract_address');
-                    if (!empty($totalEthers)) {
+                // get contract address of campaign
+                $doreaContractAddress = get_option($cashbackName . '_contract_address');
+                if (!empty($totalEthers)) {
 
-                            // check for funding campaign
-                            if ((float)array_sum($totalEthers) > (float)$contractAmount) {
+                   // check for funding campaign
+                   if ((float)array_sum($totalEthers) > (float)$contractAmount) {
 
-                                $fundOption = true;
-                            }
+                       $fundOption = true;
+                   }
+                   print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
 
-                            print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
+                }
+                    /*else {
 
-                    } else {
+
                         print ("
-                            <!-- error on no users -->
-                            <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
-                                 <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                     <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
-                                </svg>
-                                <p class='!pt-3 !pb-2'>
-                                  there is no eligible users to pay in the loyalty campaign!
-                                </p>
-                               
-                            </div>
+                           <!-- error on no users -->
+                           <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+                               <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                   <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                               </svg>
+                               <p class='!pt-3 !pb-2'>
+                                   there is no users to pay in the loyalty campaign!
+                               </p>              
+                           </div>
                         ");
-                    }
+
+                    }*/
 
                 // list claimed rewards
-                if (isset($campaignUser[$cashbackName]['claimedReward'])) {
-                    print('
-                            <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
-                                <div class="!col-span-1 !grid !grid-cols-5">
-                                     <span class="!text-center !pl-3">
-                                         Username
-                                         <hr>
-                                     </span>
-                                     <span class="!text-center">
-                                         Claimed Rewards
-                                         <hr>
-                                     </span>
-                            </div>
-                        ');
-
-                    print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . $users . "</span> ");
-                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
-
-                    print("
-                                </div>
-                            </div>
-                        ");
-                }
 
 
             }
 
         }
+
+
+
 
         if($fundOption) {
 
@@ -246,10 +230,7 @@ var_dump($cashbackInfo);
 
             // calculate remaining amount eth to pay
             $remainingAmount = bcsub((float)array_sum($totalEthers),(float)$contractAmount,10);
-
-            var_dump($remainingAmount);
-            var_dump($contractAmount);
-
+;
             // load campaign credit scripts
             wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
 

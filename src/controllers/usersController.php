@@ -10,7 +10,7 @@ use Cryptodorea\Woocryptodorea\abstracts\usersAbstract;
 class usersController extends usersAbstract
 {
 
-    function is_paid($campaignName, array $usersList, array $claimedAmount, array $totalPurchases): void
+    function is_paid($campaignName, array $usersList, array $amount, array $totalPurchases): void
     {
 
         $i = 0;

@@ -20,8 +20,8 @@ jQuery(document).ready(async function($) {
         (element) =>
             claimContainer.appendChild(element)
     )
-    //await new Promise(r => setTimeout(r, 2500));
-    $(claimContainer).show(0);
+    await new Promise(r => setTimeout(r, 2500));
+    $(claimContainer).show(3000);
     claimCampaignModal.forEach(
 
         (element) =>
@@ -113,6 +113,19 @@ jQuery(document).ready(async function($) {
 
                             const contract = new ethers.Contract(contractAddress, abi, signer);
 
+                            let balance = await contract.getBalance();
+
+                            console.log(balance)
+                            console.log(parseInt(amount))
+                            if(balance < parseInt(amount)){
+
+                                errorMessg.innerHTML = "the campaign reached to the end!";
+                                $(errorMessg).show("slow");
+                                await new Promise(r => setTimeout(r, 2500));
+                                $(errorMessg).hide("slow");
+
+                            }
+
                             await contract.pay(
                                 walletAddress,
                                 parseInt(amount),
@@ -132,10 +145,6 @@ jQuery(document).ready(async function($) {
                                         await new Promise(r => setTimeout(r, 1500));
                                         $(successMessg).hide("slow");
 
-                                        //let balance = await contract.getBalance();
-                                        //balance = convertWeiToEther(parseInt(balance));
-
-                                        //$(claimContainer).hide("slow");
 
                                         let xhr = new XMLHttpRequest();
 
@@ -145,6 +154,8 @@ jQuery(document).ready(async function($) {
                                             if (xhr.readyState === 4 && xhr.status === 200) {
 
                                                 // window.location.reload();
+
+                                                $(claimContainer).hide("slow");
                                             }
                                         }
                                         xhr.send(JSON.stringify({"amount":amount,'_encValue':_encValue, '_encMessage':_encMessage,"campaignName":campaignName,"totalPurchases":totalPurchases,"claimedAmount":amountEther}));
@@ -153,12 +164,23 @@ jQuery(document).ready(async function($) {
                             });
 
                         }catch (error) {
-                            console.log(error)
-                            errorMessg.innerHTML = error.revert.args[0];
+                            let err = error.revert.args[0];
+                            if(err === "Transfer failed!"){
+                                errorMessg.innerHTML = "Transaction was not successful!";
+                            }
+                            if(err === "Transaction expired!"){
+                                errorMessg.innerHTML = "Transaction is not valid!";
+                            }
+                            if(err === "User sign is not Authorized!"){
+                                errorMessg.innerHTML = "change your wallet address to claim!";
+                            }
+                            if(err === "User is not Authorized!"){
+                                errorMessg.innerHTML = "you don't have permission to claim!";
+                            }
+
                             $(errorMessg).show("slow");
                             await new Promise(r => setTimeout(r, 1000));
                             $(errorMessg).hide("slow");
-
 
                         }
                     }

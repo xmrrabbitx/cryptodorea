@@ -120,7 +120,7 @@ function dorea_main_page_content():void
                     <span class="!col-span-1"></span>
                 ');
             }
-var_dump($doreaContractAddress);
+
             // payment page
             if($doreaContractAddress) {
                 print('
@@ -136,7 +136,6 @@ var_dump($doreaContractAddress);
                 <div class="!flex !grid-flex lg:!gap-3 !gap-1 lg:!pl-0 !pl-2 !text-center">
             ');
             if($doreaContractAddress) {
-
                 print('
                     <!-- success status of campaign -->
                     <span class="col-span-1">
