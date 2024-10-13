@@ -6,7 +6,6 @@
 
 use Cryptodorea\Woocryptodorea\controllers\checkoutController;
 use function Cryptodorea\Woocryptodorea\view\modals\claimCampaign\claimModal;
-use function Cryptodorea\Woocryptodorea\view\modals\claimCampaign\dorea_claimed_cashback;
 
 add_action('wp','wpRequest');
 /**
@@ -14,6 +13,7 @@ add_action('wp','wpRequest');
  */
 function wpRequest()
 {
+
     // check on Authentication
     if(is_user_logged_in()) {
 
@@ -24,7 +24,5 @@ function wpRequest()
         // trigger claim modal
         claimModal();
 
-        // check if cashback claimed or not
-        dorea_claimed_cashback();
     }
 }

@@ -13,19 +13,39 @@ let closeCmampaignModal = document.getElementById("doreaCloseModal");
 let errorMessg = document.getElementById("doreaClaimError");
 let successMessg = document.getElementById("doreaClaimSuccess");
 
+
+var dorea_cashbback_menu = document.querySelector('a[href*="dorea_cashbback_menu"]');
+
+
+
 jQuery(document).ready(async function($) {
+
+    // show modal on sidebar menu trigger
+    dorea_cashbback_menu.addEventListener('click',function (event){
+        event.preventDefault();
+
+        $(claimContainer).show(2500);
+    });
 
     claimCampaignContent.forEach(
 
         (element) =>
             claimContainer.appendChild(element)
     )
-    await new Promise(r => setTimeout(r, 2500));
-    $(claimContainer).show(3000);
+
+    let currentDate = new Date();
+    let timerCheck = sessionStorage.getItem('doreaTimer');
+    //console.log(currentDate)
+    console.log(timerCheck)
+    if(timerCheck < currentDate || timerCheck === null) {
+        // show modal on timer
+        await new Promise(r => setTimeout(r, 2500));
+        $(claimContainer).show(3000);
+    }
+
     claimCampaignModal.forEach(
 
         (element) =>
-
             element.addEventListener("click", async function(){
 
                 let contractAddress = element.value.split("_")[0] ?? null;
@@ -192,5 +212,31 @@ jQuery(document).ready(async function($) {
     closeCmampaignModal.addEventListener("click", async function (){
         await new Promise(r => setTimeout(r, 100));
         $(claimContainer).hide("slow");
+        return timer();
     });
+
+    function timer(){
+
+        let timerCheck = sessionStorage.getItem('doreaTimer');
+        let timerState = sessionStorage.getItem('doreaTimerState');
+        let currentDate = new Date();
+        let nextDate;
+        let state;
+console.log(timerState)
+        if(timerState === null || timerState === "0"){
+            nextDate = currentDate.getTime() + 15 * 60000;
+            state = "1";
+        }else if(timerState === "1"){
+            nextDate = currentDate.setDate(currentDate.getDate() + 1);
+            state = "2";
+        }else{
+            nextDate = "";
+            state = "0";
+        }
+
+        sessionStorage.setItem('doreaTimer',nextDate.toString());
+        sessionStorage.setItem('doreaTimerState',state.toString());
+
+    }
+
 });

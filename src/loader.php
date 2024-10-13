@@ -99,6 +99,35 @@ class loader{
     }
 }
 
+function doorea_cashback_menu( $items ) {
+    // Remove the logout menu item.
+    $logout = $items['customer-logout'];
+    unset( $items['customer-logout'] );
+
+    // Insert your dorea cashback menu item
+    $items['dorea_cashbback_menu'] = __( 'Dorea Cashback', 'woocommerce' );
+
+    // Insert back the logout item.
+    $items['customer-logout'] = $logout;
+
+    return $items;
+}
+add_filter( 'woocommerce_account_menu_items', 'doorea_cashback_menu' );
+
+function add_type_test($tag, $handle, $src) {
+
+    // if not your script, do nothing and return original $tag
+    if ( 'DOREA_TEST_SCRIPT' !== $handle ) {
+        return $tag;
+    }
+    // change the script tag by adding type="module" and return it.
+    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+    return $tag;
+}
+// add module type to script
+add_filter('script_loader_tag', 'add_type_test' , 10, 3);
+//wp_enqueue_script('DOREA_TEST_SCRIPT', plugins_url('/woo-cryptodorea/js/test.js'), array('jquery', 'jquery-ui-core'));
+
 
 // remove after testting
 //add_action('admin_menu','deploy');

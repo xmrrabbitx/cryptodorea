@@ -13,7 +13,7 @@ use Cryptodorea\Woocryptodorea\utilities\encrypt;
 function claimModal():void
 {
 
-    // get Json Data
+    // check if cashback claimed or not
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
 
@@ -30,9 +30,6 @@ function claimModal():void
 
         $encrypt = new encrypt();
         $encryptionMessage = $encrypt->keccak(hex2bin($encryptionInfo['key']), hex2bin(substr($json->_encValue,2)), $amountsBinary);
-
-        var_dump($encryptionInfo);
-        var_dump($encryptionMessage);
 
         if($encryptionMessage === $encryptionInfo['encryptedMessage']){
 
@@ -166,11 +163,3 @@ function claimModal():void
     }
 }
 
-/**
- * check if cashback claimed by user!
- */
-function dorea_claimed_cashback()
-{
-
-
-}

@@ -83,8 +83,8 @@ function cashback(): void
  * callback function on order received
  */
 add_action('woocommerce_thankyou','orderReceived');
-function orderReceived($orderId):void{
-
+function orderReceived($orderId):void
+{
     if (is_wc_endpoint_url('order-received')) {
 
         $order = json_decode(new WC_Order($orderId));
