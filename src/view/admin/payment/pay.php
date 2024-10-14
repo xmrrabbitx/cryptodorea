@@ -45,12 +45,7 @@ function dorea_admin_pay_campaign():void
         return;
     }
 
-    //$expireDate = get_transient($cashbackName)['timestampExpire'];
-
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
-
-    //$expire = new expireCampaignController();
-
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
 
     if(empty($userList)){
@@ -74,7 +69,7 @@ function dorea_admin_pay_campaign():void
 
         $contractAmount = $cashbackInfo['contractAmount'];
         $shoppingCount = $cashbackInfo['shoppingCount'];
-
+var_dump($cashbackInfo);
         $addtoPaymentSection = true;
 
         foreach ($userList as $users) {
@@ -87,7 +82,7 @@ function dorea_admin_pay_campaign():void
 
             if($campaignUser) {
 
-                if (isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
+                //if (isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
                     if ($addtoPaymentSection) {
                         print('
@@ -106,7 +101,7 @@ function dorea_admin_pay_campaign():void
                                             <hr>
                                          </span>
                                          <span class="!text-center">
-                                             Amount
+                                             Claimed Amount
                                              <hr>
                                          </span>
                                           <span class="!text-center">
@@ -141,6 +136,8 @@ function dorea_admin_pay_campaign():void
 
                         print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
 
+                    }else{
+                        print("<span class='!pl-3 !col-span-1 !text-sm'>0 ETH</span>");
                     }
 
                     $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
@@ -178,12 +175,13 @@ function dorea_admin_pay_campaign():void
                            </span>
                         </div>
                     ");
-                }
+                //}
 
                 // get contract address of campaign
                 $doreaContractAddress = get_option($cashbackName . '_contract_address');
                 if (!empty($totalEthers)) {
-
+var_dump((float)array_sum($totalEthers));
+var_dump((float)$contractAmount);
                    // check for funding campaign
                    if ((float)array_sum($totalEthers) > (float)$contractAmount) {
 
@@ -209,16 +207,10 @@ function dorea_admin_pay_campaign():void
 
                     }*/
 
-                // list claimed rewards
-
-
             }
 
         }
-
-
-
-
+var_dump($fundOption);
         if($fundOption) {
 
             print("
@@ -230,7 +222,8 @@ function dorea_admin_pay_campaign():void
 
             // calculate remaining amount eth to pay
             $remainingAmount = bcsub((float)array_sum($totalEthers),(float)$contractAmount,10);
-;
+var_dump($contractAmount);
+var_dump($remainingAmount);
             // load campaign credit scripts
             wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
 

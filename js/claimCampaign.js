@@ -14,18 +14,19 @@ let errorMessg = document.getElementById("doreaClaimError");
 let successMessg = document.getElementById("doreaClaimSuccess");
 
 
-var dorea_cashbback_menu = document.querySelector('a[href*="dorea_cashbback_menu"]');
-
+var dorea_cashbback_menu = document.querySelector('a[href*="dorea_cashbback_menu"]') ?? null;
 
 
 jQuery(document).ready(async function($) {
 
-    // show modal on sidebar menu trigger
-    dorea_cashbback_menu.addEventListener('click',function (event){
-        event.preventDefault();
+    if(dorea_cashbback_menu) {
+        // show modal on sidebar menu trigger
+        dorea_cashbback_menu.addEventListener('click', function (event) {
+            event.preventDefault();
 
-        $(claimContainer).show(2500);
-    });
+            $(claimContainer).show(2500);
+        });
+    }
 
     claimCampaignContent.forEach(
 
@@ -35,8 +36,7 @@ jQuery(document).ready(async function($) {
 
     let currentDate = new Date();
     let timerCheck = sessionStorage.getItem('doreaTimer');
-    //console.log(currentDate)
-    console.log(timerCheck)
+
     if(timerCheck < currentDate || timerCheck === null) {
         // show modal on timer
         await new Promise(r => setTimeout(r, 2500));
@@ -78,7 +78,6 @@ jQuery(document).ready(async function($) {
 
                     }
                 }
-
                 function convertWeiToEther(amount){
 
                     const creditAmountBigInt = amount;
@@ -86,7 +85,6 @@ jQuery(document).ready(async function($) {
                     return creditAmountBigInt / multiplier;
 
                 }
-
 
                 await window.ethereum.request({ method: "eth_requestAccounts" });
                 const accounts = await ethereum.request({ method: "eth_accounts" });
@@ -135,8 +133,6 @@ jQuery(document).ready(async function($) {
 
                             let balance = await contract.getBalance();
 
-                            console.log(balance)
-                            console.log(parseInt(amount))
                             if(balance < parseInt(amount)){
 
                                 errorMessg.innerHTML = "the campaign reached to the end!";
@@ -160,6 +156,9 @@ jQuery(document).ready(async function($) {
                                     // transaction on confirmed and mined
                                     if (receipt) {
 
+                                        let balance = await contract.getBalance();
+                                        balance = convertWeiToEther(parseInt(balance));
+
                                         successMessg.innerHTML = "payment has been successfull!";
                                         $(successMessg).show("slow");
                                         await new Promise(r => setTimeout(r, 1500));
@@ -178,7 +177,8 @@ jQuery(document).ready(async function($) {
                                                 $(claimContainer).hide("slow");
                                             }
                                         }
-                                        xhr.send(JSON.stringify({"amount":amount,'_encValue':_encValue, '_encMessage':_encMessage,"campaignName":campaignName,"totalPurchases":totalPurchases,"claimedAmount":amountEther}));
+
+                                        xhr.send(JSON.stringify({"amountWei":amount, 'balance':balance,'_encValue':_encValue, '_encMessage':_encMessage,"campaignName":campaignName,"totalPurchases":totalPurchases,"claimedAmount":amountEther}));
                                     }
                                 });
                             });
@@ -209,11 +209,13 @@ jQuery(document).ready(async function($) {
             })
     )
 
-    closeCmampaignModal.addEventListener("click", async function (){
-        await new Promise(r => setTimeout(r, 100));
-        $(claimContainer).hide("slow");
-        return timer();
-    });
+    if(closeCmampaignModal) {
+        closeCmampaignModal.addEventListener("click", async function () {
+            await new Promise(r => setTimeout(r, 100));
+            $(claimContainer).hide("slow");
+            return timer();
+        });
+    }
 
     function timer(){
 
@@ -222,21 +224,20 @@ jQuery(document).ready(async function($) {
         let currentDate = new Date();
         let nextDate;
         let state;
-console.log(timerState)
-        if(timerState === null || timerState === "0"){
-            nextDate = currentDate.getTime() + 15 * 60000;
-            state = "1";
-        }else if(timerState === "1"){
-            nextDate = currentDate.setDate(currentDate.getDate() + 1);
-            state = "2";
-        }else{
-            nextDate = "";
-            state = "0";
+
+        if (timerCheck === null || timerState === null || timerState === "0") {
+                nextDate = currentDate.getTime() + 15 * 60000;
+                state = "1";
+        } else if (timerState === "1") {
+                nextDate = currentDate.setDate(currentDate.getDate() + 1);
+                state = "2";
+        } else {
+                nextDate = "";
+                state = "0";
         }
 
-        sessionStorage.setItem('doreaTimer',nextDate.toString());
-        sessionStorage.setItem('doreaTimerState',state.toString());
+        sessionStorage.setItem('doreaTimer', nextDate.toString());
+        sessionStorage.setItem('doreaTimerState', state.toString());
 
     }
-
 });

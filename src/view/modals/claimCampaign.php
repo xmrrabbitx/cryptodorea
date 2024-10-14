@@ -20,12 +20,19 @@ function claimModal():void
     if($json) {
 
         // check encryption: balance + encval + key
-        $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+        //$campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+        $campaignInfo = get_transient($json->campaignName);
+
+        // convert wei to ether
+        //$balance = bcdiv($json->balance, "1000000000000000000", 18);
+        $campaignInfo['contractAmount'] = $json->balance;
+        set_transient($json->campaignName, $campaignInfo);
+
         $encryptionInfo = get_option('encryptionCampaign_' . wp_get_current_user()->user_login);
         $encryptionInfo = $encryptionInfo[$json->campaignName];
 
         $amountsBinary = '';
-        $hexAmount = str_pad(gmp_strval(gmp_init($json->amount, 10), 16), 64, '0', STR_PAD_LEFT);
+        $hexAmount = str_pad(gmp_strval(gmp_init($json->amountWei, 10), 16), 64, '0', STR_PAD_LEFT);
         $amountsBinary .= hex2bin($hexAmount); // Convert hex string to binary
 
         $encrypt = new encrypt();
@@ -87,8 +94,7 @@ function claimModal():void
 
                 }
                 if ($userEther) {
-                    //var_dump($userEther);
-                    //var_dump($cashbackInfo['contractAmount']);
+
                     if ($cashbackInfo['contractAmount'] >= $userEther) {
 
                         $campaignEnd = true;

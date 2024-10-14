@@ -76,6 +76,7 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content():void
 {
+
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
@@ -109,7 +110,7 @@ function dorea_main_page_content():void
             print('<span class="!col-span-1">'.$campaignName.'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-
+var_dump($doreaContractAddress);
             if ($doreaContractAddress) {
                 print ('<span class="!col-span-1 !text-emerald-500 lg:!block !hidden">funded!</span>');
             } else {

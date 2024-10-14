@@ -117,7 +117,7 @@ add_filter( 'woocommerce_account_menu_items', 'doorea_cashback_menu' );
 function add_type_test($tag, $handle, $src) {
 
     // if not your script, do nothing and return original $tag
-    if ( 'DOREA_TEST_SCRIPT' !== $handle ) {
+    if ( 'DOREA_CASHBACKMENU_SCRIPT' !== $handle ) {
         return $tag;
     }
     // change the script tag by adding type="module" and return it.
@@ -126,7 +126,6 @@ function add_type_test($tag, $handle, $src) {
 }
 // add module type to script
 add_filter('script_loader_tag', 'add_type_test' , 10, 3);
-//wp_enqueue_script('DOREA_TEST_SCRIPT', plugins_url('/woo-cryptodorea/js/test.js'), array('jquery', 'jquery-ui-core'));
 
 
 // remove after testting

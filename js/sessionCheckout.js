@@ -8,8 +8,8 @@ xhr.setRequestHeader("Content-Type", "application/json");
 
 xhr.onreadystatechange = async function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
-
-        sessionStorage.removeItem("doreaCampaignInfo")
+        sessionStorage.removeItem("doreaCampaignInfo");
+        sessionStorage.removeItem('doreaTimer');
     }
 }
 if(campaignInfo !== null){
