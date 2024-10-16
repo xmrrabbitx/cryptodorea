@@ -58,8 +58,8 @@ function cashback(): void
                                 $campaignLable = explode("_", $campaign)[0];
                                 print(" 
                                   <span>
-                                     <label>" . $campaignLable . "</label>
-                                     <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . $campaign . "'>
+                                     <label>" . esc_html($campaignLable) . "</label>
+                                     <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . esc_js($campaign) . "'>
                                   </span>
                                ");
 

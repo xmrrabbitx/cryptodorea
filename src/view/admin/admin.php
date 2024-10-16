@@ -107,10 +107,10 @@ function dorea_main_page_content():void
                     <div class='xl:!col-span-11 lg:!col-span-11 !col-span-10 !grid xl:!grid-cols-6 lg:!grid-cols-6 md:!grid-cols-6 sm:!grid-cols-6 !grid-cols-2'>
             ");
 
-            print('<span class="!col-span-1">'.$campaignName.'</span>');
+            print('<span class="!col-span-1">'.esc_html($campaignName).'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-var_dump($doreaContractAddress);
+
             if ($doreaContractAddress) {
                 print ('<span class="!col-span-1 !text-emerald-500 lg:!block !hidden">funded!</span>');
             } else {
@@ -125,7 +125,7 @@ var_dump($doreaContractAddress);
             // payment page
             if($doreaContractAddress) {
                 print('
-                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'">pay</a>
+                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'">pay</a>
                 ');
             }
 
@@ -174,7 +174,7 @@ var_dump($doreaContractAddress);
             print('
                     <!-- date of created campaign -->
                     <span class="!mt-1">
-                        '.$startDate[0] . "/" .$startDate[1] ."/". $startDate[2] .'
+                        '.esc_html($startDate[0]) . "/" .esc_html($startDate[1]) ."/". esc_html($startDate[2]) .'
                     </span>
                 </div>
             ');
@@ -184,7 +184,7 @@ var_dump($doreaContractAddress);
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . $campaignName . '_' . $doreaContractAddress . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
                         <!-- payment campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -204,12 +204,11 @@ var_dump($doreaContractAddress);
         }
 
     } else {
-        // remove wordpress prefix on production
         print('
                 <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
                 </br>
                 <p class="pt-2 mt-7 text-center">
-                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="/wordpress/wp-admin/admin.php?page=campaigns">Create Your First Cashback Campaign</a>
+                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url(admin_url("/admin.php?page=campaigns"))  .'">Create Your First Cashback Campaign</a>
                 </p>
         ');
     }

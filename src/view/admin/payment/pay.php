@@ -69,7 +69,7 @@ function dorea_admin_pay_campaign():void
 
         $contractAmount = $cashbackInfo['contractAmount'];
         $shoppingCount = $cashbackInfo['shoppingCount'];
-var_dump($cashbackInfo);
+
         $addtoPaymentSection = true;
 
         foreach ($userList as $users) {
@@ -81,8 +81,6 @@ var_dump($cashbackInfo);
             $ethBasePrice = 0.0004;
 
             if($campaignUser) {
-
-                //if (isset($campaignUser[$cashbackName]['order_ids']) && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
                     if ($addtoPaymentSection) {
                         print('
@@ -128,13 +126,13 @@ var_dump($cashbackInfo);
                     $qualifiedPurchasesTotal = array_sum($result);
 
                     print("<div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-                    print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                    print("<span class='!pl-3 !col-span-1'>" . substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6) . "</span>");
-                    print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['purchaseCounts'] . "</span>");
-                    //print("<span class='!pl-3 !col-span-1'>$" . array_sum($campaignUser[$cashbackName]['total']) . "</span>");
+                    print("<span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span> ");
+                    print("<span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6) ) . "</span>");
+                    print("<span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
+
                     if (isset($campaignUser[$cashbackName]['claimedReward'])) {
 
-                        print("<span class='!pl-3 !col-span-1 !text-sm'>" . $campaignUser[$cashbackName]['claimedReward'] . " ETH</span>");
+                        print("<span class='!pl-3 !col-span-1 !text-sm'>" . esc_html($campaignUser[$cashbackName]['claimedReward']). " ETH</span>");
 
                     }else{
                         print("<span class='!pl-3 !col-span-1 !text-sm'>0 ETH</span>");
@@ -175,13 +173,11 @@ var_dump($cashbackInfo);
                            </span>
                         </div>
                     ");
-                //}
 
                 // get contract address of campaign
                 $doreaContractAddress = get_option($cashbackName . '_contract_address');
                 if (!empty($totalEthers)) {
-var_dump((float)array_sum($totalEthers));
-var_dump((float)$contractAmount);
+
                    // check for funding campaign
                    if ((float)array_sum($totalEthers) > (float)$contractAmount) {
 
@@ -210,20 +206,19 @@ var_dump((float)$contractAmount);
             }
 
         }
-var_dump($fundOption);
+var_dump($userEther);
         if($fundOption) {
 
             print("
                   <!-- Fund Again -->
                   <div class='!mx-auto !text-center !mt-5'>
-                       <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . $cashbackName . "_" . $doreaContractAddress . "_fund" . "'>Fund Again</a>
+                       <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . esc_js($cashbackName) . "_" . esc_js($doreaContractAddress) . "_fund" . "'>Fund Again</a>
                   </div>
             ");
 
             // calculate remaining amount eth to pay
             $remainingAmount = bcsub((float)array_sum($totalEthers),(float)$contractAmount,10);
-var_dump($contractAmount);
-var_dump($remainingAmount);
+
             // load campaign credit scripts
             wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
 

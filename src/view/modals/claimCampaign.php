@@ -24,7 +24,6 @@ function claimModal():void
         $campaignInfo = get_transient($json->campaignName);
 
         // convert wei to ether
-        //$balance = bcdiv($json->balance, "1000000000000000000", 18);
         $campaignInfo['contractAmount'] = $json->balance;
         set_transient($json->campaignName, $campaignInfo);
 
@@ -59,7 +58,7 @@ function claimModal():void
         static $_encValue;
         static $_encMessage;
         static $userEther;
-        static $campaignEnd;
+        static $campaignEligibility;
 
         if ($campaignUser) {
 
@@ -97,7 +96,7 @@ function claimModal():void
 
                     if ($cashbackInfo['contractAmount'] >= $userEther) {
 
-                        $campaignEnd = true;
+                        $campaignEligibility = true;
 
                         $amountsBinary = '';
                         $wei = bcmul($userEther, "1000000000000000000", 0);
@@ -128,7 +127,6 @@ function claimModal():void
 
                             get_option('encryptionCampaign_' . wp_get_current_user()->user_login) !== false ? update_option('encryptionCampaign_' . wp_get_current_user()->user_login, $userencryption) : add_option('encryptionCampaign_' . wp_get_current_user()->user_login, $userencryption);
 
-
                         }
 
                         print('
@@ -144,7 +142,7 @@ function claimModal():void
                 }
             }
 
-            if ($userEther && $campaignEnd) {
+            if ($userEther && $campaignEligibility) {
                 print('
                     <div id="doreaClaimModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
                        <span id="doreaCloseModal">
@@ -159,12 +157,39 @@ function claimModal():void
                                
                     </div>
                 ');
+            }else{
+                print('
+                   <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
+                       <span id="doreaCloseError">
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right">
+                               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                           </svg>
+                       </span>  
+                          
+                       <h5 class="bold">Congratulations 🎉</h5>
+                       <h6 class="">You Have Claimed All Your Cashbacks!</h6>
+                                   
+                    </div>
+                ');
             }
-
-            // load claim campaign scripts
-            wp_enqueue_script('DOREA_CLAIMCAMPAIGN_SCRIPT', plugins_url('/woo-cryptodorea/js/claimCampaign.js'), array('jquery', 'jquery-ui-core'));
-
+        }else{
+            print('
+               <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
+                   <span id="doreaCloseError">
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                       </svg>
+                   </span>  
+                      
+                   <h5 class="bold">Sorry</h5>
+                   <h6 class="">You didn\'t join any Campaigns yet!</h6>
+                               
+                </div>
+            ');
         }
+
+        // load claim campaign scripts
+        wp_enqueue_script('DOREA_CLAIMCAMPAIGN_SCRIPT', plugins_url('/woo-cryptodorea/js/claimCampaign.js'), array('jquery', 'jquery-ui-core'));
 
     }
 }

@@ -7,24 +7,32 @@ import {
 import {abi} from "./compile.js";
 
 let claimContainer = document.getElementById("doreaClaimModal");
+let claimError = document.getElementById("doreaClaimError");
 let claimCampaignModal = document.querySelectorAll(".doreaClaim");
 let claimCampaignContent = document.querySelectorAll(".doreaModalContent");
-let closeCmampaignModal = document.getElementById("doreaCloseModal");
+let closeCampaignModal = document.getElementById("doreaCloseModal");
+let closeCampaignError = document.getElementById("doreaCloseError");
 let errorMessg = document.getElementById("doreaClaimError");
 let successMessg = document.getElementById("doreaClaimSuccess");
 
-
 var dorea_cashbback_menu = document.querySelector('a[href*="dorea_cashbback_menu"]') ?? null;
 
-
 jQuery(document).ready(async function($) {
+
+
 
     if(dorea_cashbback_menu) {
         // show modal on sidebar menu trigger
         dorea_cashbback_menu.addEventListener('click', function (event) {
             event.preventDefault();
 
-            $(claimContainer).show(2500);
+            if(claimContainer) {
+                $(claimContainer).show(2500);
+            }else {
+
+                $(claimError).show(2500);
+
+            }
         });
     }
 
@@ -209,8 +217,8 @@ jQuery(document).ready(async function($) {
             })
     )
 
-    if(closeCmampaignModal) {
-        closeCmampaignModal.addEventListener("click", async function () {
+    if(closeCampaignModal) {
+        closeCampaignModal.addEventListener("click", async function () {
             await new Promise(r => setTimeout(r, 100));
             $(claimContainer).hide("slow");
             return timer();
@@ -239,5 +247,12 @@ jQuery(document).ready(async function($) {
         sessionStorage.setItem('doreaTimer', nextDate.toString());
         sessionStorage.setItem('doreaTimerState', state.toString());
 
+    }
+
+    if(closeCampaignError) {
+        closeCampaignError.addEventListener("click", async function () {
+            await new Promise(r => setTimeout(r, 100));
+            $(claimError).hide("slow");
+        });
     }
 });

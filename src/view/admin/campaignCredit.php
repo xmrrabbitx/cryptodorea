@@ -90,13 +90,10 @@ function dorea_contract_address()
 {
 
     static $doreaContractAddress;
-    static $contractAmount;
 
     if(isset($_GET['cashbackName'])) {
         $campaignName = $_GET['cashbackName'];
-
         $doreaContractAddress = get_option($campaignName . '_contract_address') ?? null;
-
     }
 
     // get Json Data

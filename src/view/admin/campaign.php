@@ -99,11 +99,11 @@ function dorea_cashback_campaign_content():void
                 }
 
                 if($monthsList[$index] === $currentDate){
-                    print("<option class='!border-hidden' value='".$monthNum . "_" . $nextYear."' selected>".$monthsList[$index]."</option>");
+                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."' selected>".esc_html($monthsList[$index])."</option>");
 
                 }
                 else{
-                    print("<option class='!border-hidden' value='".$monthNum . "_" . $nextYear."'>".$monthsList[$index]."</option>");
+                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."'>".esc_html($monthsList[$index])."</option>");
 
                 }
 
@@ -127,11 +127,11 @@ function dorea_cashback_campaign_content():void
 
                 if($days === $currentDay){
                     print("
-                      <option class='!border-hidden' value='".$index."' selected>".$days."</option>
+                      <option class='!border-hidden' value='".esc_js($index)."' selected>".esc_html($days)."</option>
                     ");
                 }else {
                     print("
-                      <option class='!border-hidden' value='".$index."'>" . $days . "</option>
+                      <option class='!border-hidden' value='".esc_js($index)."'>" . esc_html($days) . "</option>
                     ");
                 }
             }
@@ -169,14 +169,11 @@ function dorea_cashback_campaign_content():void
  * set up cashback campaign
  */
 add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
-
 function dorea_admin_cashback_campaign()
 {
-    //static $home_url = 'admin.php?page=crypto-dorea-cashback';
     $referer = explode("&", wp_get_referer())[0];
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['cryptoAmount'] && $_POST['shoppingCount'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
-
 
             $campaignName = trim(htmlspecialchars($_POST['campaignName']));
             $cryptoType = htmlspecialchars($_POST['cryptoType']);
