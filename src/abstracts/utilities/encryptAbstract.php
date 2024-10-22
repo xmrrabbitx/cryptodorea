@@ -17,7 +17,7 @@ abstract class encryptAbstract
     abstract  function sha256Salt();
     abstract  function encryptAes($data);
     abstract  function decryptAes($data, $key, $iv);
-    abstract function encryptGenerate();
+    abstract function encryptGenerate(string $campaignName);
     abstract function keccak($key, $value);
 
 }

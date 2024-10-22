@@ -76,7 +76,6 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content():void
 {
-
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
@@ -110,15 +109,15 @@ function dorea_main_page_content():void
             print('<span class="!col-span-1">'.esc_html($campaignName).'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
-
+var_dump($doreaContractAddress);
             if ($doreaContractAddress) {
-                print ('<span class="!col-span-1 !text-emerald-500 lg:!block !hidden">funded!</span>');
+                print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden">funded!</span>');
             } else {
-                print('<a class="!col-span-1 !pl-2 !focus:ring-0 !hover:text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
+                print('<a class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden !pl-2 !focus:ring-0 !hover:text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
 
                 print ('
                     <!-- add column to fill white space in case there is no pay option -->
-                    <span class="!col-span-1"></span>
+                    <span class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden"></span>
                 ');
             }
 
@@ -180,12 +179,27 @@ function dorea_main_page_content():void
             ');
 
             // payment page
+            //href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '`
             if($doreaContractAddress) {
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
                     <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '">
-                        <!-- payment campaign page link -->
+                        <!-- payment-fund campaign page link -->
+                        <span class="!float-right">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                              <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                            </svg>
+                            </svg>
+                        </span>
+                    </a>
+                ');
+            }else {
+                print('
+                    </div>
+                    <div class="lg:!col-span-1 !col-span-2">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '">
+                        <!-- payment-fund campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                               <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
@@ -195,6 +209,7 @@ function dorea_main_page_content():void
                     </a>
                 ');
             }
+
 
             print("
                         </div>

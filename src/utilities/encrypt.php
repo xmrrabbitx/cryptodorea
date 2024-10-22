@@ -6,16 +6,17 @@ use Cryptodorea\Woocryptodorea\abstracts\utilities\encryptAbstract;
 use Exception;
 use kornrunner\Keccak;
 
+
 /**
  * encrypt data
  */
 class encrypt extends encryptAbstract
 {
+    private string $lastNonce;
+
     /**
      * create sha256 hash for secret hash on smart contract deployment
-     * @param $data
      * @return string
-     * @throws \Random\RandomException
      */
     public function randomSha256()
     {
@@ -72,18 +73,49 @@ class encrypt extends encryptAbstract
     public function decryptAes($data, $key, $iv)
     {
        return openssl_decrypt(base64_decode($data), 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+    }
 
+    /**
+     * @throws RandomException
+     * @throws Exception
+     */
+    public function currentNonce(){
+        $_r = random_bytes(16);
+        $_s = random_bytes(16);
+        $_v = random_bytes(16);
+        $_d = random_bytes(16);
+        print_r([
+            bin2hex($_r),
+            bin2hex($_s),
+            bin2hex($_v),
+            bin2hex($_d)
+        ]);
+        $this->lastNonce = Keccak::hash($_r . $_s . $_v . $_d, 256);
+        return $this->lastNonce;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function nextNonce(){
+        if ($this->lastNonce) {
+            // Mix the last nonce with some randomness to generate the next one
+            $_extra = random_bytes(16); // Add some randomness
+            return Keccak::hash($this->lastNonce . $_extra, 256);
+        }
+        return null; // If there's no current nonce, return null
     }
 
     /**
      * create key-value for encryption
+     * @throws Exception
      */
-    public function encryptGenerate():array
+    public function encryptGenerate(string $campaignName):array
     {
-        $key = random_bytes(16);
-        $value = random_bytes(16);
+        var_dump($this->currentNonce());
+        //$options = ['currentNonce'=>$this->currentNonce(), ]
+        return get_option("currentNonce_" . $campaignName) ?  update_option("currentNonce_" . $campaignName, $options) : add_option("currentNonce_" . $campaignName, $options);
 
-        return ['key'=> $key, 'value'=> $value];
     }
 
     /**

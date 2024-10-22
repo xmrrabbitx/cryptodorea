@@ -133,6 +133,11 @@ jQuery(document).ready(async function($) {
                     const s = "0x" + signature.slice(66, 130);
                     const v = parseInt(signature.slice(130, 132), 16);
 
+                    //console.log(messageHash)
+                    //console.log(v)
+                    //console.log(r)
+                    //console.log(s)
+
                     if(amount !== null){
 
                         try{
@@ -181,12 +186,11 @@ jQuery(document).ready(async function($) {
                                             if (xhr.readyState === 4 && xhr.status === 200) {
 
                                                 // window.location.reload();
-
                                                 $(claimContainer).hide("slow");
                                             }
                                         }
 
-                                        xhr.send(JSON.stringify({"amountWei":amount, 'balance':balance,'_encValue':_encValue, '_encMessage':_encMessage,"campaignName":campaignName,"totalPurchases":totalPurchases,"claimedAmount":amountEther}));
+                                        xhr.send(JSON.stringify({"claimCampaign":{"amountWei":amount, 'balance':balance,'_encValue':_encValue, '_encMessage':_encMessage,"campaignName":campaignName,"totalPurchases":totalPurchases,"claimedAmount":amountEther}}));
                                     }
                                 });
                             });

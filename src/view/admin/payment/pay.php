@@ -30,7 +30,6 @@ function dorea_admin_pay_campaign():void
 
     // check if no campaign existed!
     if(!$cashbackInfo){
-
         print("
             <!-- error on no campaign -->
             <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
@@ -44,6 +43,7 @@ function dorea_admin_pay_campaign():void
             </div>");
         return;
     }
+
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
@@ -206,7 +206,7 @@ function dorea_admin_pay_campaign():void
             }
 
         }
-var_dump($userEther);
+
         if($fundOption) {
 
             print("

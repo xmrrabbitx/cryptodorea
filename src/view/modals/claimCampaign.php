@@ -17,7 +17,11 @@ function claimModal():void
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
 
-    if($json) {
+    if(isset($json->claimCampaign)) {
+
+        $json = $json->claimCampaign;
+        var_dump($json->campaignName);
+        //die;
 
         // check encryption: balance + encval + key
         //$campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
@@ -140,6 +144,7 @@ function claimModal():void
                         ');
                     }
                 }
+                var_dump($userEther);
             }
 
             if ($userEther && $campaignEligibility) {
