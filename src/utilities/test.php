@@ -12,39 +12,42 @@ class sol
 
 
 
-    public function generate($next=null):string
+    public function generate($nonce=null):string
     {
-        $this->r = random_bytes(16);
-        $this->s =  random_bytes(16);
-
-        if($next) {
-            var_dump("next + s");
-            $this->v = $next . $this->s;
-        }else{
-            var_dump("r + s");
-            $this->v = $this->r . $this->s;
-        }
 
         print_r([
-            bin2hex($this->r),
-            bin2hex($this->s),
-            bin2hex($this->v),
+            bin2hex($this->secret),
+            bin2hex($this->salt),
         ]);
+        if($nonce) {
 
+            $this->saltValue = Keccak::hash($this->secret . $this->salt . $this->salty, 256);
+            $this->v = hex2bin($this->saltValue) . $this->s;
+//var_dump("_v value:".bin2hex($this->v));
+            // set again
+            $this->secret = random_bytes(16);
+            $this->salt = random_bytes(16);
+            $this->salty = random_bytes(16);
+
+            $this->current = $this->saltValue;
+            return $this->current;
+        }
+
+        $this->secret = random_bytes(16);
+        $this->salt = random_bytes(16);
+        $this->salty = random_bytes(16);
+
+        $this->r = random_bytes(16);
+        $this->s = random_bytes(16);
+
+        $this->saltValue = Keccak::hash($this->secret . $this->salt . $this->salty, 256);
+        $this->v = hex2bin($this->saltValue) . $this->s;
+        var_dump("_v value:".bin2hex($this->v));
         $this->current = Keccak::hash($this->r . $this->s . $this->v, 256);
         return $this->current;
 
     }
 
-    public function next()
-    {
-        $r = random_bytes(16);
-        $s =  random_bytes(16);
-        $v =  random_bytes(16);
-
-        $this->next = Keccak::hash($r . $s . $v, 256);
-        return $this->next;
-    }
 
     /**
      * @throws Exception
@@ -52,7 +55,7 @@ class sol
     public function contract($r, $s, $v, $next):void
     {
         $nonce = Keccak::hash($r . $s . $v, 256);
-        $nextNonce = Keccak::hash($next . $s, 256);
+        $nextNonce = Keccak::hash(hex2bin($next) . $s, 256);
 
         if($nonce === $this->current){
             var_dump("valid nonce!!!");
@@ -69,34 +72,27 @@ class sol
     }
     public function test()
     {
-        $next = $this->next();
-        //var_dump("next nonce created: " . $next);
-        $enc = $this->generate($next);
-        var_dump("nonce: " . $enc);
-        $this->contract($this->r, $this->s, $this->v, $next);
-        var_dump("current Nonce: " . $this->current);
 
+        $nonce = $this->generate();
+        var_dump("nonce: " . $nonce);
+
+        $next = $this->generate($nonce);
+        var_dump("nonce: " . $next);
+
+        $decrypt = bin2hex(hex2bin($next) . $this->s);
+        if($decrypt === bin2hex($this->v)){
+            var_dump("equal!!!");
+        }
+
+        $next = $this->generate($nonce);
+        var_dump("nonce: " . $next);
+
+        $decrypt = bin2hex(hex2bin($next) . $this->s);
+        if($decrypt === bin2hex($this->v)){
+            var_dump("equal!!!");
+        }
         print_r("\n");
 
-        var_dump($next);
-        var_dump(bin2hex($this->s));
-        var_dump(Keccak::hash($next . $this->s, 256));
-        var_dump(Keccak::hash($this->v, 256));
-        /*
-        $next2 = $this->next();
-        $this->generate($next2);
-        //var_dump("next nonce created: " . $next2);
-        $this->contract($this->r, $this->s, $this->v, $next2);
-        var_dump("current Nonce: " . $this->current);
-
-        print_r("\n");
-
-        $next3 = $this->next();
-        $this->generate($next3);
-        //var_dump("next nonce created: " . $next3);
-        $this->contract($this->r, $this->s, $this->v, $next3);
-        var_dump("current Nonce: " . $this->current);
-*/
 
     }
 
