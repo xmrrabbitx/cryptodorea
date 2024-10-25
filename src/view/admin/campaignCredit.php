@@ -18,16 +18,15 @@ function dorea_cashback_campaign_credit():void
         $campaignName = $_GET['cashbackName'];
 
         // generate key-value encryption
-        $encrypt = new encrypt();
-        $encryptGeneration = $encrypt->encryptGenerate($campaignName);
-        var_dump($encryptGeneration);
-        die;
-        $encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
+        //$encrypt = new encrypt();
+        //$encryptGeneration = $encrypt->encryptGenerate($campaignName);
 
-        $campaigCredit = new campaignCreditController();
-        $campaigCredit->encryptionGeneration($campaignName, $encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
+        //$encryptionMessage = $encrypt->keccak($encryptGeneration['key'], $encryptGeneration['value']);
 
-        $_encKey = '0x' . bin2hex($encryptGeneration['key']);
+        //$campaigCredit = new campaignCreditController();
+        //$campaigCredit->encryptionGeneration($campaignName, $encryptGeneration['key'],$encryptGeneration['value'], $encryptionMessage);
+
+        //$_encKey = '0x' . bin2hex($encryptGeneration['key']);
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
@@ -37,7 +36,7 @@ function dorea_cashback_campaign_credit():void
         // load campaign credit scripts
         wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT',plugins_url('/woo-cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
         // set  enc value for deployment
-        $params = array('_encKey' => $_encKey, 'campaignName'=>$campaignName);
+        $params = array('campaignName'=>$campaignName);
         wp_localize_script( 'DOREA_CAMPAIGNCREDIT_SCRIPT', 'OBJECT', $params );
 
     }else{

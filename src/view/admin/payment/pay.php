@@ -146,7 +146,7 @@ function dorea_admin_pay_campaign():void
 
                     $sumUserEthers[] = $userEther;
 
-                    if (array_sum($totalEthers) <= $contractAmount && array_sum($sumUserEthers) <= $contractAmount) {
+                    if (sprintf("%.10f",(float)array_sum($totalEthers)) <= sprintf("%.10f",(float)$contractAmount) && sprintf("%.10f",(float)array_sum($sumUserEthers)) <= sprintf("%.10f",(float)$contractAmount) ) {
 
                         // set qualified users to pay
                         $qualifiedUserEthers[] = $userEther;
@@ -179,7 +179,7 @@ function dorea_admin_pay_campaign():void
                 if (!empty($totalEthers)) {
 
                    // check for funding campaign
-                   if ((float)array_sum($totalEthers) > (float)$contractAmount) {
+                   if (sprintf("%.10f",(float)array_sum($totalEthers)) > sprintf("%.10f",(float)$contractAmount)) {
 
                        $fundOption = true;
                    }
@@ -212,7 +212,7 @@ function dorea_admin_pay_campaign():void
             print("
                   <!-- Fund Again -->
                   <div class='!mx-auto !text-center !mt-5'>
-                       <a href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md' id='campaignPayment_" . esc_js($cashbackName) . "_" . esc_js($doreaContractAddress) . "_fund" . "'>Fund Again</a>
+                       <button id='dorea_fund'  class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Fund Again</button>
                   </div>
             ");
 
@@ -220,19 +220,43 @@ function dorea_admin_pay_campaign():void
             $remainingAmount = bcsub((float)array_sum($totalEthers),(float)$contractAmount,10);
 
             // load campaign credit scripts
-            wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+            wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
 
             // pass params value for deployment
             $params = array(
+                'contractAddress'=>$doreaContractAddress,
+                'campaignName'=>$cashbackName,
+                'remainingAmount' => $remainingAmount,
+            );
+            wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+
+        }else{
+            print("
+                  <!-- Fund Again -->
+                  <div class='!mx-auto !text-center !mt-5'>
+                       <button id='dorea_pay'  href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Pay Campaign</button>
+                  </div>
+            ");
+
+            // load campaign credit scripts
+            wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+
+            $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
+
+            // pass params value for deployment
+            $params = array(
+                'contractAddress'=>$doreaContractAddress,
+                'campaignName'=>$cashbackName,
                 'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
                 'qualifiedUserEthers' => $qualifiedUserEthers,
                 'cryptoAmount' => $cryptoAmount,
-                'remainingAmount' => $remainingAmount,
                 'usersList' => $usersList,
                 'totalPurchases' => $totalPurchases,
             );
-            wp_localize_script('DOREA_PAY_SCRIPT', 'OBJECT', $params);
+            wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+
         }
+
 
     }
 

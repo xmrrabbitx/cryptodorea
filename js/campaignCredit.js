@@ -109,14 +109,11 @@ function delay(){
                             const creditAmountInt = BigInt(Math.round(creditAmount * factor));
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
-                        console.log(contractAmountBigInt)
-                        //If your contract requires constructor args, you can specify them here
+
                         await factory.deploy(
-                            OBJECT._encKey,
                             {
                                 value: contractAmountBigInt.toString(),
                                 gasLimit: 3000000,
-
                             }
                         ).then(async function (response) {
 

@@ -21,8 +21,5 @@ function wpRequest()
         $checkout = new checkoutController();
         $checkout->autoRemove();
 
-        // trigger claim modal
-        claimModal();
-
     }
 }
