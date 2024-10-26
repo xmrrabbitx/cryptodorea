@@ -21,5 +21,6 @@ function wpRequest()
         $checkout = new checkoutController();
         $checkout->autoRemove();
 
+        //claimModal();
     }
 }

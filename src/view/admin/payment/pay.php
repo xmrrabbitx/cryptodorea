@@ -26,6 +26,10 @@ function dorea_admin_pay_campaign():void
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
+            
+            <p id='dorea_error' style='display:none;color:#ff5d5d;'></p>
+            <p id='dorea_success' style='display:none;color:#46f193;'></p>
+
     ");
 
     // check if no campaign existed!
@@ -76,7 +80,7 @@ function dorea_admin_pay_campaign():void
 
             $sumUserEthers = [];
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
-
+var_dump($campaignUser);
             //hypothetical price of eth _ get this from an online service
             $ethBasePrice = 0.0004;
 
@@ -110,7 +114,7 @@ function dorea_admin_pay_campaign():void
                             ');
                         $addtoPaymentSection = false;
                     }
-
+                var_dump($contractAmount);
                     // calculate final price in ETH format
                     $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'], $shoppingCount);
                     $result = [];
@@ -151,7 +155,7 @@ function dorea_admin_pay_campaign():void
                         // set qualified users to pay
                         $qualifiedUserEthers[] = $userEther;
                         $qualifiedWalletAddresses[] = $campaignUser[$cashbackName]['walletAddress'];
-                        //$usersList[] = $users;
+                        $usersList[] = $users;
 
                         print("
                                    <svg class='size-5 text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
@@ -183,7 +187,6 @@ function dorea_admin_pay_campaign():void
 
                        $fundOption = true;
                    }
-                   print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
 
                 }
                     /*else {
@@ -206,7 +209,7 @@ function dorea_admin_pay_campaign():void
             }
 
         }
-
+        var_dump($usersList);
         if($fundOption) {
 
             print("
@@ -291,5 +294,28 @@ function dorea_new_contractBalance():void
             $users = new usersController();
             $users->is_paid($json->campaignName,$usersList,$amount,$totalPurchases);
         }
+    }
+}
+
+add_action('admin_post_dorea_claimed', 'dorea_claimed');
+function dorea_claimed():void
+{
+
+    // check if cashback claimed or not
+    $json_data = file_get_contents('php://input');
+    $json = json_decode($json_data);
+var_dump($json);
+    if(isset($json)) {
+
+        $campaignInfo = get_transient($json->campaignName);
+
+        // convert wei to ether
+        $campaignInfo['contractAmount'] = $json->balance;
+        set_transient($json->campaignName, $campaignInfo);
+
+        // check is_paid
+        $users = new usersController();
+        $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases);
+
     }
 }

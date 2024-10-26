@@ -79,7 +79,7 @@ function dorea_cashback_campaign_content():void
                   <div class='!flex !flex-grid !gap-1'>
                     <select class='!text-right !border-hidden' name='startDateMonth' id='startDateMonth'>
                     
-        ");
+    ");
 
             $index = array_search($currentDate,$monthsList);
             $nextYear = $currentYear;
@@ -214,8 +214,8 @@ function dorea_admin_cashback_campaign()
                 }
 
             }
-
-            if(strlen($campaignName) > 25 ){
+            $campaignLength = explode("_",$campaignName)[0];
+            if(strlen($campaignLength) >= 25 ){
 
                 //throws error on character exceed!
                 $redirect_url = add_query_arg('campaignError', urlencode('no more than 25 characters allowed!'), $referer);

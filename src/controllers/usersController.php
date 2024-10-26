@@ -33,22 +33,24 @@ class usersController extends usersAbstract
         }
     }
 
-    function is_claimed($campaignName, $claimedAmount, $totalPurchases): void
+    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases): void
     {
 
-        $campaignUser = get_option('dorea_campaigninfo_user_' .  wp_get_current_user()->user_login);
+        for($i=0;$i<=count($userList) -1;$i++) {
+            $campaignUser = get_option('dorea_campaigninfo_user_' . $userList[$i]);
 
-        if(isset($campaignUser[$campaignName]['claimedReward'])){
-            $campaignUser[$campaignName]['claimedReward'] = $campaignUser[$campaignName]['claimedReward'] + $claimedAmount;
-        }else{
-            $campaignUser[$campaignName]['claimedReward'] = $claimedAmount;
+            if (isset($campaignUser[$campaignName]['claimedReward'])) {
+                $campaignUser[$campaignName]['claimedReward'] = $campaignUser[$campaignName]['claimedReward'] + $claimedAmount[$i];
+            } else {
+                $campaignUser[$campaignName]['claimedReward'] = $claimedAmount[$i];
+            }
+
+            $campaignUser[$campaignName]['purchaseCounts'] = $campaignUser[$campaignName]['purchaseCounts'] - (int)$totalPurchases[$i];
+            $campaignUser[$campaignName]['total'] = [];
+var_dump($campaignUser);
+            update_option('dorea_campaigninfo_user_' . $userList[$i], $campaignUser);
+
         }
-
-        $campaignUser[$campaignName]['purchaseCounts'] = $campaignUser[$campaignName]['purchaseCounts'] - (int)$totalPurchases;
-        $campaignUser[$campaignName]['total'] = [];
-
-        update_option('dorea_campaigninfo_user_' .  wp_get_current_user()->user_login, $campaignUser);
-
 
     }
 

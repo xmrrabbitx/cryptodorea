@@ -5,39 +5,42 @@ import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, pars
 import {abi} from "./compile.js";
 
 let payCampaign = document.getElementById("dorea_pay");
-let errorMessg = document.getElementById("dorea_metamask_error");
+let errorMessg = document.getElementById("dorea_error");
+let successMessg = document.getElementById("dorea_success");
 
-payCampaign.addEventListener("click", async function(){
-    console.log("pay trigger")
-            function convertToWei(amounts){
+jQuery(document).ready(async function($) {
+
+    payCampaign.addEventListener("click", async function () {
+
+            function convertToWei(amounts) {
 
                 let amountsBig = [];
                 amounts.forEach(
-                  (amount) => {
-                      if ((typeof (amount) === "number") && (Number.isInteger(amount))) {
+                    (amount) => {
+                        if ((typeof (amount) === "number") && (Number.isInteger(amount))) {
 
-                          const creditAmountBigInt = BigInt(amount);
-                          const multiplier = BigInt(1e18);
-                          const result = creditAmountBigInt * multiplier;
-                          amountsBig.push(parseInt(result));
+                            const creditAmountBigInt = BigInt(amount);
+                            const multiplier = BigInt(1e18);
+                            const result = creditAmountBigInt * multiplier;
+                            amountsBig.push(parseInt(result));
 
-                      }else{
+                        } else {
 
-                          const creditAmount = amount; // This is a floating-point number
-                          const multiplier = BigInt(1e18); // This is a BigInt
-                          const factor = 1e18;
+                            const creditAmount = amount; // This is a floating-point number
+                            const multiplier = BigInt(1e18); // This is a BigInt
+                            const factor = 1e18;
 
-                          // Convert the floating-point number to an integer
-                          const creditAmountInt = BigInt(Math.round(creditAmount * factor));
-                          const result = creditAmountInt * multiplier / BigInt(factor);
-                          amountsBig.push(parseInt(result));
-                      }
-                  }
+                            // Convert the floating-point number to an integer
+                            const creditAmountInt = BigInt(Math.round(creditAmount * factor));
+                            const result = creditAmountInt * multiplier / BigInt(factor);
+                            amountsBig.push(parseInt(result));
+                        }
+                    }
                 )
                 return amountsBig;
             }
 
-            function convertWeiToEther(amount){
+            function convertWeiToEther(amount) {
 
                 const creditAmountBigInt = amount;
                 const multiplier = 1e18;
@@ -68,8 +71,8 @@ payCampaign.addEventListener("click", async function(){
              */
 
 
-            await window.ethereum.request({ method: "eth_requestAccounts" });
-            const accounts = await ethereum.request({ method: "eth_accounts" });
+            await window.ethereum.request({method: "eth_requestAccounts"});
+            const accounts = await ethereum.request({method: "eth_accounts"});
             const account = accounts[0];
 
             const provider = new BrowserProvider(window.ethereum);
@@ -91,37 +94,37 @@ payCampaign.addEventListener("click", async function(){
             const s = "0x" + signature.slice(66, 130);
             const v = parseInt(signature.slice(130, 132), 16);
 
-            let amounts  = convertToWei(param.qualifiedUserEthers);
+            let amounts = convertToWei(param.qualifiedUserEthers);
 
             let userAddresses = param.qualifiedWalletAddresses;
 
             let amountsSum = amounts.reduce((accumulator, currentValue) => {
                 return parseInt(accumulator) + parseInt(currentValue)
-            },0);
-
-            console.log(
-                messageHash,
-                r,
-                s,
-                v,
-                amounts,
-                userAddresses,
-                contractAddress
-            )
-
-            try{
+            }, 0);
+            /*
+                        console.log(
+                            messageHash,
+                            r,
+                            s,
+                            v,
+                            amounts,
+                            userAddresses,
+                            contractAddress
+                        )
+            */
+            try {
 
                 const contract = new ethers.Contract(contractAddress, abi, signer);
 
                 let balance = await contract.getBalance();
 
-                if(balance < amountsSum){
+                if (balance < amountsSum || parseInt(balance) === 0) {
 
-                    errorMessg.innerHTML = "the campaign reached to the end!";
+                    errorMessg.innerHTML = "the campaign balance is not enough to pay!";
                     $(errorMessg).show("slow");
                     await new Promise(r => setTimeout(r, 2500));
                     $(errorMessg).hide("slow");
-
+                    return true;
                 }
 
                 await contract.pay(
@@ -131,12 +134,12 @@ payCampaign.addEventListener("click", async function(){
                     v,
                     r,
                     s
-                ).then(async function(response){
+                ).then(async function (response) {
                     response.wait().then(async (receipt) => {
                         // transaction on confirmed and mined
                         if (receipt) {
-                            console.log(receipt)
-                            let balance = await contract.getBalance();
+
+                            balance = await contract.getBalance();
                             balance = convertWeiToEther(parseInt(balance));
 
                             successMessg.innerHTML = "payment has been successfull!";
@@ -144,38 +147,44 @@ payCampaign.addEventListener("click", async function(){
                             await new Promise(r => setTimeout(r, 1500));
                             $(successMessg).hide("slow");
 
-
                             let xhr = new XMLHttpRequest();
 
                             // remove wordpress prefix on production
-                            xhr.open("POST", "#", true);
-                            xhr.onreadystatechange = async function() {
+                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed", true);
+                            xhr.onreadystatechange = async function () {
                                 if (xhr.readyState === 4 && xhr.status === 200) {
 
                                     // window.location.reload();
-                                    $(claimContainer).hide("slow");
+                                    //$(claimContainer).hide("slow");
                                 }
                             }
 
-                            xhr.send(JSON.stringify({"claimCampaign":{"amountWei":amount, 'balance':balance, "campaignName":campaignName,"totalPurchases":totalPurchases,"claimedAmount":amountEther}}));
+                            xhr.send(JSON.stringify({
+                                "userList":param.usersList,
+                                "amountWei": amounts,
+                                'balance': balance,
+                                "campaignName": campaignName,
+                                "totalPurchases": param.totalPurchases,
+                                "claimedAmount": param.qualifiedUserEthers
+                            }));
                         }
                     });
                 });
 
 
-            }catch (error) {
+            } catch (error) {
                 console.log(error)
-                if(typeof error.revert === "undefined")   {
+                if (typeof error.revert === "undefined") {
                     // "Something went wrong. please try again!"
-                }else{
+                } else {
                     let errorMessg = error.revert.args[0];
-                    if(errorMessg === "Insufficient balance"){
+                    if (errorMessg === "Insufficient balance") {
                         errorMessg = "Insufficient balance";
 
-                    }else if(errorMessg === "User is not Authorized!!!"){
+                    } else if (errorMessg === "User is not Authorized!!!") {
                         errorMessg = "You dont have permission to pay!";
 
-                    }else{
+                    } else {
                         errorMessg = "payment was not successfull! please try again!";
 
                     }
@@ -188,4 +197,6 @@ payCampaign.addEventListener("click", async function(){
 
             }
         }
-)
+    )
+
+})
