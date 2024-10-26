@@ -26,10 +26,11 @@ function cashback(): void
 
             if ($cashbackList) {
 
+                print("<div class='' id='add_to_cashback' style='padding-left:10px;'>");
                 if (empty($diffCampaignsList)) {
 
                     print ("
-                    <p>You already joined all cashback programs!</p>
+                    <p class='!text-md'>You already joined all cashback programs!</p>
                 ");
 
                 } else {
@@ -47,25 +48,21 @@ function cashback(): void
                                     // add to cash back program option
                                     if ($addtoCashback) {
                                         print("
-                                  <div id='add_to_cashback' style='margin-bottom:10px;padding:5px;'>
-                                     <p>
-                                        <h4>
-                                           add to cash back program:
-                                           <span>
-                                               <input id='dorea_walletaddress' type='text' placeholder='your wallet address...' >
-                                           </span>
-                                ");
+                                           <h3 class='!text-lg'>Join to Cashback Campaign</h3> 
+                                           <div class='!grid !grid-cols-5'>
+                                           <div class='!col=span-1'>
+                                               <input class='!text-sm' id='dorea_walletaddress' type='text' placeholder='your wallet address...' >
+                                           </div>
+                                           <div class='!ml-1 !col=span-1 !mt-2 !float-left'>
+                                        ");
                                         $addtoCashback = false;
                                     }
 
                                     $campaignLable = explode("_", $campaign)[0];
                                     print(" 
-                                  <span>
-                                     <label>" . esc_html($campaignLable) . "</label>
-                                     <input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_' type='checkbox' value='" . esc_js($campaign) . "'>
-                                  </span>
-                               ");
-
+                                            <label class='!ml-2 !text-sm !float-left'>" . esc_html($campaignLable) . "</label>
+                                            <div class='!float-left !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !mt-1 !accent-white !text-white' type='checkbox' value='" . esc_js($campaign) . "'></div>
+                                    ");
                                 }
 
                             }
@@ -73,11 +70,12 @@ function cashback(): void
                     }
                 }
 
-                print('<p id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>');
+                print('</div></div> <p id="dorea_error" style="display:none;color:#ff5d5d;"></p>');
 
                 // check and add to cash back program
                 wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/woo-cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
 
+                print("</div>");
             }
 
         }
