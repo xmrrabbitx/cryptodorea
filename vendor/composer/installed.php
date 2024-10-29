@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => 'cryptodorea/woocryptodorea',
+        'name' => 'cryptodorea/doreacashback',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '75913d6ad38dd91186006ec09633af6351664808',
+        'reference' => 'dcce58beaa3b9667766a03fffcf99284a18c4047',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'cryptodorea/woocryptodorea' => array(
+        'cryptodorea/doreacashback' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '75913d6ad38dd91186006ec09633af6351664808',
+            'reference' => 'dcce58beaa3b9667766a03fffcf99284a18c4047',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

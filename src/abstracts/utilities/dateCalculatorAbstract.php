@@ -1,6 +1,6 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\abstracts\utilities;
+namespace Cryptodorea\DoreaCashback\abstracts\utilities;
 
 /**
  * an abstract interface for date calculator utilities

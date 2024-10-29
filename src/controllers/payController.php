@@ -1,9 +1,9 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\abstracts\payAbstract;
-use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
+use Cryptodorea\DoreaCashback\abstracts\payAbstract;
+use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
 /**
  * a class for pay controller

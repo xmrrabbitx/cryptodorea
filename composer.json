@@ -1,9 +1,9 @@
 {
-    "name": "cryptodorea/woocryptodorea",
+    "name": "cryptodorea/doreacashback",
 
     "autoload": {
         "psr-4": {
-            "Cryptodorea\\Woocryptodorea\\": "./src"
+            "Cryptodorea\\DoreaCashback\\": "./src"
         }
     },
     "authors": [

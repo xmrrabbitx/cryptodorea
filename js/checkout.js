@@ -47,27 +47,30 @@ jQuery(document).ready(async function($) {
     dorea_add_to_cashback_checkbox.forEach(
         (element) =>
             element.addEventListener('click', async function () {
-                console.log("click event")
                 if (element.checked) {
                     if (!campaignlist.includes(element.value)) {
                         campaignlist.push(element.value);
                         setSession();
-                        console.log("set session")
                     }
                 } else {
                     campaignlist = campaignlist.filter(function (letter) {
                         return letter !== element.value;
                     });
+                    console.log(campaignlist)
+                    let data = JSON.stringify({'campaignlists': campaignlist, 'walletAddress': dorea_walletaddress.value});
+                    sessionStorage.setItem('doreaCampaignInfo', data);
+                    if(campaignlist.length <= 0){
+                        sessionStorage.removeItem('doreaCampaignInfo');
+                    }
                 }
-
             })
     )
 
     function setSession() {
+        console.log("checked")
         if (campaignlist.length > 0 && dorea_walletaddress.value.length > 0) {
             let data = JSON.stringify({'campaignlists': campaignlist, 'walletAddress': dorea_walletaddress.value});
             sessionStorage.setItem('doreaCampaignInfo', data);
-            console.log("session trigger")
         }
 
     }

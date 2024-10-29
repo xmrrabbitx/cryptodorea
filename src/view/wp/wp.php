@@ -4,8 +4,8 @@
  * wp on each user request
  */
 
-use Cryptodorea\Woocryptodorea\controllers\checkoutController;
-use function Cryptodorea\Woocryptodorea\view\modals\claimCampaign\claimModal;
+use Cryptodorea\DoreaCashback\controllers\checkoutController;
+use function Cryptodorea\DoreaCashback\view\modals\userStatusCampaign\userStatusCampaign;
 
 add_action('wp','wpRequest');
 /**
@@ -21,6 +21,6 @@ function wpRequest()
         $checkout = new checkoutController();
         $checkout->autoRemove();
 
-        //claimModal();
+        userStatusCampaign();
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Cryptodorea\Woocryptodorea\controllers\cashbackController;
-use Cryptodorea\Woocryptodorea\controllers\checkoutController;
+use Cryptodorea\DoreaCashback\controllers\cashbackController;
+use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
 add_action('woocommerce_blocks_checkout_enqueue_data','cashback', 10, 3);
 /**
@@ -35,7 +35,8 @@ function cashback(): void
 
                 } else {
                     $addtoCashback = true;
-                    // show campaigns in view
+
+                    // show campaigns in checkout page
                     if (!empty($cashbackList)) {
 
                         foreach ($diffCampaignsList as $campaign) {
@@ -49,31 +50,33 @@ function cashback(): void
                                     if ($addtoCashback) {
                                         print("
                                            <h3 class='!text-lg'>Join to Cashback Campaign</h3> 
-                                           <div class='!grid !grid-cols-5'>
-                                           <div class='!col=span-1'>
-                                               <input class='!text-sm' id='dorea_walletaddress' type='text' placeholder='your wallet address...' >
-                                           </div>
-                                           <div class='!ml-1 !col=span-1 !mt-2 !float-left'>
+                                           <div class='!grid !grid-cols-1 !gap-2'>
+                                           <label class='!text-sm'>choose which campaign you want to participate in:</label>
+                                           <div class='!grid !grid-cols-2 xl:!w-80 lg:!w-80 md:!w-80 sm:!w-80 !w-80 !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>
                                         ");
                                         $addtoCashback = false;
                                     }
 
                                     $campaignLable = explode("_", $campaign)[0];
                                     print(" 
-                                            <label class='!ml-2 !text-sm !float-left'>" . esc_html($campaignLable) . "</label>
-                                            <div class='!float-left !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !mt-1 !accent-white !text-white' type='checkbox' value='" . esc_js($campaign) . "'></div>
+                                            <label class='!ml-2 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center'>" . esc_html($campaignLable) . "</label>
+                                            <div class='!float-left !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1' type='checkbox' value='" . esc_js($campaign) . "'></div>
                                     ");
                                 }
-
                             }
                         }
+                        print('
+                            </div> 
+                            <div class="!col-span-1">
+                                 <input class="!text-sm !mt-2 !ml-1" id="dorea_walletaddress" type="text" placeholder="your wallet address..." >
+                            </div> 
+                           </div> <p class="!text-sm !mt-2" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
+                        ');
                     }
                 }
 
-                print('</div></div> <p id="dorea_error" style="display:none;color:#ff5d5d;"></p>');
-
                 // check and add to cash back program
-                wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/woo-cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
+                wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
 
                 print("</div>");
             }
@@ -95,7 +98,7 @@ function orderReceived($orderId):void
         if(isset($order->id)) {
 
             // send session doreaCampaignInfo to checkout controller
-            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT',plugins_url('/woo-cryptodorea/js/sessionCheckout.js'), array('jquery', 'jquery-ui-core'));
+            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT',plugins_url('/cryptodorea/js/sessionCheckout.js'), array('jquery', 'jquery-ui-core'));
 
             // get Json Data
             $data = file_get_contents('php://input');

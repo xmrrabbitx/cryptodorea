@@ -1,6 +1,6 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\abstracts;
+namespace Cryptodorea\DoreaCashback\abstracts;
 
 /**
  * an abstract interface for cashback class controller

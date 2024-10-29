@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\model;
+namespace Cryptodorea\DoreaCashback\model;
 
-use Cryptodorea\Woocryptodorea\abstracts\model\checkoutModelAbstract;
+use Cryptodorea\DoreaCashback\abstracts\model\checkoutModelAbstract;
 
 /**
  * an abstract for checkout model

@@ -4,16 +4,16 @@
  * Crypto Cashback Campaign
  */
 
-use Cryptodorea\Woocryptodorea\controllers\cashbackController;
-use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
+use Cryptodorea\DoreaCashback\controllers\cashbackController;
+use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
 function dorea_cashback_campaign_content():void
 {
     // load campaign css styles
-    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/woo-cryptodorea/css/campaign.css'));
+    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'));
 
     // load campaign scripts
-    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',plugins_url('/woo-cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',plugins_url('/cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'));
 
     // utilities helper functions
     $dateCalculator = new dateCalculator();

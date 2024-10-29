@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\exceptions;
+namespace Cryptodorea\DoreaCashback\exceptions;
 
-use Cryptodorea\Woocryptodorea\controllers\debugController;
+use Cryptodorea\DoreaCashback\controllers\debugController;
 
 function databaseError($error){
   

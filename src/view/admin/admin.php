@@ -1,9 +1,9 @@
 <?php
 
-use Cryptodorea\Woocryptodorea\controllers\cashbackController;
+use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 // include necessary files
-include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/modals/deleteCampaign.php';
+include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
 /**
  * add menu options to admin panels
@@ -22,8 +22,8 @@ function dorea_add_menu_page(): void
          * Dorea Cash Back Main Menu
          */
         add_menu_page(
-            'WooCryptoDorea', // Page title
-            'WooCryptoDorea', // Menu title
+            'CryptoDorea', // Page title
+            'Home', // Menu title
             'manage_options',  // Capability required to access
             'crypto-dorea-cashback',  // Menu slug (unique identifier)
             'dorea_main_page_content',  // Callback function to display page content
@@ -80,7 +80,7 @@ function dorea_main_page_content():void
     $cashbackList = $cashback->list();
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/woo-cryptodorea/css/admin.css'));
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/admin.css'));
 
     print("
         <main>

@@ -1,9 +1,9 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\abstracts\expireCampaignAbstract;
-use Cryptodorea\Woocryptodorea\utilities\dateCalculator;
+use Cryptodorea\DoreaCashback\abstracts\expireCampaignAbstract;
+use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
 
 class expireCampaignController extends expireCampaignAbstract

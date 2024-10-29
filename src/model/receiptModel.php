@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\model;
+namespace Cryptodorea\DoreaCashback\model;
 
-use Cryptodorea\Woocryptodorea\abstracts\model\receiptModelAbstract;
+use Cryptodorea\DoreaCashback\abstracts\model\receiptModelAbstract;
 
 
 /**

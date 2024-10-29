@@ -1,10 +1,10 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\abstracts\checkoutAbstract;
-use Cryptodorea\Woocryptodorea\model\checkoutModel;
-use Cryptodorea\Woocryptodorea\controllers\receiptController;
+use Cryptodorea\DoreaCashback\abstracts\checkoutAbstract;
+use Cryptodorea\DoreaCashback\model\checkoutModel;
+use Cryptodorea\DoreaCashback\controllers\receiptController;
 use WC_Order;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\abstracts\utilities;
+namespace Cryptodorea\DoreaCashback\abstracts\utilities;
 
 /**
  * an interface for compile class

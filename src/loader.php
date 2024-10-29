@@ -10,13 +10,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * load necessary admin files
  */
-include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/admin/admin.php';
-include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/wp/wp.php';
-include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/checkout/checkout.php';
-include_once WP_PLUGIN_DIR . '/woo-cryptodorea/src/view/modals/claimCampaign.php';
+include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/admin/admin.php';
+include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/wp/wp.php';
+include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/checkout/checkout.php';
+include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/userStatusCampaign.php';
 
 // core js style
-wp_enqueue_script('DOREA_CORE_STYLE',plugins_url('/woo-cryptodorea/js/style.min.js'));
+wp_enqueue_script('DOREA_CORE_STYLE',plugins_url('/cryptodorea/js/style.min.js'));
 
 // add module type to scripts
 add_filter('script_loader_tag', 'add_type_campaigncredit' , 10, 3);
@@ -31,11 +31,11 @@ function add_type_campaigncredit($tag, $handle, $src) {
     return $tag;
 }
 // add module type to script
-add_filter('script_loader_tag', 'add_type_claimcampaign' , 10, 3);
-function add_type_claimcampaign($tag, $handle, $src) {
+add_filter('script_loader_tag', 'add_type_userStatusCampaign' , 10, 3);
+function add_type_userStatusCampaign($tag, $handle, $src) {
 
     // if not your script, do nothing and return original $tag
-    if ( 'DOREA_CLAIMCAMPAIGN_SCRIPT' !== $handle ) {
+    if ( 'DOREA_USERSTATUSCAMPAIGN_SCRIPT' !== $handle ) {
         return $tag;
     }
     // change the script tag by adding type="module" and return it.
@@ -83,7 +83,7 @@ class loader{
      */
     private function removeCacheLogs(){
 
-        $logDirectory = WP_PLUGIN_DIR . "/woo-cryptodorea/debug/";
+        $logDirectory = WP_PLUGIN_DIR . "/cryptodorea/debug/";
         $logFiles = glob($logDirectory . "*.log");
         $maxFileSize = 5 * 1024 * 1024;
 

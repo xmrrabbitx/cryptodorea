@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Cryptodorea\Woocryptodorea\abstracts;
+namespace Cryptodorea\DoreaCashback\abstracts;
 
 /**
  * an abstract interface for admin payment class controller

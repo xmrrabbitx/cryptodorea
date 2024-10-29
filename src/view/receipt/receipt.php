@@ -1,15 +1,15 @@
 <?php
 
-//namespace cryptodorea\woocryptodorea\view\receipt;
+//namespace cryptodorea\DoreaCashback\view\receipt;
 
 /**
  * Crypto Cashback Receipt View
  */
 
-use Cryptodorea\Woocryptodorea\controllers\receiptController;
+use Cryptodorea\DoreaCashback\controllers\receiptController;
 
-require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/receiptController.php");
-require(WP_PLUGIN_DIR . "/woo-cryptodorea/controllers/payController.php");
+require(WP_PLUGIN_DIR . "/cryptodorea/controllers/receiptController.php");
+require(WP_PLUGIN_DIR . "/cryptodorea/controllers/payController.php");
 
 add_action('woocommerce_thankyou','receipt',10,3);
 function receipt($order_id){

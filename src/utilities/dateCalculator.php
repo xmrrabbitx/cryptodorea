@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\utilities;
+namespace Cryptodorea\DoreaCashback\utilities;
 
-use Cryptodorea\Woocryptodorea\abstracts\utilities\dateCalculatorAbstract;
+use Cryptodorea\DoreaCashback\abstracts\utilities\dateCalculatorAbstract;
 
 /**
  * calculate current time in the unix format

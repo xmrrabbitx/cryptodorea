@@ -1,18 +1,19 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\view\modals\claimCampaign;
+
+
+namespace Cryptodorea\DoreaCashback\view\modals\userStatusCampaign;
 
 use Couchbase\ValueRecorder;
-use Cryptodorea\Woocryptodorea\controllers\usersController;
-use Cryptodorea\Woocryptodorea\utilities\encrypt;
+use Cryptodorea\DoreaCashback\controllers\usersController;
 
 /**
- * a modal to claim cashback
- * @throws Exception
+ * a modal to show the status of claimed cashback campaigns
  */
-function claimModal():void
+function userStatusCampaign():void
 {
 
+    /*
     // check if cashback claimed or not
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
@@ -49,9 +50,9 @@ function claimModal():void
 
         }
     }else{
-
+*/
         // load claim campaign style
-        wp_enqueue_style('DOREA_CLAIMCAMPAIGN_STYLE', plugins_url('/woo-cryptodorea/css/claimCampaign.css'));
+        wp_enqueue_style('DOREA_USERSTATUSCAMPAIGN_STYLE', plugins_url('/cryptodorea/css/userStatusCampaign.css'));
 
         $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
 
@@ -68,6 +69,36 @@ function claimModal():void
 
             foreach ($campaignUser as $campaignName => $campaignValue) {
 
+                if(isset($campaignValue['claimedReward'])){
+                    print('
+                       <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
+                           <span id="doreaCloseError">
+                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right">
+                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                               </svg>
+                           </span>  
+                              
+                           <h5 class="bold">cashback list</h5>
+                           <h6 class="">Claimed Rewards: '.$campaignValue['claimedReward'].' ETH </h6>
+                                       
+                        </div>
+                    ');
+                }else{
+                    print('
+                       <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
+                           <span id="doreaCloseError">
+                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right">
+                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                               </svg>
+                           </span>  
+                              
+                           <h5 class="bold">Sorry</h5>
+                           <h6 class="">You didn\'t have won any rewards yet!</h6>
+                                       
+                        </div>
+                    ');
+                }
+                /*
                 $doreaContractAddress = get_option($campaignName . '_contract_address');
 
                 $cashbackInfo = get_transient($campaignName) ?? null;
@@ -145,8 +176,9 @@ function claimModal():void
                     }
                 }
                 var_dump($userEther);
+                */
             }
-
+            /*
             if ($userEther && $campaignEligibility) {
                 print('
                     <div id="doreaClaimModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
@@ -177,6 +209,7 @@ function claimModal():void
                     </div>
                 ');
             }
+            */
         }else{
             print('
                <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
@@ -187,15 +220,15 @@ function claimModal():void
                    </span>  
                       
                    <h5 class="bold">Sorry</h5>
-                   <h6 class="">You didn\'t join any Campaigns yet!</h6>
-                               
+                   <h6 class="">You didn\'t join any Campaigns yet!</h6>      
                 </div>
             ');
         }
 
         // load claim campaign scripts
-        wp_enqueue_script('DOREA_CLAIMCAMPAIGN_SCRIPT', plugins_url('/woo-cryptodorea/js/claimCampaign.js'), array('jquery', 'jquery-ui-core'));
+        wp_enqueue_script('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'));
 
-    }
+
+
 }
 

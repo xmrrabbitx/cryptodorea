@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\utilities;
+namespace Cryptodorea\DoreaCashback\utilities;
 
-use Cryptodorea\Woocryptodorea\abstracts\utilities\encryptAbstract;
+use Cryptodorea\DoreaCashback\abstracts\utilities\encryptAbstract;
 use Exception;
 use kornrunner\Keccak;
 

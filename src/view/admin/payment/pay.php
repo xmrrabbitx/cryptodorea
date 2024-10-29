@@ -1,7 +1,7 @@
 <?php
 
-use Cryptodorea\Woocryptodorea\controllers\usersController;
-use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
+use Cryptodorea\DoreaCashback\controllers\usersController;
+use Cryptodorea\DoreaCashback\controllers\expireCampaignController;
 
 /**
  * Campaign payment list users
@@ -9,7 +9,7 @@ use Cryptodorea\Woocryptodorea\controllers\expireCampaignController;
 function dorea_admin_pay_campaign():void
 {
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/woo-cryptodorea/css/pay.css'));
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'));
 
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
@@ -49,7 +49,8 @@ function dorea_admin_pay_campaign():void
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
-
+var_dump($userList);
+var_dump(get_option("dorea_claimed_users_" . $cashbackName));
     if(empty($userList)){
         print ("
             <!-- error on no users -->
@@ -85,7 +86,8 @@ function dorea_admin_pay_campaign():void
                 //hypothetical price of eth _ get this from an online service
                 $ethBasePrice = 0.0004;
 
-                if ($campaignUser) {
+                if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] > 0) {
+
                     if ($addtoPaymentSection) {
                         print('
                                 <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
@@ -208,60 +210,65 @@ function dorea_admin_pay_campaign():void
 
                     }*/
 
+                    var_dump($totalEthers);
+                    var_dump($contractAmount);
+                    if ($fundOption) {
+                        print("
+                          <!-- Fund Campaign -->
+                          <div class='!mx-auto !text-center !mt-5'>
+                               <button id='dorea_fund'  class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Fund Campaign</button>
+                          </div>
+                        ");
+                        // calculate remaining amount eth to pay
+                        $remainingAmount = bcsub((float)array_sum($totalEthers), (float)$contractAmount, 10);
+                        //var_dump($remainingAmount);
+
+                        // load campaign credit scripts
+                        wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
+
+                        // pass params value for deployment
+                        $params = array(
+                            'contractAddress' => $doreaContractAddress,
+                            'campaignName' => $cashbackName,
+                            'remainingAmount' => $remainingAmount,
+                        );
+                        wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+
+                    }
+                    else {
+                        print("
+                          <!-- Pay Campaign -->
+                          <div class='!mx-auto !text-center !mt-5'>
+                               <button id='dorea_pay'  href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Pay Campaign</button>
+                          </div>
+                        ");
+
+                        // load campaign credit scripts
+                        wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+
+                        $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
+
+                        // pass params value for deployment
+                        $params = array(
+                            'contractAddress' => $doreaContractAddress,
+                            'campaignName' => $cashbackName,
+                            'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
+                            'qualifiedUserEthers' => $qualifiedUserEthers,
+                            'cryptoAmount' => $cryptoAmount,
+                            'usersList' => $usersList,
+                            'totalPurchases' => $totalPurchases,
+                        );
+                        wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+
+                    }
                 }
 
             }
 
-            if ($fundOption) {
-                print("
-                  <!-- Fund Again -->
-                  <div class='!mx-auto !text-center !mt-5'>
-                       <button id='dorea_fund'  class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Fund Again</button>
-                  </div>
-            ");
-                var_dump($usersList);
-                // calculate remaining amount eth to pay
-                $remainingAmount = bcsub((float)array_sum($totalEthers), (float)$contractAmount, 10);
-
-                // load campaign credit scripts
-                wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
-
-                // pass params value for deployment
-                $params = array(
-                    'contractAddress' => $doreaContractAddress,
-                    'campaignName' => $cashbackName,
-                    'remainingAmount' => $remainingAmount,
-                );
-                wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
-
-            } else {
-                print("
-                  <!-- Fund Again -->
-                  <div class='!mx-auto !text-center !mt-5'>
-                       <button id='dorea_pay'  href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Pay Campaign</button>
-                  </div>
-            ");
-
-                // load campaign credit scripts
-                wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/woo-cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
-
-                $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
-
-                // pass params value for deployment
-                $params = array(
-                    'contractAddress' => $doreaContractAddress,
-                    'campaignName' => $cashbackName,
-                    'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
-                    'qualifiedUserEthers' => $qualifiedUserEthers,
-                    'cryptoAmount' => $cryptoAmount,
-                    'usersList' => $usersList,
-                    'totalPurchases' => $totalPurchases,
-                );
-                wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
-
-            }
 
         }
+
+        // pagination navigation
         if($pagination+1 <= count($userList)-1) {
             print('
                 <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1) . '&pageIndex=' . $pageIndex + 1 . '">
@@ -285,6 +292,7 @@ function dorea_admin_pay_campaign():void
                 </a>
             ');
         }
+
     }
 
     print("    

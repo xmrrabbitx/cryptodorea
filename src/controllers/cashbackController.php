@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\abstracts\cashbackAbstract;
+use Cryptodorea\DoreaCashback\abstracts\cashbackAbstract;
 
 /**
  * Controller to create_modify_delete cashback campaign

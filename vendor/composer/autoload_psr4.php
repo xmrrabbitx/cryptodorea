@@ -8,5 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'kornrunner\\' => array($vendorDir . '/kornrunner/keccak/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'Cryptodorea\\Woocryptodorea\\' => array($baseDir . '/src'),
+    'Cryptodorea\\DoreaCashback\\' => array($baseDir . '/src'),
 );

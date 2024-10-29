@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\abstracts\paymentAbstract;
+use Cryptodorea\DoreaCashback\abstracts\paymentAbstract;
 
 
 class paymentController extends paymentAbstract

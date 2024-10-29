@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\utilities;
+namespace Cryptodorea\DoreaCashback\utilities;
 
-use Cryptodorea\Woocryptodorea\abstracts\utilities\expCalculatorAbstract;
+use Cryptodorea\DoreaCashback\abstracts\utilities\expCalculatorAbstract;
 
 /**
  * calculate time untile campaign expires

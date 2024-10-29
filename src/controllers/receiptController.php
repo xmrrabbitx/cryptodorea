@@ -1,9 +1,9 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\model\receiptModel;
-use Cryptodorea\Woocryptodorea\abstracts\receiptAbstract;
+use Cryptodorea\DoreaCashback\model\receiptModel;
+use Cryptodorea\DoreaCashback\abstracts\receiptAbstract;
 
 /**
  * a class for receipt controller

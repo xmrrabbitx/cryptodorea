@@ -1,6 +1,6 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\abstracts\model;
+namespace Cryptodorea\DoreaCashback\abstracts\model;
 
 /**
  * an abstract class for checkout model

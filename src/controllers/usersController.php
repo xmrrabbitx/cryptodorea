@@ -1,8 +1,8 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
+namespace Cryptodorea\DoreaCashback\controllers;
 
-use Cryptodorea\Woocryptodorea\abstracts\usersAbstract;
+use Cryptodorea\DoreaCashback\abstracts\usersAbstract;
 
 /**
  * Controller to create_modify_delete cashback campaign
@@ -33,7 +33,7 @@ class usersController extends usersAbstract
         }
     }
 
-    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases): void
+    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases): bool
     {
 
         for($i=0;$i<=count($userList) -1;$i++) {
@@ -47,11 +47,17 @@ class usersController extends usersAbstract
 
             $campaignUser[$campaignName]['purchaseCounts'] = $campaignUser[$campaignName]['purchaseCounts'] - (int)$totalPurchases[$i];
             $campaignUser[$campaignName]['total'] = [];
-var_dump($campaignUser);
+
             update_option('dorea_campaigninfo_user_' . $userList[$i], $campaignUser);
 
         }
 
+        $campaignUsers = get_option("dorea_campaigns_users_" . $campaignName);
+
+        $userList = array_diff($campaignUsers, $userList);
+        $userList = array_values($userList);
+        update_option("dorea_campaigns_users_" . $campaignName, $userList);
+        return get_option("dorea_claimed_users_" . $campaignName) ? update_option("dorea_claimed_users_" . $campaignName, $userList) : add_option("dorea_claimed_users_" . $campaignName, $userList);
     }
 
 

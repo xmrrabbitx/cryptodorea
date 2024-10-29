@@ -1,7 +1,7 @@
 <?php
 
-namespace Cryptodorea\Woocryptodorea\controllers;
-use Cryptodorea\Woocryptodorea\abstracts\debugAbstract;
+namespace Cryptodorea\DoreaCashback\controllers;
+use Cryptodorea\DoreaCashback\abstracts\debugAbstract;
 
 /**
  * controller for debug errors
@@ -14,7 +14,7 @@ class debugController extends debugAbstract
     function __construct()
     {
 
-        $this->path = WP_PLUGIN_DIR . '/woo-cryptodorea/debug';
+        $this->path = WP_PLUGIN_DIR . '/cryptodorea/debug';
 
     }
 

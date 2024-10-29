@@ -154,8 +154,8 @@ jQuery(document).ready(async function($) {
                             xhr.onreadystatechange = async function () {
                                 if (xhr.readyState === 4 && xhr.status === 200) {
 
-                                    // window.location.reload();
-                                    //$(claimContainer).hide("slow");
+                                     window.location.reload();
+
                                 }
                             }
 

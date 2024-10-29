@@ -21,7 +21,7 @@ class ComposerStaticInita83944fa3e8c7d5187bef2f2d8520751
         ),
         'C' => 
         array (
-            'Cryptodorea\\Woocryptodorea\\' => 27,
+            'Cryptodorea\\DoreaCashback\\' => 26,
         ),
     );
 
@@ -34,7 +34,7 @@ class ComposerStaticInita83944fa3e8c7d5187bef2f2d8520751
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Cryptodorea\\Woocryptodorea\\' => 
+        'Cryptodorea\\DoreaCashback\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),

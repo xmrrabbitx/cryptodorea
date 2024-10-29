@@ -7,7 +7,7 @@
 function deleteModal():bool
 {
     // load claim campaign scripts
-    wp_enqueue_script('DOREA_DELETECAMPAIGN_SCRIPT', plugins_url('/woo-cryptodorea/js/deleteCampaign.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script('DOREA_DELETECAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/deleteCampaign.js'), array('jquery', 'jquery-ui-core'));
 
     return print ('
        <!-- delete campaign modal -->

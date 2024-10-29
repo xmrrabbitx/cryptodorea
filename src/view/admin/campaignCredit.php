@@ -1,7 +1,7 @@
 <?php
 
-use Cryptodorea\Woocryptodorea\controllers\campaignCreditController;
-use Cryptodorea\Woocryptodorea\utilities\encrypt;
+use Cryptodorea\DoreaCashback\controllers\campaignCreditController;
+use Cryptodorea\DoreaCashback\utilities\encrypt;
 
 /**
  * Crypto Cashback Campaign Credit
@@ -11,7 +11,7 @@ function dorea_cashback_campaign_credit():void
 {
 
     // load campaign credit Style
-    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/woo-cryptodorea/css/campaignCredit.css'));
+    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'));
 
     if(!empty($_GET['cashbackName'])) {
 
@@ -23,7 +23,7 @@ function dorea_cashback_campaign_credit():void
         }
 
         // load campaign credit scripts
-        wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT',plugins_url('/woo-cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
+        wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT',plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
 
         // set  enc value for deployment
         $params = array('campaignName'=>$campaignName);
