@@ -49,8 +49,7 @@ function dorea_admin_pay_campaign():void
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
-var_dump($userList);
-var_dump(get_option("dorea_claimed_users_" . $cashbackName));
+
     if(empty($userList)){
         print ("
             <!-- error on no users -->
@@ -210,8 +209,6 @@ var_dump(get_option("dorea_claimed_users_" . $cashbackName));
 
                     }*/
 
-                    var_dump($totalEthers);
-                    var_dump($contractAmount);
                     if ($fundOption) {
                         print("
                           <!-- Fund Campaign -->
@@ -221,7 +218,6 @@ var_dump(get_option("dorea_claimed_users_" . $cashbackName));
                         ");
                         // calculate remaining amount eth to pay
                         $remainingAmount = bcsub((float)array_sum($totalEthers), (float)$contractAmount, 10);
-                        //var_dump($remainingAmount);
 
                         // load campaign credit scripts
                         wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
@@ -265,7 +261,6 @@ var_dump(get_option("dorea_claimed_users_" . $cashbackName));
 
             }
 
-
         }
 
         // pagination navigation
@@ -293,6 +288,11 @@ var_dump(get_option("dorea_claimed_users_" . $cashbackName));
             ');
         }
 
+    }
+
+    $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
+    if(!empty($claimedUsers)){
+        var_dump($claimedUsers);
     }
 
     print("    

@@ -9,6 +9,7 @@ add_action('woocommerce_blocks_checkout_enqueue_data','cashback', 10, 3);
  */
 function cashback(): void
 {
+    static $contractAddressConfirm;
 
     if (!WC()->cart->get_cart_contents_count() == 0) {
 
@@ -43,6 +44,7 @@ function cashback(): void
                             // check if any campaign funded or not!
                             if (get_option($campaign . '_contract_address')) {
 
+                                $contractAddressConfirm = true;
                                 // check if campaign started or not
                                 if ($checkoutController->expire($campaign)) {
 
@@ -65,16 +67,18 @@ function cashback(): void
                                 }
                             }
                         }
-                        print('
-                            </div> 
-                            <div class="!col-span-1">
-                                 <input class="!text-sm !mt-2 !ml-1" id="dorea_walletaddress" type="text" placeholder="your wallet address..." >
-                            </div> 
-                           </div> <p class="!text-sm !mt-2" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
-                        ');
                     }
                 }
 
+                if($contractAddressConfirm) {
+                    print('
+                         </div> 
+                            <div class="!col-span-1">
+                                <input class="!text-sm !mt-2 !ml-1" id="dorea_walletaddress" type="text" placeholder="your wallet address..." >
+                            </div> 
+                         </div> <p class="!text-sm !mt-2" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
+                    ');
+                }
                 // check and add to cash back program
                 wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
 
