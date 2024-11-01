@@ -50,10 +50,10 @@ class checkoutModel extends checkoutModelAbstract
     {
         foreach ($campaignLists as $campaigns) {
 
-            $userList = get_option("dorea_campaigns_users_" . $campaigns);
+            $userList = get_option("dorea_campaigns_users_" . $campaigns) ?? null;
             $userName = wp_get_current_user()->user_login;
 
-            if (!$userList) {
+            if ($userList === false) {
                 add_option("dorea_campaigns_users_" . $campaigns, [$userName]);
             } else {
                 if (!in_array($userName, $userList)) {

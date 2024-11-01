@@ -68,9 +68,7 @@ class checkoutController extends checkoutAbstract
 
     public function addtoListUsers($campaignLists)
     {
-
         $this->checkoutModel->addUser($campaignLists);
-
     }
 
     public function checkout($json)

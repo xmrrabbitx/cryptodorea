@@ -99,11 +99,11 @@ function dorea_cashback_campaign_content():void
                 }
 
                 if($monthsList[$index] === $currentDate){
-                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."' selected>".esc_html($monthsList[$index])."</option>");
+                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."' selected>".$monthsList[$index]."</option>");
 
                 }
                 else{
-                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."'>".esc_html($monthsList[$index])."</option>");
+                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."'>".$monthsList[$index]."</option>");
 
                 }
 
@@ -127,11 +127,11 @@ function dorea_cashback_campaign_content():void
 
                 if($days === $currentDay){
                     print("
-                      <option class='!border-hidden' value='".esc_js($index)."' selected>".esc_html($days)."</option>
+                      <option class='!border-hidden' value='".esc_js($index)."' selected>".$days."</option>
                     ");
                 }else {
                     print("
-                      <option class='!border-hidden' value='".esc_js($index)."'>" . esc_html($days) . "</option>
+                      <option class='!border-hidden' value='".esc_js($index)."'>" . $days . "</option>
                     ");
                 }
             }

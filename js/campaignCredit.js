@@ -73,7 +73,7 @@ function delay(){
                         errorMessg.innerHTML = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
 
                         $(errorMessg).show("slow");
-                        await new Promise(r => setTimeout(r, 1500));
+                        await new Promise(r => setTimeout(r, 2500));
                         $(errorMessg).hide("slow");
 
                         return false;

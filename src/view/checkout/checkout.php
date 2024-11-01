@@ -61,7 +61,7 @@ function cashback(): void
 
                                     $campaignLable = explode("_", $campaign)[0];
                                     print(" 
-                                            <label class='!ml-2 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center'>" . esc_html($campaignLable) . "</label>
+                                            <label class='!ml-2 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center'>" . $campaignLable . "</label>
                                             <div class='!float-left !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1' type='checkbox' value='" . esc_js($campaign) . "'></div>
                                     ");
                                 }
@@ -112,7 +112,7 @@ function orderReceived($orderId):void
                 // save doreaCampaignInfo
                 $checkout = new checkoutController();
 
-                // check if campaign
+                // check if campaign is expired
                 $statusCampaigns = [];
                 $campaignLists = (array)$json->campaignlists;
                 foreach ($campaignLists as $campaign){

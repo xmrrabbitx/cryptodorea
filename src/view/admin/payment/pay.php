@@ -18,14 +18,14 @@ function dorea_admin_pay_campaign():void
     $cashbackName = $_GET['cashbackName'] ?? null;
     $cashbackInfo = get_transient($cashbackName) ?? null;
     $pagination = $_GET['pagination'] ?? 0;
-    $pageIndex = $_GET['pageIndex'] ?? 1;
 
     print("
         <main>
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
-            
+            <h3 class='!pl-5 !text-xs !font-bold'>Campaign Name: ". esc_html($cashbackName) . "</h3> </br>
+
             <p id='dorea_error' style='display:none;'></p>
             <p id='dorea_success' style='display:none;'></p>
     ");
@@ -64,7 +64,7 @@ function dorea_admin_pay_campaign():void
             </div>
         ");
     }
-    else{
+    else {
 
         $totalEthers = [];
         $usersList = [];
@@ -74,10 +74,10 @@ function dorea_admin_pay_campaign():void
 
         $addtoPaymentSection = true;
 
-        if($pagination <= count($userList)-1) {
+        //foreach ($userList as $users) {
+        for ($i = $pagination - 1; $i <= $pagination - 1; $i++) {
 
-            //foreach ($userList as $users) {
-            for ($i = $pagination; $i <= $pagination; $i++) {
+            if ($i <= count($userList) - 1) {
 
                 $users = $userList[$i];
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
@@ -93,26 +93,27 @@ function dorea_admin_pay_campaign():void
                                     <div class="!col-span-1 !grid !grid-cols-5">
                                          <span class="!text-center !pl-3">
                                             Username
-                                            <hr>
+                                           
                                          </span>
                                          <span class="!text-center">
                                              Wallet Address
-                                             <hr>
+                                         
                                          </span>
                                          <span class="!text-center">
                                             Purchase Counts
-                                            <hr>
+                                        
                                          </span>
                                          <span class="!text-center">
-                                             Claimed Amount
-                                             <hr>
+                                             Amount to be Paid
+                                           
                                          </span>
                                           <span class="!text-center">
                                              Eligibility to Pay
-                                             <hr>
+                                            
                                          </span>
                                     </div>
-                            ');
+                                    <hr class="">
+                        ');
                         $addtoPaymentSection = false;
                     }
 
@@ -135,15 +136,9 @@ function dorea_admin_pay_campaign():void
                     print("<span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
                     print("<span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
 
-                    if (isset($campaignUser[$cashbackName]['claimedReward'])) {
-
-                        print("<span class='!pl-3 !col-span-1 !text-sm'>" . esc_html($campaignUser[$cashbackName]['claimedReward']) . " ETH</span>");
-
-                    } else {
-                        print("<span class='!pl-3 !col-span-1 !text-sm'>0 ETH</span>");
-                    }
-
                     $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
+
+                    print("<span class='!pl-3 !col-span-1 !text-sm'>" . esc_html($userEther) . " ETH</span>");
 
                     $totalEthers[] = $userEther;
 
@@ -203,7 +198,7 @@ function dorea_admin_pay_campaign():void
                                </svg>
                                <p class='!pt-3 !pb-2'>
                                    there is no users to pay in the loyalty campaign!
-                               </p>              
+                               </p>
                            </div>
                         ");
 
@@ -230,8 +225,7 @@ function dorea_admin_pay_campaign():void
                         );
                         wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
 
-                    }
-                    else {
+                    } else {
                         print("
                           <!-- Pay Campaign -->
                           <div class='!mx-auto !text-center !mt-5'>
@@ -258,44 +252,77 @@ function dorea_admin_pay_campaign():void
 
                     }
                 }
-
             }
-
         }
 
+    }
+
+    /*
+    $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
+    if (!empty($claimedUsers) && $pagination <= count($claimedUsers)) {
+        for ($i = $pagination - 1; $i <= $pagination - 1; $i++) {
+            $users = $claimedUsers[$i];
+            $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
+
+            print("<hr class='!mt-5 !w-auto'><h3 class='!mt-5'>Claimed Status</h3><div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
+            print("<span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span> ");
+            print("<span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
+            print("<span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
+            print("<span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['claimedReward']) . "</span>");
+            print("</div>");
+        }
+    }
+*/
+
+    if($userList) {
+        print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
-        if($pagination+1 <= count($userList)-1) {
+        if ($pagination-1 <= count($userList) - 1 && $pagination-1 !== 0) {
+            // forward arrow pagination
             print('
-                <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1) . '&pageIndex=' . $pageIndex + 1 . '">
-                    <div class="!mt-0 !mr-1 !float-left">' . $pageIndex + 1 . '</div>
-                    <div class="!float-left">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                    </svg>
-                    </div>
-                </a>
+               <div class="">
+                    <a class="!col-span-1 !mt-0 !pl-0 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+                        </svg>
+                    </a>
+                </div>
             ');
         }else{
-            print('
-                <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '&pageIndex=' . $pageIndex - 1 . '">
-                    <div class="!float-left">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+            // blank space
+            print('<div class="!col-span-1"></div>');
+        }
+        print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
+        if ($pagination <= count($userList) - 1) {
+            print('      
+                <div class="">
+                     <a class="!col-span-1 !mt-0 !pl-0 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
                         </svg>
-                    </div>
-                    <div class="!mt-0 !ml-1 !float-left">' . $pageIndex - 1 . '</div>
-                </a>
+                     </a>
+                 </div>
             ');
         }
-
+        print("</div>");
     }
 
-    $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
-    if(!empty($claimedUsers)){
-        var_dump($claimedUsers);
-    }
+    /*
+    print("
+        <div class='!w-52 !mt-5 !cursor-pointer'>
+           <a class='' href='/'>
+              <div class='!grid grid-cols-2'>
+                 <label class='!pt-1 !cursor-pointer'>Transaction List</label>
+                 <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6'>
+                     <path stroke-linecap='round' stroke-linejoin='round' d='M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z' />
+                 </svg>
+              </div>
+           </a>   
+        </div>
+    ");
+    */
 
-    print("    
+    print("
             </div>
         </main>
     ");
