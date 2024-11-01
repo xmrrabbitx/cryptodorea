@@ -15,23 +15,27 @@ function dorea_admin_pay_campaign():void
     static $qualifiedWalletAddresses;
     static $fundOption;
 
-    $cashbackName = $_GET['cashbackName'] ?? null;
-    $cashbackInfo = get_transient($cashbackName) ?? null;
-    $pagination = $_GET['pagination'] ?? 0;
-
     print("
         <main>
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
-            <h3 class='!pl-5 !text-xs !font-bold'>Campaign Name: ". esc_html($cashbackName) . "</h3> </br>
+            
+    ");
 
+    if(isset($_GET['cashbackName'])){
+        $cashbackName = sanitize_key($_GET['cashbackName']) ?? null;
+        print("<h3 class='!pl-5 !text-xs !font-bold'>Campaign Name: ". $cashbackName . "</h3> </br>");
+    }
+
+    // show errors
+    print("            
             <p id='dorea_error' style='display:none;'></p>
             <p id='dorea_success' style='display:none;'></p>
     ");
 
     // check if no campaign existed!
-    if(!$cashbackInfo){
+    if(!isset($_GET['cashbackName'])){
         print("
             <!-- error on no campaign -->
             <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
@@ -46,6 +50,8 @@ function dorea_admin_pay_campaign():void
         return;
     }
 
+    $cashbackInfo = get_transient($cashbackName) ?? null;
+    $pagination = sanitize_key($_GET['pagination']) ?? 0;
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
@@ -256,23 +262,6 @@ function dorea_admin_pay_campaign():void
         }
 
     }
-
-    /*
-    $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
-    if (!empty($claimedUsers) && $pagination <= count($claimedUsers)) {
-        for ($i = $pagination - 1; $i <= $pagination - 1; $i++) {
-            $users = $claimedUsers[$i];
-            $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
-
-            print("<hr class='!mt-5 !w-auto'><h3 class='!mt-5'>Claimed Status</h3><div class='!col-span-1 !grid !grid-cols-5 !pt-3 !text-center'>");
-            print("<span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span> ");
-            print("<span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
-            print("<span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
-            print("<span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['claimedReward']) . "</span>");
-            print("</div>");
-        }
-    }
-*/
 
     if($userList) {
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');

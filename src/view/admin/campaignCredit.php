@@ -9,13 +9,12 @@ use Cryptodorea\DoreaCashback\utilities\encrypt;
  */
 function dorea_cashback_campaign_credit():void
 {
-
     // load campaign credit Style
     wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'));
 
     if(!empty($_GET['cashbackName'])) {
 
-        $campaignName = $_GET['cashbackName'];
+        $campaignName = sanitize_key($_GET['cashbackName']);
 
         $doreaContractAddress = get_option($campaignName . '_contract_address');
         if($doreaContractAddress){
@@ -83,7 +82,7 @@ function dorea_contract_address()
     static $doreaContractAddress;
 
     if(isset($_GET['cashbackName'])) {
-        $campaignName = $_GET['cashbackName'];
+        $campaignName = sanitize_key($_GET['cashbackName']);
         $doreaContractAddress = get_option($campaignName . '_contract_address') ?? null;
     }
 
@@ -91,15 +90,16 @@ function dorea_contract_address()
     $json_data = file_get_contents('php://input');
     $json = json_decode($json_data);
 
+    $contractAddress = trim(htmlspecialchars(sanitize_text_field($json->contractAddress)));
     if($doreaContractAddress){
         // update contract adddress of specific campaign
-        update_option($campaignName . '_contract_address', $json->contractAddress);
+        update_option($campaignName . '_contract_address', $contractAddress);
     }else{
         // set contract adddress into option
-        add_option($campaignName . '_contract_address', $json->contractAddress);
+        add_option($campaignName . '_contract_address', $contractAddress);
     }
 
-    $contractAmount = $json->contractAmount;
+    $contractAmount = trim(htmlspecialchars(sanitize_text_field($json->contractAmount)));
     if($contractAmount){
 
         $campaignInfo = get_transient($campaignName);

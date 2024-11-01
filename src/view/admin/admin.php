@@ -36,8 +36,8 @@ function dorea_add_menu_page(): void
          */
         add_submenu_page(
             'crypto-dorea-cashback',
-            'Create Campaigns',
-            'Create Campaigns',
+            'Create Campaign',
+            'Create Campaign',
             'manage_options',
             'campaigns',
             'dorea_cashback_campaign_content'

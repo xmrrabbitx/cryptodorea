@@ -114,17 +114,21 @@ function orderReceived($orderId):void
 
                 // check if campaign is expired
                 $statusCampaigns = [];
-                $campaignLists = (array)$json->campaignlists;
-                foreach ($campaignLists as $campaign){
+                if(is_array($json->campaignlists)) {
+                    $campaignLists = $json->campaignlists;
+                    foreach ($campaignLists as $campaign) {
 
-                    $statusCampaigns[] = $checkout->expire($campaign);
+                        $campaign = sanitize_text_field(sanitize_key($campaign));
+                        $campaignLists[] = $campaign;
+                        $statusCampaigns[] = $checkout->expire(sanitize_text_field(sanitize_key($campaign)));
 
-                }
-                if(in_array(true, $statusCampaigns)){
-                    $checkout->autoRemove();
-                    $checkout->checkout($json);
-                }else{
-                    wp_redirect('/');
+                    }
+                    if (in_array(true, $statusCampaigns)) {
+                        $checkout->autoRemove();
+                        $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($json->walletAddress)));
+                    } else {
+                        wp_redirect('/');
+                    }
                 }
             }
 

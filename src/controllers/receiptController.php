@@ -24,7 +24,7 @@ class receiptController extends receiptAbstract
         static $campaignInfoResult;
 
         $displayName = $order->billing->first_name . " " . $order->billing->last_name ;
-        $userEmail = $order->billing->email;
+        $userEmail = sanitize_email($order->billing->email);
         $campaignListKeys = array_keys($campaignList);
 
         foreach ($campaignListKeys as $campaignName) {

@@ -8,7 +8,7 @@ let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_metamask_error");
 
 fundCampaign.addEventListener("click", async function(){
-console.log("fund trigger")
+
             function convertToWei(amount){
 
                 if( (typeof(amount) === "number") && (Number.isInteger(amount))){

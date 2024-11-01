@@ -175,8 +175,8 @@ function dorea_admin_cashback_campaign()
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['cryptoAmount'] && $_POST['shoppingCount'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
 
-            $campaignName = trim(htmlspecialchars($_POST['campaignName']));
-            $cryptoType = htmlspecialchars($_POST['cryptoType']);
+            $campaignName = trim(htmlspecialchars(sanitize_text_field($_POST['campaignName'])));
+            $cryptoType = htmlspecialchars(sanitize_text_field($_POST['cryptoType']));
 
             if(!is_numeric(trim($_POST['cryptoAmount'])) || !is_numeric(trim($_POST['shoppingCount']))){
 
@@ -188,12 +188,13 @@ function dorea_admin_cashback_campaign()
 
             }
 
-            $cryptoAmount = (float)htmlspecialchars($_POST['cryptoAmount']);
-            $shoppingCount = (int)htmlspecialchars($_POST['shoppingCount']);
-            $startDate = htmlspecialchars($_POST['startDateMonth']);
+            $cryptoAmount = (float)htmlspecialchars(sanitize_text_field($_POST['cryptoAmount']));
+            $shoppingCount = (int)htmlspecialchars(sanitize_text_field($_POST['shoppingCount']));
+
+            $startDate = htmlspecialchars(sanitize_text_field($_POST['startDateMonth']));
+            $startDateDay = htmlspecialchars(sanitize_text_field($_POST['startDateDay']));
             $startDateMonth = explode('_',$startDate)[0];
             $startDateYear = explode('_',$startDate)[1];
-            $startDateDay = htmlspecialchars($_POST['startDateDay']);
 
             $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . " 00:00:00");
             $timestampExpire = $timestampStart + 691199; // calculate next 7 days of timestamp

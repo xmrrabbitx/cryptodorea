@@ -71,13 +71,10 @@ class checkoutController extends checkoutAbstract
         $this->checkoutModel->addUser($campaignLists);
     }
 
-    public function checkout($json)
+    public function checkout($campaignLists, $walletAddress)
     {
 
-        $campaignLists = (array)$json->campaignlists;
-        $userWalletAddress = htmlspecialchars($json->walletAddress);
-
-        $this->addtoList($campaignLists, $userWalletAddress);
+        $this->addtoList($campaignLists, $walletAddress);
         $this->addtoListUsers($campaignLists);
 
     }
