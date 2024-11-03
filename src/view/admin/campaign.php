@@ -9,6 +9,9 @@ use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
 function dorea_cashback_campaign_content():void
 {
+    // check nonce validation
+    check_admin_referer();
+
     // load campaign css styles
     wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'));
 
@@ -34,6 +37,7 @@ function dorea_cashback_campaign_content():void
         <p id='errorMessg' style='display: none'></p>
     ");
 
+    $credit_url = wp_nonce_url(esc_url(admin_url('admin-post.php')));
     print("
       </p>
       <div class='!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md'>
@@ -41,7 +45,7 @@ function dorea_cashback_campaign_content():void
         <h2 class='!text-center !text-lg !divide-y !mt-5'>Crypto Dorea Cashback</h2>
         <hr class='border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-2'>
 
-        <form class='!grid !grid-cols-1 !mt-5' method='POST' action='".esc_url(admin_url('admin-post.php'))."' id='cashback_campaign'>
+        <form class='!grid !grid-cols-1 !mt-5' method='POST' action='".esc_url($credit_url)."' id='cashback_campaign'>
             
             <input type='hidden' name='action' value='cashback_campaign'>
            
@@ -61,7 +65,7 @@ function dorea_cashback_campaign_content():void
             </div>
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- amount options -->
-                <input id='cryptoAmount' class='!border-hidden !w-64 !mt-3 !p-2' type='text' name='cryptoAmount' placeholder='amount'>
+                <input id='cryptoAmount' class='!border-hidden !w-64 !mt-3 !p-2' type='text' name='cryptoAmount' placeholder='% amount'>
            </div>
     ");
 
@@ -171,6 +175,9 @@ function dorea_cashback_campaign_content():void
 add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
 function dorea_admin_cashback_campaign()
 {
+    // check nonce validation
+    check_admin_referer();
+
     $referer = explode("&", wp_get_referer())[0];
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['cryptoAmount'] && $_POST['shoppingCount'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
@@ -233,8 +240,12 @@ function dorea_admin_cashback_campaign()
                 // create campaign
                 $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
 
+                $url = 'admin.php?page=credit&cashbackName=' . $campaignName;
+                $nonce = wp_create_nonce();
+                $url = $url . "&_wpnonce=" . $nonce;
+
                 // head to the admin page of Dorea
-                wp_redirect('admin.php?page=credit&cashbackName=' . $campaignName);
+                wp_redirect($url);
 
             }
 

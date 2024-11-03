@@ -9,6 +9,9 @@ use Cryptodorea\DoreaCashback\utilities\encrypt;
  */
 function dorea_cashback_campaign_credit():void
 {
+    // check nonce validation
+    check_admin_referer();
+
     // load campaign credit Style
     wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'));
 
@@ -32,10 +35,17 @@ function dorea_cashback_campaign_credit():void
         wp_redirect('admin.php?page=crypto-dorea-cashback');
     }
 
-    print('
-        <main>
+    print('  
+       <main>
             <h1 class="p-5 text-sm font-bold">Fund Campaign</h1> </br>
-            
+    ');
+
+    if(isset($_GET['cashbackName'])){
+        $cashbackName = sanitize_key($_GET['cashbackName']) ?? null;
+        print("<h3 class='!pl-5 !text-xs !font-bold'>Campaign Name: ". $cashbackName . "</h3> </br>");
+    }
+
+    print('
              <p id="errorMessg" style="display: none"></p>
             
             <div class="container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md">
@@ -57,8 +67,6 @@ function dorea_cashback_campaign_credit():void
                  <button class="!p-3 !w-64 !bg-[#faca43] !rounded-md" id="doreaFund" style="">Fund your Campaign</button>
                 </div>
                
-                <button  id="metamaskDisconnect" style="display:none">Disconnect Metamask</button>
-        
                 <p class="!mt-10" id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
                 <p class="!mt-10" id="dorea_fund_error" style="display:none;color:#ff5d5d;"></p>
                 

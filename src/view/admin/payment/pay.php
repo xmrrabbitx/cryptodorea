@@ -8,6 +8,9 @@ use Cryptodorea\DoreaCashback\controllers\expireCampaignController;
  */
 function dorea_admin_pay_campaign():void
 {
+    // check nonce validation
+    check_admin_referer();
+
     // load admin css styles
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'));
 

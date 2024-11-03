@@ -2,7 +2,6 @@
 
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
-// include necessary files
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
 /**
@@ -79,6 +78,18 @@ function dorea_add_menu_page(): void
             'dorea_admin_trx_campaign'
         );
 
+        /**
+         * Dorea campaign Help Page
+         */
+        add_submenu_page(
+            'crypto-dorea-cashback',
+            'Help',
+            'Help',
+            'manage_options',
+            'Help',
+            'dorea_admin_help_campaign'
+        );
+
     }
 
 }
@@ -111,7 +122,7 @@ function dorea_main_page_content():void
         print("
             <div class='!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md'>
         ");
-        foreach ($cashbackList as &$campaignName) {
+        foreach ($cashbackList as $campaignName) {
             print("  
                 <div class='!mr-5 !pl-3 !p-10 !mt-3 !rounded-xl !bg-white !shadow-sm !border'>
                    <div class='!grid xl:!grid-cols-12 lg:!grid-cols-12 md:!grid-cols-12 sm:!grid-cols-12 !grid-cols-12 !gap-1'>
@@ -135,8 +146,9 @@ function dorea_main_page_content():void
 
             // payment page
             if($doreaContractAddress) {
+                $nonce = wp_create_nonce();
                 print('
-                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'&pagination=1">pay</a>
+                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'&pagination=1&_wpnonce' . $nonce.'">pay</a>
                 ');
             }
 
@@ -146,7 +158,6 @@ function dorea_main_page_content():void
 
             print('
                 <div class="!flex !grid-flex lg:!gap-3 !gap-1 lg:!pl-0 !pl-2 !text-center">
-                
                 <span class="!col-span-1 !cursor-pointer">
                    <a href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $campaignName)) . '&pagination=1">
                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -154,7 +165,6 @@ function dorea_main_page_content():void
                          </svg>
                    </a>   
                 </span>
-
             ');
             if($doreaContractAddress) {
                 print('
@@ -201,10 +211,11 @@ function dorea_main_page_content():void
 
             // payment page
             if($doreaContractAddress) {
+                $nonce = wp_create_nonce();
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black !hover:text-[#ffa23f] campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wp_nonce' .$nonce.'">
                         <!-- payment-fund campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -237,11 +248,14 @@ function dorea_main_page_content():void
         }
 
     } else {
+        $campaign_url = wp_nonce_url(esc_url(admin_url("/admin.php?page=campaigns")));
         print('
                 <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
                 </br>
                 <p class="pt-2 mt-7 text-center">
-                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url(admin_url("/admin.php?page=campaigns"))  .'">Create Your First Cashback Campaign</a>
+                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url($campaign_url)  .'">
+                        Create Your First Cashback Campaign
+                    </a>
                 </p>
         ');
     }
@@ -277,3 +291,8 @@ include('payment/pay.php');
  * transactrions list
  */
 include('trxList.php');
+
+/**
+ * help page
+ */
+include('help.php');
