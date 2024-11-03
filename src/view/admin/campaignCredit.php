@@ -64,7 +64,7 @@ function dorea_cashback_campaign_credit():void
                     </span>
                 </div>
                 <div class="!col-span-1 !w-12/12 !mt-5">
-                 <button class="!p-3 !w-64 !bg-[#faca43] !rounded-md" id="doreaFund" style="">Fund your Campaign</button>
+                 <button class="!p-3 !w-64 !bg-[#faca43] !rounded-md" id="doreaFund" style="">Fund Campaign</button>
                 </div>
                
                 <p class="!mt-10" id="dorea_metamask_error" style="display:none;color:#ff5d5d;"></p>
