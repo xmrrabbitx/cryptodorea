@@ -182,7 +182,9 @@ function dorea_admin_cashback_campaign()
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['cryptoAmount'] && $_POST['shoppingCount'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
 
-            $campaignName = trim(htmlspecialchars(sanitize_text_field($_POST['campaignName'])));
+            $campaignNameLable = trim(sanitize_text_field($_POST['campaignName']));
+            $campaignNameLable = preg_replace("/[^A-Za-z0-9 ]/", '', $campaignNameLable);
+            $campaignName = trim(sanitize_text_field(sanitize_key($_POST['campaignName'])));
             $cryptoType = htmlspecialchars(sanitize_text_field($_POST['cryptoType']));
 
             if(!is_numeric(trim($_POST['cryptoAmount'])) || !is_numeric(trim($_POST['shoppingCount']))){
@@ -238,7 +240,7 @@ function dorea_admin_cashback_campaign()
                 }
 
                 // create campaign
-                $cashback->create($campaignName, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
+                $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
 
                 $url = 'admin.php?page=credit&cashbackName=' . $campaignName;
                 $nonce = wp_create_nonce();

@@ -22,7 +22,7 @@ function dorea_admin_help_campaign():void
           <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Help</h1> </br>
             
-            <h2 class='!pl-5 !text-sm !font-bold'>How to Start?</h2> </br>
+            <h2 class='!pl-5 !text-sm !font-bold'>How to Start ?</h2> </br>
             <p class='!w-10/12 !pl-5 !leading-7'>
             1. if it is your first time to use Crypto Dorea, 
             you can select \"Create Your First Cashback Campaign\"  option in first page to create your first campaign.
@@ -31,16 +31,12 @@ function dorea_admin_help_campaign():void
                 <img class='!pt-3' src='". esc_url($createCampaignImg) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
             </div>
             
-            <hr class='!w-12/12'>
-            
             <p class='!w-10/12 !pl-5 !mt-5'>
             2. otherwise, you could choose \"Create Campaign\" option from the sidebar.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
                 <img class='!pt-3' src='". esc_url($createCampaignImg2) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
             </div>
-            
-            <hr class='!w-12/12'>
             
             <p class='!w-10/12 !pl-5 !mt-5  !leading-7'>
             3. in this step, you should fill in your campaign info:
@@ -62,9 +58,11 @@ function dorea_admin_help_campaign():void
                 <img class='!pt-3' src='". esc_url($createCampaignImg3) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
             </div>
            
-            <h2 class='!pl-5 !mt-5 !text-sm !font-bold'>How to Fund?</h2> 
+            <hr class='!w-12/12'>
+           
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How to Fund ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
-            1. next step is funding campaign. you can set Ethers as many as you want in this field. 
+            1. next step is funding campaign. you can set as many as Ethers you want in this field. 
             0.0004 ETH is equal to $1 until this document is written. for example, you could set 0.4 ETH equals to $1000 to reward your users. 
             this value changes time by time, so you should check ethereum price chart before to fund your campaign.
             </p>
@@ -75,11 +73,36 @@ function dorea_admin_help_campaign():void
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
             2. you should have installed Metmask Extention on your browser to fund your campaign. 
             make sure your metamask wallet address have enough ethers to fund the campaign. 
-            click on \"Fund Campaign\" option then confirm metamask window and wait to deploy the campaign into the Blockchain,
+            click on <span class='!font-bold'>\"Fund Campaign\"</span> option then confirm metamask window and wait to deploy the campaign into the Blockchain,
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
                 <img class='!pt-3 w-8/12' src='". esc_url($fundCampaign2) ."' alt='no image!' >
             </div>
+            
+            <hr class='!w-12/12 !mt-5'>
+            
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How to Pay ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            1. after users joined cashback campaign and campaign date reach to the end, you can pay users participated into the campaign. 
+            choose <span class='!font-bold'>\"Pay\"</span> option on main page in each campaign section. you should see payment page now.
+            in that page, you could pay campaign users.
+            </p>
+            
+            <hr class='!w-12/12 !mt-5'>
+            
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>What if Campaign Balance is not enough ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            you could fund campaign again in payment page. 
+            after that <span class='!font-bold'>\"Pay Campaign\" </span> option appears to pay users.
+            </p>
+            
+            <hr class='!w-12/12 !mt-5'>
+            
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How can i see transaction list of campaigns ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            on main page, in each section of campaign, there is a transactions list icon on the right side. click on that icon, 
+            you should see paid details like user's wallet address and paid ethers amount.    
+            </p>
             
           </div>
         </main>

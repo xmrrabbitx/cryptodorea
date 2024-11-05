@@ -19,6 +19,13 @@ jQuery(document).ready(async function($) {
 
             return false;
         }
+        else if (/[^A-Za-z0-9 ]/g.exec(campaignName.value)) {
+            errorMessg.innerHTML = "Special Characters are not allowed!";
+            $(errorMessg).show("slow");
+            await new Promise(r => setTimeout(r, 2500));
+            $(errorMessg).hide("slow");
+            return false;
+        }
         else if (campaignName.value.length >= 25) {
             errorMessg.innerHTML = "no more than 25 length campaign name is allowed! ";
             $(errorMessg).show("slow");

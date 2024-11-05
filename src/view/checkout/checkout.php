@@ -41,6 +41,9 @@ function cashback(): void
                     if (!empty($cashbackList)) {
 
                         foreach ($diffCampaignsList as $campaign) {
+
+                            $campaignInfo = get_transient($campaign);
+
                             // check if any campaign funded or not!
                             if (get_option($campaign . '_contract_address')) {
 
@@ -59,9 +62,8 @@ function cashback(): void
                                         $addtoCashback = false;
                                     }
 
-                                    $campaignLable = explode("_", $campaign)[0];
                                     print(" 
-                                            <label class='!ml-2 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center'>" . $campaignLable . "</label>
+                                            <label class='!ml-2 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center'>" . $campaignInfo['campaignNameLable'] . "</label>
                                             <div class='!float-left !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1' type='checkbox' value='" . esc_js($campaign) . "'></div>
                                     ");
                                 }
