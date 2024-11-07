@@ -57,15 +57,18 @@ function cashback(): void
                                            <h3 class='!text-lg'>Join to Cashback Campaign</h3> 
                                            <div class='!grid !grid-cols-1 !gap-2'>
                                            <label class='!text-sm'>choose which campaign you want to participate in:</label>
-                                           <div class='!grid !grid-cols-2 xl:!w-80 lg:!w-80 md:!w-80 sm:!w-80 !w-80 !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>
+                                           <div class='!grid !grid-cols-1 !pb-5 !p-3 xl:!w-80 lg:!w-96 md:!w-80 sm:!w-80 !w-80 !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>
                                         ");
                                         $addtoCashback = false;
                                     }
 
                                     print(" 
-                                            <label class='!ml-2 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center'>" . $campaignInfo['campaignNameLable'] . "</label>
-                                            <div class='!float-left !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1' type='checkbox' value='" . esc_js($campaign) . "'></div>
+                                            <div class='!flex !mt-1'>
+                                                <div class='!w-1/12 !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1' type='checkbox' value='" . esc_js($campaign) . "'></div>
+                                                <label class='!w-11/12 !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces'>" . $campaignInfo['campaignNameLable'] . "</label>
+                                            </div>
                                     ");
+
                                 }
                             }
                         }

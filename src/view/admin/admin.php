@@ -124,17 +124,18 @@ function dorea_main_page_content():void
         ");
         foreach ($cashbackList as $campaignName) {
             print("  
-                <div class='!mr-5 !pl-3 !p-10 !mt-3 !rounded-xl !bg-white !shadow-sm !border'>
-                   <div class='!grid xl:!grid-cols-12 lg:!grid-cols-12 md:!grid-cols-12 sm:!grid-cols-12 !grid-cols-12 !gap-1'>
+                <div class='!mr-5 !pl-3 !p-0 !pr-5 !pt-10 !pb-10 !mt-3 !rounded-xl !bg-white !shadow-sm !border'>
+                   <div class='!grid xl:!grid-cols-12 lg:!grid-cols-12 md:!grid-cols-12 sm:!grid-cols-12 !grid-cols-12 !gap-1 !flex !items-center'>
                     <div class='xl:!col-span-11 lg:!col-span-11 !col-span-10 !grid xl:!grid-cols-6 lg:!grid-cols-6 md:!grid-cols-6 sm:!grid-cols-6 !grid-cols-2'>
             ");
 
-            print('<span class="!col-span-1">'. $campaignName .'</span>');
+            $campName = get_transient($campaignName)['campaignNameLable'];
+            print('<span class="!col-span-1 !m-auto !text-center !whitespace-break-spaces">'. $campName .'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
-                print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden">funded!</span>');
+                print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden inline-block !m-auto">funded!</span>');
             } else {
                 print('<a class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden !pl-2 !focus:ring-0 hover:!text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
 
@@ -148,17 +149,18 @@ function dorea_main_page_content():void
             if($doreaContractAddress) {
                 $nonce = wp_create_nonce();
                 print('
-                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 hover:!text-amber-500 campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'&pagination=1&_wpnonce' . $nonce.'">pay</a>
+                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 hover:!text-amber-500 !m-auto campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'&pagination=1&_wpnonce' . $nonce.'">pay</a>
                 ');
             }
 
             print ('
+                <!-- add column to fill white space -->
                 <span class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden"></span>
             ');
 
             print('
                 <!-- transactions lits -->
-                <div class="!flex !grid-flex lg:!gap-3 !gap-1 lg:!pl-0 !pl-2 !text-center">
+                <div class="!flex !items-center !grid-flex lg:!gap-3 !gap-1 lg:!pl-0 !pl-2 !text-center">
                 <span class="!col-span-1 !focus:ring-0 !cursor-pointer">
                    <a title="transactions list" class="hover:!text-amber-500" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $campaignName)) . '&pagination=1">
                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

@@ -34,7 +34,7 @@ function dorea_cashback_campaign_content():void
 
     print("
         <p class='!pl-5 !col-span-12 h-3 w-full'>
-        <p id='errorMessg' style='display: none'></p>
+        <p class='!pl-5' id='errorMessg' style='display: none'></p>
     ");
 
     $credit_url = wp_nonce_url(esc_url(admin_url('admin-post.php')));
@@ -184,6 +184,9 @@ function dorea_admin_cashback_campaign()
 
             $campaignNameLable = trim(sanitize_text_field($_POST['campaignName']));
             $campaignNameLable = preg_replace("/[^A-Za-z0-9 ]/", '', $campaignNameLable);
+            if(strlen($campaignNameLable) >= 25){
+                return wp_redirect($referer);
+            }
             $campaignName = trim(sanitize_text_field(sanitize_key($_POST['campaignName'])));
             $cryptoType = htmlspecialchars(sanitize_text_field($_POST['cryptoType']));
 
