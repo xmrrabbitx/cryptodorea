@@ -5,6 +5,9 @@ namespace Cryptodorea\DoreaCashback\utilities;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * getting latest price of ethereum
+ */
 class ethHelper
 {
     /**
@@ -40,4 +43,3 @@ class ethHelper
         return $json->USD;
     }
 }
-

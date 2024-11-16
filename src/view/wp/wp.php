@@ -22,5 +22,7 @@ function wpRequest()
         $checkout->autoRemove();
 
         userStatusCampaign();
+
     }
+
 }

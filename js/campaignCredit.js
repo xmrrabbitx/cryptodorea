@@ -6,7 +6,6 @@ import {
 
 import {abi,bytecode} from "./compile.js";
 
-
 // Request access to Metamask
 setTimeout(delay, 1000)
 function delay(){
@@ -14,57 +13,60 @@ function delay(){
         jQuery(document).ready(async function($) {
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
-                function convertWeiToEther(amount){
-
-                    const creditAmountBigInt = amount;
-                    const multiplier = 1e18;
-                    return creditAmountBigInt / multiplier;
-
-                }
-
-                let campaignName = OBJECT.campaignName;
-
                 let errorMessg = document.getElementById("errorMessg");
-                document.getElementById("doreaFund").disabled = true;
-
-                let contractAmount = document.getElementById("creditAmount").value;
                 const metamaskError = document.getElementById("dorea_metamask_error");
 
-                if (contractAmount === "") {
-                    metamaskError.style.display = "block";
-                    errorMessg.innerHTML = "cryptocurrency amount could not be left empty!";
+                // check Metamask extension is installed!
+                if(window.ethereum){
 
-                    $(errorMessg).show("slow");
-                    await new Promise(r => setTimeout(r, 2500));
-                    $(errorMessg).hide("slow");
+                    function convertWeiToEther(amount){
 
-                    document.getElementById("doreaFund").disabled = false;
-                    return false;
-                } else if (!Number.isInteger(parseInt(contractAmount))) {
+                        const creditAmountBigInt = amount;
+                        const multiplier = 1e18;
+                        return creditAmountBigInt / multiplier;
 
-                    metamaskError.style.display = "block";
-                    errorMessg.innerHTML = "cryptocurrency amount must be in the decimal format!";
+                    }
 
-                    $(errorMessg).show("slow");
-                    await new Promise(r => setTimeout(r, 1500));
-                    $(errorMessg).hide("slow");
+                    let campaignName = params.campaignName;
 
-                    document.getElementById("doreaFund").disabled = false;
-                    return false;
 
-                } else {
-                    metamaskError.style.display = "none";
-                }
+                    let contractAmount = document.getElementById("creditAmount").value;
 
-                if (window.ethereum) {
+                    if (contractAmount === "") {
+                        metamaskError.style.display = "block";
+                        errorMessg.innerHTML = "cryptocurrency amount could not be left empty!";
+
+                        $(errorMessg).show("slow");
+                        await new Promise(r => setTimeout(r, 2500));
+                        $(errorMessg).hide("slow");
+
+                        document.getElementById("doreaFund").disabled = false;
+                        return false;
+                    } else if (!Number.isInteger(parseInt(contractAmount))) {
+
+                        metamaskError.style.display = "block";
+                        errorMessg.innerHTML = "cryptocurrency amount must be in the decimal format!";
+
+                        $(errorMessg).show("slow");
+                        await new Promise(r => setTimeout(r, 1500));
+                        $(errorMessg).hide("slow");
+
+                        document.getElementById("doreaFund").disabled = false;
+                        return false;
+
+                    } else {
+                        metamaskError.style.display = "none";
+                    }
+
 
                     const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
                     const userAddress = accounts[0];
 
                     const userBalance = await window.ethereum.request({
-                        method: "eth_getBalance",
-                        params: [userAddress, "latest"]
+                            method: "eth_getBalance",
+                            params: [userAddress, "latest"]
                     });
+
 
                     // check balance of metamask wallet
                     if (parseInt(userBalance) < 300000000000000) {
@@ -81,7 +83,9 @@ function delay(){
                     }
 
                     try {
+                        let xhr = new XMLHttpRequest();
 
+                        document.getElementById("doreaFund").disabled = true;
                         const provider = new BrowserProvider(window.ethereum);
 
                         // Get the signer from the provider metamask
@@ -129,16 +133,17 @@ function delay(){
                                     let balance = await contract.getBalance();
                                     balance = convertWeiToEther(parseInt(balance));
 
+                                    /*
                                     // get contract address
                                     let xhr = new XMLHttpRequest();
 
                                     // remove wordpress prefix on production
-                                    xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_contract_address&cashbackName=" + campaignName, true);
+                                    xhr.open("POST", "/wp-admin/admin-ajax.php?action=dorea_contract_address&cashbackName=" + campaignName, true);
                                     xhr.onreadystatechange = async function () {
                                         if (xhr.readyState === 4 && xhr.status === 200) {
 
                                             // remove wordpress prefix on production
-                                            window.location.replace("/wordpress/wp-admin/admin.php?page=credit");
+                                           // window.location.replace("/wp-admin/admin.php?page=credit");
 
                                         }
                                     }
@@ -147,11 +152,27 @@ function delay(){
                                         "contractAddress": contractAddress,
                                         "contractAmount": balance
                                     }));
+                                    */
+
+                                    jQuery.ajax({
+                                        type: "post",
+                                        url: `${window.location.origin}/wp-admin/admin-ajax.php`,
+                                        data: {
+                                            action: "dorea_contract_address",  // the action to fire in the server
+                                            data: JSON.stringify({
+                                                "contractAddress":contractAddress,
+                                                "contractAmount": balance,
+                                                "campaignName":campaignName
+                                            }),
+                                        },
+                                        complete: function (response) {
+                                            //window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
+                                        },
+                                    });
                                 }
                             });
 
                         });
-
                     } catch (error) {
                         document.getElementById("doreaFund").disabled = false;
                         errorMessg.innerHTML = "Funding the Contract was not successfull! please try again";
@@ -164,13 +185,20 @@ function delay(){
 
                     }
 
+                    // enable dorea fund button
+                    document.getElementById("doreaFund").disabled = false;
+
+                }else{
+
+                    metamaskError.style.display = "block";
+                    errorMessg.innerHTML = "please install Metamask extension!";
+                    $(errorMessg).show("slow");
+                    await new Promise(r => setTimeout(r, 2500));
+                    $(errorMessg).hide("slow");
 
                 }
-
-                document.getElementById("doreaFund").disabled = false;
             })
         });
     })();
 }
-
 

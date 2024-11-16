@@ -83,7 +83,7 @@ function dorea_admin_trx_campaign():void
     ');
 
     if (!empty($claimedUsers) && $pagination <= count($claimedUsers)) {
-        for ($i = $pagination - 1; $i <= $pagination - 1; $i++) {
+        for ($i = $pagination -1; $i <= ($pagination * 1) - 1; $i++) {
             $users = $claimedUsers[$i];
             $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
@@ -97,7 +97,7 @@ function dorea_admin_trx_campaign():void
 
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
-        if ($pagination-1 <= count($claimedUsers) - 1 && $pagination-1 !== 0) {
+        if (($pagination * 1)-1 <= count($claimedUsers) - 1 && ($pagination * 1)-1 !== 0) {
             // forward arrow pagination
             print('
                <div class="">
@@ -113,7 +113,7 @@ function dorea_admin_trx_campaign():void
                 print('<div class="!col-span-1"></div>');
         }
         print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
-        if ($pagination <= count($claimedUsers) - 1) {
+        if (($pagination * 1) <= count($claimedUsers) - 1) {
            print('      
                 <div class="">
                      <a class="!col-span-1 !mt-0 !pl-0 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">

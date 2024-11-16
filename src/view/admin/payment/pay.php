@@ -22,6 +22,10 @@ function dorea_admin_pay_campaign():void
 
     print("
         <main>
+            
+            <!-- Load Metamask sdk CDN -->
+            <script src='https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js'></script>
+            
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
@@ -86,15 +90,14 @@ function dorea_admin_pay_campaign():void
         $addtoPaymentSection = true;
 
         //foreach ($userList as $users) {
-        for ($i = $pagination - 1; $i <= $pagination - 1; $i++) {
-
+        for ($i = $pagination -1; $i <= ($pagination * 100) - 1; $i++) {
             if ($i <= count($userList) - 1) {
-
                 $users = $userList[$i];
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
                 //hypothetical price of eth _ get this from an online service
-                $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                //$ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                $ethBasePrice = 0.0004;
 
                 if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] > 0) {
 
@@ -143,13 +146,13 @@ function dorea_admin_pay_campaign():void
                     $qualifiedPurchasesTotal = array_sum($result);
 
                     print("<div class='!col-span-1 !grid xl:!grid-cols-5 lg:!grid-cols-5 md:!grid-cols-5 sm:!grid-cols-5 !grid-cols-2 !pt-3 xl:!text-center lg:!text-center md:!text-center sm:!text-center !text-left !gap-y-5 !gap-5'>");
-                    print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Username</span><span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span> ");
+                    print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Username</span><span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span>");
                     print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '> Wallet Address</span><span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
                     print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Purchase Counts</span><span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
 
                     $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
 
-                    print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Amount to be Paid</span><span class='!pl-3 !col-span-1 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm'>" . bcsub($userEther , 0, 5) . " ETH</span>");
+                    print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>Amount to be Paid</span><span class='!pl-3 !col-span-1 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm'>" . bcsub($userEther , 0, 5) . " ETH</span>");
 
                     $totalEthers[] = $userEther;
 
@@ -185,6 +188,7 @@ function dorea_admin_pay_campaign():void
                     print ("
                            </div>
                         </div>
+                        <hr class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>
                     ");
 
                     // get contract address of campaign
@@ -215,55 +219,59 @@ function dorea_admin_pay_campaign():void
 
                     }*/
 
-                    if ($fundOption) {
-                        print("
+                }
+            }
+        }
+
+
+        if ($fundOption) {
+            print("
                           <!-- Fund Campaign -->
                           <div class='!mx-auto !text-center !mt-5'>
                                <button id='dorea_fund'  class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Fund Campaign</button>
                           </div>
                         ");
-                        // calculate remaining amount eth to pay
-                        $remainingAmount = bcsub((float)array_sum($totalEthers), (float)$contractAmount, 10);
+            // calculate remaining amount eth to pay
+            $remainingAmount = bcsub((float)array_sum($totalEthers), (float)$contractAmount, 10);
 
-                        // load campaign credit scripts
-                        wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
+            // load campaign credit scripts
+            wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
 
-                        // pass params value for deployment
-                        $params = array(
-                            'contractAddress' => $doreaContractAddress,
-                            'campaignName' => $cashbackName,
-                            'remainingAmount' => $remainingAmount,
-                        );
-                        wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+            // pass params value for deployment
+            $params = array(
+                'contractAddress' => $doreaContractAddress,
+                'campaignName' => $cashbackName,
+                'remainingAmount' => $remainingAmount,
+            );
+            wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
 
-                    } else {
-                        print("
+        }
+        else {
+            print("
                           <!-- Pay Campaign -->
                           <div class='!mx-auto !text-center !mt-5'>
                                <button id='dorea_pay'  href='#' class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Pay Campaign</button>
                           </div>
                         ");
 
-                        // load campaign credit scripts
-                        wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+            // load campaign credit scripts
+            wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
 
-                        $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
+            $qualifiedWalletAddresses = json_encode($qualifiedWalletAddresses);
 
-                        // pass params value for deployment
-                        $params = array(
-                            'contractAddress' => $doreaContractAddress,
-                            'campaignName' => $cashbackName,
-                            'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
-                            'qualifiedUserEthers' => $qualifiedUserEthers,
-                            'cryptoAmount' => $cryptoAmount,
-                            'usersList' => $usersList,
-                            'totalPurchases' => $totalPurchases,
-                        );
-                        wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+            // pass params value for deployment
+            $params = array(
+                'contractAddress' => $doreaContractAddress,
+                'campaignName' => $cashbackName,
+                'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
+                'qualifiedUserEthers' => $qualifiedUserEthers,
+                'cryptoAmount' => $cryptoAmount,
+                'usersList' => $usersList,
+                'totalPurchases' => $totalPurchases,
+                'redirectUrl' =>  esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=1')
+            );
+            wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
 
-                    }
-                }
-            }
         }
 
     }
@@ -271,7 +279,7 @@ function dorea_admin_pay_campaign():void
     if($userList) {
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
-        if ($pagination-1 <= count($userList) - 1 && $pagination-1 !== 0) {
+        if (($pagination * 100)-1 <= count($userList) - 1 && ($pagination * 100)-1 !== 0) {
             // forward arrow pagination
             print('
                <div class="">
@@ -287,7 +295,7 @@ function dorea_admin_pay_campaign():void
             print('<div class="!col-span-1"></div>');
         }
         print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
-        if ($pagination <= count($userList) - 1) {
+        if (($pagination * 100) <= count($userList) - 1) {
             print('      
                 <div class="">
                      <a class="!col-span-1 !mt-0 !pl-0 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">

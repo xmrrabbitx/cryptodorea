@@ -3,15 +3,21 @@
 /**
  * Crypto Cashback Campaign
  */
-
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
+// check nonce validation
+add_action('check_admin_referer', 'dorea_referer_check',10,2);
+function dorea_referer_check($action, $result)
+{
+    if (!$result) {
+        error_log("Invalid nonce for action: $action");
+    }
+    return $action;
+}
+
 function dorea_cashback_campaign_content():void
 {
-    // check nonce validation
-    check_admin_referer();
-
     // load campaign css styles
     wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'));
 
@@ -270,10 +276,8 @@ function dorea_admin_cashback_campaign()
  * delete a campaign
  */
 add_action('admin_post_delete_campaign', 'dorea_admin_delete_campaign');
-
 function dorea_admin_delete_campaign():void
 {
-
     if ( !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'delete_campaign_nonce') ) {
         die('Security check failed');
     }

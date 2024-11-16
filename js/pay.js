@@ -150,11 +150,11 @@ jQuery(document).ready(async function($) {
                             let xhr = new XMLHttpRequest();
 
                             // remove wordpress prefix on production
-                            xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_claimed", true);
+                            xhr.open("POST", "/wp-admin/admin-post.php?action=dorea_claimed", true);
                             xhr.onreadystatechange = async function () {
                                 if (xhr.readyState === 4 && xhr.status === 200) {
 
-                                     window.location.reload();
+                                    window.location.replace(param.redirectUrl);
 
                                 }
                             }

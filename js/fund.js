@@ -1,7 +1,6 @@
 
 // load etherJs library
 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./ethers.min.js";
-
 import {abi} from "./compile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
@@ -9,7 +8,12 @@ const errorMessg = document.getElementById("dorea_metamask_error");
 
 fundCampaign.addEventListener("click", async function(){
 
-            function convertToWei(amount){
+    /**
+     *
+     * @param amount
+     * @returns {bigint}
+     */
+    function convertToWei(amount){
 
                 if( (typeof(amount) === "number") && (Number.isInteger(amount))){
 
@@ -29,15 +33,20 @@ fundCampaign.addEventListener("click", async function(){
                     return creditAmountInt * multiplier / BigInt(factor);
 
                 }
-            }
+    }
 
-            function convertWeiToEther(amount){
+    /**
+     *
+     * @param amount
+     * @returns {number}
+     */
+    function convertWeiToEther(amount){
 
                 const creditAmountBigInt = amount;
                 const multiplier = 1e18;
                 return creditAmountBigInt / multiplier;
 
-            }
+    }
 
             const contractAddress = param.contractAddress;
             let campaignName = param.campaignName;
@@ -60,24 +69,28 @@ fundCampaign.addEventListener("click", async function(){
 
              */
 
+    if(window.innerWidth <= 1000){
+        window.location.href = "https://metamask.app.link/5qejsn6h1r.loclx.io/wp-admin/admin-ajax.php?action=dorea_fundMobile";
+    }else{
+        await window.ethereum.request({method: "eth_requestAccounts"});
+        let accounts = await ethereum.request({method: "eth_accounts"});
+        let account = accounts[0];
 
-            await window.ethereum.request({ method: "eth_requestAccounts" });
-            const accounts = await ethereum.request({ method: "eth_accounts" });
-            const account = accounts[0];
 
-            const provider = new BrowserProvider(window.ethereum);
+        const provider = new BrowserProvider(window.ethereum);
 
-            const signer = await provider.getSigner();
+        const signer = await provider.getSigner();
 
-            let message = "you are siging message to fund the contract!";
+        let message = "you are siging message to fund the contract!";
 
-            const messageHash = ethers.id(message);
+        const messageHash = ethers.id(message);
 
-            // sign hashed message
-            const signature = await ethereum.request({
-                method: "personal_sign",
-                params: [messageHash, accounts[0]],
-            });
+        // sign hashed message
+        const signature = await ethereum.request({
+            method: "personal_sign",
+            params: [messageHash, accounts[0]],
+        });
+    }
 
             // split signature
             const r = signature.slice(0, 66);
@@ -115,7 +128,7 @@ fundCampaign.addEventListener("click", async function(){
                                 let xhr = new XMLHttpRequest();
 
                                 // remove wordpress prefix on production
-                                xhr.open("POST", "/wordpress/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
+                                xhr.open("POST", "/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
                                 xhr.onreadystatechange = async function() {
                                     if (xhr.readyState === 4 && xhr.status === 200) {
 

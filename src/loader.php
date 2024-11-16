@@ -15,121 +15,105 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/wp/wp.php';
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/checkout/checkout.php';
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/userStatusCampaign.php';
 
-// core js style
-wp_enqueue_script('DOREA_CORE_STYLE',plugins_url('/cryptodorea/js/style.min.js'));
 
-// add module type to scripts
-add_filter('script_loader_tag', 'add_type_campaigncredit' , 10, 3);
-function add_type_campaigncredit($tag, $handle, $src) {
+// wait until admin panel fully loads
+add_action('admin_menu','admin_init');
+function admin_init():void
+{
+    // core js style
+    wp_enqueue_script('DOREA_CORE_STYLE', plugins_url('/cryptodorea/js/style.min.js'));
 
-    // if not your script, do nothing and return original $tag
-    if ( 'DOREA_CAMPAIGNCREDIT_SCRIPT' !== $handle ) {
-        return $tag;
-    }
-    // change the script tag by adding type="module" and return it.
-    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
-    return $tag;
-}
-// add module type to script
-add_filter('script_loader_tag', 'add_type_userStatusCampaign' , 10, 3);
-function add_type_userStatusCampaign($tag, $handle, $src) {
+    // add module type to scripts
+    add_filter('script_loader_tag', 'add_type_campaigncredit', 10, 3);
+    function add_type_campaigncredit($tag, $handle, $src)
+    {
 
-    // if not your script, do nothing and return original $tag
-    if ( 'DOREA_USERSTATUSCAMPAIGN_SCRIPT' !== $handle ) {
-        return $tag;
-    }
-    // change the script tag by adding type="module" and return it.
-    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
-    return $tag;
-}
-// add module type to script
-add_filter('script_loader_tag', 'add_type_pay' , 10, 3);
-function add_type_pay($tag, $handle, $src) {
-
-    // if not your script, do nothing and return original $tag
-    if ( 'DOREA_PAY_SCRIPT' !== $handle ) {
-        return $tag;
-    }
-    // change the script tag by adding type="module" and return it.
-    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
-    return $tag;
-}
-
-/**
- * a Class for handling the Cash Back program
- */
-class loader{
-
-    public function __construct(){
-
-        $this->removeCacheLogs();
-
-        // set the session max lifetime to 2 hours
-        $inactive = 7200;
-        ini_set('session.gc_maxlifetime', $inactive);
-
-        session_start();
-
-        if (isset($_SESSION['campaignList_user']) && (time() - $_SESSION['time'] > $inactive)) {
-
-            session_unset();
-            session_destroy();
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_CAMPAIGNCREDIT_SCRIPT' !== $handle) {
+            return $tag;
         }
-
-    }
-
-    /**
-     * check and remove the size of log files in /debug directory
-     */
-    private function removeCacheLogs(){
-
-        $logDirectory = WP_PLUGIN_DIR . "/cryptodorea/debug/";
-        $logFiles = glob($logDirectory . "*.log");
-        $maxFileSize = 5 * 1024 * 1024;
-
-        foreach ($logFiles as $logFile) {
-
-            if(filesize($logFile) > $maxFileSize){
-
-                unlink($logFile);
-
-            }
-
-        }
-    }
-}
-
-function doorea_cashback_menu( $items ) {
-    // Remove the logout menu item.
-    $logout = $items['customer-logout'];
-    unset( $items['customer-logout'] );
-
-    // Insert your dorea cashback menu item
-    $items['dorea_cashbback_menu'] = __( 'Dorea Cashback', 'woocommerce' );
-
-    // Insert back the logout item.
-    $items['customer-logout'] = $logout;
-
-    return $items;
-}
-add_filter( 'woocommerce_account_menu_items', 'doorea_cashback_menu' );
-
-function add_type_test($tag, $handle, $src) {
-
-    // if not your script, do nothing and return original $tag
-    if ( 'DOREA_CASHBACKMENU_SCRIPT' !== $handle ) {
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
         return $tag;
     }
-    // change the script tag by adding type="module" and return it.
-    $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
-    return $tag;
-}
-// add module type to script
-add_filter('script_loader_tag', 'add_type_test' , 10, 3);
 
+    // add module type to script
+    add_filter('script_loader_tag', 'add_type_userStatusCampaign', 10, 3);
+    function add_type_userStatusCampaign($tag, $handle, $src)
+    {
+
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_USERSTATUSCAMPAIGN_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+    // add module type to script
+    add_filter('script_loader_tag', 'add_type_pay', 10, 3);
+    function add_type_pay($tag, $handle, $src)
+    {
+
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_PAY_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+    // insert Dorea option into user menu
+    function doorea_cashback_menu($items)
+    {
+        // Remove the logout menu item.
+        $logout = $items['customer-logout'];
+        unset($items['customer-logout']);
+
+        // Insert your dorea cashback menu item
+        $items['dorea_cashbback_menu'] = __('Dorea Cashback', 'woocommerce');
+
+        // Insert back the logout item.
+        $items['customer-logout'] = $logout;
+
+        return $items;
+    }
+
+    add_filter('woocommerce_account_menu_items', 'doorea_cashback_menu');
+    function add_type_test($tag, $handle, $src)
+    {
+
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_CASHBACKMENU_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+
+    add_filter('script_loader_tag', 'add_type_appfund', 10, 3);
+    function add_type_appfund($tag, $handle, $src)
+    {
+
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_APPFUND_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+
+}
 
 // remove after testting
 //add_action('admin_menu','deploy');
+/*
 function deploy():void
 {
 print('<script type="module">
@@ -264,3 +248,4 @@ await factory.deploy(
 </script>');
 
 }
+*/
