@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Regular.ttf');
+}
+body{
+    background: #f6f6f6 !important;
+}
+main{
+    font-family: "Poppins", sans-serif !important;
+}
+#doreaCheckout{
+    display: none;
+    z-index: 9999;
+}
+
+#doreaChkConfirm{
+    border-radius: 8px;
+    padding: 5px;
+    cursor: pointer;
+    top: 5px;
+}

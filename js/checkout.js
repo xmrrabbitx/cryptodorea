@@ -8,6 +8,10 @@ function debounce(func, wait) {
     };
 }
 
+let doreaClose = document.getElementById('doreaClose');
+let doreaCampaignsSection = document.getElementById('doreaCampaignsSection');
+let doreaCheckout = document.getElementById('doreaCheckout');
+let doreaCheckoutConfirm = document.getElementById('doreaChkConfirm');
 let dorea_walletaddress = document.getElementById('dorea_walletaddress');
 let dorea_add_to_cashback_checkbox = document.querySelectorAll('.dorea_add_to_cashback_checkbox_');
 let errorMessg = document.getElementById('dorea_error');
@@ -15,6 +19,9 @@ let errorMessg = document.getElementById('dorea_error');
 let campaignlist = [];
 
 jQuery(document).ready(async function($) {
+
+    await new Promise(r => setTimeout(r, 1500));
+    $(doreaCheckout).show(2000);
 
     dorea_walletaddress.addEventListener('input', async function () {
         setTimeout(async () => {
@@ -34,15 +41,14 @@ jQuery(document).ready(async function($) {
                     $(errorMessg).hide("slow");
                     return false;
                 } else {
-                    setSession();
-                    sessionStorage.setItem('walletAddress', dorea_walletaddress.value);
-                    dorea_walletaddress.style.border = '1px solid #ccc';
+                    setValue();
+                    dorea_walletaddress.style.border = '1px solid #00b300';
                 }
             } else {
-                dorea_walletaddress.style.border = '1px solid #ccc';
+                dorea_walletaddress.style.border = '1px solid #ccc'; // grey border on empty wallet address feild
             }
         }, 1000);
-    })
+    });
 
     dorea_add_to_cashback_checkbox.forEach(
         (element) =>
@@ -50,69 +56,64 @@ jQuery(document).ready(async function($) {
                 if (element.checked) {
                     if (!campaignlist.includes(element.value)) {
                         campaignlist.push(element.value);
-                        setSession();
+                        setValue();
                     }
                 } else {
                     campaignlist = campaignlist.filter(function (letter) {
                         return letter !== element.value;
                     });
-                    console.log(campaignlist)
-                    let data = JSON.stringify({'campaignlists': campaignlist, 'walletAddress': dorea_walletaddress.value});
-                    sessionStorage.setItem('doreaCampaignInfo', data);
-                    if(campaignlist.length <= 0){
-                        sessionStorage.removeItem('doreaCampaignInfo');
-                    }
                 }
             })
-    )
+    );
 
-    function setSession() {
-        console.log("checked")
+    function setValue() {
         if (campaignlist.length > 0 && dorea_walletaddress.value.length > 0) {
-            let data = JSON.stringify({'campaignlists': campaignlist, 'walletAddress': dorea_walletaddress.value});
-            sessionStorage.setItem('doreaCampaignInfo', data);
+            //sessionStorage.setItem("doreaCampaignlist", campaignlist);
+            //sessionStorage.setItem("doreaWalletaddress", dorea_walletaddress.value);
+            jQuery.ajax({
+                type: "post",
+                url: `${window.location.origin}/wp-admin/admin-ajax.php`,
+                data: {
+                    action: "dorea_ordered_received",  // the action to fire in the server
+                    data: JSON.stringify({
+                        "campaignlists":campaignlist,
+                        "walletAddress":dorea_walletaddress.value,
+                    }),
+                },
+                complete: function (response) {
+                    // response on completed!
+                },
+            });
         }
 
     }
 
-    function add_to_cashback_checkbox() {
-
-        let dorea_walletaddress = document.getElementById('dorea_walletaddress');
-        const metamaskError = document.getElementById('dorea_metamask_error');
-
-        metamaskError.style.display = 'none';
-        dorea_walletaddress.style.border = '1px solid green';
-        if (dorea_add_to_cashback_checked.length > 0) {
-
-            let campaignlist = [];
-            for (let i = 0; i < dorea_add_to_cashback_checked.length; i++) {
-                if (dorea_add_to_cashback_checked[i].checked) {
-                    if (dorea_add_to_cashback_checked[i].value !== '') {
-                        campaignlist.push(dorea_add_to_cashback_checked[i].value);
-                    }
-
-                } else {
-
-                }
-            }
-
-            // remove wordpress prefix on production
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', '#', true);
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
-            if (campaignlist.length > 0) {
-                xhr.send(JSON.stringify({'campaignlists': campaignlist, 'walletAddress': dorea_walletaddress.value}));
-            }
-
-            // Prevent the form from submitting (optional)
+    doreaCheckoutConfirm.addEventListener('click', async function () {
+        if(campaignlist.length < 1 ){
+            errorMessg.innerHTML = "you should choose at least one campaign!";
+            doreaCampaignsSection.style.border = '1px solid #f87171'; // red border
+            $(errorMessg).show("slow");
+            await new Promise(r => setTimeout(r, 2500));
+            $(errorMessg).hide("slow");
+            doreaCampaignsSection.style.border = '1px solid #ccc'; // back to grey border
             return false;
-
+        }else if(dorea_walletaddress.value.length < 1 ){
+            errorMessg.innerHTML = "you should insert your wallet address!";
+            dorea_walletaddress.style.border = '1px solid #f87171'; // red border
+            $(errorMessg).show("slow");
+            await new Promise(r => setTimeout(r, 2500));
+            $(errorMessg).hide("slow");
+            dorea_walletaddress.style.border = '1px solid #ccc'; // back to grey border
+            return false;
+        }else{
+            $(doreaCheckout).hide("slow");
         }
+    });
 
-    }
+    doreaClose.addEventListener("click", async function () {
+        await new Promise(r => setTimeout(r, 100));
+        $(doreaCheckout).hide("slow");
+    });
 
-    const debouncedAddToCashbackCheckbox = debounce(add_to_cashback_checkbox, 3000);
 
 });

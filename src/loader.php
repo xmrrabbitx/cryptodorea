@@ -6,6 +6,13 @@
 
 // check security
 defined( 'ABSPATH' ) || exit;
+if( ! defined('WCSF_PLUGIN_FILE') ) {
+    define( 'WCSF_PLUGIN_FILE', __FILE__ );
+}
+
+if( ! defined('WCSF_PLUGIN_DIR') ) {
+    define( 'WCSF_PLUGIN_DIR', __DIR__ );
+}
 
 /**
  * load necessary admin files
@@ -37,6 +44,45 @@ function admin_init():void
         return $tag;
     }
 
+    // add module type to scripts
+    add_filter('script_loader_tag', 'add_type_checkout', 10, 3);
+    function add_type_checkout($tag, $handle, $src)
+    {
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_CHECKOUT_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+    // add module type to scripts
+    add_filter('script_loader_tag', 'add_type_checkoutbeforeproccessed', 10, 3);
+    function add_type_checkoutbeforeproccessed($tag, $handle, $src)
+    {
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_CHECKOUT_BEFORE_PROCESSED_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+    // add module type to scripts
+    add_filter('script_loader_tag', 'add_type_ordered', 10, 3);
+    function add_type_ordered($tag, $handle, $src)
+    {
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_ORDERED_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
     // add module type to script
     add_filter('script_loader_tag', 'add_type_userStatusCampaign', 10, 3);
     function add_type_userStatusCampaign($tag, $handle, $src)
@@ -58,35 +104,6 @@ function admin_init():void
 
         // if not your script, do nothing and return original $tag
         if ('DOREA_PAY_SCRIPT' !== $handle) {
-            return $tag;
-        }
-        // change the script tag by adding type="module" and return it.
-        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-        return $tag;
-    }
-
-    // insert Dorea option into user menu
-    function doorea_cashback_menu($items)
-    {
-        // Remove the logout menu item.
-        $logout = $items['customer-logout'];
-        unset($items['customer-logout']);
-
-        // Insert your dorea cashback menu item
-        $items['dorea_cashbback_menu'] = __('Dorea Cashback', 'woocommerce');
-
-        // Insert back the logout item.
-        $items['customer-logout'] = $logout;
-
-        return $items;
-    }
-
-    add_filter('woocommerce_account_menu_items', 'doorea_cashback_menu');
-    function add_type_test($tag, $handle, $src)
-    {
-
-        // if not your script, do nothing and return original $tag
-        if ('DOREA_CASHBACKMENU_SCRIPT' !== $handle) {
             return $tag;
         }
         // change the script tag by adding type="module" and return it.

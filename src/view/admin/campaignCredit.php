@@ -87,9 +87,6 @@ add_action('wp_ajax_dorea_contract_address', 'dorea_contract_address');
 
 function dorea_contract_address()
 {
-
-    static $doreaContractAddress;
-
     if(isset($_POST['data'])) {
 
         // get Json Data

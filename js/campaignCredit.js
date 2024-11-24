@@ -133,27 +133,6 @@ function delay(){
                                     let balance = await contract.getBalance();
                                     balance = convertWeiToEther(parseInt(balance));
 
-                                    /*
-                                    // get contract address
-                                    let xhr = new XMLHttpRequest();
-
-                                    // remove wordpress prefix on production
-                                    xhr.open("POST", "/wp-admin/admin-ajax.php?action=dorea_contract_address&cashbackName=" + campaignName, true);
-                                    xhr.onreadystatechange = async function () {
-                                        if (xhr.readyState === 4 && xhr.status === 200) {
-
-                                            // remove wordpress prefix on production
-                                           // window.location.replace("/wp-admin/admin.php?page=credit");
-
-                                        }
-                                    }
-
-                                    xhr.send(JSON.stringify({
-                                        "contractAddress": contractAddress,
-                                        "contractAmount": balance
-                                    }));
-                                    */
-
                                     jQuery.ajax({
                                         type: "post",
                                         url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -166,7 +145,7 @@ function delay(){
                                             }),
                                         },
                                         complete: function (response) {
-                                            //window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
+                                            window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
                                         },
                                     });
                                 }

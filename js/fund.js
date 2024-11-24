@@ -69,9 +69,7 @@ fundCampaign.addEventListener("click", async function(){
 
              */
 
-    if(window.innerWidth <= 1000){
-        window.location.href = "https://metamask.app.link/5qejsn6h1r.loclx.io/wp-admin/admin-ajax.php?action=dorea_fundMobile";
-    }else{
+
         await window.ethereum.request({method: "eth_requestAccounts"});
         let accounts = await ethereum.request({method: "eth_accounts"});
         let account = accounts[0];
@@ -90,7 +88,7 @@ fundCampaign.addEventListener("click", async function(){
             method: "personal_sign",
             params: [messageHash, accounts[0]],
         });
-    }
+
 
             // split signature
             const r = signature.slice(0, 66);
