@@ -52,13 +52,8 @@ function cashback(): void
                                    </svg>
                                </span>
                         ");
-                        if (empty($diffCampaignsList)) {
+                        if (!empty($diffCampaignsList)) {
 
-                            print ("
-                                <p class='!text-md'>You already joined all cashback programs!</p>
-                            ");
-
-                        } else {
                             $addtoCashback = true;
 
                             // show campaigns in checkout page
@@ -97,6 +92,8 @@ function cashback(): void
                                     }
                                 }
                             }
+                        }else{
+                            print('<p id="doreaNoCampaign"></p>');
                         }
 
                         if ($contractAddressConfirm) {
