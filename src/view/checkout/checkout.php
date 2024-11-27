@@ -4,6 +4,13 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
 
+add_action( 'woocommerce_checkout_process', 'dorea_checkout_field_process',9999 );
+function dorea_checkout_field_process() {
+    if (!$_POST['dorea_wallet_address']) {
+        wc_add_notice( esc_html__( 'Please enter a valid wallet address...' ), 'error' );
+    }
+}
+
 /**
  * Crypto Cashback Checkout View
  */
@@ -12,7 +19,9 @@ function cashback(): void
 {
     static $contractAddressConfirm;
 
+
     if(is_checkout()) {
+
         if (!WC()->cart->get_cart_contents_count() == 0) {
 
             // load claim campaign style
@@ -26,7 +35,6 @@ function cashback(): void
             $checkoutController = new checkoutController;
             $diffCampaignsList = $checkoutController->check($cashbackList);
 
-
             // check on Authentication user
             if (is_user_logged_in()) {
 
@@ -34,15 +42,23 @@ function cashback(): void
 
                     if (has_filter('woocommerce_checkout_fields')) {
 
-                        add_filter( 'woocommerce_form_field', 'bbloomer_remove_optional_checkout_fields', 9999 );
-                        function bbloomer_remove_optional_checkout_fields( $fields) {
-                            $fields = preg_replace('//', '', $fields);
+                        // check and add to cash back program
+                        wp_enqueue_script('DOREA_CHECKOUTLEGACY_SCRIPT', plugins_url('/cryptodorea/js/checkoutLegacy.js'), array('jquery', 'jquery-ui-core'));
+
+                        add_filter( 'woocommerce_form_field', 'dorea_remove_optional_checkout_fields', 9999 );
+                        function dorea_remove_optional_checkout_fields( $fields) {
+                            if (strpos($fields, 'id="dorea_campaigns_checkout"') !== false || strpos($fields, 'dorea-campaigns-class') !== false) {
+                                // Remove only <span class="optional">(optional)</span> within this context
+                                $fields = preg_replace('/<span class="optional">\((optional)\)<\/span>/', '', $fields);
+                            }
+
                             return $fields;
                         }
 
                         add_filter('woocommerce_after_order_notes', 'customize_checkout', 10,2);
                         function customize_checkout($checkout)
                         {
+
                             // get cashback list of admin
                             $cashback = new cashbackController();
                             $cashbackList = $cashback->list();
@@ -56,8 +72,10 @@ function cashback(): void
                                 // show campaigns in checkout page
                                 if (!empty($cashbackList)) {
 
-                                    print('<div id="dorea_campaigns_checkout"><h3>' . esc_html__('Join to Cashback Campaign') . '</h3>');
-
+                                    print("
+                                        <h3 id='dorea_campaigns_checkout_title'>Join to Cashback Campaigns</h3>
+                                        <div id='dorea_campaigns_checkout'>
+                                    ");
                                     foreach ($diffCampaignsList as $campaign) {
 
                                         $campaignInfo = get_transient($campaign);
@@ -75,7 +93,7 @@ function cashback(): void
                                                         'required' => false,
                                                         'custom_attributes' => array('optional' => false)
                                                     ),
-                                                    $checkout->get_value('dorea_campaigns')
+                                                    $checkout->get_value('dorea_campaigns_'.$campaignInfo['campaignNameLable'])
                                                 );
                                             }
                                         }
@@ -92,6 +110,7 @@ function cashback(): void
                                         $checkout->get_value('dorea_wallet_address')
                                     );
 
+
                                     print('</div>');
                                 }
                             }
@@ -100,7 +119,8 @@ function cashback(): void
 
                         // legacy code here ...
 
-                    } else {
+                    }
+                    else {
 
                         print("
                                         <div class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border' id='doreaCheckout' style='padding-left:10px;'>
@@ -165,7 +185,6 @@ function cashback(): void
 
                         }
 
-
                         // check and add to cash back program
                         wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
 
@@ -175,7 +194,10 @@ function cashback(): void
                 }
             }
         }
+
     }
+
+
 }
 
 

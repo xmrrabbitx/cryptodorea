@@ -8,6 +8,9 @@ function debounce(func, wait) {
     };
 }
 
+let dorea_campaigns_checkout_title = document.querySelectorAll('.dorea-campaigns-checkout-title-class');
+let dorea_campaigns_checkout = document.getElementById("dorea_campaigns_checkout");
+
 let doreaClose = document.getElementById('doreaClose');
 let doreaNoCampaign = document.getElementById('doreaNoCampaign');
 let doreaCampaignsSection = document.getElementById('doreaCampaignsSection');
@@ -21,12 +24,24 @@ let campaignlist = [];
 
 jQuery(document).ready(async function($) {
 
-    console.log(doreaNoCampaign)
+
+    dorea_campaigns_checkout_title.forEach(
+        (element) =>
+            element.addEventListener('click', function (){
+                if(dorea_campaigns_checkout_title.checked) {
+                    $(dorea_campaigns_checkout).show(2000);
+                }else{
+                    $(dorea_campaigns_checkout).hide(2000);
+                }
+        })
+    );
+
     if(doreaNoCampaign === null) {
         await new Promise(r => setTimeout(r, 1500));
         $(doreaCheckout).show(2000);
     }
-        dorea_walletaddress.addEventListener('input', async function () {
+
+    dorea_walletaddress.addEventListener('input', async function () {
             setTimeout(async () => {
                 if (dorea_walletaddress.value.length !== 0) {
                     if (dorea_walletaddress.value.length < 42) {
@@ -53,7 +68,7 @@ jQuery(document).ready(async function($) {
             }, 1000);
         });
 
-        dorea_add_to_cashback_checkbox.forEach(
+    dorea_add_to_cashback_checkbox.forEach(
             (element) =>
                 element.addEventListener('click', async function () {
                     if (element.checked) {

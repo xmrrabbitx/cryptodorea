@@ -58,6 +58,19 @@ function admin_init():void
     }
 
     // add module type to scripts
+    add_filter('script_loader_tag', 'add_type_checkout_legacy', 10, 3);
+    function add_type_checkout_legacy($tag, $handle, $src)
+    {
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_CHECKOUTLEGACY_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+
+    // add module type to scripts
     add_filter('script_loader_tag', 'add_type_checkoutbeforeproccessed', 10, 3);
     function add_type_checkoutbeforeproccessed($tag, $handle, $src)
     {

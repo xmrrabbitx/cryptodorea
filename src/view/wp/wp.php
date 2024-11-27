@@ -25,7 +25,8 @@ function wpRequest()
         $checkout = new checkoutController();
         $checkout->autoRemove();
 
-        userStatusCampaign();
+
+        //userStatusCampaign();
 
 
         // insert Dorea option into user menu
@@ -56,7 +57,6 @@ function wpRequest()
             $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
             return $tag;
         }
-
 
     }
 
