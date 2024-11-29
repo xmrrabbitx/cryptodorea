@@ -6,8 +6,54 @@ use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
 add_action( 'woocommerce_checkout_process', 'dorea_checkout_field_process',9999 );
 function dorea_checkout_field_process() {
-    if (!$_POST['dorea_wallet_address']) {
-        wc_add_notice( esc_html__( 'Please enter a valid wallet address...' ), 'error' );
+var_dump("okkk");
+    // get cashback list of admin
+    $cashback = new cashbackController();
+    $cashbackList = $cashback->list();
+
+    // get campaign list of user
+    $checkoutController = new checkoutController;
+    $diffCampaignsList = $checkoutController->check($cashbackList);
+
+    if (!empty($diffCampaignsList)) {
+
+        // show campaigns in checkout page
+        if (!empty($cashbackList)) {
+
+            $checkoboxes = [];
+            foreach ($diffCampaignsList as $campaign) {
+
+                $campaignInfo = get_transient($campaign);
+
+                // check if any campaign funded or not!
+                if (get_option($campaign . '_contract_address')) {
+                    // check if campaign started or not
+                    if ($checkoutController->expire($campaign)) {
+
+                        if ($_POST[$campaignInfo['campaignNameLable']]) {
+                           $checkoboxes[] = true;
+                        }
+                    }
+                }
+            }
+
+            if(in_array(true, $checkoboxes)) {
+                if (!$_POST['dorea_wallet_address']) {
+
+                   wc_add_notice(esc_html__('Please enter a valid wallet address!'), 'error');
+
+                }
+            }else {
+                wc_add_notice(esc_html__('Please choose at least one campaign!'), 'error');
+            }
+            if($_POST['dorea_wallet_address']){
+                if(substr($_POST['dorea_wallet_address'], 0,2) !== '0x'){
+                    wc_add_notice(esc_html__('Wallet Address must start with 0x !'), 'error');
+                }elseif (strlen($_POST['dorea_wallet_address']) < 42){
+                    wc_add_notice(esc_html__('Please enter a valid wallet address!'), 'error');
+                }
+            }
+        }
     }
 }
 
@@ -47,7 +93,7 @@ function cashback(): void
 
                         add_filter( 'woocommerce_form_field', 'dorea_remove_optional_checkout_fields', 9999 );
                         function dorea_remove_optional_checkout_fields( $fields) {
-                            if (strpos($fields, 'id="dorea_campaigns_checkout"') !== false || strpos($fields, 'dorea-campaigns-class') !== false) {
+                            if (strpos($fields, 'id="dorea_campaigns_checkout"') !== false || strpos($fields, 'dorea-campaigns-class') !== false || strpos($fields, 'dorea_wallet_address') !== false) {
                                 // Remove only <span class="optional">(optional)</span> within this context
                                 $fields = preg_replace('/<span class="optional">\((optional)\)<\/span>/', '', $fields);
                             }
@@ -85,7 +131,7 @@ function cashback(): void
                                             // check if campaign started or not
                                             if ($checkoutController->expire($campaign)) {
                                                 woocommerce_form_field(
-                                                    'dorea_campaigns_'.$campaignInfo['campaignNameLable'],
+                                                    $campaignInfo['campaignNameLable'],
                                                     array(
                                                         'type' => 'checkbox',
                                                         'class' => array('dorea-campaigns-class form-row-wide'),
@@ -93,7 +139,7 @@ function cashback(): void
                                                         'required' => false,
                                                         'custom_attributes' => array('optional' => false)
                                                     ),
-                                                    $checkout->get_value('dorea_campaigns_'.$campaignInfo['campaignNameLable'])
+                                                    $checkout->get_value($campaignInfo['campaignNameLable'])
                                                 );
                                             }
                                         }
