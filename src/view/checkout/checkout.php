@@ -6,7 +6,7 @@ use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
 add_action( 'woocommerce_checkout_process', 'dorea_checkout_field_process',9999 );
 function dorea_checkout_field_process() {
-var_dump("okkk");
+
     // get cashback list of admin
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
@@ -54,6 +54,58 @@ var_dump("okkk");
                 }
             }
         }
+    }
+
+}
+
+
+/**
+ * Update the order meta with field value
+ */
+add_action( 'woocommerce_checkout_update_order_meta', 'dorea_update_feild' );
+
+function dorea_update_feild( $order_id ) {
+    // get cashback list of admin
+    $cashback = new cashbackController();
+    $cashbackList = $cashback->list();
+
+    // get campaign list of user
+    $checkoutController = new checkoutController;
+    $diffCampaignsList = $checkoutController->check($cashbackList);
+
+    if (!empty($diffCampaignsList)) {
+
+        // show campaigns in checkout page
+        if (!empty($cashbackList)) {
+
+            $campaignNamesJoined = [];
+            foreach ($diffCampaignsList as $campaign) {
+
+                $campaignInfo = get_transient($campaign);
+
+                // check if any campaign funded or not!
+                if (get_option($campaign . '_contract_address')) {
+                    // check if campaign started or not
+                    if ($checkoutController->expire($campaign)) {
+
+                        if (!empty($_POST[$campaignInfo['campaignNameLable']])) {
+                            $campaignNamesJoined[] = sanitize_text_field($campaignInfo['campaignNameLable']);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    if (!empty( $_POST['dorea_wallet_address'])) {
+        $order = wc_get_order( $order_id );
+        $order->update_meta_data( 'dorea_wallet_address', sanitize_text_field( $_POST['dorea_wallet_address'] ) );
+        $order->save_meta_data();
+    }
+    if (!empty($campaignNamesJoined)) {
+        $order = wc_get_order( $order_id );
+        $order->update_meta_data( 'dorea_campaigns', $campaignNamesJoined);
+        $order->save_meta_data();
     }
 }
 
@@ -285,7 +337,7 @@ add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
         $order = json_decode(new WC_Order($orderId));
-
+        var_dump($order);
         if(isset($order->id)) {
 
             $campaignQueue = get_option('dorea_campaign_queue');
