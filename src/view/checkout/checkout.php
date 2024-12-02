@@ -4,6 +4,9 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
 
+/**
+ * error handling
+ */
 add_action( 'woocommerce_checkout_process', 'dorea_checkout_field_process',9999 );
 function dorea_checkout_field_process() {
 
@@ -30,7 +33,7 @@ function dorea_checkout_field_process() {
                     // check if campaign started or not
                     if ($checkoutController->expire($campaign)) {
 
-                        if ($_POST[$campaignInfo['campaignNameLable']]) {
+                        if ($_POST[$campaignInfo['campaignName']]) {
                            $checkoboxes[] = true;
                         }
                     }
@@ -88,8 +91,8 @@ function dorea_update_feild( $order_id ) {
                     // check if campaign started or not
                     if ($checkoutController->expire($campaign)) {
 
-                        if (!empty($_POST[$campaignInfo['campaignNameLable']])) {
-                            $campaignNamesJoined[] = sanitize_text_field($campaignInfo['campaignNameLable']);
+                        if (!empty($_POST[$campaignInfo['campaignName']])) {
+                            $campaignNamesJoined[] = sanitize_text_field($campaignInfo['campaignName']);
                         }
                     }
                 }
@@ -99,7 +102,7 @@ function dorea_update_feild( $order_id ) {
     }
     if (!empty( $_POST['dorea_wallet_address'])) {
         $order = wc_get_order( $order_id );
-        $order->update_meta_data( 'dorea_wallet_address', sanitize_text_field( $_POST['dorea_wallet_address'] ) );
+        $order->update_meta_data( 'dorea_walletaddress', sanitize_text_field( $_POST['dorea_wallet_address'] ) );
         $order->save_meta_data();
     }
     if (!empty($campaignNamesJoined)) {
@@ -183,7 +186,7 @@ function cashback(): void
                                             // check if campaign started or not
                                             if ($checkoutController->expire($campaign)) {
                                                 woocommerce_form_field(
-                                                    $campaignInfo['campaignNameLable'],
+                                                    $campaignInfo['campaignName'],
                                                     array(
                                                         'type' => 'checkbox',
                                                         'class' => array('dorea-campaigns-class form-row-wide'),
@@ -191,7 +194,7 @@ function cashback(): void
                                                         'required' => false,
                                                         'custom_attributes' => array('optional' => false)
                                                     ),
-                                                    $checkout->get_value($campaignInfo['campaignNameLable'])
+                                                    $checkout->get_value($campaignInfo['campaignName'])
                                                 );
                                             }
                                         }
@@ -326,7 +329,6 @@ function dorea_ordered_received()
         $campaignQueue = get_option('dorea_campaign_queue');
 
         $campaignQueue === true ? update_option('dorea_campaign_queue', $json_data) : add_option('dorea_campaign_queue', $json_data);
-
     }
 }
 
@@ -337,44 +339,57 @@ add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
         $order = json_decode(new WC_Order($orderId));
-        var_dump($order);
+
         if(isset($order->id)) {
 
             $campaignQueue = get_option('dorea_campaign_queue');
 
-            if(isset($campaignQueue)) {
-                if (!empty($campaignQueue)) {
+            if(!$campaignQueue) {
 
-                    $campaignQueue = json_decode($campaignQueue);
+                foreach ($order->meta_data as $meta_data){
+                    if ($meta_data->key === 'dorea_walletaddress') {
+                        $walletAddress = [
+                            'walletAddress' => $meta_data->value,
+                        ];
+                    }
+                    if ($meta_data->key === 'dorea_campaigns') {
+                        $campaignlist = [
+                            'campaignlists' => $meta_data->value
+                        ];
+                    }
+                }
+                $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
+            }
 
-                    // save doreaCampaignInfo
-                    $checkout = new checkoutController();
+            if($campaignQueue) {
 
-                    // check if campaign is expired
-                    $statusCampaigns = [];
-                    if (is_array($campaignQueue->campaignlists)) {
-                        $campaignLists = $campaignQueue->campaignlists;
-                        foreach ($campaignLists as $campaign) {
+                // save doreaCampaignInfo
+                $checkout = new checkoutController();
 
-                            $campaign = sanitize_text_field(sanitize_key($campaign));
-                            $campaignLists[] = $campaign;
-                            $statusCampaigns[] = $checkout->expire(sanitize_text_field(sanitize_key($campaign)));
+                // check if campaign is expired
+                $statusCampaigns = [];
+                if (is_array($campaignQueue->campaignlists)) {
+                    $campaignLists = $campaignQueue->campaignlists;
+                    foreach ($campaignLists as $campaign) {
 
-                        }
-                        if (in_array(true, $statusCampaigns)) {
-                            $checkout->autoRemove();
-                            $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
-                        } else {
-                            wp_redirect('/');
-                        }
+                        $campaign = sanitize_text_field(sanitize_key($campaign));
+                        $campaignLists[] = $campaign;
+                        $statusCampaigns[] = $checkout->expire(sanitize_text_field(sanitize_key($campaign)));
+                    }
+                    if (in_array(true, $statusCampaigns)) {
+                        $checkout->autoRemove();
+                        $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
+                    } else {
+                        wp_redirect('/');
                     }
                 }
 
                 // receive order details
                 $checkout = new checkoutController();
-                $checkout->orederReceived($order, $orderId);
+                $checkout->orederReceived($order);
 
                 delete_option('dorea_campaign_queue');
+
             }
         }
 }

@@ -46,8 +46,6 @@ class receiptController extends receiptAbstract
                 // add sum of total to list
                 $campaignList[$campaignName]['total'][] = (int)$order->total;
 
-
-                //die('stoppp');
                 $campaignList[$campaignName]['order_ids'][] = $order->id;
 
                 // it must trigger and count campaign on every each of product

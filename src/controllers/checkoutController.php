@@ -79,7 +79,7 @@ class checkoutController extends checkoutAbstract
 
     }
 
-    public function orederReceived($order,$orderId):void
+    public function orederReceived($order):void
     {
 
        // call receipt controller
