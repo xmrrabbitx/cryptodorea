@@ -34,10 +34,6 @@ function dorea_cashback_campaign_credit():void
 
     print('  
        <main>
-       
-            <!-- Load Metamask sdk CDN -->
-            <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
-            
             <h1 class="p-5 text-sm font-bold">Fund Campaign</h1> </br>
     ');
 
