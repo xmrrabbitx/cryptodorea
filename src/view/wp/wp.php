@@ -7,7 +7,6 @@
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 use function Cryptodorea\DoreaCashback\view\modals\userStatusCampaign\userStatusCampaign;
 
-
 add_action('wp','wpRequest');
 /**
  * @throws Exception
@@ -59,5 +58,7 @@ function wpRequest()
         }
 
     }
+
+
 
 }

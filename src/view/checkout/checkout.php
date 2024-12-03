@@ -3,7 +3,6 @@
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
-
 /**
  * error handling
  */
@@ -209,7 +208,6 @@ function cashback(): void
                                         $checkout->get_value('dorea_wallet_address')
                                     );
 
-
                                     print('</div>');
                                 }
                             }
@@ -299,20 +297,6 @@ function cashback(): void
 
 }
 
-
-/**
- * before order processed
- */
-/*
-add_action('woocommerce_store_api_checkout_order_processed', 'dorea_ordered_before');
-function dorea_ordered_before()
-{
-    // check and add to cash back program
-    wp_enqueue_script('DOREA_CHECKOUT_BEFORE_PROCESSED_SCRIPT', plugins_url('/cryptodorea/js/checkoutBeforeProcessed.js'), array('jquery', 'jquery-ui-core'));
-
-}
-*/
-
 /**
  * incoming ajax handle
  */
@@ -336,6 +320,7 @@ function dorea_ordered_received()
 add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
+
         $order = json_decode(new WC_Order($orderId));
 
         if(isset($order->id)) {
@@ -356,7 +341,9 @@ function orderReceived($orderId):void
                         ];
                     }
                 }
-                $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
+                if($walletAddress) {
+                    $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
+                }
             }
 
             if($campaignQueue) {
@@ -390,4 +377,5 @@ function orderReceived($orderId):void
 
             }
         }
+
 }
