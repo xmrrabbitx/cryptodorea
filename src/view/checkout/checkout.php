@@ -110,13 +110,12 @@ function dorea_update_feild( $order_id ) {
 }
 
 /**
- * Crypto Cashback Checkout View
+ * Crypto Cashback on Checkout View
  */
 add_action('wp', 'cashback', 10);
 function cashback(): void
 {
     static $contractAddressConfirm;
-
 
     if(is_checkout()) {
 
@@ -139,9 +138,6 @@ function cashback(): void
                 if ($cashbackList) {
 
                     if (has_filter('woocommerce_checkout_fields')) {
-
-                        // check and add to cash back program
-                        wp_enqueue_script('DOREA_CHECKOUTLEGACY_SCRIPT', plugins_url('/cryptodorea/js/checkoutLegacy.js'), array('jquery', 'jquery-ui-core'));
 
                         add_filter( 'woocommerce_form_field', 'dorea_remove_optional_checkout_fields', 9999 );
                         function dorea_remove_optional_checkout_fields( $fields) {
@@ -213,8 +209,6 @@ function cashback(): void
                             }
 
                         }
-
-                        // legacy code here ...
 
                     }
                     else {
@@ -315,12 +309,11 @@ function dorea_ordered_received()
 }
 
 /**
- * callback function on order received
+ * callback function on order received page
  */
 add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
-
         $order = json_decode(new WC_Order($orderId));
 
         if(isset($order->id)) {

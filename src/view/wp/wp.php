@@ -7,13 +7,20 @@
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 use function Cryptodorea\DoreaCashback\view\modals\userStatusCampaign\userStatusCampaign;
 
-add_action('wp','wpRequest');
+
+add_action('woocommerce_account_content','myAccount', 10);
+function myAccount()
+{
+    userStatusCampaign();
+
+}
+
+add_action('wp','wpRequest', 10);
 /**
  * @throws Exception
  */
 function wpRequest()
 {
-
     // check on Authentication
     if(is_user_logged_in()) {
 
@@ -24,11 +31,9 @@ function wpRequest()
         $checkout = new checkoutController();
         $checkout->autoRemove();
 
-
-        //userStatusCampaign();
-
-
-        // insert Dorea option into user menu
+        /**
+         * add Dorea menu into my account menu
+         */
         function dorea_cashback_menu($items)
         {
             // Remove the logout menu item.
@@ -58,7 +63,5 @@ function wpRequest()
         }
 
     }
-
-
 
 }

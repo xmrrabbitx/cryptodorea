@@ -25,7 +25,7 @@ function dorea_admin_help_campaign():void
             <h2 class='!pl-5 !text-sm !font-bold'>How to Start ?</h2> </br>
             <p class='!w-10/12 !pl-5 !leading-7'>
             1. if it is your first time to use Crypto Dorea, 
-            you can select \"Create Your First Cashback Campaign\"  option in first page to create your first campaign.
+            you can select \"Create Your First Cashback Campaign\"  option in main page to create your first campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
                 <img class='!pt-3' src='". esc_url($createCampaignImg) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>

@@ -18,8 +18,8 @@ if( ! defined('WCSF_PLUGIN_DIR') ) {
  * load necessary admin files
  */
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/admin/admin.php';
-include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/wp/wp.php';
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/checkout/checkout.php';
+include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/wp/wp.php';
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/userStatusCampaign.php';
 
 
