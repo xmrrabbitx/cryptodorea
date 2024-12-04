@@ -96,7 +96,7 @@ function dorea_admin_pay_campaign():void
 
         $addtoPaymentSection = true;
 
-        //foreach ($userList as $users) {
+        // pagination set to 100 queries
         for ($i = $pagination -1; $i <= ($pagination * 100) - 1; $i++) {
             if ($i <= count($userList) - 1) {
                 $users = $userList[$i];
