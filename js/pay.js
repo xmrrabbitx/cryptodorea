@@ -147,8 +147,27 @@ jQuery(document).ready(async function($) {
                             await new Promise(r => setTimeout(r, 1500));
                             $(successMessg).hide("slow");
 
-                            let xhr = new XMLHttpRequest();
+                            jQuery.ajax({
+                                type: "post",
+                                url: `${window.location.origin}/wp-admin/admin-ajax.php`,
+                                data: {
+                                    action: "dorea_pay",  // the action to fire in the server
+                                    data: JSON.stringify({
+                                        "userList":param.usersList,
+                                        "amountWei": amounts,
+                                        'balance': balance,
+                                        "campaignName": campaignName,
+                                        "totalPurchases": param.totalPurchases,
+                                        "claimedAmount": param.qualifiedUserEthers
+                                    }),
+                                },
+                                complete: function (response) {
+                                    window.location.reload();
+                                },
+                            });
+                            //let xhr = new XMLHttpRequest();
 
+                            /*
                             // remove wordpress prefix on production
                             xhr.open("POST", "/wp-admin/admin-post.php?action=dorea_claimed", true);
                             xhr.onreadystatechange = async function () {
@@ -167,6 +186,8 @@ jQuery(document).ready(async function($) {
                                 "totalPurchases": param.totalPurchases,
                                 "claimedAmount": param.qualifiedUserEthers
                             }));
+
+                             */
                         }
                     });
                 });

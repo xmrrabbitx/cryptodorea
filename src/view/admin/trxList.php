@@ -81,14 +81,17 @@ function dorea_admin_trx_campaign():void
 
     if (!empty($claimedUsers) && $pagination <= count($claimedUsers)) {
         for ($i = $pagination -1; $i <= ($pagination * 100) - 1; $i++) {
-            $users = $claimedUsers[$i];
-            $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-            print("<div class='!col-span-1 !grid !grid-cols-4 !pt-3 !text-center'>");
-            print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-            print("<span class='!pl-3 !col-span-2'>" . $campaignUser[$cashbackName]['walletAddress'] . "</span>");
-            print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['claimedReward'] . "</span>");
-            print("</div>");
+            $users = $claimedUsers[$i];
+            if ($i <= count($claimedUsers) - 1) {
+                $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
+
+                print("<div class='!col-span-1 !grid !grid-cols-4 !pt-3 !text-center'>");
+                print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
+                print("<span class='!pl-3 !col-span-2'>" . $campaignUser[$cashbackName]['walletAddress'] . "</span>");
+                print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['claimedReward'] . "</span>");
+                print("</div>");
+            }
         }
 
 

@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Crypto Cashback Campaign
- */
+
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
@@ -16,6 +14,9 @@ function dorea_referer_check($action, $result)
     return $action;
 }
 
+/**
+ * Crypto Cashback Campaign
+ */
 function dorea_cashback_campaign_content():void
 {
     // load campaign css styles
@@ -179,7 +180,7 @@ function dorea_cashback_campaign_content():void
  * set up cashback campaign
  */
 add_action('admin_post_cashback_campaign', 'dorea_admin_cashback_campaign');
-function dorea_admin_cashback_campaign()
+function dorea_admin_cashback_campaign():void
 {
     // check nonce validation
     check_admin_referer();
@@ -191,7 +192,8 @@ function dorea_admin_cashback_campaign()
             $campaignNameLable = trim(sanitize_text_field($_POST['campaignName']));
             $campaignNameLable = preg_replace("/[^A-Za-z0-9 ]/", '', $campaignNameLable);
             if(strlen($campaignNameLable) >= 25){
-                return wp_redirect($referer);
+                wp_redirect($referer);
+                exit;
             }
             $campaignName = trim(sanitize_text_field(sanitize_key($_POST['campaignName'])));
             $cryptoType = htmlspecialchars(sanitize_text_field($_POST['cryptoType']));
@@ -202,7 +204,7 @@ function dorea_admin_cashback_campaign()
                 $redirect_url = add_query_arg('cryptoAmountError', urlencode('amount and shopping counts must be numeric!'), $referer);
 
                 wp_redirect($redirect_url);
-                return false;
+                exit;
 
             }
 
@@ -228,7 +230,7 @@ function dorea_admin_cashback_campaign()
 
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
                     wp_redirect($redirect_url);
-                    return false;
+                    exit;
 
                 }
 
@@ -257,7 +259,7 @@ function dorea_admin_cashback_campaign()
 
                 // head to the admin page of Dorea
                 wp_redirect($url);
-
+                exit;
             }
 
     }else{
@@ -266,7 +268,7 @@ function dorea_admin_cashback_campaign()
         $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('some fields left empty!'), $referer);
 
         wp_redirect($redirect_url);
-        return false;
+        exit;
 
     }
     
@@ -279,7 +281,7 @@ add_action('admin_post_delete_campaign', 'dorea_admin_delete_campaign');
 function dorea_admin_delete_campaign():void
 {
     if ( !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'delete_campaign_nonce') ) {
-        die('Security check failed');
+        error_log('Security check failed');
     }
 
     // Get campaign name

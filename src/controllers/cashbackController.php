@@ -51,23 +51,11 @@ class cashbackController extends cashbackAbstract
 
     }
 
-    public function modify()
-    {
-
-    }
-
-    public function check($campaignName)
-    {
-
-
-    }
-
     /*
      * remove admin Database records
      */
     public function remove($campaignName):void
     {
-
         if (!empty($campaignName)) {
 
             delete_transient($campaignName); // remove campaign information
@@ -83,7 +71,6 @@ class cashbackController extends cashbackAbstract
             if(empty(get_option('campaign_list'))){
                 delete_option('campaign_list');
             }
-
 
             // remove dorea_campaigninfo_user_
             $campaignInfoUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
@@ -113,17 +100,6 @@ class cashbackController extends cashbackAbstract
             $campaignUsers = get_option("dorea_campaigns_users_" . $campaignName);
             if($campaignUsers){
                 delete_option("dorea_campaigns_users_" . $campaignName);
-            }
-
-            //remove encryption campaign
-            $encryptionCampaign = get_option("encryptionCampaign");
-
-            if($encryptionCampaign[$campaignName]){
-                unset($encryptionCampaign[$campaignName]);
-                update_option("encryptionCampaign" , $encryptionCampaign);
-            }
-            if(empty($encryptionCampaign)){
-                delete_option("encryptionCampaign");
             }
 
         }

@@ -3,7 +3,6 @@
 /**
  * Delete Campaign Modal
  */
-
 function deleteModal():bool
 {
     // load claim campaign scripts

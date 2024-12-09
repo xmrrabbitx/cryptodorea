@@ -292,7 +292,7 @@ function cashback(): void
 }
 
 /**
- * incoming ajax handle
+ * incoming ajax handle after order received!
  */
 add_action('wp_ajax_dorea_ordered_received','dorea_ordered_received');
 function dorea_ordered_received()
@@ -314,9 +314,9 @@ function dorea_ordered_received()
 add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
-        $order = json_decode(new WC_Order($orderId));
+   $order = json_decode(new WC_Order($orderId));
 
-        if(isset($order->id)) {
+   if(isset($order->id)) {
 
             $campaignQueue = get_option('dorea_campaign_queue');
 
@@ -370,5 +370,4 @@ function orderReceived($orderId):void
 
             }
         }
-
 }

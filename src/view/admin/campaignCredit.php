@@ -1,8 +1,5 @@
 <?php
 
-use Cryptodorea\DoreaCashback\controllers\campaignCreditController;
-use Cryptodorea\DoreaCashback\utilities\encrypt;
-
 /**
  * Crypto Cashback Campaign Credit
  * @throws Exception

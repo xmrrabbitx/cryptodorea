@@ -209,40 +209,22 @@ function dorea_admin_pay_campaign():void
                         }
 
                     }
-                    /*else {
-
-
-                        print ("
-                           <!-- error on no users -->
-                           <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
-                               <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                   <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
-                               </svg>
-                               <p class='!pt-3 !pb-2'>
-                                   there is no users to pay in the loyalty campaign!
-                               </p>
-                           </div>
-                        ");
-
-                    }*/
-
                 }
             }
         }
 
-
         if ($fundOption) {
             print("
-                          <!-- Fund Campaign -->
-                          <div class='!mx-auto !text-center !mt-5'>
-                               <button id='dorea_fund'  class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Fund Campaign</button>
-                          </div>
-                        ");
+                <!-- Fund Campaign -->
+                <div class='!mx-auto !text-center !mt-5'>
+                    <button id='dorea_fund'  class='campaignPayment_ !p-3 !w-64 !bg-[#faca43] !rounded-md'>Fund Campaign</button>
+                </div>
+            ");
             // calculate remaining amount eth to pay
             $remainingAmount = bcsub((float)array_sum($totalEthers), (float)$contractAmount, 10);
 
             // load campaign credit scripts
-            wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
+            wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
 
             // pass params value for deployment
             $params = array(
@@ -250,7 +232,7 @@ function dorea_admin_pay_campaign():void
                 'campaignName' => $cashbackName,
                 'remainingAmount' => $remainingAmount,
             );
-            wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+            wp_localize_script('DOREA_FUND_SCRIPT', 'param', $params);
 
         }
         else {
@@ -275,7 +257,6 @@ function dorea_admin_pay_campaign():void
                 'cryptoAmount' => $cryptoAmount,
                 'usersList' => $usersList,
                 'totalPurchases' => $totalPurchases,
-                'redirectUrl' =>  esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=1')
             );
             wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
 
@@ -316,21 +297,6 @@ function dorea_admin_pay_campaign():void
         print("</div>");
     }
 
-    /*
-    print("
-        <div class='!w-52 !mt-5 !cursor-pointer'>
-           <a class='' href='/'>
-              <div class='!grid grid-cols-2'>
-                 <label class='!pt-1 !cursor-pointer'>Transaction List</label>
-                 <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6'>
-                     <path stroke-linecap='round' stroke-linejoin='round' d='M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z' />
-                 </svg>
-              </div>
-           </a>   
-        </div>
-    ");
-    */
-
     print("
             </div>
         </main>
@@ -338,52 +304,60 @@ function dorea_admin_pay_campaign():void
 }
 
 /**
- * get the new contract balance
+ * fund campaign & get the new balance
  */
-add_action('admin_post_dorea_new_contractBalance', 'dorea_new_contractBalance');
-function dorea_new_contractBalance():void
+add_action('wp_ajax_dorea_fund', 'dorea_fund');
+function dorea_fund():void
 {
+    if(isset($_POST['data'])) {
 
-    // get Json Data
-    $json_data = file_get_contents('php://input');
-    $json = json_decode($json_data);
+        // get Json Data
+        $json = stripslashes($_POST['data']);
+        $json = json_decode($json);
 
-    if ($json) {
-        $campaignInfoUser = get_transient($json->campaignName);
-        $campaignInfoUser['contractAmount'] = $json->balance;
+        if ($json) {
+            $campaignInfoUser = get_transient($json->campaignName);
+            $campaignInfoUser['contractAmount'] = $json->balance;
 
-        $amount = $json->amount;
-        $totalPurchases = $json->totalPurchases;
+            $amount = $json->amount;
+            $totalPurchases = $json->totalPurchases;
 
-        set_transient($json->campaignName, $campaignInfoUser);
+            set_transient($json->campaignName, $campaignInfoUser);
 
-        if (isset($json->usersList)){
-            $usersList = $json->usersList;
-            $users = new usersController();
-            $users->is_paid($json->campaignName,$usersList,$amount,$totalPurchases);
+            if (isset($json->usersList)) {
+                $usersList = $json->usersList;
+                $users = new usersController();
+                $users->is_paid($json->campaignName, $usersList, $amount, $totalPurchases);
+
+            }
         }
     }
 }
 
-add_action('admin_post_dorea_claimed', 'dorea_claimed');
-function dorea_claimed():void
+/**
+ * pay campaign
+ */
+add_action('wp_ajax_dorea_pay', 'dorea_pay');
+function dorea_pay():void
 {
+    if(isset($_POST['data'])) {
 
-    // check if cashback claimed or not
-    $json_data = file_get_contents('php://input');
-    $json = json_decode($json_data);
+        // get Json Data
+        $json = stripslashes($_POST['data']) ?? null;
+        $json = json_decode($json);
 
-    if(isset($json)) {
+        if (isset($json)) {
 
-        $campaignInfo = get_transient($json->campaignName);
+            $campaignInfo = get_transient($json->campaignName);
 
-        // convert wei to ether
-        $campaignInfo['contractAmount'] = $json->balance;
-        set_transient($json->campaignName, $campaignInfo);
+            // convert wei to ether
+            $campaignInfo['contractAmount'] = $json->balance;
+            set_transient($json->campaignName, $campaignInfo);
 
-        // check is_paid
-        $users = new usersController();
-        $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases);
+            // check is_paid
+            $users = new usersController();
+            $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases);
 
+        }
     }
 }
