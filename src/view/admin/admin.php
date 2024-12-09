@@ -113,10 +113,10 @@ function dorea_main_page_content():void
     if ($cashbackList) {
 
         print("
-            <h2 class='!pl-5 !text-sm !font-bold'>
+            <h2 class='!pl-5 !text-sm !break-words !text-balance !font-bold'>
                 DOREA CASHBACK GROWS YOUR BUSINESS TO THE MOON 🚀  
             </h2> 
-            <p class='!pl-5 !text-sm !mt-2 !text-slate-500'>Create Cashback Campaign for the Most Loyal Customers!</p>
+            <p class='!pl-5 !text-sm !mt-2 !text-slate-500 !break-words !text-balance'>Create Cashback Campaign for the Most Loyal Customers!</p>
             </br>");
 
         print("

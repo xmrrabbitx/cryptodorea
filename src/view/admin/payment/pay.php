@@ -18,11 +18,9 @@ function dorea_admin_pay_campaign():void
 
     print("
         <main>
-            
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
-            
     ");
 
     if(isset($_GET['cashbackName'])){
@@ -61,14 +59,13 @@ function dorea_admin_pay_campaign():void
     if($userList === false){
         print ("
             <!-- error on no users -->
-            <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+            <div class='!text-center !text-sm !mx-auto xl:!w-96 lg:!w-96 md:!w-96 sm:!w-96 !w-80 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
                  <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
-                <p class='!pt-3 !pb-2'>
+                <p class='!pt-2 !pb-2 !break-words !text-balance xl:!text-sm lg:!text-sm'>
                   there is no users participant into the loyalty campaign!
                 </p>
-               
             </div>
         ");
     }elseif(empty($userList)){
