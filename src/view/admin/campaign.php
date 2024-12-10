@@ -216,24 +216,26 @@ function dorea_admin_cashback_campaign():void
             $startDateMonth = explode('_',$startDate)[0];
             $startDateYear = explode('_',$startDate)[1];
 
+            $expMode = htmlspecialchars(sanitize_text_field($_POST['expDate']));
+
             $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . " 00:00:00");
-            $timestampExpire = $timestampStart + 691199; // calculate next 7 days of timestamp
+            if($expMode === "weekly") {
+                $timestampExpire = $timestampStart + 691199; // calculate next 7 days of timestamp
+            }elseif($expMode === "monthly") {
+                $timestampExpire = $timestampStart + 691199 * 4; // calculate next 1 month of timestamp
+            }
 
             // add random hash to campaign name
             $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
 
             $cashback = new cashbackController();
             if(get_option('campaign_list')){
-
                 //throws error on existed campaign
                 if(in_array($campaignName, get_option('campaign_list'))){
-
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
                     wp_redirect($redirect_url);
                     exit;
-
                 }
-
             }
             $campaignLength = explode("_",$campaignName)[0];
             if(strlen($campaignLength) >= 25 ){

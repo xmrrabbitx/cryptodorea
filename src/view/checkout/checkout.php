@@ -166,10 +166,8 @@ function cashback(): void
                                 // show campaigns in checkout page
                                 if (!empty($cashbackList)) {
 
-                                    print("
-                                        <h3 id='dorea_campaigns_checkout_title'>Join to Cashback Campaigns</h3>
-                                        <div id='dorea_campaigns_checkout'>
-                                    ");
+                                    $title = true;
+                                    $campaignsList = [];
                                     foreach ($diffCampaignsList as $campaign) {
 
                                         $campaignInfo = get_transient($campaign);
@@ -178,6 +176,13 @@ function cashback(): void
                                         if (get_option($campaign . '_contract_address')) {
                                             // check if campaign started or not
                                             if ($checkoutController->expire($campaign)) {
+                                                if($title){
+                                                    print("
+                                                        <h3 id='dorea_campaigns_checkout_title'>Join to Cashback Campaigns</h3>
+                                                        <div id='dorea_campaigns_checkout'>
+                                                    ");
+                                                    $title = false;
+                                                }
                                                 woocommerce_form_field(
                                                     $campaignInfo['campaignName'],
                                                     array(
@@ -189,21 +194,23 @@ function cashback(): void
                                                     ),
                                                     $checkout->get_value($campaignInfo['campaignName'])
                                                 );
+                                                $campaignsList[] = true;
                                             }
                                         }
                                     }
-                                    woocommerce_form_field(
-                                        'dorea_wallet_address',
-                                        array(
-                                            'type' => 'text',
-                                            'class' => array('dorea-wallet-address-class form-row-wide'),
-                                            'label' => __('wallet address'),
-                                            'placeholder' => __('Enter Wallet Address...'),
-                                            'required' => false,
-                                        ),
-                                        $checkout->get_value('dorea_wallet_address')
-                                    );
-
+                                    if(in_array(true, $campaignsList)) {
+                                        woocommerce_form_field(
+                                            'dorea_wallet_address',
+                                            array(
+                                                'type' => 'text',
+                                                'class' => array('dorea-wallet-address-class form-row-wide'),
+                                                'label' => __('wallet address'),
+                                                'placeholder' => __('Enter Wallet Address...'),
+                                                'required' => false,
+                                            ),
+                                            $checkout->get_value('dorea_wallet_address')
+                                        );
+                                    }
                                     print('</div>');
                                 }
                             }

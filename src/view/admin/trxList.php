@@ -36,7 +36,7 @@ function dorea_admin_trx_campaign():void
         print("
             <!-- error on no campaign -->
             <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
-                 <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                 <svg class='size-6 !text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
                 <p class='!pt-3 !pb-2 !text-balance'>
@@ -65,7 +65,7 @@ function dorea_admin_trx_campaign():void
 
     print('
        <div class="!grid !grid-cols-1 !ml-5 !w-3/3 !mr-5 !mt-3 !p-10 !gap-3 !text-left !rounded-xl  !bg-white !shadow-sm !border">
-             <div class="!col-span-1 !grid !grid-cols-4">
+             <div class="!col-span-1 !grid-cols-4 xl:!grid lg:!grid  md:!grid  sm:!grid !hidden">
                    <span class="!text-center !pl-3 !col-span-1">
                         Username        
                    </span>
@@ -86,14 +86,15 @@ function dorea_admin_trx_campaign():void
             if ($i <= count($claimedUsers) - 1) {
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-                print("<div class='!col-span-1 !grid !grid-cols-4 !pt-3 !text-center'>");
-                print("<span class='!pl-3 !col-span-1'>" . $users . "</span> ");
-                print("<span class='!pl-3 !col-span-2'>" . $campaignUser[$cashbackName]['walletAddress'] . "</span>");
-                print("<span class='!pl-3 !col-span-1'>" . $campaignUser[$cashbackName]['claimedReward'] . "</span>");
+                print("<div class='!col-span-1 !grid xl:!grid-cols-4 lg:!grid-cols-4 md:!grid-cols-4 sm:!grid-cols-4 !grid-cols-2 !pt-3 !text-center'>");
+                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'>Username</span><span class='!pl-3 !pt-3 !col-span-1'>" . $users . "</span> ");
+                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'> Wallet Address</span><span class='!pl-3 !pt-3 xl:!col-span-2 lg:!col-span-2 md:!col-span-2 sm:!col-span-2 !col-span-1 !break-all'>" . $campaignUser[$cashbackName]['walletAddress'] . "</span>");
+                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'>Claimed Ethers</span><span class='!pl-3 !pt-3 !col-span-1'>" . $campaignUser[$cashbackName]['claimedReward'] . "</span>");
                 print("</div>");
+                print('<hr class="xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block">');
             }
-        }
 
+        }
 
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
@@ -101,7 +102,7 @@ function dorea_admin_trx_campaign():void
             // forward arrow pagination
             print('
                <div class="">
-                    <a class="!col-span-1 !mt-0 !pl-0 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '">
+                    <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
                         </svg>
@@ -116,7 +117,7 @@ function dorea_admin_trx_campaign():void
         if (($pagination * 100) <= count($claimedUsers) - 1) {
            print('      
                 <div class="">
-                     <a class="!col-span-1 !mt-0 !pl-0 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">
+                     <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">
                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
                         </svg>
