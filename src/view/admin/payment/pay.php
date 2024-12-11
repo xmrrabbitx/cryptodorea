@@ -12,20 +12,47 @@ function dorea_admin_pay_campaign():void
     // load admin css styles
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'));
 
+    // load campaign credit scripts
+    wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'));
+
+
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
     static $fundOption;
 
     print("
         <main>
-            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
+            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
     ");
 
     if(isset($_GET['cashbackName'])){
         $cashbackName = sanitize_key($_GET['cashbackName']) ?? null;
-        print("<h3 class='!pl-5 !text-xs !font-bold'>Campaign: ". $cashbackName . "</h3> </br>");
+
+        $cashbackInfo = get_transient($cashbackName) ?? null;
+
+        if(isset($cashbackInfo['mode'])){
+            if($cashbackInfo['mode'] === "on"){
+                $mode = "checked";
+            }else{
+                $mode = '';
+            }
+        }else{
+            $mode = '';
+        }
+
+        print("
+            <h3 class='!pl-5 !text-xs !font-bold'>Campaign: ". $cashbackName . "</h3> </br>
+            <div class='!pr-5 !text-right'>
+                trun On/Off Campaign
+                <label class='switch'>
+                  <input id='doreaSwitchcCampaign' type='checkbox' $mode>
+                  <span class='slider round'></span>
+                </label>
+                <input id='doreaCampaignNameSwitch' type='hidden' name='$cashbackName'>
+            </div>
+        ");
     }
 
     // show errors
@@ -50,7 +77,6 @@ function dorea_admin_pay_campaign():void
         return;
     }
 
-    $cashbackInfo = get_transient($cashbackName) ?? null;
     $pagination = sanitize_key($_GET['pagination']) ?? 0;
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
@@ -75,7 +101,7 @@ function dorea_admin_pay_campaign():void
                  <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
-                <p class='!pt-3 !pb-2'>
+                <p class='!pt-3 !pb-2 !leading-7'>
                   the loyalty campaign has been successfully paid!
                   please check the transactions list from main page.
                 </p>
@@ -93,8 +119,9 @@ function dorea_admin_pay_campaign():void
 
         $addtoPaymentSection = true;
 
+        $j = $pagination -1 === 0 ? 0 : $pagination;
         // pagination set to 100 queries
-        for ($i = $pagination -1; $i <= ($pagination * 100) - 1; $i++) {
+        for ($i = $j; $i <= ($pagination * 100) - 1; $i++) {
             if ($i <= count($userList) - 1) {
                 $users = $userList[$i];
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
@@ -264,8 +291,8 @@ function dorea_admin_pay_campaign():void
     if($userList) {
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
-        if (($pagination * 100)-1 <= count($userList) - 1 && ($pagination * 100)-1 !== 0) {
-            // forward arrow pagination
+        if ($pagination -1 !== 0) {
+            // backward arrow pagination
             print('
                <div class="">
                     <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '">
@@ -281,6 +308,7 @@ function dorea_admin_pay_campaign():void
         }
         print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
         if (($pagination * 100) <= count($userList) - 1) {
+            // forward arrow pagination
             print('      
                 <div class="">
                      <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">
@@ -300,6 +328,34 @@ function dorea_admin_pay_campaign():void
     ");
 }
 
+
+/**
+ * switch on/off campaign
+ */
+add_action('wp_ajax_dorea_switchCampaign', 'dorea_switchCampaign');
+function dorea_switchCampaign()
+{
+    if(isset($_POST['data'])) {
+
+        // get Json Data
+        $json = stripslashes($_POST['data']);
+        $json = json_decode($json);
+
+        if ($json) {
+            $campaignInfoUser = get_transient(sanitize_text_field($json->campaignName));
+            if(sanitize_text_field($json->mode) === "on"){
+                $mode = "on";
+            }else  if(sanitize_text_field($json->mode) === "off"){
+                $mode = "off";
+            }
+
+            $campaignInfoUser['mode'] = $mode;
+            set_transient(sanitize_text_field($json->campaignName),$campaignInfoUser);
+
+        }
+    }
+}
+
 /**
  * fund campaign & get the new balance
  */
@@ -313,7 +369,7 @@ function dorea_fund():void
         $json = json_decode($json);
 
         if ($json) {
-            $campaignInfoUser = get_transient($json->campaignName);
+            $campaignInfoUser = get_transient(sanitize_text_field($json->campaignName));
             $campaignInfoUser['contractAmount'] = $json->balance;
 
             $amount = $json->amount;

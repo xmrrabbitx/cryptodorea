@@ -175,7 +175,7 @@ function cashback(): void
                                         // check if any campaign funded or not!
                                         if (get_option($campaign . '_contract_address')) {
                                             // check if campaign started or not
-                                            if ($checkoutController->expire($campaign)) {
+                                            if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
                                                 if($title){
                                                     print("
                                                         <h3 id='dorea_campaigns_checkout_title'>Join to Cashback Campaigns</h3>
@@ -352,20 +352,29 @@ function orderReceived($orderId):void
                 $checkout = new checkoutController();
 
                 // check if campaign is expired
+                $switchStatus = [];
                 $statusCampaigns = [];
                 if (is_array($campaignQueue->campaignlists)) {
                     $campaignLists = $campaignQueue->campaignlists;
                     foreach ($campaignLists as $campaign) {
 
                         $campaign = sanitize_text_field(sanitize_key($campaign));
+                        $cashbackInfo = get_transient($campaign) ?? null;
+                        if(isset($cashbackInfo['mode'])){
+                            if($cashbackInfo['mode'] === "on"){
+                                $switchStatus[] = true;
+                            }else{
+                                $switchStatus[] = false;
+                            }
+                        }else{
+                            $switchStatus[] = true;
+                        }
                         $campaignLists[] = $campaign;
                         $statusCampaigns[] = $checkout->expire(sanitize_text_field(sanitize_key($campaign)));
                     }
-                    if (in_array(true, $statusCampaigns)) {
+                    if (in_array(true, $statusCampaigns) && in_array(true, $switchStatus)) {
                         $checkout->autoRemove();
                         $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
-                    } else {
-                        wp_redirect('/');
                     }
                 }
 

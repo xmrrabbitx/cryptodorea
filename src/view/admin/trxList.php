@@ -51,12 +51,12 @@ function dorea_admin_trx_campaign():void
     if(empty($claimedUsers)){
         print("
             <!-- error on no campaign -->
-            <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+            <div class='!text-center !text-sm !mx-auto !mx-auto xl:!w-96 lg:!w-96 md:!w-96 sm:!w-96 !w-80  !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
                  <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
-                <p class='!pt-3 !pb-2 !text-balance'>
-                  there is no transactions on this campaign yet!
+                <p class='!pt-3 !pb-2 !break-words !text-balance'>
+                  there is no transactions </br> on this campaign yet!
                 </p>
                
             </div>");
@@ -79,9 +79,9 @@ function dorea_admin_trx_campaign():void
              <hr class="">
     ');
 
+    $j = $pagination -1 === 0 ? 0 : $pagination;
     if (!empty($claimedUsers) && $pagination <= count($claimedUsers)) {
-        for ($i = $pagination -1; $i <= ($pagination * 100) - 1; $i++) {
-
+        for ($i =  $j; $i <= ($pagination * 100) - 1; $i++) {
             $users = $claimedUsers[$i];
             if ($i <= count($claimedUsers) - 1) {
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
@@ -98,8 +98,8 @@ function dorea_admin_trx_campaign():void
 
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
-        if (($pagination * 100)-1 <= count($claimedUsers) - 1 && ($pagination * 100)-1 !== 0) {
-            // forward arrow pagination
+        if ($pagination -1 !== 0) {
+            // backward arrow pagination
             print('
                <div class="">
                     <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '">
@@ -110,12 +110,13 @@ function dorea_admin_trx_campaign():void
                 </div>
             ');
         }else{
-                // blank space
-                print('<div class="!col-span-1"></div>');
+            // blank space
+            print('<div class="!col-span-1"></div>');
         }
         print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
         if (($pagination * 100) <= count($claimedUsers) - 1) {
-           print('      
+            // forward arrow pagination
+            print('      
                 <div class="">
                      <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=transactions_list&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">
                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -123,7 +124,7 @@ function dorea_admin_trx_campaign():void
                         </svg>
                      </a>
                  </div>
-           ');
+            ');
         }
         print("</div>");
 

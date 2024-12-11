@@ -7,6 +7,7 @@ import {abi} from "./compile.js";
 let payCampaign = document.getElementById("dorea_pay");
 let errorMessg = document.getElementById("dorea_error");
 let successMessg = document.getElementById("dorea_success");
+let doreaSwitchcCampaign = document.getElementById('doreaSwitchcCampaign');
 
 jQuery(document).ready(async function($) {
 
@@ -151,7 +152,7 @@ jQuery(document).ready(async function($) {
                                 type: "post",
                                 url: `${window.location.origin}/wp-admin/admin-ajax.php`,
                                 data: {
-                                    action: "dorea_pay",  // the action to fire in the server
+                                    action: "dorea_pay",
                                     data: JSON.stringify({
                                         "userList":param.usersList,
                                         "amountWei": amounts,
@@ -165,29 +166,6 @@ jQuery(document).ready(async function($) {
                                     window.location.reload();
                                 },
                             });
-                            //let xhr = new XMLHttpRequest();
-
-                            /*
-                            // remove wordpress prefix on production
-                            xhr.open("POST", "/wp-admin/admin-post.php?action=dorea_claimed", true);
-                            xhr.onreadystatechange = async function () {
-                                if (xhr.readyState === 4 && xhr.status === 200) {
-
-                                    window.location.replace(param.redirectUrl);
-
-                                }
-                            }
-
-                            xhr.send(JSON.stringify({
-                                "userList":param.usersList,
-                                "amountWei": amounts,
-                                'balance': balance,
-                                "campaignName": campaignName,
-                                "totalPurchases": param.totalPurchases,
-                                "claimedAmount": param.qualifiedUserEthers
-                            }));
-
-                             */
                         }
                     });
                 });

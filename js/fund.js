@@ -6,7 +6,6 @@ import {abi} from "./compile.js";
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_metamask_error");
 
-console.log(param.redirectUrl)
 jQuery(document).ready(async function($) {
     fundCampaign.addEventListener("click", async function(){
 
@@ -128,7 +127,7 @@ jQuery(document).ready(async function($) {
                                         type: "post",
                                         url: `${window.location.origin}/wp-admin/admin-ajax.php`,
                                         data: {
-                                            action: "dorea_fund",  // the action to fire in the server
+                                            action: "dorea_fund",
                                             data: JSON.stringify({
                                                 "balance": balance,
                                                 "campaignName": campaignName,
@@ -138,21 +137,6 @@ jQuery(document).ready(async function($) {
                                             window.location.reload();
                                         },
                                     });
-                                    /*
-                                    // get contract address
-                                    let xhr = new XMLHttpRequest();
-
-                                    // remove wordpress prefix on production
-                                    xhr.open("POST", "/wp-admin/admin-post.php?action=dorea_new_contractBalance", true);
-                                    xhr.onreadystatechange = async function() {
-                                        if (xhr.readyState === 4 && xhr.status === 200) {
-
-                                            window.location.reload();
-                                        }
-                                    }
-
-                                    xhr.send(JSON.stringify({"balance":JSON.stringify(balance),"campaignName":campaignName}));
-                                    */
                                 }
                             });
 
