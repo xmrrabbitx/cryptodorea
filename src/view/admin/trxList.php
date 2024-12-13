@@ -82,8 +82,8 @@ function dorea_admin_trx_campaign():void
     $j = $pagination -1 === 0 ? 0 : $pagination;
     if (!empty($claimedUsers) && $pagination <= count($claimedUsers)) {
         for ($i =  $j; $i <= ($pagination * 100) - 1; $i++) {
-            $users = $claimedUsers[$i];
             if ($i <= count($claimedUsers) - 1) {
+                $users = $claimedUsers[$i];
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
                 print("<div class='!col-span-1 !grid xl:!grid-cols-4 lg:!grid-cols-4 md:!grid-cols-4 sm:!grid-cols-4 !grid-cols-2 !pt-3 !text-center'>");

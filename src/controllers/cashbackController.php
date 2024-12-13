@@ -12,7 +12,7 @@ class cashbackController extends cashbackAbstract
 
     public function create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount, $timestampStart, $timestampExpire):void
     {
-        $campaignInfo = ['campaignName' => $campaignName, 'campaignNameLable'=>$campaignNameLable, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, "timestampStart"=>$timestampStart, "timestampExpire"=>$timestampExpire] ?? null;
+        $campaignInfo = ['campaignName' => $campaignName, 'campaignNameLable'=>$campaignNameLable, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, "timestampStart"=>$timestampStart, "timestampExpire"=>$timestampExpire, 'mode'=>'on'] ?? null;
 
         if (empty($this->list()) || !in_array($campaignName, $this->list())) {
             if ($campaignInfo) {

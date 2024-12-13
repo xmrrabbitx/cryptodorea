@@ -321,6 +321,8 @@ function dorea_ordered_received()
 add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
+   static $error;
+
    $order = json_decode(new WC_Order($orderId));
 
    if(isset($order->id)) {
@@ -375,12 +377,17 @@ function orderReceived($orderId):void
                     if (in_array(true, $statusCampaigns) && in_array(true, $switchStatus)) {
                         $checkout->autoRemove();
                         $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
+                    }else{
+                        error_log('campaign is expired or not enabled!');
+                        $error = true;
                     }
                 }
 
-                // receive order details
-                $checkout = new checkoutController();
-                $checkout->orederReceived($order);
+                if(!$error) {
+                    // receive order details
+                    $checkout = new checkoutController();
+                    $checkout->orederReceived($order);
+                }
 
                 delete_option('dorea_campaign_queue');
 

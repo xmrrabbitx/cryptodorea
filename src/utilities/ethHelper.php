@@ -2,6 +2,7 @@
 
 namespace Cryptodorea\DoreaCashback\utilities;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -15,8 +16,12 @@ class ethHelper
      */
     static function ethPrice(): float
     {
-        $client = new Client([
-            'verify'=>false
+
+        static $json;
+
+        $client = new Client(
+            [
+                'verify'=>false
             ]
         );
 
@@ -31,12 +36,24 @@ class ethHelper
                 if (!empty($json)) {
                     break;
                 }
-            }catch (SiteErrorException $error) {
+            }catch (Exception $error) {
                 if ($i == 3) {
                     if (empty($json)){
-                        throw new SiteErrorException("no response!");
+                        // throw error on Guzzle response
+                        error_log($error);
+                        print("<span>Something went wrong! please refresh the page...</span>");
+                        exit;
                     }
                 }
+            }
+        }
+
+        // throw error on api response
+        if(isset($json->Response)) {
+            if ($json->Response === "Error") {
+                error_log($json->Message);
+                print("<span>Something went wrong! please refresh the page...</span>");
+                exit;
             }
         }
 
