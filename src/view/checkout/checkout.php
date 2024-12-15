@@ -160,7 +160,7 @@ function cashback(): void
                             // get campaign list of user
                             $checkoutController = new checkoutController;
                             $diffCampaignsList = $checkoutController->check($cashbackList);
-
+                            
                             if (!empty($diffCampaignsList)) {
 
                                 // show campaigns in checkout page
@@ -221,13 +221,13 @@ function cashback(): void
                     else {
 
                         print("
-                                        <div class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border' id='doreaCheckout' style='padding-left:10px;'>
-                                            <span id='doreaClose'>
-                                               <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right'>
+                           <div class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border' id='doreaCheckout' style='padding-left:10px;'>
+                               <span id='doreaClose'>
+                                   <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right'>
                                                    <path stroke-linecap='round' stroke-linejoin='round' d='M6 18 18 6M6 6l12 12' />
-                                               </svg>
-                                           </span>
-                                    ");
+                                   </svg>
+                            </span>
+                        ");
                         if (!empty($diffCampaignsList)) {
 
                             $addtoCashback = true;
@@ -244,7 +244,7 @@ function cashback(): void
 
                                         $contractAddressConfirm = true;
                                         // check if campaign started or not
-                                        if ($checkoutController->expire($campaign)) {
+                                        if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
 
                                             // add to cash back program option
                                             if ($addtoCashback) {
@@ -322,6 +322,7 @@ add_action('woocommerce_thankyou','orderReceived');
 function orderReceived($orderId):void
 {
    static $error;
+   static $walletAddress;
 
    $order = json_decode(new WC_Order($orderId));
 
@@ -362,6 +363,7 @@ function orderReceived($orderId):void
 
                         $campaign = sanitize_text_field(sanitize_key($campaign));
                         $cashbackInfo = get_transient($campaign) ?? null;
+
                         if(isset($cashbackInfo['mode'])){
                             if($cashbackInfo['mode'] === "on"){
                                 $switchStatus[] = true;

@@ -27,6 +27,10 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/userStatusCampaign.ph
 add_action('admin_menu','admin_init');
 function admin_init():void
 {
+    // remove admin footer label
+    add_filter( 'admin_footer_text', '__return_empty_string', 11 );
+    add_filter( 'update_footer', '__return_empty_string', 11 );
+
     // core js style
     wp_enqueue_script('DOREA_CORE_STYLE', plugins_url('/cryptodorea/js/style.min.js'));
 

@@ -161,7 +161,7 @@ function dorea_admin_pay_campaign():void
                                          </span>
                                     </div>
                                     <hr class="">
-                        ');
+                            ');
                             $addtoPaymentSection = false;
                         }
 
@@ -179,7 +179,7 @@ function dorea_admin_pay_campaign():void
                         $totalPurchases[] = count($result) * $shoppingCount;
                         $qualifiedPurchasesTotal = array_sum($result);
 
-                        print("<div class='!col-span-1 !grid xl:!grid-cols-5 lg:!grid-cols-5 md:!grid-cols-5 sm:!grid-cols-5 !grid-cols-2 !pt-3 xl:!text-center lg:!text-center md:!text-center sm:!text-center !text-left !gap-y-5 !gap-5'>");
+                        print("<div  class='!col-span-1 !grid xl:!grid-cols-5 lg:!grid-cols-5 md:!grid-cols-5 sm:!grid-cols-5 !grid-cols-2 !pt-3 xl:!text-center lg:!text-center md:!text-center sm:!text-center !text-left !gap-y-5 !gap-5'>");
                         print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Username</span><span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span>");
                         print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '> Wallet Address</span><span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
                         print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Purchase Counts</span><span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
@@ -200,30 +200,30 @@ function dorea_admin_pay_campaign():void
                             $usersList[] = $users;
 
                             print("
-                             <svg class='size-5 !text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                 <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
-                             </svg>
-                        ");
+                                 <svg class='size-5 !text-green-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                     <path fill-rule='evenodd' d='M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z' clip-rule='evenodd' />
+                                 </svg>
+                            ");
 
                         } else if (array_sum($totalPurchases) < $cashbackInfo['shoppingCount']) {
                             print('  
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                              </svg>
-                        ');
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                  </svg>
+                            ');
                         } else {
                             print("
-                             <svg class='size-5 !text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
-                                 <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
-                             </svg>
-                        ");
+                                 <svg class='size-5 !text-amber-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                                     <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                                 </svg>
+                            ");
                         }
 
                         print ("
-                           </div>
-                        </div>
-                        <hr class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>
-                    ");
+                               </div>
+                            </div>
+                            <hr class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>
+                        ");
 
                         // get contract address of campaign
                         $doreaContractAddress = get_option($cashbackName . '_contract_address');

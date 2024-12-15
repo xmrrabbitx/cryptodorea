@@ -96,7 +96,7 @@ function delay(){
                         let contractAmountBigInt;
 
                         // calculate 10% of amount
-                        contractAmount = parseFloat(contractAmount) / (1-0.1)
+                        contractAmount = parseFloat(contractAmount) / (1-0.1);
 
                         if ((typeof (contractAmount) === "number") && (Number.isInteger(contractAmount))) {
                             const creditAmountBigInt = BigInt(contractAmount);
