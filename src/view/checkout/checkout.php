@@ -2,6 +2,7 @@
 
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
+use Cryptodorea\DoreaCashback\model\checkoutModel;
 
 /**
  * error handling
@@ -326,73 +327,78 @@ function orderReceived($orderId):void
 
    $order = json_decode(new WC_Order($orderId));
 
+   $checkout = new checkoutModel();
+   $campaignListUser = $checkout->list();
+
    if(isset($order->id)) {
 
-            $campaignQueue = get_option('dorea_campaign_queue');
+           $campaignQueue = get_option('dorea_campaign_queue');
 
-            if(!$campaignQueue) {
+           if (!$campaignQueue) {
+               foreach ($order->meta_data as $meta_data) {
+                   if ($meta_data->key === 'dorea_walletaddress') {
+                       $walletAddress = [
+                           'walletAddress' => $meta_data->value,
+                       ];
+                   }
+                   if ($meta_data->key === 'dorea_campaigns') {
+                       $campaignlist = [
+                           'campaignlists' => $meta_data->value
+                       ];
+                   }
+               }
+               if ($walletAddress) {
+                   $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
+               }
+           }
 
-                foreach ($order->meta_data as $meta_data){
-                    if ($meta_data->key === 'dorea_walletaddress') {
-                        $walletAddress = [
-                            'walletAddress' => $meta_data->value,
-                        ];
-                    }
-                    if ($meta_data->key === 'dorea_campaigns') {
-                        $campaignlist = [
-                            'campaignlists' => $meta_data->value
-                        ];
-                    }
-                }
-                if($walletAddress) {
-                    $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
-                }
-            }
+           if ($campaignQueue) {
 
-            if($campaignQueue) {
+               // save doreaCampaignInfo
+               $checkout = new checkoutController();
 
-                // save doreaCampaignInfo
-                $checkout = new checkoutController();
+               // check if campaign is expired
+               $switchStatus = [];
+               $statusCampaigns = [];
+               if (is_array($campaignQueue->campaignlists)) {
 
-                // check if campaign is expired
-                $switchStatus = [];
-                $statusCampaigns = [];
-                if (is_array($campaignQueue->campaignlists)) {
-                    $campaignLists = $campaignQueue->campaignlists;
-                    foreach ($campaignLists as $campaign) {
+                   $campaignLists = array_merge($campaignQueue->campaignlists, array_keys($campaignListUser));
 
-                        $campaign = sanitize_text_field(sanitize_key($campaign));
-                        $cashbackInfo = get_transient($campaign) ?? null;
+                   foreach ($campaignLists as $campaign) {
 
-                        if(isset($cashbackInfo['mode'])){
-                            if($cashbackInfo['mode'] === "on"){
-                                $switchStatus[] = true;
-                            }else{
-                                $switchStatus[] = false;
-                            }
-                        }else{
-                            $switchStatus[] = true;
-                        }
-                        $campaignLists[] = $campaign;
-                        $statusCampaigns[] = $checkout->expire(sanitize_text_field(sanitize_key($campaign)));
-                    }
-                    if (in_array(true, $statusCampaigns) && in_array(true, $switchStatus)) {
-                        $checkout->autoRemove();
-                        $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
-                    }else{
-                        error_log('campaign is expired or not enabled!');
-                        $error = true;
-                    }
-                }
+                       $campaign = sanitize_text_field(sanitize_key($campaign));
+                       $cashbackInfo = get_transient($campaign) ?? null;
 
-                if(!$error) {
-                    // receive order details
-                    $checkout = new checkoutController();
-                    $checkout->orederReceived($order);
-                }
+                       if (isset($cashbackInfo['mode'])) {
+                           if ($cashbackInfo['mode'] === "on") {
+                               $switchStatus[] = true;
+                           } else {
+                               $switchStatus[] = false;
+                           }
+                       } else {
+                           $switchStatus[] = true;
+                       }
+                       $campaignLists[] = $campaign;
+                       $statusCampaigns[] = $checkout->expire(sanitize_text_field(sanitize_key($campaign)));
+                   }
+                   if (in_array(true, $statusCampaigns) && in_array(true, $switchStatus) && isset($campaignQueue->walletAddress)) {
+                       $checkout->autoRemove();
+                       $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
+                   } else {
+                       error_log('campaign is expired or not enabled!');
+                       $error = true;
+                   }
+               }
+           }
 
-                delete_option('dorea_campaign_queue');
+           if (!$error) {
+               // receive order details
+               $checkout = new checkoutController();
+               $checkout->orederReceived($order);
+           }
 
-            }
-        }
+           delete_option('dorea_campaign_queue');
+
+
+   }
 }
