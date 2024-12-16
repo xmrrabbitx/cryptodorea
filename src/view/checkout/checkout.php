@@ -327,13 +327,16 @@ function orderReceived($orderId):void
 
    $order = json_decode(new WC_Order($orderId));
 
-   $checkout = new checkoutModel();
-   $campaignListUser = $checkout->list();
+   //$checkout = new checkoutModel();
+   //$campaignInfoUser = $checkout->list();
+   //$checkoutController = new checkoutController;
 
    if(isset($order->id)) {
 
+           // get campaign info from HPO mode
            $campaignQueue = get_option('dorea_campaign_queue');
 
+           // get campaign info from legacy mode
            if (!$campaignQueue) {
                foreach ($order->meta_data as $meta_data) {
                    if ($meta_data->key === 'dorea_walletaddress') {
@@ -352,9 +355,10 @@ function orderReceived($orderId):void
                }
            }
 
+           // store new camppaigns
            if ($campaignQueue) {
 
-               // save doreaCampaignInfo
+               // store doreaCampaignInfo
                $checkout = new checkoutController();
 
                // check if campaign is expired
@@ -362,7 +366,7 @@ function orderReceived($orderId):void
                $statusCampaigns = [];
                if (is_array($campaignQueue->campaignlists)) {
 
-                   $campaignLists = array_merge($campaignQueue->campaignlists, array_keys($campaignListUser));
+                   $campaignLists = $campaignQueue->campaignlists;
 
                    foreach ($campaignLists as $campaign) {
 
