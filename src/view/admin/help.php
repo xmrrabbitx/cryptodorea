@@ -5,9 +5,6 @@
  */
 function dorea_admin_help_campaign():void
 {
-    // check nonce validation
-    check_admin_referer();
-
     // load admin css styles
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/help.css'));
 
@@ -72,7 +69,7 @@ function dorea_admin_help_campaign():void
             
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
             2. you should have installed Metmask Extention on your browser to fund your campaign. 
-            make sure your metamask wallet address have enough ethers to fund the campaign. 
+            make sure your metamask wallet address has enough ethers to fund the campaign. 
             click on <span class='!font-bold'>\"Fund Campaign\"</span> option then confirm metamask window and wait to deploy the campaign into the Blockchain,
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
@@ -83,7 +80,7 @@ function dorea_admin_help_campaign():void
             
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How to Pay ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
-            1. after users joined cashback campaign and campaign date reach to the end, you can pay users participated into the campaign. 
+            1. after users joined cashback campaign and campaign date reaches to the end, you can pay users participated into the campaign. 
             choose <span class='!font-bold'>\"Pay\"</span> option on main page in each campaign section. you should see payment page now.
             in that page, you could pay campaign users.
             </p>

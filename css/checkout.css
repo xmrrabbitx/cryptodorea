@@ -25,4 +25,5 @@ main{
 #dorea_wallet_address{
     border-color: inherit !important;
     box-shadow: none !important;
+    font-size: 12px !important;
 }
