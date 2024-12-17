@@ -153,7 +153,6 @@ function cashback(): void
                         add_filter('woocommerce_after_order_notes', 'customize_checkout', 10,2);
                         function customize_checkout($checkout)
                         {
-
                             // get cashback list of admin
                             $cashback = new cashbackController();
                             $cashbackList = $cashback->list();
@@ -220,12 +219,11 @@ function cashback(): void
 
                     }
                     else {
-
                         print("
                            <div class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border' id='doreaCheckout' style='padding-left:10px;'>
                                <span id='doreaClose'>
                                    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right'>
-                                                   <path stroke-linecap='round' stroke-linejoin='round' d='M6 18 18 6M6 6l12 12' />
+                                        <path stroke-linecap='round' stroke-linejoin='round' d='M6 18 18 6M6 6l12 12' />
                                    </svg>
                             </span>
                         ");
@@ -250,21 +248,20 @@ function cashback(): void
                                             // add to cash back program option
                                             if ($addtoCashback) {
                                                 print("
-                                                               <h3 class='!text-lg'>Join to Cashback Campaign</h3> 
-                                                               <div class='!grid !grid-cols-1 !gap-2'>
-                                                                    <label class='!text-sm'>choose which campaign you want to participate in:</label>
-                                                                    <div id='doreaCampaignsSection' class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>
-                                                            ");
+                                                     <h3 class='!text-lg'>Join to Cashback Campaign</h3> 
+                                                     <div class='!grid !grid-cols-1 !gap-2'>
+                                                         <label class='!text-sm'>choose which campaign you want to participate in:</label>
+                                                         <div id='doreaCampaignsSection' class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>
+                                                ");
                                                 $addtoCashback = false;
                                             }
 
                                             print(" 
-                                                            <div class='!flex !mt-1'>
-                                                                <div class='!w-1/12 !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_js($campaign) . "'></div>
-                                                                <label class='!w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces'>" . $campaignInfo['campaignNameLable'] . "</label>
-                                                            </div>
-                                                        ");
-
+                                                <div class='!flex !mt-1'>
+                                                     <div class='!w-1/12 !ml-1'><input id='dorea_add_to_cashback_checkbox' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_js($campaign) . "'></div>
+                                                     <label class='!w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces'>" . $campaignInfo['campaignNameLable'] . "</label>
+                                                </div>
+                                            ");
                                         }
                                     }
                                 }
@@ -275,12 +272,13 @@ function cashback(): void
 
                         if ($contractAddressConfirm) {
                             print('</div> 
-                                                <div class="!col-span-1 !mt-2">
-                                                    <p class="!text-sm !mt-3" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
-                                                   <input class="!p-3 !text-sm !mt-1 !ml-1 !bg-white !shadow-none !rounded-md" id="dorea_walletaddress" type="text" placeholder="wallet address...">
-                                                   <button id="doreaChkConfirm" class="!rounded !mt-3 !pl-5 !pr-5 !pt-3 !pb-3">Join</button>
-                                                </div> 
-                                             </div>');
+                                   <div class="!col-span-1 !mt-2">
+                                      <p class="!text-sm !mt-3" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
+                                      <input class="!p-3 !text-sm !mt-1 !ml-1 !bg-white !shadow-none !rounded-md" id="dorea_walletaddress" type="text" placeholder="wallet address...">
+                                      <button id="doreaChkConfirm" class="!rounded !mt-3 !pl-5 !pr-5 !pt-3 !pb-3">Join</button>
+                                   </div> 
+                               </div>
+                            ');
 
                         }
 

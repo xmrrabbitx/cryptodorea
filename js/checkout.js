@@ -86,8 +86,6 @@ jQuery(document).ready(async function($) {
 
         function setValue() {
             if (campaignlist.length > 0 && dorea_walletaddress.value.length > 0) {
-                //sessionStorage.setItem("doreaCampaignlist", campaignlist);
-                //sessionStorage.setItem("doreaWalletaddress", dorea_walletaddress.value);
                 jQuery.ajax({
                     type: "post",
                     url: `${window.location.origin}/wp-admin/admin-ajax.php`,

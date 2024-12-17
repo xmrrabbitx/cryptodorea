@@ -12,20 +12,17 @@ main{
     display: none;
     z-index: 9999;
 }
-
 #doreaChkConfirm{
     border-radius: 8px;
     padding: 5px;
     cursor: pointer;
     top: 5px;
 }
-
-.dorea-campaigns-class{
-
-}
-
 #dorea_campaigns_checkout_title{
-
     padding-top: 5px;
     padding-bottom: 5px;
+}
+#dorea_wallet_address{
+    border-color: inherit !important;
+    box-shadow: none !important;
 }
