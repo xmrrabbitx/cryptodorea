@@ -1,5 +1,6 @@
 <?php
 
+use Cryptodorea\DoreaCashback\controllers\checkoutController;
 use Cryptodorea\DoreaCashback\controllers\usersController;
 use Cryptodorea\DoreaCashback\controllers\expireCampaignController;
 use Cryptodorea\DoreaCashback\utilities\ethHelper;
@@ -83,10 +84,38 @@ function dorea_admin_pay_campaign():void
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
+    $checkoutController = new checkoutController;
 
-    if($userList === false){
+    if($checkoutController->checkTimestamp($cashbackName) === "expired"){
         print ("
-            <!-- error on no users -->
+            <!-- error on campaign expired! -->
+            <div class='!text-center !text-sm !mx-auto xl:!w-96 lg:!w-96 md:!w-96 sm:!w-96 !w-80 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+                 <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                     <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                </svg>
+                <p class='!pt-2 !pb-2 !break-words !text-balance'>
+                  the campaign Date expired. please create another campaign!
+                </p>
+            </div>
+        ");
+    }
+    elseif ($checkoutController->checkTimestamp($cashbackName) === "notStarted"){
+        print ("
+            <!-- error on campaign expired! -->
+            <div class='!text-center !text-sm !mx-auto xl:!w-96 lg:!w-96 md:!w-96 sm:!w-96 !w-80 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
+                 <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
+                     <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
+                </svg>
+                <p class='!pt-2 !pb-2 !break-words !text-balance'>
+                  the campaign is not started yet!
+                  it starts at ".$checkoutController->timestamToDate($cashbackName).".
+                </p>
+            </div>
+        ");
+    }
+    else if($userList === false){
+        print ("
+            <!-- error on no users! -->
             <div class='!text-center !text-sm !mx-auto xl:!w-96 lg:!w-96 md:!w-96 sm:!w-96 !w-80 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
                  <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
@@ -96,9 +125,10 @@ function dorea_admin_pay_campaign():void
                 </p>
             </div>
         ");
-    }elseif(empty($userList)){
+    }
+    else if(empty($userList)){
         print ("
-            <!-- error on no users -->
+            <!-- notif on campaign paid! -->
             <div class='!text-center !text-sm !mx-auto !w-96 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
                  <svg class='size-6 text-rose-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'>
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />

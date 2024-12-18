@@ -181,7 +181,6 @@ function cashback(): void
                                                         <h3 id='dorea_campaigns_checkout_title'>Join to Cashback Campaigns</h3>
                                                         <div id='dorea_campaigns_checkout'>
                                                     ");
-                                                    $title = false;
                                                 }
                                                 woocommerce_form_field(
                                                     $campaignInfo['campaignName'],
@@ -195,6 +194,10 @@ function cashback(): void
                                                     $checkout->get_value($campaignInfo['campaignName'])
                                                 );
                                                 $campaignsList[] = true;
+                                                if($title){
+                                                    print('</div>');
+                                                    $title = false;
+                                                }
                                             }
                                         }
                                     }
@@ -211,7 +214,7 @@ function cashback(): void
                                             $checkout->get_value('dorea_wallet_address')
                                         );
                                     }
-                                    print('</div>');
+
                                 }
                             }
 

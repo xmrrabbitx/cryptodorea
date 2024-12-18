@@ -128,6 +128,7 @@ class checkoutController extends checkoutAbstract
         }
     }
 
+    // check if expired campaign!
     public function expire($campaign):bool
     {
         $camapaignInfo = get_transient($campaign);
@@ -136,5 +137,32 @@ class checkoutController extends checkoutAbstract
 
         return $camapaignInfo['timestampExpire'] >= $currentDate && $camapaignInfo['timestampStart'] <= $currentDate ?? false;
 
+    }
+
+    // check if expired or not started campaign!
+    public function checkTimestamp($campaign):string
+    {
+        $camapaignInfo = get_transient($campaign);
+
+        $currentDate = (int)strtotime(date("d.m.Y") . " 00:00:00");
+
+        if($camapaignInfo['timestampExpire'] < $currentDate){
+            return "expired";
+        }elseif($camapaignInfo['timestampStart'] > $currentDate){
+
+            return "notStarted";
+        }
+
+        return "";
+
+    }
+
+    public function timestamToDate($campaign)
+    {
+        $camapaignInfo = get_transient($campaign);
+
+        //$date = (int)strtotime(date("d.m.Y") . " 00:00:00", $camapaignInfo['timestampStart']);
+
+        return date('Y/m/d', $camapaignInfo['timestampStart']);
     }
 }

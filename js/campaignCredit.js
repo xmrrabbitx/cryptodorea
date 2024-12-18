@@ -83,7 +83,6 @@ function delay(){
                     }
 
                     try {
-                        let xhr = new XMLHttpRequest();
 
                         document.getElementById("doreaFund").disabled = true;
                         const provider = new BrowserProvider(window.ethereum);

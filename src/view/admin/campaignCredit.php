@@ -31,7 +31,7 @@ function dorea_cashback_campaign_credit():void
 
     print('  
        <main>
-            <h1 class="p-5 text-sm font-bold">Fund Campaign</h1> </br>
+            <h1 class="!p-5 !text-sm !font-bold">Fund Campaign</h1> </br>
     ');
 
     if(isset($_GET['cashbackName'])){
@@ -40,9 +40,9 @@ function dorea_cashback_campaign_credit():void
     }
 
     print('
-             <p id="errorMessg" style="display: none"></p>
+             <p id="errorMessg" style="display: none" class="!pl-5"></p>
             
-            <div class="container mx-auto pl-5 pt-2 pb-5 shadow-transparent text-center rounded-md">
+            <div class="!container !mx-auto !pl-5 !pt-2 !pb-5 !shadow-transparent !text-center !rounded-md">
               
               <h2 class="!text-center !text-lg !divide-y !mt-5">Crypto Dorea Cashback</h2>
               <hr class="border-1 !w-64 !text-center !dark:bg-gray-700 !w-48 1h-1 !mx-auto !mt-2">

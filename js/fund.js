@@ -49,8 +49,8 @@ jQuery(document).ready(async function($) {
 
         }
 
-                const contractAddress = param.contractAddress;
-                let campaignName = param.campaignName;
+        const contractAddress = param.contractAddress;
+        let campaignName = param.campaignName;
 
                 /*
                  await window.ethereum.request({
@@ -71,18 +71,21 @@ jQuery(document).ready(async function($) {
                  */
 
 
-            await window.ethereum.request({method: "eth_requestAccounts"});
-            let accounts = await ethereum.request({method: "eth_accounts"});
-            let account = accounts[0];
+        await window.ethereum.request({method: "eth_requestAccounts"});
+        let accounts = await ethereum.request({method: "eth_accounts"});
+        let account = accounts[0];
 
+        const provider = new BrowserProvider(window.ethereum);
 
-            const provider = new BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
 
-            const signer = await provider.getSigner();
+        let message = "you are siging message to fund the contract!";
 
-            let message = "you are siging message to fund the contract!";
+        const messageHash = ethers.id(message);
 
-            const messageHash = ethers.id(message);
+        try{
+            // disable dorea fund button
+            fundCampaign.disabled = true;
 
             // sign hashed message
             const signature = await ethereum.request({
@@ -90,49 +93,46 @@ jQuery(document).ready(async function($) {
                 params: [messageHash, accounts[0]],
             });
 
+            // split signature
+            const r = signature.slice(0, 66);
+            const s = "0x" + signature.slice(66, 130);
+            const v = parseInt(signature.slice(130, 132), 16);
 
-                // split signature
-                const r = signature.slice(0, 66);
-                const s = "0x" + signature.slice(66, 130);
-                const v = parseInt(signature.slice(130, 132), 16);
+            let fundAgainAmount = convertToWei(param.remainingAmount);
 
-                let fundAgainAmount = convertToWei(param.remainingAmount);
+            const contract = new ethers.Contract(contractAddress, abi, signer);
 
-                try{
+            await contract.fundAgain(
+                messageHash,
+                v,
+                r,
+                s,
+                {
+                    value: fundAgainAmount.toString(),
+                    gasLimit :3000000,
+                },
+            ).then(async function(response){
+                response.wait().then(async (receipt) => {
+                    // transaction on confirmed and mined
+                    if (receipt) {
+                        let succMessage = "payment has been successfull!";
 
-                    const contract = new ethers.Contract(contractAddress, abi, signer);
 
-                    await contract.fundAgain(
-                            messageHash,
-                            v,
-                            r,
-                            s,
-                            {
-                                value: fundAgainAmount.toString(),
-                                gasLimit :3000000,
+                        await new Promise(r => setTimeout(r, 1500));
+
+                        let balance = await contract.getBalance();
+                        balance = convertWeiToEther(parseInt(balance));
+
+                        jQuery.ajax({
+                            type: "post",
+                            url: `${window.location.origin}/wp-admin/admin-ajax.php`,
+                            data: {
+                                action: "dorea_fund",
+                                data: JSON.stringify({
+                                    "balance": balance,
+                                    "campaignName": campaignName,
+                                }),
                             },
-                    ).then(async function(response){
-                            response.wait().then(async (receipt) => {
-                                // transaction on confirmed and mined
-                                if (receipt) {
-                                    let succMessage = "payment has been successfull!";
-
-
-                                    await new Promise(r => setTimeout(r, 1500));
-
-                                    let balance = await contract.getBalance();
-                                    balance = convertWeiToEther(parseInt(balance));
-
-                                    jQuery.ajax({
-                                        type: "post",
-                                        url: `${window.location.origin}/wp-admin/admin-ajax.php`,
-                                        data: {
-                                            action: "dorea_fund",
-                                            data: JSON.stringify({
-                                                "balance": balance,
-                                                "campaignName": campaignName,
-                                            }),
-                                        },
                                         complete: function (response) {
                                             window.location.reload();
                                         },
@@ -143,7 +143,12 @@ jQuery(document).ready(async function($) {
                     })
 
 
-                }catch (error) {
+        }
+        catch (error) {
+
+                    // enable dorea fund button
+                    fundCampaign.disabled = false;
+
                     if(typeof error.revert === "undefined")   {
                         // "Something went wrong. please try again!"
                     }else{
@@ -165,7 +170,10 @@ jQuery(document).ready(async function($) {
                     //metamaskError.innerHTML = errorMessg;
                     return false;
 
-                }
-            }
-    )
+        }
+
+        // enable dorea fund button
+        fundCampaign.disabled = false;
+
+    })
 })

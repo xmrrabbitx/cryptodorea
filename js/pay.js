@@ -84,36 +84,29 @@ jQuery(document).ready(async function($) {
 
             const messageHash = ethers.id(message);
 
-            // sign hashed message
-            const signature = await ethereum.request({
-                method: "personal_sign",
-                params: [messageHash, accounts[0]],
-            });
-
-            // split signature
-            const r = signature.slice(0, 66);
-            const s = "0x" + signature.slice(66, 130);
-            const v = parseInt(signature.slice(130, 132), 16);
-
-            let amounts = convertToWei(param.qualifiedUserEthers);
-
-            let userAddresses = param.qualifiedWalletAddresses;
-
-            let amountsSum = amounts.reduce((accumulator, currentValue) => {
-                return parseInt(accumulator) + parseInt(currentValue)
-            }, 0);
-            /*
-                        console.log(
-                            messageHash,
-                            r,
-                            s,
-                            v,
-                            amounts,
-                            userAddresses,
-                            contractAddress
-                        )
-            */
             try {
+
+                // disable dorea fund button
+                payCampaign.disabled = true;
+
+                // sign hashed message
+                const signature = await ethereum.request({
+                    method: "personal_sign",
+                    params: [messageHash, accounts[0]],
+                });
+
+                // split signature
+                const r = signature.slice(0, 66);
+                const s = "0x" + signature.slice(66, 130);
+                const v = parseInt(signature.slice(130, 132), 16);
+
+                let amounts = convertToWei(param.qualifiedUserEthers);
+
+                let userAddresses = param.qualifiedWalletAddresses;
+
+                let amountsSum = amounts.reduce((accumulator, currentValue) => {
+                    return parseInt(accumulator) + parseInt(currentValue)
+                }, 0);
 
                 const contract = new ethers.Contract(contractAddress, abi, signer);
 
@@ -172,6 +165,9 @@ jQuery(document).ready(async function($) {
 
 
             } catch (error) {
+                // enable dorea fund button
+                payCampaign.disabled = false;
+
                 console.log(error)
                 if (typeof error.revert === "undefined") {
                     // "Something went wrong. please try again!"
@@ -195,7 +191,9 @@ jQuery(document).ready(async function($) {
                 return false;
 
             }
-        }
-    )
+
+        // enable dorea fund button
+        payCampaign.disabled = false;
+    })
 
 })
