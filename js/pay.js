@@ -7,7 +7,6 @@ import {abi} from "./compile.js";
 let payCampaign = document.getElementById("dorea_pay");
 let errorMessg = document.getElementById("dorea_error");
 let successMessg = document.getElementById("dorea_success");
-let doreaSwitchcCampaign = document.getElementById('doreaSwitchcCampaign');
 
 jQuery(document).ready(async function($) {
 
@@ -170,24 +169,22 @@ jQuery(document).ready(async function($) {
 
                 console.log(error)
                 if (typeof error.revert === "undefined") {
-                    // "Something went wrong. please try again!"
+                    errorMessg.innerHTML  = "Something went wrong. please try again!";
                 } else {
-                    let errorMessg = error.revert.args[0];
-                    if (errorMessg === "Insufficient balance") {
-                        errorMessg = "Insufficient balance";
-
-                    } else if (errorMessg === "User is not Authorized!!!") {
-                        errorMessg = "You dont have permission to pay!";
-
+                    let err = error.revert.args[0];
+                    if (err === "Insufficient balance") {
+                        errorMessg.innerHTML = "Insufficient balance";
+                    } else if (err === "User is not Authorized!!!") {
+                        errorMessg.innerHTML = "You dont have permission to pay!";
                     } else {
-                        errorMessg = "payment was not successfull! please try again!";
-
+                        errorMessg.innerHTML = "payment was not successfull! please try again!";
                     }
                 }
 
                 // show error popup message
-                //metamaskError.style.display = "block";
-                //metamaskError.innerHTML = errorMessg;
+                $(errorMessg).show("slow");
+                await new Promise(r => setTimeout(r, 2500));
+                $(errorMessg).hide("slow");
                 return false;
 
             }

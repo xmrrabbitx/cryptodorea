@@ -4,10 +4,20 @@ import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, pars
 import {abi} from "./compile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
-const errorMessg = document.getElementById("dorea_metamask_error");
+const errorMessg = document.getElementById("dorea_error");
 
 jQuery(document).ready(async function($) {
+
     fundCampaign.addEventListener("click", async function(){
+
+
+        const body = document.body;
+
+        // Disable interactions
+        body.style.pointerEvents = 'none';
+        body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
+        body.style.userSelect = 'none'; // Disables text selection
+        body.style.overflow = 'hidden'; // Prevent scrolling
 
         /**
          *
@@ -117,7 +127,6 @@ jQuery(document).ready(async function($) {
                     if (receipt) {
                         let succMessage = "payment has been successfull!";
 
-
                         await new Promise(r => setTimeout(r, 1500));
 
                         let balance = await contract.getBalance();
@@ -133,14 +142,14 @@ jQuery(document).ready(async function($) {
                                     "campaignName": campaignName,
                                 }),
                             },
-                                        complete: function (response) {
-                                            window.location.reload();
-                                        },
-                                    });
-                                }
-                            });
+                            complete: function (response) {
+                                window.location.reload();
+                            },
+                        });
+                    }
+                });
 
-                    })
+            })
 
 
         }
@@ -150,24 +159,22 @@ jQuery(document).ready(async function($) {
                     fundCampaign.disabled = false;
 
                     if(typeof error.revert === "undefined")   {
-                        // "Something went wrong. please try again!"
+                        errorMessg.innerHTML  = "Something went wrong. please try again!";
                     }else{
-                        let errorMessg = error.revert.args[0];
-                        if(errorMessg === "Insufficient balance"){
-                            errorMessg = "Insufficient balance";
-
-                        }else if(errorMessg === "User is not Authorized!!!"){
-                            errorMessg = "You dont have permission to pay!";
-
+                        let err = error.revert.args[0];
+                        if(err === "Insufficient balance"){
+                            errorMessg.innerHTML  = "Insufficient balance";
+                        }else if(err === "User is not Authorized!!!"){
+                            errorMessg.innerHTML  = "You dont have permission to pay!";
                         }else{
-                            errorMessg = "payment was not successfull! please try again!";
-
+                            errorMessg.innerHTML  = "payment was not successfull! please try again!";
                         }
                     }
 
                     // show error popup message
-                    //metamaskError.style.display = "block";
-                    //metamaskError.innerHTML = errorMessg;
+                    $(errorMessg).show("slow");
+                    await new Promise(r => setTimeout(r, 2500));
+                    $(errorMessg).hide("slow");
                     return false;
 
         }

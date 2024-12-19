@@ -60,8 +60,8 @@ function dorea_admin_pay_campaign():void
 
     // show errors
     print("            
-            <p id='dorea_error' style='display:none;'></p>
-            <p id='dorea_success' style='display:none;'></p>
+            <p class='!pl-5' id='dorea_error' style='display:none;'></p>
+            <p class='!pl-5' id='dorea_success' style='display:none;'></p>
     ");
 
     // check if no campaign existed!
