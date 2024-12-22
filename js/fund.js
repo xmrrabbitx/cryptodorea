@@ -157,8 +157,6 @@ jQuery(document).ready(async function($) {
                 });
 
             })
-
-
         }
         catch (error) {
 
