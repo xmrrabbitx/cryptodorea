@@ -12,6 +12,24 @@ jQuery(document).ready(async function($) {
 
     payCampaign.addEventListener("click", async function () {
 
+        /*
+             await window.ethereum.request({
+               method: "wallet_addEthereumChain",
+                  params: [{
+                      chainId: "0x14A34",
+                      rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
+                      chainName: "SEPOLIA",
+                      nativeCurrency: {
+                        name: "ETH",
+                        symbol: "ETH",
+                        decimals: 18
+                      },
+                      blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
+                }]
+             });
+
+             */
+
             function convertToWei(amounts) {
 
                 let amountsBig = [];
@@ -52,25 +70,6 @@ jQuery(document).ready(async function($) {
             const contractAddress = param.contractAddress;
             let campaignName = param.campaignName;
 
-            /*
-             await window.ethereum.request({
-                                      method: "wallet_addEthereumChain",
-                                      params: [{
-                                        chainId: "0x14A34",
-                                        rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                                        chainName: "SEPOLIA",
-                                        nativeCurrency: {
-                                          name: "ETH",
-                                          symbol: "ETH",
-                                          decimals: 18
-                                        },
-                                        blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
-                                      }]
-             });
-
-             */
-
-
             await window.ethereum.request({method: "eth_requestAccounts"});
             const accounts = await ethereum.request({method: "eth_accounts"});
             const account = accounts[0];
@@ -83,10 +82,18 @@ jQuery(document).ready(async function($) {
 
             const messageHash = ethers.id(message);
 
+            const body = document.body;
+
             try {
 
                 // disable dorea fund button
                 payCampaign.disabled = true;
+
+                // Disable interactions
+                body.style.pointerEvents = 'none';
+                body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
+                body.style.userSelect = 'none'; // Disables text selection
+                body.style.overflow = 'hidden'; // Prevent scrolling
 
                 // sign hashed message
                 const signature = await ethereum.request({
@@ -156,6 +163,12 @@ jQuery(document).ready(async function($) {
                                 },
                                 complete: function (response) {
                                     window.location.reload();
+                                    // enable interactions
+                                    body.style.pointerEvents = 'visible';
+                                    body.style.opacity = '1';
+                                    body.style.userSelect = 'visible'; // enable text selection
+                                    body.style.overflow = 'visible'; // Prevent scrolling
+                                    return false;
                                 },
                             });
                         }
@@ -163,9 +176,17 @@ jQuery(document).ready(async function($) {
                 });
 
 
-            } catch (error) {
+            }
+            catch (error) {
+
                 // enable dorea fund button
                 payCampaign.disabled = false;
+
+                // enable interactions
+                body.style.pointerEvents = 'visible';
+                body.style.opacity = '1';
+                body.style.userSelect = 'visible'; // enable text selection
+                body.style.overflow = 'visible'; // Prevent scrolling
 
                 console.log(error)
                 if (typeof error.revert === "undefined") {

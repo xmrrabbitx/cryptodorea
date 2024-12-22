@@ -11,13 +11,23 @@ jQuery(document).ready(async function($) {
     fundCampaign.addEventListener("click", async function(){
 
 
-        const body = document.body;
+        /*
+             await window.ethereum.request({
+               method: "wallet_addEthereumChain",
+                  params: [{
+                      chainId: "0x14A34",
+                      rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
+                      chainName: "SEPOLIA",
+                      nativeCurrency: {
+                        name: "ETH",
+                        symbol: "ETH",
+                        decimals: 18
+                      },
+                      blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
+                }]
+             });
 
-        // Disable interactions
-        body.style.pointerEvents = 'none';
-        body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
-        body.style.userSelect = 'none'; // Disables text selection
-        body.style.overflow = 'hidden'; // Prevent scrolling
+             */
 
         /**
          *
@@ -62,25 +72,6 @@ jQuery(document).ready(async function($) {
         const contractAddress = param.contractAddress;
         let campaignName = param.campaignName;
 
-                /*
-                 await window.ethereum.request({
-                                          method: "wallet_addEthereumChain",
-                                          params: [{
-                                            chainId: "0x14A34",
-                                            rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                                            chainName: "SEPOLIA",
-                                            nativeCurrency: {
-                                              name: "ETH",
-                                              symbol: "ETH",
-                                              decimals: 18
-                                            },
-                                            blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
-                                          }]
-                 });
-
-                 */
-
-
         await window.ethereum.request({method: "eth_requestAccounts"});
         let accounts = await ethereum.request({method: "eth_accounts"});
         let account = accounts[0];
@@ -93,9 +84,18 @@ jQuery(document).ready(async function($) {
 
         const messageHash = ethers.id(message);
 
+        const body = document.body;
+
         try{
             // disable dorea fund button
             fundCampaign.disabled = true;
+
+            // Disable interactions
+            body.style.pointerEvents = 'none';
+            body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
+            body.style.userSelect = 'none'; // Disables text selection
+            body.style.overflow = 'hidden'; // Prevent scrolling
+
 
             // sign hashed message
             const signature = await ethereum.request({
@@ -144,6 +144,13 @@ jQuery(document).ready(async function($) {
                             },
                             complete: function (response) {
                                 window.location.reload();
+
+                                // enable interactions
+                                body.style.pointerEvents = 'visible';
+                                body.style.opacity = '1';
+                                body.style.userSelect = 'visible'; // enable text selection
+                                body.style.overflow = 'visible'; // Prevent scrolling
+                                return false;
                             },
                         });
                     }
@@ -155,12 +162,19 @@ jQuery(document).ready(async function($) {
         }
         catch (error) {
 
-                    // enable dorea fund button
-                    fundCampaign.disabled = false;
+            // enable dorea fund button
+            fundCampaign.disabled = false;
 
-                    if(typeof error.revert === "undefined")   {
+            // enable interactions
+            body.style.pointerEvents = 'visible';
+            body.style.opacity = '1';
+            body.style.userSelect = 'visible'; // enable text selection
+            body.style.overflow = 'visible'; // Prevent scrolling
+
+            if(typeof error.revert === "undefined")   {
                         errorMessg.innerHTML  = "Something went wrong. please try again!";
-                    }else{
+                    }
+            else{
                         let err = error.revert.args[0];
                         if(err === "Insufficient balance"){
                             errorMessg.innerHTML  = "Insufficient balance";
@@ -171,11 +185,11 @@ jQuery(document).ready(async function($) {
                         }
                     }
 
-                    // show error popup message
-                    $(errorMessg).show("slow");
-                    await new Promise(r => setTimeout(r, 2500));
-                    $(errorMessg).hide("slow");
-                    return false;
+            // show error popup message
+            $(errorMessg).show("slow");
+            await new Promise(r => setTimeout(r, 2500));
+            $(errorMessg).hide("slow");
+            return false;
 
         }
 

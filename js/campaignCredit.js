@@ -11,7 +11,26 @@ setTimeout(delay, 1000)
 function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
+
             document.getElementById("doreaFund").addEventListener("click", async () => {
+
+                /*
+                 await window.ethereum.request({
+                   method: "wallet_addEthereumChain",
+                      params: [{
+                          chainId: "0x14A34",
+                          rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
+                          chainName: "SEPOLIA",
+                          nativeCurrency: {
+                            name: "ETH",
+                            symbol: "ETH",
+                            decimals: 18
+                          },
+                          blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
+                    }]
+                 });
+
+                 */
 
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");
@@ -82,7 +101,15 @@ function delay(){
 
                     }
 
+                    const body = document.body;
+
                     try {
+
+                        // Disable interactions
+                        body.style.pointerEvents = 'none';
+                        body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
+                        body.style.userSelect = 'none'; // Disables text selection
+                        body.style.overflow = 'hidden'; // Prevent scrolling
 
                         document.getElementById("doreaFund").disabled = true;
                         const provider = new BrowserProvider(window.ethereum);
@@ -145,14 +172,29 @@ function delay(){
                                         },
                                         complete: function (response) {
                                             window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
+                                            // enable interactions
+                                            body.style.pointerEvents = 'visible';
+                                            body.style.opacity = '1';
+                                            body.style.userSelect = 'visible'; // enable text selection
+                                            body.style.overflow = 'visible'; // Prevent scrolling
+                                            return false;
                                         },
                                     });
                                 }
                             });
 
                         });
-                    } catch (error) {
+                    }
+                    catch (error) {
+
                         document.getElementById("doreaFund").disabled = false;
+
+                        // enable interactions
+                        body.style.pointerEvents = 'visible';
+                        body.style.opacity = '1';
+                        body.style.userSelect = 'visible'; // enable text selection
+                        body.style.overflow = 'visible'; // Prevent scrolling
+
                         errorMessg.innerHTML = "Funding the Contract was not successfull! please try again";
 
                         $(errorMessg).show("slow");
@@ -166,7 +208,14 @@ function delay(){
                     // enable dorea fund button
                     document.getElementById("doreaFund").disabled = false;
 
-                }else{
+                    // enable interactions
+                    //body.style.pointerEvents = 'visible';
+                    //body.style.opacity = '1';
+                    //body.style.userSelect = 'visible'; // enable text selection
+                    //body.style.overflow = 'visible'; // Prevent scrolling
+
+                }
+                else{
 
                     metamaskError.style.display = "block";
                     errorMessg.innerHTML = "please install Metamask extension!";
