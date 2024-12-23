@@ -328,10 +328,6 @@ function orderReceived($orderId):void
 
    $order = json_decode(new WC_Order($orderId));
 
-   //$checkout = new checkoutModel();
-   //$campaignInfoUser = $checkout->list();
-   //$checkoutController = new checkoutController;
-
    if(isset($order->id)) {
 
            // get campaign info from HPO mode

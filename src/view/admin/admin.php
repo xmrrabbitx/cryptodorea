@@ -18,6 +18,10 @@ function dorea_add_menu_page(): void
 {
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
 
+    //var_dump(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login));
+    $campaignUsers = get_option("dorea_campaigns_users_" . 'dorea_f46b22d');
+    var_dump($campaignUsers);
+
     if (file_exists($logo_path)) {
 
         $logo_content = file_get_contents($logo_path);

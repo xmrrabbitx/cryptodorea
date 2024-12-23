@@ -69,7 +69,7 @@ class receiptController extends receiptAbstract
 
             if ($campaignInfoResult) {
                 // store campaign info into model
-                $this->receiptModel->add($campaignList);
+                $this->receiptModel->add($campaignInfoResult);
             }
         }
     }
