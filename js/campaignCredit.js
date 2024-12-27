@@ -149,6 +149,8 @@ function delay(){
 
                             let contractAddress = response.target;
 
+                            sessionStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName}) );
+
                             // wait for deployment
                             response.waitForDeployment().then(async (receipt) => {
 
@@ -159,6 +161,7 @@ function delay(){
                                     let balance = await contract.getBalance();
                                     balance = convertWeiToEther(parseInt(balance));
 
+                                    /*
                                     jQuery.ajax({
                                         type: "post",
                                         url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -171,7 +174,10 @@ function delay(){
                                             }),
                                         },
                                         complete: function (response) {
-                                            window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
+
+                                            window.location.reload();
+                                            //window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
+
                                             // enable interactions
                                             body.style.pointerEvents = 'visible';
                                             body.style.opacity = '1';
@@ -180,6 +186,9 @@ function delay(){
                                             return false;
                                         },
                                     });
+
+                                     */
+
                                 }
                             });
 

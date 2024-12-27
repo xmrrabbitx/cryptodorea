@@ -101,7 +101,6 @@ jQuery(document).ready(async function($) {
                     },
                 });
             }
-
         }
 
         doreaCheckoutConfirm.addEventListener('click', async function () {
@@ -127,7 +126,6 @@ jQuery(document).ready(async function($) {
         });
 
     doreaClose.addEventListener("click", async function () {
-        console.log("close")
         await new Promise(r => setTimeout(r, 100));
         $(doreaCheckout).hide("slow");
     });

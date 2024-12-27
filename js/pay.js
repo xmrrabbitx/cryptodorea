@@ -135,6 +135,9 @@ jQuery(document).ready(async function($) {
                     r,
                     s
                 ).then(async function (response) {
+
+                    sessionStorage.setItem('payFailBreak', JSON.stringify({campaignName}) );
+
                     response.wait().then(async (receipt) => {
                         // transaction on confirmed and mined
                         if (receipt) {
@@ -146,7 +149,7 @@ jQuery(document).ready(async function($) {
                             $(successMessg).show("slow");
                             await new Promise(r => setTimeout(r, 1500));
                             $(successMessg).hide("slow");
-
+/*
                             jQuery.ajax({
                                 type: "post",
                                 url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -162,7 +165,9 @@ jQuery(document).ready(async function($) {
                                     }),
                                 },
                                 complete: function (response) {
+
                                     window.location.reload();
+
                                     // enable interactions
                                     body.style.pointerEvents = 'visible';
                                     body.style.opacity = '1';
@@ -171,11 +176,11 @@ jQuery(document).ready(async function($) {
                                     return false;
                                 },
                             });
+
+ */
                         }
                     });
                 });
-
-
             }
             catch (error) {
 

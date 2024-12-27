@@ -122,7 +122,11 @@ jQuery(document).ready(async function($) {
                     gasLimit :3000000,
                 },
             ).then(async function(response){
+
+                sessionStorage.setItem('fundFailBreak', JSON.stringify({campaignName}) );
+
                 response.wait().then(async (receipt) => {
+
                     // transaction on confirmed and mined
                     if (receipt) {
                         let succMessage = "payment has been successfull!";
@@ -132,6 +136,7 @@ jQuery(document).ready(async function($) {
                         let balance = await contract.getBalance();
                         balance = convertWeiToEther(parseInt(balance));
 
+                        /*
                         jQuery.ajax({
                             type: "post",
                             url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -143,6 +148,7 @@ jQuery(document).ready(async function($) {
                                 }),
                             },
                             complete: function (response) {
+
                                 window.location.reload();
 
                                 // enable interactions
@@ -153,6 +159,8 @@ jQuery(document).ready(async function($) {
                                 return false;
                             },
                         });
+
+                         */
                     }
                 });
 

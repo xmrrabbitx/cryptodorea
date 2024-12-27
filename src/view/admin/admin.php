@@ -4,11 +4,11 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
-//$campaignInfo = get_transient('dorea_5941136');
+//$campaignInfo = get_transient('dorea_e89abbf');
 //$campaignInfo['timestampStart'] = 1729259131000;
 //$campaignInfo['timestampExpire'] = 1731937531;
-//set_transient('dorea_5941136', $campaignInfo);
-//var_dump(get_transient('dorea_5941136'));
+//set_transient('dorea_e89abbf', $campaignInfo);
+//var_dump(get_transient('dorea_e89abbf'));
 
 /**
  * add menu options to admin panels
@@ -17,10 +17,6 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
     $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
-
-    //var_dump(get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login));
-    $campaignUsers = get_option("dorea_campaigns_users_" . 'dorea_f46b22d');
-    var_dump($campaignUsers);
 
     if (file_exists($logo_path)) {
 
@@ -282,6 +278,17 @@ function dorea_main_page_content():void
         </main>
     ");
 
+    print ('
+        <!-- failed campaign payment modal -->
+        <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+            <p class="!text-base">Last Payment interrupted. <br> please refresh the page...</p>
+            <div class="!mt-5">
+                <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
+            </div>
+        </div>
+    ');
+    // load fail break script
+    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
 
 }
 
