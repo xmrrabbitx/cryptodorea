@@ -12,6 +12,10 @@ main{
     display: none;
     z-index: 9999;
 }
+#doreaOpen{
+    display: none;
+    z-index: 10000;
+}
 #doreaChkConfirm{
     border-radius: 8px;
     padding: 5px;

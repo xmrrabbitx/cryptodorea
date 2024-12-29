@@ -12,12 +12,14 @@ let dorea_campaigns_checkout_title = document.querySelectorAll('.dorea-campaigns
 let dorea_campaigns_checkout = document.getElementById("dorea_campaigns_checkout");
 
 let doreaClose = document.getElementById('doreaClose');
+let doreaOpen = document.getElementById('doreaOpen');
 let doreaNoCampaign = document.getElementById('doreaNoCampaign');
 let doreaCampaignsSection = document.getElementById('doreaCampaignsSection');
 let doreaCheckout = document.getElementById('doreaCheckout');
 let doreaCheckoutConfirm = document.getElementById('doreaChkConfirm');
 let dorea_walletaddress = document.getElementById('dorea_walletaddress');
 let dorea_add_to_cashback_checkbox = document.querySelectorAll('.dorea_add_to_cashback_checkbox_');
+let dorea_add_to_cashback_label = document.querySelectorAll('.dorea_add_to_cashback_label_');
 let errorMessg = document.getElementById('dorea_error');
 
 let campaignlist = [];
@@ -37,8 +39,12 @@ jQuery(document).ready(async function($) {
     );
 
     if(doreaNoCampaign === null) {
-        await new Promise(r => setTimeout(r, 1500));
+        //doreaCheckout.style.top = window.screen.height;
+        //doreaCheckout.style.display = 'block';
+        await new Promise(r => setTimeout(r, 1000));
         $(doreaCheckout).show(2000);
+        //$(doreaCheckout).animate({top: (window.screen.height / 3)}, 2000);
+        console.log(doreaCheckout.offsetHeight)
     }
 
     dorea_walletaddress.addEventListener('input', async function () {
@@ -68,9 +74,33 @@ jQuery(document).ready(async function($) {
             }, 1000);
         });
 
+    dorea_add_to_cashback_label.forEach(
+        (element) =>
+            element.addEventListener('click', async function () {
+
+                let id = element.id.split('_')[1] + "_" + element.id.split('_')[2];
+                let checkbox = document.getElementById('doreaaddtocashbackcheckbox_' + id);
+
+                checkbox.checked = checkbox.checked !== true;
+
+                if (checkbox.checked) {
+                    if (!campaignlist.includes(element.value)) {
+                        campaignlist.push(checkbox.value);
+                        setValue();
+                    }
+                } else {
+                    campaignlist = campaignlist.filter(function (letter) {
+                        return letter !== checkbox.value;
+                    });
+                }
+
+            })
+    );
+
     dorea_add_to_cashback_checkbox.forEach(
             (element) =>
                 element.addEventListener('click', async function () {
+
                     if (element.checked) {
                         if (!campaignlist.includes(element.value)) {
                             campaignlist.push(element.value);
@@ -82,7 +112,7 @@ jQuery(document).ready(async function($) {
                         });
                     }
                 })
-        );
+    );
 
         function setValue() {
             if (campaignlist.length > 0 && dorea_walletaddress.value.length > 0) {
@@ -127,8 +157,18 @@ jQuery(document).ready(async function($) {
 
     doreaClose.addEventListener("click", async function () {
         await new Promise(r => setTimeout(r, 100));
-        $(doreaCheckout).hide("slow");
+        $(doreaOpen).show("slow");
+        $(doreaCheckout).hide(2000);
+        //$(doreaCheckout).animate({top: (window.screen.height)}, 1000);
+
     });
 
+    doreaOpen.addEventListener("click", async function () {
+        await new Promise(r => setTimeout(r, 100));
+        //console.log(doreaCheckout.clientHeight)
+        //$(doreaCheckout).animate({top: (window.screen.height / 3)}, 1000);
+        $(doreaOpen).hide("slow");
+        $(doreaCheckout).show(2000);
+    });
 
 });
