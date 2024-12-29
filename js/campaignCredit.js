@@ -182,6 +182,8 @@ function delay(){
                                             body.style.opacity = '1';
                                             body.style.userSelect = 'visible'; // enable text selection
                                             body.style.overflow = 'visible'; // Prevent scrolling
+
+                                            sessionStorage.removeItem('deployFailBreak');
                                             return false;
                                         },
                                     });

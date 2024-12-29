@@ -156,6 +156,8 @@ jQuery(document).ready(async function($) {
                                 body.style.opacity = '1';
                                 body.style.userSelect = 'visible'; // enable text selection
                                 body.style.overflow = 'visible'; // Prevent scrolling
+
+                                sessionStorage.removeItem('fundFailBreak');
                                 return false;
                             },
                         });

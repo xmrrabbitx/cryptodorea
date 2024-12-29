@@ -43,6 +43,8 @@ jQuery(document).ready(async function($) {
                 // pop up message to reload the  page after interrupt transaction
                 let failBreakModal = document.getElementById("failBreakModal");
                 $(failBreakModal).show("slow");
+                sessionStorage.removeItem('fundFailBreak');
+                return false;
             },
         });
 
