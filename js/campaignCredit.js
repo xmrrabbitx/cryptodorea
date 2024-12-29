@@ -176,7 +176,6 @@ function delay(){
                                         complete: function (response) {
 
                                             window.location.reload();
-                                            //window.location.replace(`${window.location.origin}/wp-admin/admin.php?page=credit`);
 
                                             // enable interactions
                                             body.style.pointerEvents = 'visible';
@@ -214,12 +213,6 @@ function delay(){
 
                     // enable dorea fund button
                     document.getElementById("doreaFund").disabled = false;
-
-                    // enable interactions
-                    //body.style.pointerEvents = 'visible';
-                    //body.style.opacity = '1';
-                    //body.style.userSelect = 'visible'; // enable text selection
-                    //body.style.overflow = 'visible'; // Prevent scrolling
 
                 }
                 else{
