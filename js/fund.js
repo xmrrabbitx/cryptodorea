@@ -136,7 +136,7 @@ jQuery(document).ready(async function($) {
                         let balance = await contract.getBalance();
                         balance = convertWeiToEther(parseInt(balance));
 
-                        /*
+
                         jQuery.ajax({
                             type: "post",
                             url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -160,7 +160,7 @@ jQuery(document).ready(async function($) {
                             },
                         });
 
-                         */
+
                     }
                 });
 

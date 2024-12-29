@@ -161,7 +161,7 @@ function delay(){
                                     let balance = await contract.getBalance();
                                     balance = convertWeiToEther(parseInt(balance));
 
-                                    /*
+
                                     jQuery.ajax({
                                         type: "post",
                                         url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -186,8 +186,6 @@ function delay(){
                                             return false;
                                         },
                                     });
-
-                                     */
 
                                 }
                             });

@@ -149,7 +149,7 @@ jQuery(document).ready(async function($) {
                             $(successMessg).show("slow");
                             await new Promise(r => setTimeout(r, 1500));
                             $(successMessg).hide("slow");
-/*
+
                             jQuery.ajax({
                                 type: "post",
                                 url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -177,7 +177,7 @@ jQuery(document).ready(async function($) {
                                 },
                             });
 
- */
+
                         }
                     });
                 });
