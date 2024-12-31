@@ -49,21 +49,13 @@ class usersController extends usersAbstract
 
         }
 
-        // add new users
-        //$campaignUsers = get_option("dorea_campaigns_users_" . $campaignName);
-        //$users = array_diff($campaignUsers, $userList);
-        //$users = array_values($users);
-       // if(!empty($users)) {
-            //update_option("dorea_campaigns_users_" . $campaignName, $users);
-       // }
-
         $claimedUsers = get_option("dorea_claimed_users_" . $campaignName);
 
         if($claimedUsers){
             $claimedUsers = array_merge($claimedUsers, $userList);
             $claimedUsers = array_unique($claimedUsers);
         }
-        var_dump($claimedUsers);
+
         return get_option("dorea_claimed_users_" . $campaignName) ? update_option("dorea_claimed_users_" . $campaignName, $claimedUsers) : add_option("dorea_claimed_users_" . $campaignName, $userList);
     }
 }
