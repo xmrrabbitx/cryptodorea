@@ -52,7 +52,7 @@ class receiptController extends receiptAbstract
                     }
 
                     // add sum of total to list
-                    $campaignList[$campaignName]['total'][] = (int)$order->total;
+                    $campaignList[$campaignName]['total'][] = (float)$order->total;
 
                     $campaignList[$campaignName]['order_ids'][] = $order->id;
 

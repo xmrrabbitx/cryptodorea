@@ -166,7 +166,7 @@ jQuery(document).ready(async function($) {
                                 },
                                 complete: function (response) {
 
-                                    window.location.reload();
+                                   // window.location.reload();
 
                                     // enable interactions
                                     body.style.pointerEvents = 'visible';

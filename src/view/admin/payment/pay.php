@@ -159,6 +159,7 @@ function dorea_admin_pay_campaign():void
                         $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'], $shoppingCount);
                         $result = [];
                         array_map(function ($value) use ($shoppingCount, &$result) {
+                            //var_dump($value);
                             if (count($value) == $shoppingCount) {
                                 $value = array_sum($value);
                                 // calculate percentage of each value
@@ -167,13 +168,15 @@ function dorea_admin_pay_campaign():void
                         }, $qualifiedPurchases);
 
                         $totalPurchases[] = count($result) * $shoppingCount;
-                        $qualifiedPurchasesTotal = array_sum($result);
-
+                        $qualifiedPurchasesTotal = number_format(array_sum($result),10);
+                        var_dump($campaignUser[$cashbackName]['total']);
+                        //var_dump($totalPurchases);
+                        var_dump($campaignUser[$cashbackName]['purchaseCounts']);
                         $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
 
                         $totalEthers[] = $userEther;
 
-                        if($campaignUser[$cashbackName]['purchaseCounts'] >= $cashbackInfo['shoppingCount']) {
+                        if(array_sum($totalPurchases) >= $cashbackInfo['shoppingCount']) {
 
                             $usersList[] = $users;
 
@@ -206,7 +209,7 @@ function dorea_admin_pay_campaign():void
                             print("<div  class='!col-span-1 !grid xl:!grid-cols-5 lg:!grid-cols-5 md:!grid-cols-5 sm:!grid-cols-5 !grid-cols-2 !pt-3 xl:!text-center lg:!text-center md:!text-center sm:!text-center !text-left !gap-y-5 !gap-5'>");
                             print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Username</span><span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span>");
                             print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '> Wallet Address</span><span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
-                            print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Purchase Counts</span><span class='!pl-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['purchaseCounts']) . "</span>");
+                            print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Purchase Counts</span><span class='!pl-3 !col-span-1'>" . esc_html(array_sum($totalPurchases)) . "</span>");
 
                             print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>Amount to be Paid</span><span class='!pl-3 !col-span-1 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm'>" . bcsub($userEther, 0, 5) . " ETH</span>");
 
