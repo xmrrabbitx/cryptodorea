@@ -171,9 +171,9 @@ function dorea_admin_pay_campaign():void
 
                         $totalPurchases[] = count($result) * $shoppingCount;
                         $qualifiedPurchasesTotal = number_format(array_sum($result),10);
-                        var_dump($campaignUser[$cashbackName]['total']);
+                        var_dump($totalPurchases);
                         //var_dump($totalPurchases);
-                        var_dump($campaignUser[$cashbackName]['purchaseCounts']);
+                        //var_dump($campaignUser[$cashbackName]['purchaseCounts']);
                         $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
 
                         $totalEthers[] = $userEther;

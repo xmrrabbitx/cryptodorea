@@ -2,7 +2,6 @@
 
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
-use Cryptodorea\DoreaCashback\model\checkoutModel;
 
 /**
  * error handling
@@ -224,6 +223,7 @@ function cashback(): void
                     }
                     // HPO mode enabled!
                     else {
+                        $mode = null;
                         if (!empty($diffCampaignsList)) {
 
                             $addtoCashback = true;
@@ -280,20 +280,17 @@ function cashback(): void
                             print('<p id="doreaNoCampaign"></p>');
                         }
 
-                        if ($contractAddressConfirm) {
-                            print('</div> 
-                                   <div class="!col-span-1 !mt-2">
+                        if ($contractAddressConfirm & $mode === "on") {
+                            print('</div><div class="!col-span-1 !mt-2">
                                       <p class="!text-sm !mt-3" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
                                       <input class="!p-3 !text-sm !mt-1 !ml-1 !bg-white !shadow-none !rounded-md" id="dorea_walletaddress" type="text" placeholder="wallet address...">
                                       <button id="doreaChkConfirm" class="!rounded !mt-3 !pl-5 !pr-5 !pt-3 !pb-3">Join</button>
                                    </div> 
-                               </div>
-                            ');
+                               </div>');
 
                             // check and add to cash back program
                             wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
                         }
-
 
                         print('</div>');
                     }
