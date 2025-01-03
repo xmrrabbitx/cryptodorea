@@ -13,6 +13,8 @@ function dorea_admin_help_campaign():void
     $createCampaignImg3 = plugins_url('/pics/help/createCampaign3.jpeg', __FILE__);
     $fundCampaign = plugins_url('/pics/help/fundCampaign.jpeg', __FILE__);
     $fundCampaign2 = plugins_url('/pics/help/fundCampaign2.jpeg', __FILE__);
+    $disableEnable = plugins_url('/pics/help/disableEnable.jpeg', __FILE__);
+    $disableEnable2 = plugins_url('/pics/help/disableEnable2.jpeg', __FILE__);
 
     print("
         <main>
@@ -43,7 +45,7 @@ function dorea_admin_help_campaign():void
             </br>
             B: <span class='!font-bold'>Amount</span> _ amount is the percentage of user purchases which is paid in ETH format.
             for example, user \"A\" purchased $4, you set %10 as amount for your campaign, which means %10 of $4 per user: $0.4 to be paid. it will be converted to ETH format: 0.00016 ETH.
-            don't wory about ETH numbers, Dorea Cashback convert it automatically for you.  
+            don't wory about ETH numbers, Dorea Cashback convert it automatically for you based on live ETH price in the market.  
             </br>
             C: <span class='!font-bold'>Shopping Counts</span> _ is the numbers of purchases user must do it to be eligible for cashback. 
             for example, if you set 4 value as shopping counts, it means user must purchases 4 times to be eligible for cashback, 
@@ -80,7 +82,7 @@ function dorea_admin_help_campaign():void
             
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How to Pay ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
-            1. after users joined cashback campaign and campaign date reaches to the end, you can pay users participated into the campaign. 
+            1. after cashback campaign is created and users joined in the campaign, you can pay ethers to users. 
             choose <span class='!font-bold'>\"Pay\"</span> option on main page in each campaign section. you should see payment page now.
             in that page, you could pay campaign users.
             </p>
@@ -100,6 +102,17 @@ function dorea_admin_help_campaign():void
             on main page, in each section of campaign, there is a transactions list icon on the right side. click on that icon, 
             you should see paid details like user's wallet address and paid ethers amount.    
             </p>
+            
+            <hr class='!w-12/12 !mt-5'>
+            
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>What if i want to disable campaign ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-5'>
+            you can toggle between disable/enable option in each campaign. disabling campaign doesn't count user's purchases which participant into campaign. 
+            </p>
+            <div class='!flex !justify-center !items-center !mt-5 !p-5'>
+                <img class='!pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40' src='". esc_url($disableEnable) ."' alt='no image!'>
+                <img class='!pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40' src='". esc_url($disableEnable2) ."' alt='no image!'>
+            </div>
             
           </div>
         </main>

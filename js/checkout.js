@@ -39,12 +39,8 @@ jQuery(document).ready(async function($) {
     );
 
     if(doreaNoCampaign === null) {
-        //doreaCheckout.style.top = window.screen.height;
-        //doreaCheckout.style.display = 'block';
         await new Promise(r => setTimeout(r, 1000));
         $(doreaCheckout).show(2000);
-        //$(doreaCheckout).animate({top: (window.screen.height / 3)}, 2000);
-        console.log(doreaCheckout.offsetHeight)
     }
 
     dorea_walletaddress.addEventListener('input', async function () {
@@ -159,14 +155,10 @@ jQuery(document).ready(async function($) {
         await new Promise(r => setTimeout(r, 100));
         $(doreaOpen).show("slow");
         $(doreaCheckout).hide(2000);
-        //$(doreaCheckout).animate({top: (window.screen.height)}, 1000);
-
     });
 
     doreaOpen.addEventListener("click", async function () {
         await new Promise(r => setTimeout(r, 100));
-        //console.log(doreaCheckout.clientHeight)
-        //$(doreaCheckout).animate({top: (window.screen.height / 3)}, 1000);
         $(doreaOpen).hide("slow");
         $(doreaCheckout).show(2000);
     });

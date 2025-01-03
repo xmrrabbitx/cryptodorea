@@ -32,7 +32,9 @@ function dorea_admin_pay_campaign():void
         $cashbackName = sanitize_key($_GET['cashbackName']) ?? null;
 
         $cashbackInfo = get_transient($cashbackName) ?? null;
-
+        if(!$cashbackInfo){
+            wp_redirect('admin.php?page=crypto-dorea-cashback');
+        }
         if(isset($cashbackInfo['mode'])){
             if($cashbackInfo['mode'] === "on"){
                 $mode = "checked";

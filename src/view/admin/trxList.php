@@ -9,7 +9,10 @@ function dorea_admin_trx_campaign():void
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/trxList.css'));
 
     $cashbackName = $_GET['cashbackName'] ?? null;
-    //$cashbackInfo = get_transient($cashbackName) ?? null;
+    $cashbackInfo = get_transient($cashbackName);
+    if(!$cashbackInfo){
+        wp_redirect('admin.php?page=crypto-dorea-cashback');
+    }
     $pagination = $_GET['pagination'] ?? 0;
     $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
 
