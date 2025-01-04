@@ -151,34 +151,34 @@ function dorea_admin_pay_campaign():void
                 //hypothetical price of eth _ get this from an online service
                 $ethBasePrice = 0.0004;
 
-                $purchaseCounts = [];
+                //var_dump($campaignUser[$cashbackName]['purchaseCounts']);
                 if($ethBasePrice) {
-                    if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] > 0) {
+                    if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
                         $purchaseCounts[] = true;
 
                         // calculate final price in ETH format
                         $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'], $shoppingCount);
-                        $result = [];
-                        array_map(function ($value) use ($shoppingCount, &$result) {
-                            //var_dump($value);
+                        //var_dump($qualifiedPurchases);
+                        $validPurchases = [];
+                        array_map(function ($value) use ($shoppingCount, &$validPurchases) {
+                            //var_dump(count($value));
                             if (count($value) == $shoppingCount) {
                                 $value = array_sum($value);
                                 // calculate percentage of each value
-                                $result[] = $value;
+                                $validPurchases[] = $value;
                             }
                         }, $qualifiedPurchases);
 
-                        $totalPurchases[] = count($result) * $shoppingCount;
-                        $qualifiedPurchasesTotal = number_format(array_sum($result),10);
-                        var_dump($totalPurchases);
+                        $totalPurchases = count($validPurchases) * $shoppingCount;
+                        $qualifiedPurchasesTotal = number_format(array_sum($validPurchases),10);
                         //var_dump($totalPurchases);
-                        //var_dump($campaignUser[$cashbackName]['purchaseCounts']);
                         $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
 
+                        $userTotalPurchases[] = $totalPurchases;
                         $totalEthers[] = $userEther;
 
-                        if(array_sum($totalPurchases) >= $cashbackInfo['shoppingCount']) {
+                        if($totalPurchases >= $cashbackInfo['shoppingCount']) {
 
                             $usersList[] = $users;
 
@@ -211,14 +211,14 @@ function dorea_admin_pay_campaign():void
                             print("<div  class='!col-span-1 !grid xl:!grid-cols-5 lg:!grid-cols-5 md:!grid-cols-5 sm:!grid-cols-5 !grid-cols-2 !pt-3 xl:!text-center lg:!text-center md:!text-center sm:!text-center !text-left !gap-y-5 !gap-5'>");
                             print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Username</span><span class='!pl-3 !col-span-1'>" . esc_html($users) . "</span>");
                             print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '> Wallet Address</span><span class='!pl-3 !col-span-1'>" . esc_html(substr($campaignUser[$cashbackName]['walletAddress'], 0, 4) . "****" . substr($campaignUser[$cashbackName]['walletAddress'], 36, 6)) . "</span>");
-                            print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Purchase Counts</span><span class='!pl-3 !col-span-1'>" . esc_html(array_sum($totalPurchases)) . "</span>");
+                            print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block '>Purchase Counts</span><span class='!pl-3 !col-span-1'>" . esc_html($totalPurchases) . "</span>");
 
                             print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>Amount to be Paid</span><span class='!pl-3 !col-span-1 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm'>" . bcsub($userEther, 0, 5) . " ETH</span>");
 
 
                             print ("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>Status</span><div class='!pl-3 !pt-1 !col-span-1 xl:!mx-auto lg:!mx-auto md:!mx-auto sm:!mx-auto  !mx-0 !float-left'>");
 
-                            if (sprintf("%.10f", (float)array_sum($totalEthers)) <= sprintf("%.10f", (float)$contractAmount) && array_sum($totalPurchases) >= $cashbackInfo['shoppingCount']) {
+                            if (sprintf("%.10f", (float)array_sum($totalEthers)) <= sprintf("%.10f", (float)$contractAmount) && $totalPurchases >= $cashbackInfo['shoppingCount']) {
 
                                 // set qualified users to pay
                                 $qualifiedUserEthers[] = $userEther;
@@ -230,7 +230,7 @@ function dorea_admin_pay_campaign():void
                                      </svg>
                                 ");
 
-                            } else if (array_sum($totalPurchases) < $cashbackInfo['shoppingCount']) {
+                            } else if ($totalPurchases < $cashbackInfo['shoppingCount']) {
                                 print('  
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -269,6 +269,7 @@ function dorea_admin_pay_campaign():void
 
         //var_dump($usersList);
         if(!empty($usersList)) {
+
             // error on empty purchase
             if (!in_array(true, $purchaseCounts)) {
                 print ("
@@ -346,7 +347,7 @@ function dorea_admin_pay_campaign():void
                     'qualifiedUserEthers' => $qualifiedUserEthers,
                     'cryptoAmount' => $cryptoAmount,
                     'usersList' => $usersList,
-                    'totalPurchases' => $totalPurchases,
+                    'totalPurchases' => $userTotalPurchases,
                 );
                 wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
 
