@@ -262,15 +262,7 @@ function cashback(): void
                                                 $addtoCashback = false;
                                             }
 
-                                            print(" 
-                                                <div class='!flex !mt-1'>                                                 
-                                                     <div class='!w-1/12 !ml-1'>
-                                                        <input id='doreaaddtocashbackcheckbox_" . esc_html($campaign) . "' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($campaign) . "'>
-                                                     </div>
-                                                     <label id='doreaaddtocashbacklabel_" . esc_html($campaign) . "' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>" . esc_html($campaignInfo['campaignNameLable']) . "</label>
-                                                </div>
-                                                
-                                            ");
+                                            print("<div class='!flex !mt-1'><div class='!w-1/12 !ml-1'><input id='doreaaddtocashbackcheckbox_" . esc_html($campaign) . "' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($campaign) . "'></div><label id='doreaaddtocashbacklabel_" . esc_html($campaign) . "' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>" . esc_html($campaignInfo['campaignNameLable']) . "</label></div>");
                                         }
                                     }
                                 }
@@ -281,12 +273,7 @@ function cashback(): void
                         }
 
                         if ($contractAddressConfirm & $mode === "on") {
-                            print('</div><div class="!col-span-1 !mt-2">
-                                      <p class="!text-sm !mt-3" id="dorea_error" style="display:none;color:#ff5d5d;"></p>
-                                      <input class="!p-3 !text-sm !mt-1 !ml-1 !bg-white !shadow-none !rounded-md" id="dorea_walletaddress" type="text" placeholder="wallet address...">
-                                      <button id="doreaChkConfirm" class="!rounded !mt-3 !pl-5 !pr-5 !pt-3 !pb-3">Join</button>
-                                   </div> 
-                               </div>');
+                            print('</div><div class="!col-span-1 !mt-2"><p class="!text-sm !mt-3" id="dorea_error" style="display:none;color:#ff5d5d;"></p><input class="!p-3 !text-sm !mt-1 !ml-1 !bg-white !shadow-none !rounded-md" id="dorea_walletaddress" type="text" placeholder="wallet address..."><button id="doreaChkConfirm" class="!rounded !mt-3 !pl-5 !pr-5 !pt-3 !pb-3">Join</button></div></div>');
 
                             // check and add to cash back program
                             wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));

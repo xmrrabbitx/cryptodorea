@@ -16,11 +16,11 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
-    $logo_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo.svg';
+    $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
-    if (file_exists($logo_path)) {
+    if (file_exists($logoIco_path)) {
 
-        $logo_content = file_get_contents($logo_path);
+        $logo_content = file_get_contents($logoIco_path);
         $base64_encoded = base64_encode($logo_content);
 
         /**
@@ -105,6 +105,19 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content():void
 {
+
+    $logo_path = plugins_url('/icons/doreaLogo.svg', __FILE__);
+
+    // update admin footer
+    function add_admin_footer_text() {
+        return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
+    }
+    add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
+    function update_admin_footer_text() {
+        return 'Version 1.0.0';
+    }
+    add_filter( 'update_footer', 'update_admin_footer_text', 11 );
+
     $cashback = new cashbackController();
     $cashbackList = $cashback->list();
 
@@ -113,7 +126,10 @@ function dorea_main_page_content():void
 
     print("
         <main>
-        <h1 class='!p-5 !text-sm !font-bold'>Home</h1> </br>
+        <h1 class='!p-5 !text-sm !font-bold'>
+            Home
+        </h1> 
+        </br>
     ");
 
     if ($cashbackList) {
@@ -258,15 +274,7 @@ function dorea_main_page_content():void
 
     } else {
         $campaign_url = wp_nonce_url(esc_url(admin_url("/admin.php?page=campaigns")));
-        print('
-                <h3 class="text-base text-center text-gray-400 mt-16">Start your Journey to Web3</h3>
-                </br>
-                <p class="pt-2 mt-7 text-center">
-                    <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url($campaign_url)  .'">
-                        Create Your First Cashback Campaign
-                    </a>
-                </p>
-        ');
+        print('<h3 class="!text-base !text-center !text-gray-400 !mt-16">Start your Journey to Web3</h3></br><p class="!pt-2 !mt-7 !text-center"> <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url($campaign_url)  .'">Create Your First Cashback Campaign</a></p>');
     }
 
     // pop up delete campaign modal

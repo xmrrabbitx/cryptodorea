@@ -6,6 +6,16 @@
  */
 function dorea_cashback_campaign_credit():void
 {
+    // update admin footer
+    function add_admin_footer_text() {
+        return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
+    }
+    add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
+    function update_admin_footer_text() {
+        return 'Version 1.0.0';
+    }
+    add_filter( 'update_footer', 'update_admin_footer_text', 11 );
+
     // load campaign credit Style
     wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'));
 

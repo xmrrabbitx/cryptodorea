@@ -62,7 +62,7 @@ jQuery(document).ready(async function($) {
                         return false;
                     } else {
                         setValue();
-                        dorea_walletaddress.style.border = '1px solid #00b300';
+                        //dorea_walletaddress.style.border = '1px solid #00b300';
                     }
                 } else {
                     dorea_walletaddress.style.border = '1px solid #ccc'; // grey border on empty wallet address feild
@@ -116,7 +116,7 @@ jQuery(document).ready(async function($) {
                     type: "post",
                     url: `${window.location.origin}/wp-admin/admin-ajax.php`,
                     data: {
-                        action: "dorea_ordered_received",  // the action to fire in the server
+                        action: "dorea_ordered_received",
                         data: JSON.stringify({
                             "campaignlists": campaignlist,
                             "walletAddress": dorea_walletaddress.value,
