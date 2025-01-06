@@ -148,9 +148,12 @@ function dorea_admin_pay_campaign():void
 
         $addtoPaymentSection = true;
 
-        $j = $pagination -1 === 0 ? 0 : $pagination;
+        $j = $pagination - 1 === 0 ? 0 : ($pagination-1) * 100;
+
         // pagination set to 100 queries
-        for ($i = $j; $i <= ($pagination * 100) - 1; $i++) {
+        for ($i = $j; $i <= ($pagination * 100)-1; $i++) {
+
+
             if ($i <= count($userList) - 1) {
                 $users = $userList[$i];
 
@@ -275,9 +278,9 @@ function dorea_admin_pay_campaign():void
                     }
                 }
             }
+
         }
 
-        //var_dump($usersList);
         if(!empty($usersList)) {
 
             // error on empty purchase
@@ -375,7 +378,8 @@ function dorea_admin_pay_campaign():void
 
                 wp_localize_script('DOREA_PAYFAILBREAK_SCRIPT', 'params', $params);
             }
-        }else{
+        }
+        else{
             print ("
                 <!-- error on no eligible users! -->
                 <div class='!text-center !text-sm !mx-auto xl:!w-96 lg:!w-96 md:!w-96 sm:!w-96 !w-80 !p-5 !rounded-xl !mt-10 !bg-[#faca43] !shadow-transparent'>
@@ -390,12 +394,13 @@ function dorea_admin_pay_campaign():void
             ");
             return;
         }
+
     }
 
     if($userList && !empty($usersList)) {
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
         // pagination navigation
-        if ($pagination -1 !== 0) {
+        if ($pagination - 1 !== 0) {
             // backward arrow pagination
             print('
                <div class="">
@@ -406,10 +411,12 @@ function dorea_admin_pay_campaign():void
                     </a>
                 </div>
             ');
-        }else{
+        }
+        else{
             // blank space
             print('<div class="!col-span-1"></div>');
         }
+
         print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
         if (($pagination * 100) <= count($userList) - 1) {
             // forward arrow pagination
