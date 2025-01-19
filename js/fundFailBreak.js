@@ -3,7 +3,7 @@
 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./ethers.min.js";
 import {abi} from "./compile.js";
 
-
+console.log("fund")
 jQuery(document).ready(async function($) {
 
     function convertWeiToEther(amount){
@@ -15,6 +15,7 @@ jQuery(document).ready(async function($) {
     }
 
     let fundFailBreak = sessionStorage.getItem('fundFailBreak');
+    console.log(fundFailBreak)
     if(fundFailBreak){
         let contractAddress = params.contractAddress;
         let campaignName = JSON.parse(fundFailBreak).campaignName;

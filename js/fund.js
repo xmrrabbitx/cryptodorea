@@ -10,24 +10,21 @@ jQuery(document).ready(async function($) {
 
     fundCampaign.addEventListener("click", async function(){
 
-
-        /*
-             await window.ethereum.request({
-               method: "wallet_addEthereumChain",
-                  params: [{
-                      chainId: "0x14A34",
-                      rpcUrls: ["https://base-sepolia.blockpi.network/v1/rpc/public"],
-                      chainName: "SEPOLIA",
+        // connect to Base  Mainnet
+        await window.ethereum.request({
+           method: "wallet_addEthereumChain",
+              params: [{
+                      chainId: "0x2105",
+                      rpcUrls: ["https://mainnet.base.org"],
+                      chainName: "Base Mainnet",
                       nativeCurrency: {
                         name: "ETH",
                         symbol: "ETH",
-                        decimals: 18
-                      },
-                      blockExplorerUrls: ["https://base-sepolia.blockscout.com"]
-                }]
-             });
-
-             */
+                        //decimals: 18
+              },
+              blockExplorerUrls: ["https://base.blockscout.com/"]
+           }]
+        });
 
         /**
          *
@@ -136,7 +133,6 @@ jQuery(document).ready(async function($) {
                         let balance = await contract.getBalance();
                         balance = convertWeiToEther(parseInt(balance));
 
-
                         jQuery.ajax({
                             type: "post",
                             url: `${window.location.origin}/wp-admin/admin-ajax.php`,
@@ -162,7 +158,6 @@ jQuery(document).ready(async function($) {
                             },
                         });
 
-
                     }
                 });
 
@@ -180,18 +175,17 @@ jQuery(document).ready(async function($) {
             body.style.overflow = 'visible'; // Prevent scrolling
 
             if(typeof error.revert === "undefined")   {
-                        errorMessg.innerHTML  = "Something went wrong. please try again!";
-                    }
-            else{
-                        let err = error.revert.args[0];
-                        if(err === "Insufficient balance"){
-                            errorMessg.innerHTML  = "Insufficient balance";
-                        }else if(err === "User is not Authorized!!!"){
-                            errorMessg.innerHTML  = "You dont have permission to pay!";
-                        }else{
-                            errorMessg.innerHTML  = "payment was not successfull! please try again!";
-                        }
-                    }
+                errorMessg.innerHTML  = "Something went wrong. please try again!";
+            } else {
+                let err = error.revert.args[0];
+                if(err === "Insufficient balance"){
+                     errorMessg.innerHTML  = "Insufficient balance";
+                }else if(err === "User is not Authorized!!!"){
+                     errorMessg.innerHTML  = "You dont have permission to pay!";
+                }else{
+                     errorMessg.innerHTML  = "payment was not successfull! please try again!";
+                }
+            }
 
             // show error popup message
             $(errorMessg).show("slow");

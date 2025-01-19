@@ -44,6 +44,7 @@ jQuery(document).ready(async function($) {
     let amounts = convertToWei(params.qualifiedUserEthers);
 
     let payFailBreak = sessionStorage.getItem('payFailBreak');
+    console.log(payFailBreak)
     if(payFailBreak){
         let contractAddress = params.contractAddress;
         let campaignName = JSON.parse(payFailBreak).campaignName;
