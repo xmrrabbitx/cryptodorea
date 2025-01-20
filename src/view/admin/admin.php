@@ -274,7 +274,7 @@ function dorea_main_page_content():void
 
     } else {
         $campaign_url = wp_nonce_url(esc_url(admin_url("/admin.php?page=campaigns")));
-        print('<h3 class="!text-base !text-center !text-gray-400 !mt-16">Start your Journey to Web3</h3></br><p class="!pt-2 !mt-7 !text-center"> <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url($campaign_url)  .'">Create Your First Cashback Campaign</a></p>');
+        print('<h3 class="!text-base !text-center !text-gray-400 !mt-16">Your Journey to Web3 Cashback</h3></br><p class="!pt-2 !mt-7 !text-center"> <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none" href="'.esc_url($campaign_url)  .'">Create Your First Cashback Campaign</a></p>');
     }
 
     // pop up delete campaign modal

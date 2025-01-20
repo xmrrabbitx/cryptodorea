@@ -14,21 +14,22 @@ function delay(){
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
+                /*
                 // connect to Base  Mainnet
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
                     params: [{
                         chainId: "0x2105",
-                        rpcUrls: ["https://mainnet.base.org"],
-                        chainName: "Base Mainnet",
+                        rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+                        chainName: "Arbitrum One",
                         nativeCurrency: {
-                            name: "ETH",
-                            symbol: "ETH",
-                            //decimals: 18
+                            name: "ARB",
+                            symbol: "ARB",
                         },
-                        blockExplorerUrls: ["https://base.blockscout.com/"]
+                        blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
                     }]
                 });
+                */
 
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");

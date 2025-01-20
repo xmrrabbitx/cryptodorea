@@ -20,7 +20,7 @@ jQuery(document).ready(async function($) {
             return false;
         }
         else if (/[^A-Za-z0-9 ]/g.exec(campaignName.value)) {
-            errorMessg.innerHTML = "Special Characters are not allowed!";
+            errorMessg.innerHTML = "Special Characters are not allowed in Campaign Name!";
             $(errorMessg).show("slow");
             await new Promise(r => setTimeout(r, 2500));
             $(errorMessg).hide("slow");
@@ -36,7 +36,14 @@ jQuery(document).ready(async function($) {
 
             errorMessg.innerHTML = "amount and shopping counts must be numeric!";
             $(errorMessg).show("slow");
-            await new Promise(r => setTimeout(r, 1500));
+            await new Promise(r => setTimeout(r, 2000));
+            $(errorMessg).hide("slow");
+            return false;
+        } else if (!Number.isInteger(parseInt(cryptoAmount.value)) || !Number.isInteger(parseInt(shoppingCount.value)) ){
+
+            errorMessg.innerHTML = "amount and shopping counts must be integer!";
+            $(errorMessg).show("slow");
+            await new Promise(r => setTimeout(r, 2000));
             $(errorMessg).hide("slow");
             return false;
         }

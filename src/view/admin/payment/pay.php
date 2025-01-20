@@ -151,21 +151,32 @@ function dorea_admin_pay_campaign():void
 
         $j = $pagination - 1 === 0 ? 0 : ($pagination-1) * 100;
 
+        //test data
+        /*
+        $userList = []; // for test
+        $usersList = []; // for test
+        for ($i=0;$i<373;$i++){
+            $userList[] = $i;
+            $usersList[] = $i;
+        }
+        */
+
         // pagination set to 100 queries
         for ($i = $j; $i <= ($pagination * 100)-1; $i++) {
 
-
             if ($i <= count($userList) - 1) {
+
+                //var_dump($userList[$i]);
+
                 $users = $userList[$i];
 
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-                $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                //$ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
 
                 //hypothetical price of eth _ get this from an online service
-                //$ethBasePrice = 0.0004;
+                $ethBasePrice = 0.0004;
 
-                //var_dump($campaignUser[$cashbackName]['purchaseCounts']);
                 if($ethBasePrice) {
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
@@ -173,10 +184,10 @@ function dorea_admin_pay_campaign():void
 
                         // calculate final price in ETH format
                         $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'], $shoppingCount);
-                        //var_dump($qualifiedPurchases);
+
                         $validPurchases = [];
                         array_map(function ($value) use ($shoppingCount, &$validPurchases) {
-                            //var_dump(count($value));
+
                             if (count($value) == $shoppingCount) {
                                 $value = array_sum($value);
                                 // calculate percentage of each value
@@ -186,7 +197,7 @@ function dorea_admin_pay_campaign():void
 
                         $totalPurchases = count($validPurchases) * $shoppingCount;
                         $qualifiedPurchasesTotal = number_format(array_sum($validPurchases),10);
-                        //var_dump($totalPurchases);
+
                         $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
 
                         $userTotalPurchases[] = $totalPurchases;

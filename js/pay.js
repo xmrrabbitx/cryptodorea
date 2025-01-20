@@ -12,21 +12,6 @@ jQuery(document).ready(async function($) {
 
     payCampaign.addEventListener("click", async function () {
 
-            // connect to Base  Mainnet
-            await window.ethereum.request({
-                method: "wallet_addEthereumChain",
-                params: [{
-                    chainId: "0x2105",
-                    rpcUrls: ["https://mainnet.base.org"],
-                    chainName: "Base Mainnet",
-                    nativeCurrency: {
-                        name: "ETH",
-                        symbol: "ETH",
-                        //decimals: 18
-                    },
-                    blockExplorerUrls: ["https://base.blockscout.com/"]
-                }]
-            });
 
             function convertToWei(amounts) {
 

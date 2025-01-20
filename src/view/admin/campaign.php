@@ -68,7 +68,7 @@ function dorea_cashback_campaign_content():void
            
            <!-- campaign name field -->
            <div class='!col-span-1 !w-12/12'>
-                <input id='campaignName' class='!rounded-md !w-64 !p-2 !focus:ring-green-500 !border-hidden !focus:ring-0 !focus:outline-none !outline-none!bg-white' type='text' name='campaignName'  placeholder='campaign name'>
+                <input id='campaignName' class='!rounded-md !w-64 !p-2 !focus:ring-green-500 !border-hidden !focus:ring-0 !focus:outline-none !outline-none!bg-white' type='text' name='campaignName' placeholder='campaign name'>
            </div>
     ");
 
@@ -89,7 +89,7 @@ function dorea_cashback_campaign_content():void
     print("
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
-                <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='Shopping Counts'>
+                <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='shopping counts'>
             </div>
             
             <div class='!col-span-1 !w-12/12 !mt-5'>
@@ -165,7 +165,7 @@ function dorea_cashback_campaign_content():void
                 <div class='!col-span-1 !w-12/12 !mt-5 text-center'>
                 <div class='!w-64 !bg-white !rounded-md !p-2 !mx-auto'>
                     <!-- expire date options -->
-                    <lable class='!float-left !pt-1 !text-[14px]'>Expire Date</lable>
+                    <lable class='!float-left !pt-1 !text-[14px]'>Expiration Date</lable>
                     <select class='!border-hidden' name='expDate' id='expDate'>
                         <option value='weekly'>Weekly</option>
                         <option value='monthly'>Monthly</option>
@@ -218,7 +218,7 @@ function dorea_admin_cashback_campaign():void
 
             }
 
-            $cryptoAmount = (float)htmlspecialchars(sanitize_text_field($_POST['cryptoAmount']));
+            $cryptoAmount = (int)htmlspecialchars(sanitize_text_field($_POST['cryptoAmount']));
             $shoppingCount = (int)htmlspecialchars(sanitize_text_field($_POST['shoppingCount']));
 
             $startDate = htmlspecialchars(sanitize_text_field($_POST['startDateMonth']));
