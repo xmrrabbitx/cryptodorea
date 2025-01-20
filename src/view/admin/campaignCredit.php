@@ -61,10 +61,10 @@ function dorea_cashback_campaign_credit():void
               
                 <div class="!col-span-1 !w-64 !mt-10">
                     <span class="">
-                        <label class="!text-pretty !text-left !float-left">Notes: Ethers must be in the Ether format e.g: 0.0004</label>
+                        <label class="!text-pretty !text-left !float-left">Notes: Ethers must be in the Ether format, e.g 0.0004</label>
                     </span>
                     <span class="">
-                        <input class="!rounded-md !w-64 !mt-5 !p-2 !focus:ring-green-500 !border-hidden !bg-white" id="creditAmount" type="text" placeholder="Insert Ethers">
+                        <input class="!rounded-md !w-64 !mt-5 !p-2 !focus:ring-green-500 !border-hidden !bg-white" id="creditAmount" type="text" placeholder="amount">
                     </span>
                 </div>
                 <div class="!col-span-1 !w-12/12 !mt-5">
