@@ -289,7 +289,7 @@ function dorea_main_page_content():void
     print ('
         <!-- failed campaign payment modal -->
         <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
-            <p class="!text-base">Last Payment interrupted. <br> please refresh the page...</p>
+            <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
             <div class="!mt-5">
                 <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
             </div>

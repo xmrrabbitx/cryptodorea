@@ -34,8 +34,8 @@ function dorea_admin_pay_campaign():void
 
     print("
         <main>
-            <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> 
-            <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
+            <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
+            <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethereum</h2> </br>
     ");
 
     if(isset($_GET['cashbackName'])){
@@ -90,7 +90,7 @@ function dorea_admin_pay_campaign():void
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
                 <p class='!pt-3 !pb-2 !text-balance'>
-                  no campaign choosen. please select or create one in main page! 
+                    No campaign was chosen. Please select or create one on the main page!
                 </p>
                
             </div>
@@ -139,7 +139,7 @@ function dorea_admin_pay_campaign():void
                      <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                 </svg>
                 <p class='!pt-2 !pb-2 !break-words !text-balance'>
-                  there is no users participant into the loyalty campaign!
+                  No users have participated in the loyalty campaign yet!
                 </p>
             </div>
         ");
@@ -223,7 +223,7 @@ function dorea_admin_pay_campaign():void
                                              Wallet Address
                                          </span>
                                          <span class="!text-center">
-                                            Purchase Counts
+                                            Purchase Count
                                          </span>
                                          <span class="!text-center">
                                              Amount to be Paid
@@ -343,7 +343,7 @@ function dorea_admin_pay_campaign():void
                 print ('
                     <!-- failed campaign payment modal -->
                     <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
-                        <p class="!text-base">Last Payment interrupted. <br> please refresh the page...</p>
+                        <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
                         <div class="!mt-5">
                             <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
                         </div>
@@ -385,7 +385,7 @@ function dorea_admin_pay_campaign():void
                 print ('
                 <!-- failed campaign payment modal -->
                 <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
-                    <p class="!text-base">Last Payment interrupted. <br> please refresh the page...</p>
+                    <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
                     <div class="!mt-5">
                         <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
                     </div>
@@ -405,8 +405,8 @@ function dorea_admin_pay_campaign():void
                          <path fill-rule='evenodd' d='M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z' clip-rule='evenodd' />
                     </svg>
                     <p class='!pt-2 !pb-2 !break-words !text-balance'>
-                      there is no eligible users!
-                      you can check the transactions list from main page.
+                      There are no eligible users! 
+                      You can check the transaction list from the main page.
                     </p>
                 </div>
             ");
