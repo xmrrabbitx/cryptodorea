@@ -28,7 +28,6 @@ function dorea_admin_trx_campaign():void
 
     print("
         <main>
-            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
             <h1 class='!p-5 !text-sm !font-bold'>Transactions List</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Claimed Ethers</h2> </br>
     ");
@@ -39,7 +38,8 @@ function dorea_admin_trx_campaign():void
     }
 
     // show errors
-    print("            
+    print("      
+       <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>      
             <p id='dorea_error' style='display:none;'></p>
             <p id='dorea_success' style='display:none;'></p>
     ");

@@ -60,7 +60,7 @@ function delay(){
 
                         document.getElementById("doreaFund").disabled = false;
                         return false;
-                    } else if (!Number.isInteger(parseInt(contractAmount)) || (/[^0-9 ]/g.exec(contractAmount)) )  {
+                    } else if ( (/[^.0-9 ]/g.exec(contractAmount)) )  {
 
                         metamaskError.style.display = "block";
                         errorMessg.innerHTML = "cryptocurrency amount must be in the decimal format!";

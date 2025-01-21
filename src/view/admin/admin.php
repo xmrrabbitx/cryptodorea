@@ -126,10 +126,10 @@ function dorea_main_page_content():void
 
     print("
         <main>
-        <h1 class='!p-5 !text-sm !font-bold'>
-            Home
-        </h1> 
-        </br>
+            <h1 class='!p-5 !text-sm !font-bold'>
+                Home
+            </h1> 
+            </br>
     ");
 
     if ($cashbackList) {
@@ -157,7 +157,7 @@ function dorea_main_page_content():void
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
-                print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden inline-block !m-auto">funded!</span>');
+                print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden inline-block !m-auto">funded</span>');
             } else {
                 print('<a class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden !pl-2 !focus:ring-0 hover:!text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
 

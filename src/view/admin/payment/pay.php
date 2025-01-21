@@ -34,8 +34,7 @@ function dorea_admin_pay_campaign():void
 
     print("
         <main>
-            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent !rounded-md'>
-            <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
+            <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> 
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethers</h2> </br>
     ");
 
@@ -58,6 +57,7 @@ function dorea_admin_pay_campaign():void
 
         print("
             <h3 class='!pl-5 !text-xs !font-bold'>Campaign: ". $cashbackName . "</h3> </br>
+            <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent !rounded-md'>
             <div class='!pr-5 !text-right'>
                 <span class='!pr-1'>disable</span> 
                 <label class='switch'>
@@ -70,13 +70,18 @@ function dorea_admin_pay_campaign():void
         ");
     }
 
-    // show errors
+
+    /**
+     * show errors
+     */
     print("            
             <p class='!pl-5' id='dorea_error' style='display:none;'></p>
             <p class='!pl-5' id='dorea_success' style='display:none;'></p>
     ");
 
-    // check if no campaign existed!
+    /**
+     * check if no campaign existed!
+     */
     if(!isset($_GET['cashbackName'])){
         print("
             <!-- error on no campaign -->
