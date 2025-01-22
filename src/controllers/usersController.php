@@ -42,8 +42,11 @@ class usersController extends usersAbstract
                 $campaignUser[$campaignName]['claimedReward'] = $claimedAmount[$i];
             }
 
+            $totalCampaign = $campaignUser[$campaignName]['total'];
             $campaignUser[$campaignName]['purchaseCounts'] = $campaignUser[$campaignName]['purchaseCounts'] - (int)$totalPurchases[$i];
-            $campaignUser[$campaignName]['total'] = array_splice($campaignUser[$campaignName]['total'], 0, (int)$totalPurchases[$i] - 1);
+            array_splice($totalCampaign, 0, (int)$totalPurchases[$i] === 1 ? 1 : (int)$totalPurchases[$i] - 1);
+
+            $campaignUser[$campaignName]['total'] = $totalCampaign;
 
             update_option('dorea_campaigninfo_user_' . $userList[$i], $campaignUser);
 

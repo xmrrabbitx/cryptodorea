@@ -171,6 +171,7 @@ function dorea_admin_pay_campaign():void
 
             if ($i <= count($userList) - 1) {
 
+                //var_dump($userList);
                 //var_dump($userList[$i]);
 
                 $users = $userList[$i];
@@ -207,7 +208,7 @@ function dorea_admin_pay_campaign():void
 
                         $userTotalPurchases[] = $totalPurchases;
                         $totalEthers[] = $userEther;
-
+                        var_dump($campaignUser[$cashbackName]['purchaseCounts']);
                         if($totalPurchases >= $cashbackInfo['shoppingCount']) {
 
                             $usersList[] = $users;
