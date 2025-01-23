@@ -9,7 +9,6 @@ use Cryptodorea\DoreaCashback\abstracts\cashbackAbstract;
  */
 class cashbackController extends cashbackAbstract
 {
-
     public function create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount, $timestampStart, $timestampExpire):void
     {
         $campaignInfo = ['campaignName' => $campaignName, 'campaignNameLable'=>$campaignNameLable, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, "timestampStart"=>$timestampStart, "timestampExpire"=>$timestampExpire, 'mode'=>'on'] ?? null;
@@ -22,19 +21,15 @@ class cashbackController extends cashbackAbstract
 
             }
         }
-
     }
 
     public function list()
     {
-
         return get_option('campaign_list');
-
     }
 
     public function addtoList($campaignName)
     {
-
         if (!empty($campaignName)) {
 
             $list = get_option('campaign_list');
@@ -48,7 +43,6 @@ class cashbackController extends cashbackAbstract
             }
 
         }
-
     }
 
     /*
@@ -101,8 +95,6 @@ class cashbackController extends cashbackAbstract
             if($campaignUsers){
                 delete_option("dorea_campaigns_users_" . $campaignName);
             }
-
         }
     }
-
 }

@@ -14,7 +14,6 @@ jQuery(document).ready(async function($) {
 
     }
 
-    console.log()
     let deployFailBreak = sessionStorage.getItem('deployFailBreak');
     if(deployFailBreak){
         let contractAddress = JSON.parse(deployFailBreak).contractAddress;

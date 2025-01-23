@@ -202,6 +202,7 @@ function dorea_admin_cashback_campaign():void
             $campaignNameLable = trim(sanitize_text_field($_POST['campaignName']));
             $campaignNameLable = preg_replace("/[^A-Za-z0-9 ]/", '', $campaignNameLable);
             if(strlen($campaignNameLable) >= 25){
+                error_log("campaign name exceeds 25 length!");
                 wp_redirect($referer);
                 exit;
             }
@@ -209,13 +210,12 @@ function dorea_admin_cashback_campaign():void
             $cryptoType = htmlspecialchars(sanitize_text_field($_POST['cryptoType']));
 
             if(!is_numeric(trim($_POST['cryptoAmount'])) || !is_numeric(trim($_POST['shoppingCount']))){
-
+                error_log("amount and shopping counts must be numeric!");
                 //throws error on amount format
                 $redirect_url = add_query_arg('cryptoAmountError', urlencode('amount and shopping counts must be numeric!'), $referer);
 
                 wp_redirect($redirect_url);
                 exit;
-
             }
 
             $cryptoAmount = (int)htmlspecialchars(sanitize_text_field($_POST['cryptoAmount']));
@@ -242,6 +242,7 @@ function dorea_admin_cashback_campaign():void
             if(get_option('campaign_list')){
                 //throws error on existed campaign
                 if(in_array($campaignName, get_option('campaign_list'))){
+                    error_log("");
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
                     wp_redirect($redirect_url);
                     exit;
@@ -249,9 +250,9 @@ function dorea_admin_cashback_campaign():void
             }
             $campaignLength = explode("_",$campaignName)[0];
             if(strlen($campaignLength) >= 25 ){
-
+                error_log("no more than 25 characters allowed campaign name!");
                 //throws error on character exceed!
-                $redirect_url = add_query_arg('campaignError', urlencode('no more than 25 characters allowed!'), $referer);
+                $redirect_url = add_query_arg('campaignError', urlencode('no more than 25 characters allowed on campaign name!'), $referer);
                 wp_redirect($redirect_url);
 
             }else {
@@ -275,7 +276,7 @@ function dorea_admin_cashback_campaign():void
             }
 
     }else{
-
+        error_log("some fields left empty!");
         //throws error on empty
         $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('some fields left empty!'), $referer);
 
@@ -306,5 +307,4 @@ function dorea_admin_delete_campaign():void
     // Redirect back to the previous page after deletion
     wp_redirect(wp_get_referer());
     exit;
-
 }
