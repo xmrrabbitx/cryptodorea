@@ -178,7 +178,7 @@ function cashback(): void
                                             if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
                                                 if($title){
                                                     print("
-                                                        <h3 id='dorea_campaigns_checkout_title'>Join to Cashback Campaigns</h3>
+                                                        <h3 id='dorea_campaigns_checkout_title'>Join Cashback Campaigns</h3>
                                                         <div id='dorea_campaigns_checkout'>
                                                     ");
                                                 }
@@ -255,7 +255,7 @@ function cashback(): void
                                                                 <path stroke-linecap='round' stroke-linejoin='round' d='M6 18 18 6M6 6l12 12' />
                                                            </svg>
                                                      </span>
-                                                     <h3 class='!text-lg'>Join to Cashback Campaign</h3> 
+                                                     <h3 class='!text-lg'>Join Cashback Campaign</h3> 
                                                      <div class='!grid !grid-cols-1 !gap-2'>
                                                          <label class='!text-sm'>choose which campaign you want to participate in:</label>
                                                          <div id='doreaCampaignsSection' class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>");
@@ -281,14 +281,10 @@ function cashback(): void
 
                         print('</div>');
                     }
-
                 }
             }
         }
-
     }
-
-
 }
 
 /**
@@ -321,11 +317,11 @@ function orderReceived($orderId):void
 
    if(isset($order->id)) {
 
-           // get campaign info from HPO mode
-           $campaignQueue = json_decode(get_option('dorea_campaign_queue'));
+       // get campaign info from HPO mode
+       $campaignQueue = json_decode(get_option('dorea_campaign_queue'));
 
-           // get campaign info from legacy mode
-           if (!$campaignQueue) {
+       // get campaign info from legacy mode
+       if (!$campaignQueue) {
                foreach ($order->meta_data as $meta_data) {
                    if ($meta_data->key === 'dorea_walletaddress') {
                        $walletAddress = [
@@ -343,8 +339,8 @@ function orderReceived($orderId):void
                }
            }
 
-           // store new camppaigns
-           if ($campaignQueue) {
+       // store new camppaigns
+       if ($campaignQueue) {
 
                // store doreaCampaignInfo
                $checkout = new checkoutController();
@@ -382,14 +378,13 @@ function orderReceived($orderId):void
                }
            }
 
-           if (!$error) {
-               // receive order details
-               $checkout = new checkoutController();
-               $checkout->orederReceived($order);
-           }
+       if (!$error) {
+           // receive order details
+           $checkout = new checkoutController();
+           $checkout->orederReceived($order);
+       }
 
-           delete_option('dorea_campaign_queue');
-
+       delete_option('dorea_campaign_queue');
 
    }
 }

@@ -89,7 +89,7 @@ function dorea_cashback_campaign_content():void
     print("
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
-                <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='shopping counts'>
+                <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='user shopping count'>
             </div>
             
             <div class='!col-span-1 !w-12/12 !mt-5'>
