@@ -3,7 +3,6 @@
 /**
  * wp on each user request
  */
-
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 use function Cryptodorea\DoreaCashback\view\modals\userStatusCampaign\userStatusCampaign;
 
@@ -12,14 +11,13 @@ add_action('woocommerce_account_content','myAccount', 10);
 function myAccount()
 {
     userStatusCampaign();
-
 }
 
-add_action('wp','wpRequest', 10);
+add_action('wp','doreawpRequest', 10);
 /**
  * @throws Exception
  */
-function wpRequest()
+function doreawpRequest()
 {
     // check on Authentication
     if(is_user_logged_in()) {
