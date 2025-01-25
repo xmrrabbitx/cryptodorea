@@ -37,7 +37,7 @@ class usersController extends usersAbstract
             $campaignUser = get_option('dorea_campaigninfo_user_' . $userList[$i]);
 
             if (isset($campaignUser[$campaignName]['claimedReward'])) {
-                $campaignUser[$campaignName]['claimedReward'] = $campaignUser[$campaignName]['claimedReward'] + $claimedAmount[$i];
+                $campaignUser[$campaignName]['claimedReward'] = sprintf('%.10f', $campaignUser[$campaignName]['claimedReward'] + $claimedAmount[$i]);
             } else {
                 $campaignUser[$campaignName]['claimedReward'] = $claimedAmount[$i];
             }

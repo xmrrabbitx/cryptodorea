@@ -10,6 +10,9 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 //set_transient('dorea_e89abbf', $campaignInfo);
 //var_dump(get_transient('dorea_e89abbf'));
 
+//$n = (0.00002 + 0.00002);
+//var_dump(sprintf('%.10f', $n));
+
 /**
  * add menu options to admin panels
  */
