@@ -3,8 +3,6 @@
 namespace Cryptodorea\DoreaCashback\utilities;
 
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * getting latest price of ethereum
@@ -12,18 +10,12 @@ use GuzzleHttp\Exception\GuzzleException;
 class ethHelper
 {
     /**
-     * @throws GuzzleException
+     * @throws Exception
      */
     static function ethPrice(): float
     {
 
         static $json;
-
-        $client = new Client(
-            [
-                'verify'=>false
-            ]
-        );
 
         for ($i = 0; $i <= 3; $i++) {
             try {
