@@ -94,6 +94,12 @@ function dorea_admin_help_campaign():void
             </div>
             
             <hr class='!w-12/12 !mt-5'>
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>Is it necessary to have installed WooCommerce ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            Yes, WooCommerce is a prerequisite to the Cryptodorea plugin. Your woo-commerce purchases will be processed and monitored to pay the most loyal users.
+            </p>
+            
+            <hr class='!w-12/12 !mt-5'>
             
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How is the funding cashback campaign calculated ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
