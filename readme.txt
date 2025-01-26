@@ -28,14 +28,21 @@ you can check and find out more on [CryptoDorea](https://cryptodorea.io)
 
 == FAQ ==
 
-= A question that someone might have =
+= Which cryptocurrencies are supported? =
 
-An answer to that question.
+For now, our focus is on Ethereum; in the future, there will be more cryptocurrencies.
+
+= Which blockchain network are supported? =
+
+For now, it supports Arbitrium One Network; in the future, there will be more network support.
+
+= Does Cryptodorea integrate with WooCommerce? =
+
+Yes, it is integrated with the WooCommerce checkout and payment system.
 
 == Screenshots ==
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Screenshots are stored in the /assets directory.
 2. This is the second screen shot
-
 
 `<?php code(); ?>`
