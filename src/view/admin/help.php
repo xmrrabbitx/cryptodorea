@@ -121,7 +121,7 @@ function dorea_admin_help_campaign():void
             <hr class='!w-12/12 !mt-5'>
             
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>What if i want to disable campaign ?</h2> 
-            <p class='!w-10/12 !pl-5 !mt-5'>
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
             you can toggle between disable/enable options in each campaign. 
             the disabling of the campaign doesn't count the user's purchases that 
             participate in the campaign.            
@@ -132,10 +132,15 @@ function dorea_admin_help_campaign():void
                 <img class='!pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40' src='". esc_url($disableEnable2) ."' alt='no image!'>
             </div>
             
+            <hr class='!w-12/12 !mt-5'>
+            
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How is the funding cashback campaign calculated ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            When you fund a campaign, you send it to the Ethereum blockchain. Besides the amount of money you send to the campaign, 
+            a small amount of fee (regularly less than $1) pays for the blockchain. Also, 10% of the campaign amount will be calculated and sent to Dorea Account Address: 0xca578e925551aCB0d86D3557a6fF26a68034C88b.
+            </p>
+            
           </div>
         </main>
     ");
-
-
-
 }

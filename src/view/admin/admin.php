@@ -12,6 +12,8 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
 //$n = (0.00002 + 0.00002);
 //var_dump(sprintf('%.10f', $n));
+//    $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
+
 
 /**
  * add menu options to admin panels
@@ -19,8 +21,6 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
-    $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
-var_dump($campaignUser);
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {
