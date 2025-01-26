@@ -42,7 +42,10 @@ Yes, it is integrated with the WooCommerce checkout and payment system.
 
 == Screenshots ==
 
-1.
-2.
+1. Join Cashback Campaign
+2. Campaign List
+3. Fund Campaign
+4. Pay Campaign
+5. Transactions List
 
 `<?php code(); ?>`
