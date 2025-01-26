@@ -257,7 +257,7 @@ function cashback(): void
                                                      </span>
                                                      <h3 class='!text-lg'>Join Cashback Campaign</h3> 
                                                      <div class='!grid !grid-cols-1 !gap-2'>
-                                                         <label class='!text-sm'>choose which campaign you want to participate in:</label>
+                                                         <label class='!text-sm'>Choose the campaign you wish to participate in:</label>
                                                          <div id='doreaCampaignsSection' class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>");
                                                 $addtoCashback = false;
                                             }
