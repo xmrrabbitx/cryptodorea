@@ -15,7 +15,7 @@ jQuery(document).ready(async function($) {
     }
 
     let fundFailBreak = sessionStorage.getItem('fundFailBreak');
-    console.log(fundFailBreak)
+
     if(fundFailBreak){
         let contractAddress = params.contractAddress;
         let campaignName = JSON.parse(fundFailBreak).campaignName;

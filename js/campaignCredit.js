@@ -6,11 +6,16 @@ import {
 
 import {abi,bytecode} from "./compile.js";
 
+
 // Request access to Metamask
 setTimeout(delay, 1000)
 function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
+
+            if(sessionStorage.getItem('deployState')){
+                location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+            }
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
@@ -104,6 +109,8 @@ function delay(){
 
                     try {
 
+                        sessionStorage.setItem('deployState', 'false');
+
                         // Disable interactions
                         body.style.pointerEvents = 'none';
                         body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -174,6 +181,9 @@ function delay(){
                                         },
                                         complete: function (response) {
 
+                                            sessionStorage.removeItem('deployFailBreak');
+                                            sessionStorage.removeItem('deployState');
+
                                             window.location.reload();
 
                                             // enable interactions
@@ -182,7 +192,6 @@ function delay(){
                                             body.style.userSelect = 'visible'; // enable text selection
                                             body.style.overflow = 'visible'; // Prevent scrolling
 
-                                            sessionStorage.removeItem('deployFailBreak');
                                             return false;
                                         },
                                     });
@@ -191,6 +200,7 @@ function delay(){
                             });
 
                         });
+
                     }
                     catch (error) {
 
@@ -215,9 +225,14 @@ function delay(){
                     // enable dorea fund button
                     document.getElementById("doreaFund").disabled = false;
 
+                    let trxExpired = document.getElementById("trxExpired");
+                    trxExpired.addEventListener("click", async () => {
+                        let trxExpired = document.getElementById("trxExpired");
+                        $(trxExpired).hide("slow");
+                    });
+
                 }
                 else{
-
                     metamaskError.style.display = "block";
                     errorMessg.innerHTML = "please install Metamask extension!";
                     $(errorMessg).show("slow");
@@ -225,6 +240,7 @@ function delay(){
                     $(errorMessg).hide("slow");
 
                 }
+
             })
         });
     })();
