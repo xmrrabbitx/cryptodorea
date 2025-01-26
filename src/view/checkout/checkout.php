@@ -41,17 +41,17 @@ function dorea_checkout_field_process() {
 
             if(in_array(true, $checkoboxes)) {
                 if (!$_POST['dorea_wallet_address']) {
-                   wc_add_notice(esc_html__('Please enter a valid wallet address!'), 'error');
+                   wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
                 }
             }
             if($_POST['dorea_wallet_address']){
                 if(substr($_POST['dorea_wallet_address'], 0,2) !== '0x'){
-                    wc_add_notice(esc_html__('Wallet Address must start with 0x!'), 'error');
+                    wc_add_notice(esc_html__('Wallet Address must start with 0x!', 'cryptodorea'), 'error');
                 }elseif (strlen($_POST['dorea_wallet_address']) < 42){
-                    wc_add_notice(esc_html__('Please enter a valid wallet address!'), 'error');
+                    wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
                 }
                 if(!in_array(true, $checkoboxes)) {
-                    wc_add_notice(esc_html__('Please choose at least one campaign!'), 'error');
+                    wc_add_notice(esc_html__('Please choose at least one campaign!', 'cryptodorea'), 'error');
                 }
             }
         }
@@ -182,6 +182,7 @@ function cashback(): void
                                                         <div id='dorea_campaigns_checkout'>
                                                     ");
                                                 }
+
                                                 woocommerce_form_field(
                                                     $campaignInfo['campaignName'],
                                                     array(
@@ -207,8 +208,8 @@ function cashback(): void
                                             array(
                                                 'type' => 'text',
                                                 'class' => array('dorea-wallet-address-class form-row-wide'),
-                                                'label' => __('wallet address'),
-                                                'placeholder' => __('Enter Wallet Address...'),
+                                                'label' => __('wallet address', 'cryptodorea'),
+                                                'placeholder' => __('Enter Wallet Address...', 'cryptodorea'),
                                                 'required' => false,
                                             ),
                                             $checkout->get_value('dorea_wallet_address')

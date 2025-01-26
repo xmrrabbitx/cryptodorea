@@ -35,8 +35,8 @@ function userStatusCampaign():void
                                </svg>
                            </span>  
                               
-                           <h5 class="bold">cashback list</h5>
-                           <h6 class="">Claimed Rewards: ' . array_sum($sumUserEthers) . ' ETH </h6>
+                           <h5 class="!bold">Crypto Dorea</h5>
+                           <h6 class="!mt-3">Claimed Rewards: ' . array_sum($sumUserEthers) . ' ETH </h6>
                                        
                        </div>
                     ');
