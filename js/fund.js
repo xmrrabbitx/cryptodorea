@@ -8,8 +8,11 @@ const errorMessg = document.getElementById("dorea_error");
 
 jQuery(document).ready(async function($) {
 
-    fundCampaign.addEventListener("click", async function(){
+    if(sessionStorage.getItem('deployState')){
+        location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+    }
 
+    fundCampaign.addEventListener("click", async function(){
 
         /**
          *
@@ -69,6 +72,9 @@ jQuery(document).ready(async function($) {
         const body = document.body;
 
         try{
+
+            sessionStorage.setItem('deployState', 'false');
+
             // disable dorea fund button
             fundCampaign.disabled = true;
 
@@ -130,6 +136,9 @@ jQuery(document).ready(async function($) {
                             },
                             complete: function (response) {
 
+                                sessionStorage.removeItem('fundFailBreak');
+                                sessionStorage.removeItem('deployState');
+
                                 window.location.reload();
 
                                 // enable interactions
@@ -138,7 +147,6 @@ jQuery(document).ready(async function($) {
                                 body.style.userSelect = 'visible'; // enable text selection
                                 body.style.overflow = 'visible'; // Prevent scrolling
 
-                                sessionStorage.removeItem('fundFailBreak');
                                 return false;
                             },
                         });

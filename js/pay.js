@@ -10,9 +10,11 @@ let successMessg = document.getElementById("dorea_success");
 
 jQuery(document).ready(async function($) {
 
+    if(sessionStorage.getItem('deployState')){
+        location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+    }
+
     payCampaign.addEventListener("click", async function () {
-
-
             function convertToWei(amounts) {
 
                 let amountsBig = [];
@@ -68,6 +70,8 @@ jQuery(document).ready(async function($) {
             const body = document.body;
 
             try {
+
+                sessionStorage.setItem('deployState', 'false');
 
                 // disable dorea fund button
                 payCampaign.disabled = true;
@@ -149,6 +153,9 @@ jQuery(document).ready(async function($) {
                                 },
                                 complete: function (response) {
 
+                                    sessionStorage.removeItem('payFailBreak');
+                                    sessionStorage.removeItem('deployState');
+
                                     window.location.reload();
 
                                     // enable interactions
@@ -157,7 +164,6 @@ jQuery(document).ready(async function($) {
                                     body.style.userSelect = 'visible'; // enable text selection
                                     body.style.overflow = 'visible'; // Prevent scrolling
 
-                                    sessionStorage.removeItem('payFailBreak');
                                     return false;
                                 },
                             });
@@ -177,7 +183,6 @@ jQuery(document).ready(async function($) {
                 body.style.userSelect = 'visible'; // enable text selection
                 body.style.overflow = 'visible'; // Prevent scrolling
 
-                console.log(error)
                 if (typeof error.revert === "undefined") {
                     errorMessg.innerHTML  = "Something went wrong. please try again!";
                 } else {

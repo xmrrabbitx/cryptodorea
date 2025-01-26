@@ -4,7 +4,6 @@ setTimeout(delay, 1000)
 function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
-
             if(sessionStorage.getItem('deployState')){
                 // pop up message to inform user that the transaction is expired!
                 let trxExpired = document.getElementById("trxExpired");
