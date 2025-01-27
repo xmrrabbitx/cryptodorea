@@ -5,7 +5,7 @@ import {abi} from "./compile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
-
+console.log(param.fundAjaxNonce)
 jQuery(document).ready(async function($) {
 
     if(sessionStorage.getItem('deployState')){
@@ -126,7 +126,7 @@ jQuery(document).ready(async function($) {
 
                         jQuery.ajax({
                             type: "post",
-                            url: `${window.location.origin}/wp-admin/admin-ajax.php`,
+                            url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.fundAjaxNonce,
                             data: {
                                 action: "dorea_fund",
                                 data: JSON.stringify({

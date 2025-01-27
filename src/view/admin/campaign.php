@@ -263,7 +263,7 @@ function dorea_admin_cashback_campaign():void
                 $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
 
                 $url = 'admin.php?page=credit&cashbackName=' . $campaignName;
-                $nonce = wp_create_nonce("campaign_credit_nonce");
+                $nonce = wp_create_nonce("deploy_campaign_nonce");
                 $url = $url . "&_wpnonce=" . $nonce;
 
                 // head to the admin page credit

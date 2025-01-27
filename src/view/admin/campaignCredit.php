@@ -21,7 +21,7 @@ function dorea_cashback_campaign_credit():void
 
     if(isset($_GET['_wpnonce'])) {
         $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
-        if (!empty($_GET['cashbackName']) && wp_verify_nonce($nonce, 'campaign_credit_nonce')) {
+        if (!empty($_GET['cashbackName']) && wp_verify_nonce($nonce, 'deploy_campaign_nonce')) {
 
             $campaignName = sanitize_key($_GET['cashbackName']);
 
@@ -31,16 +31,16 @@ function dorea_cashback_campaign_credit():void
             }
 
             $ajaxNonce = wp_create_nonce("campaign_credit_nonce");
-            $params = array(
-                "ajaxNonce"=>$ajaxNonce
-            );
+
             // load campaign credit scripts
             wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
-            wp_localize_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'param', $params);
 
             // set  enc value for deployment
-            $params = array('campaignName' => $campaignName);
-            wp_localize_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'params', $params);
+            $params = array(
+                'campaignName' => $campaignName,
+                "ajaxNonce"=>$ajaxNonce
+            );
+            wp_localize_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'param', $params);
 
         } else {
             wp_redirect('admin.php?page=crypto-dorea-cashback');

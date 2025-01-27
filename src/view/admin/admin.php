@@ -179,9 +179,9 @@ function dorea_main_page_content():void
 
             // payment page
             if($doreaContractAddress) {
-                $nonce = wp_create_nonce();
+                $nonce = wp_create_nonce('payment_nonce');
                 print('
-                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 hover:!text-amber-500 !m-auto campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . esc_html($campaignName) )).'&pagination=1&_wpnonce' . esc_html($nonce) .'">pay</a>
+                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 hover:!text-amber-500 !m-auto campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . esc_html($campaignName) )).'&pagination=1&_wpnonce=' . esc_html($nonce) .'">pay</a>
                 ');
             }
 

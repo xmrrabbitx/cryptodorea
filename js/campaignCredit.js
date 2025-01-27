@@ -50,7 +50,7 @@ function delay(){
 
                     }
 
-                    let campaignName = params.campaignName;
+                    let campaignName = param.campaignName;
 
 
                     let contractAmount = document.getElementById("creditAmount").value;
