@@ -9,7 +9,7 @@ add_action('check_admin_referer', 'dorea_referer_check',10,2);
 function dorea_referer_check($action, $result)
 {
     if (!$result) {
-        error_log("Invalid nonce for action: $action");
+       // error_log("Invalid nonce for action: $action");
     }
     return $action;
 }
@@ -120,11 +120,11 @@ function dorea_cashback_campaign_content():void
                 }
 
                 if($monthsList[$index] === $currentDate){
-                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."' selected>".$monthsList[$index]."</option>");
+                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."' selected>".esc_html($monthsList[$index])."</option>");
 
                 }
                 else{
-                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."'>".$monthsList[$index]."</option>");
+                    print("<option class='!border-hidden' value='".esc_js($monthNum) . "_" . esc_js($nextYear)."'>".esc_html($monthsList[$index])."</option>");
 
                 }
 
@@ -148,11 +148,11 @@ function dorea_cashback_campaign_content():void
 
                 if($days === $currentDay){
                     print("
-                      <option class='!border-hidden' value='".esc_js($index)."' selected>".$days."</option>
+                      <option class='!border-hidden' value='".esc_js($index)."' selected>".esc_html($days)."</option>
                     ");
                 }else {
                     print("
-                      <option class='!border-hidden' value='".esc_js($index)."'>" . $days . "</option>
+                      <option class='!border-hidden' value='".esc_js($index)."'>" . esc_html($days) . "</option>
                     ");
                 }
             }
@@ -172,9 +172,9 @@ function dorea_cashback_campaign_content():void
             ");
 
             print("
-                                </select>
-                              </div>
-                            </div>
+                            </select>
+                          </div>
+                        </div>
                     <div class='!col-span-1 !w-12/12 !mt-5'>
                         <button id='setupCampaign' class='!p-3 !w-64 !bg-[#faca43] !rounded-md' type='submit'>set up campaign</button>
                     </div>
@@ -199,18 +199,16 @@ function dorea_admin_cashback_campaign():void
 
     if(!empty($_POST['campaignName'] && $_POST['cryptoType'] && $_POST['cryptoAmount'] && $_POST['shoppingCount'] && $_POST['startDateMonth'] && $_POST['startDateDay'] && $_POST['expDate'])){
 
-            $campaignNameLable = trim(sanitize_text_field($_POST['campaignName']));
+            $campaignNameLable = trim(sanitize_text_field(wp_unslash($_POST['campaignName'])));
             $campaignNameLable = preg_replace("/[^A-Za-z0-9 ]/", '', $campaignNameLable);
             if(strlen($campaignNameLable) >= 25){
-                error_log("campaign name exceeds 25 length!");
                 wp_redirect($referer);
                 exit;
             }
-            $campaignName = trim(sanitize_text_field(sanitize_key($_POST['campaignName'])));
-            $cryptoType = htmlspecialchars(sanitize_text_field($_POST['cryptoType']));
+            $campaignName = trim(sanitize_text_field(sanitize_key(wp_unslash($_POST['campaignName']))));
+            $cryptoType = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['cryptoType'])));
 
-            if(!is_numeric(trim($_POST['cryptoAmount'])) || !is_numeric(trim($_POST['shoppingCount']))){
-                error_log("amount and shopping counts must be numeric!");
+            if(!is_numeric(trim(sanitize_text_field(wp_unslash($_POST['cryptoAmount'])))) || !is_numeric(trim(sanitize_text_field(wp_unslash($_POST['shoppingCount']))))){
                 //throws error on amount format
                 $redirect_url = add_query_arg('cryptoAmountError', urlencode('amount and shopping counts must be numeric!'), $referer);
 
@@ -218,15 +216,15 @@ function dorea_admin_cashback_campaign():void
                 exit;
             }
 
-            $cryptoAmount = (int)htmlspecialchars(sanitize_text_field($_POST['cryptoAmount']));
-            $shoppingCount = (int)htmlspecialchars(sanitize_text_field($_POST['shoppingCount']));
+            $cryptoAmount = (int)htmlspecialchars(sanitize_text_field(wp_unslash($_POST['cryptoAmount'])));
+            $shoppingCount = (int)htmlspecialchars(sanitize_text_field(wp_unslash($_POST['shoppingCount'])));
 
-            $startDate = htmlspecialchars(sanitize_text_field($_POST['startDateMonth']));
-            $startDateDay = htmlspecialchars(sanitize_text_field($_POST['startDateDay']));
+            $startDate = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['startDateMonth'])));
+            $startDateDay = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['startDateDay'])));
             $startDateMonth = explode('_',$startDate)[0];
             $startDateYear = explode('_',$startDate)[1];
 
-            $expMode = htmlspecialchars(sanitize_text_field($_POST['expDate']));
+            $expMode = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['expDate'])));
 
             $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . " 00:00:00");
             if($expMode === "weekly") {
@@ -242,7 +240,6 @@ function dorea_admin_cashback_campaign():void
             if(get_option('campaign_list')){
                 //throws error on existed campaign
                 if(in_array($campaignName, get_option('campaign_list'))){
-                    error_log("");
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
                     wp_redirect($redirect_url);
                     exit;
@@ -250,7 +247,6 @@ function dorea_admin_cashback_campaign():void
             }
             $campaignLength = explode("_",$campaignName)[0];
             if(strlen($campaignLength) >= 25 ){
-                error_log("no more than 25 characters allowed campaign name!");
                 //throws error on character exceed!
                 $redirect_url = add_query_arg('campaignError', urlencode('no more than 25 characters allowed on campaign name!'), $referer);
                 wp_redirect($redirect_url);
@@ -267,16 +263,15 @@ function dorea_admin_cashback_campaign():void
                 $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
 
                 $url = 'admin.php?page=credit&cashbackName=' . $campaignName;
-                $nonce = wp_create_nonce();
+                $nonce = wp_create_nonce("campaign_credit_nonce");
                 $url = $url . "&_wpnonce=" . $nonce;
 
-                // head to the admin page of Dorea
+                // head to the admin page credit
                 wp_redirect($url);
                 exit;
             }
 
     }else{
-        error_log("some fields left empty!");
         //throws error on empty
         $redirect_url = add_query_arg('emptyErrorFeilds', urlencode('some fields left empty!'), $referer);
 
@@ -293,18 +288,20 @@ function dorea_admin_cashback_campaign():void
 add_action('admin_post_delete_campaign', 'dorea_admin_delete_campaign');
 function dorea_admin_delete_campaign():void
 {
-    if ( !isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'delete_campaign_nonce') ) {
-        error_log('Security check failed');
+    if(isset($_GET['_wpnonce'])){
+        $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+        if (wp_verify_nonce($nonce, 'delete_campaign_nonce') ) {
+
+            // Get campaign name
+            $campaignName = isset($_GET['cashbackName']) ? sanitize_text_field(wp_unslash($_GET['cashbackName'])) : '';
+
+            // Perform your delete operation here
+            $cashback = new cashbackController();
+            $cashback->remove($campaignName);
+
+            // Redirect back to the previous page after deletion
+            wp_redirect(wp_get_referer());
+            exit;
+        }
     }
-
-    // Get campaign name
-    $campaignName = isset($_GET['cashbackName']) ? sanitize_text_field($_GET['cashbackName']) : '';
-
-    // Perform your delete operation here
-    $cashback = new cashbackController();
-    $cashback->remove($campaignName);
-    
-    // Redirect back to the previous page after deletion
-    wp_redirect(wp_get_referer());
-    exit;
 }

@@ -34,7 +34,7 @@ function dorea_admin_trx_campaign():void
 
     if(isset($_GET['cashbackName'])){
         $cashbackName = sanitize_key($_GET['cashbackName']) ?? null;
-        print("<h3 class='!pl-5 !text-xs !font-bold'>Campaign Name: ". $cashbackName . "</h3> </br>");
+        print(wp_kses_post("<h3 class='!pl-5 !text-xs !font-bold'>Campaign Name: ". esc_html($cashbackName) . "</h3> </br>"));
     }
 
     // show errors
@@ -100,13 +100,12 @@ function dorea_admin_trx_campaign():void
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
                 print("<div class='!col-span-1 !grid xl:!grid-cols-4 lg:!grid-cols-4 md:!grid-cols-4 sm:!grid-cols-4 !grid-cols-2 !pt-3 !text-center'>");
-                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'>Username</span><span class='!pl-3 !pt-3 !col-span-1'>" . $users . "</span> ");
-                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'> Wallet Address</span><span class='!pl-3 !pt-3 xl:!col-span-2 lg:!col-span-2 md:!col-span-2 sm:!col-span-2 !col-span-1 !break-all'>" . $campaignUser[$cashbackName]['walletAddress'] . "</span>");
-                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'>Claimed Ethers</span><span class='!pl-3 !pt-3 !col-span-1'>" . $campaignUser[$cashbackName]['claimedReward'] . "</span>");
+                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'>Username</span><span class='!pl-3 !pt-3 !col-span-1'>" . esc_html($users) . "</span> ");
+                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'> Wallet Address</span><span class='!pl-3 !pt-3 xl:!col-span-2 lg:!col-span-2 md:!col-span-2 sm:!col-span-2 !col-span-1 !break-all'>" . esc_html($campaignUser[$cashbackName]['walletAddress']) . "</span>");
+                print("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block !pt-3'>Claimed Ethers</span><span class='!pl-3 !pt-3 !col-span-1'>" . esc_html($campaignUser[$cashbackName]['claimedReward']) . "</span>");
                 print("</div>");
                 print('<hr class="xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block">');
             }
-
         }
 
         print('<div class="!grid !grid-cols-3 !w-16 !text-center">');
@@ -126,7 +125,7 @@ function dorea_admin_trx_campaign():void
             // blank space
             print('<div class="!col-span-1"></div>');
         }
-        print(' <div class="!mt-0 !mr-0 ">' . $pagination. '</div>');
+        print(' <div class="!mt-0 !mr-0 ">' . esc_html($pagination). '</div>');
         if (($pagination * 100) <= count($claimedUsers) - 1) {
             // forward arrow pagination
             print('      

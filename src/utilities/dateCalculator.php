@@ -25,7 +25,7 @@ class dateCalculator extends dateCalculatorAbstract
     public function unixToYear($time)
     {
 
-        return date('Y', $time);
+        return gmdate('Y', $time);
 
     }
 
@@ -36,7 +36,7 @@ class dateCalculator extends dateCalculatorAbstract
     public function unixToMonth($time)
     {
 
-        return date('F', $time);
+        return gmdate('F', $time);
 
     }
 
@@ -47,7 +47,7 @@ class dateCalculator extends dateCalculatorAbstract
     public function unixToday($time)
     {
 
-        return date('d', $time);
+        return gmdate('d', $time);
 
     }
 

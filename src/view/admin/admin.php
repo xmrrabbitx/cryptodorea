@@ -4,11 +4,13 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
-//$campaignInfo = get_transient('dorea_e89abbf');
-//$campaignInfo['timestampStart'] = 1729259131000;
-//$campaignInfo['timestampExpire'] = 1731937531;
-//set_transient('dorea_e89abbf', $campaignInfo);
-//var_dump(get_transient('dorea_e89abbf'));
+//$currentDate = (int)strtotime(date("d.m.Y") . " 00:00:00");
+//var_dump($currentDate);
+//$campaignInfo = get_transient('blackfriday_1d2752c');
+//$campaignInfo['timestampStart'] = $currentDate;
+//$campaignInfo['timestampExpire'] = $currentDate;
+//set_transient('blackfriday_1d2752c', $campaignInfo);
+//var_dump(get_transient('blackfriday_1d2752c'));
 
 //$n = (0.00002 + 0.00002);
 //var_dump(sprintf('%.10f', $n));
@@ -21,11 +23,14 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {
 
-        $logo_content = file_get_contents($logoIco_path);
+        $logo_content_array = file($logoIco_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $logo_content = implode("\n", $logo_content_array);
+
         $base64_encoded = base64_encode($logo_content);
 
         /**
@@ -157,14 +162,14 @@ function dorea_main_page_content():void
             ");
 
             $campName = get_transient($campaignName)['campaignNameLable'];
-            print('<span class="!col-span-1 !m-auto !text-center !whitespace-break-spaces">'. $campName .'</span>');
+            print('<span class="!col-span-1 !m-auto !text-center !whitespace-break-spaces">'. esc_html($campName) .'</span>');
 
             $doreaContractAddress = get_option($campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
                 print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden inline-block !m-auto">funded</span>');
             } else {
-                print('<a class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden !pl-2 !focus:ring-0 hover:!text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
+                print('<a class="!col-span-1 xl:!block lg:!block md:!block sm:!block !hidden !pl-2 !focus:ring-0 hover:!text-emerald-500 !text-center" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&_wpnonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '"> fund </a>');
 
                 print ('
                     <!-- add column to fill white space in case there is no pay option -->
@@ -176,7 +181,7 @@ function dorea_main_page_content():void
             if($doreaContractAddress) {
                 $nonce = wp_create_nonce();
                 print('
-                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 hover:!text-amber-500 !m-auto campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)).'&pagination=1&_wpnonce' . $nonce.'">pay</a>
+                     <a class="!col-span-1 !pl-2 xl:!block lg:!block md:!block sm:!block !hidden !focus:ring-0 hover:!text-amber-500 !m-auto campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . esc_html($campaignName) )).'&pagination=1&_wpnonce' . esc_html($nonce) .'">pay</a>
                 ');
             }
 
@@ -219,7 +224,7 @@ function dorea_main_page_content():void
             print ('
                       <span class="">
                         <!-- delete campaign -->
-                        <span id="deleteCampaign" class="deleteCampaign_ !focus:ring-0 !cursor-pointer !text-rose-500 hover:!text-rose-700" name="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&nonce=' . wp_create_nonce('delete_campaign_nonce'))) . '">
+                        <span id="deleteCampaign" class="deleteCampaign_ !focus:ring-0 !cursor-pointer !text-rose-500 hover:!text-rose-700" name="' . esc_url(admin_url('admin-post.php?cashbackName=' . $campaignName . '&action=delete_campaign&_wpnonce=' . wp_create_nonce('delete_campaign_nonce'))) . '">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                             </svg>
@@ -228,13 +233,13 @@ function dorea_main_page_content():void
             ');
 
             $campaignInfo = get_transient($campaignName);
-            $startDate = date('Y/m/d',$campaignInfo['timestampStart']);
+            $startDate = gmdate('Y/m/d',$campaignInfo['timestampStart']);
             $startDate = explode('/',$startDate);
 
             print('
                     <!-- date of created campaign -->
                     <span class="!mt-1">
-                        '.$startDate[0] . "/" .$startDate[1]."/". $startDate[2] .'
+                        '.esc_html($startDate[0]) . "/" .esc_html($startDate[1])."/". esc_html($startDate[2]) .'
                     </span>
                 </div>
             ');
@@ -245,7 +250,7 @@ function dorea_main_page_content():void
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500  campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wp_nonce' .$nonce.'">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500  campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wp_nonce' .esc_html($nonce).'">
                         <!-- payment-fund campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -259,7 +264,7 @@ function dorea_main_page_content():void
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500 campaignPayment_" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&nonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500 campaignPayment_" href="' . esc_url(admin_url('admin.php?page=credit&cashbackName=' . $campaignName . '&_wpnonce=' . wp_create_nonce('deploy_campaign_nonce'))) . '">
                         <!-- payment-fund campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">

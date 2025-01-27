@@ -36,7 +36,7 @@ function userStatusCampaign():void
                            </span>  
                               
                            <h5 class="!bold">Crypto Dorea</h5>
-                           <h6 class="!mt-3">Claimed Rewards: ' . array_sum($sumUserEthers) . ' ETH </h6>
+                           <h6 class="!mt-3">Claimed Rewards: ' . esc_html(array_sum($sumUserEthers)) . ' ETH </h6>
                                        
                        </div>
                     ');

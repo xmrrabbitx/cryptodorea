@@ -34,7 +34,6 @@ class ethHelper
                 if ($i == 3) {
                     if (empty($response)){
                         // throw error on Guzzle response
-                        error_log($error);
                         print("<span>Something went wrong! please refresh the page...</span>");
                         exit;
                     }
@@ -44,7 +43,6 @@ class ethHelper
 
         // throw error on api response
         if(isset($response->errors)) {
-            error_log($response->errors['http_request_failed'][0]);
             print("<span>Something went wrong! please refresh the page...</span>");
             exit;
         }
