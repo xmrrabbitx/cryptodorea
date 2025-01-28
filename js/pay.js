@@ -7,6 +7,7 @@ import {abi} from "./compile.js";
 let payCampaign = document.getElementById("dorea_pay");
 let errorMessg = document.getElementById("dorea_error");
 let successMessg = document.getElementById("dorea_success");
+const beforeTrxModal = document.getElementById("beforeTrxModal");
 
 jQuery(document).ready(async function($) {
 
@@ -71,6 +72,10 @@ jQuery(document).ready(async function($) {
 
             try {
 
+                // show warning before Trx popup message
+                $(beforeTrxModal).show("slow");
+                await new Promise(r => setTimeout(r, 2000));
+
                 sessionStorage.setItem('deployState', 'false');
 
                 // disable dorea fund button
@@ -123,6 +128,8 @@ jQuery(document).ready(async function($) {
                     s
                 ).then(async function (response) {
 
+                    $(beforeTrxModal).hide("slow");
+
                     sessionStorage.setItem('payFailBreak', JSON.stringify({campaignName}) );
 
                     response.wait().then(async (receipt) => {
@@ -173,6 +180,10 @@ jQuery(document).ready(async function($) {
                 });
             }
             catch (error) {
+
+                $(beforeTrxModal).hide("slow");
+
+                sessionStorage.removeItem('deployState');
 
                 // enable dorea fund button
                 payCampaign.disabled = false;

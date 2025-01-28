@@ -6,6 +6,7 @@ import {
 
 import {abi,bytecode} from "./compile.js";
 
+const beforeTrxModal = document.getElementById("beforeTrxModal");
 
 // Request access to Metamask
 setTimeout(delay, 1000)
@@ -109,6 +110,10 @@ function delay(){
 
                     try {
 
+                        // show warning before Trx popup message
+                        $(beforeTrxModal).show("slow");
+                        await new Promise(r => setTimeout(r, 2000));
+
                         sessionStorage.setItem('deployState', 'false');
 
                         // Disable interactions
@@ -181,6 +186,8 @@ function delay(){
                                         },
                                         complete: function (response) {
 
+                                            $(beforeTrxModal).hide("slow");
+
                                             sessionStorage.removeItem('deployFailBreak');
                                             sessionStorage.removeItem('deployState');
 
@@ -203,6 +210,10 @@ function delay(){
 
                     }
                     catch (error) {
+
+                        $(beforeTrxModal).hide("slow");
+
+                        sessionStorage.removeItem('deployState');
 
                         document.getElementById("doreaFund").disabled = false;
 
@@ -233,6 +244,9 @@ function delay(){
 
                 }
                 else{
+
+                    $(beforeTrxModal).hide("slow");
+
                     metamaskError.style.display = "block";
                     errorMessg.innerHTML = "please install Metamask extension!";
                     $(errorMessg).show("slow");

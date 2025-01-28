@@ -5,6 +5,7 @@ import {abi} from "./compile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
+const beforeTrxModal = document.getElementById("beforeTrxModal");
 console.log(param.fundAjaxNonce)
 jQuery(document).ready(async function($) {
 
@@ -73,6 +74,10 @@ jQuery(document).ready(async function($) {
 
         try{
 
+            // show warning before Trx popup message
+            $(beforeTrxModal).show("slow");
+            await new Promise(r => setTimeout(r, 2000));
+
             sessionStorage.setItem('deployState', 'false');
 
             // disable dorea fund button
@@ -110,6 +115,8 @@ jQuery(document).ready(async function($) {
                     gasLimit :3000000,
                 },
             ).then(async function(response){
+
+                $(beforeTrxModal).hide("slow");
 
                 sessionStorage.setItem('fundFailBreak', JSON.stringify({campaignName}) );
 
@@ -157,6 +164,10 @@ jQuery(document).ready(async function($) {
             })
         }
         catch (error) {
+
+            $(beforeTrxModal).hide("slow");
+
+            sessionStorage.removeItem('deployState');
 
             // enable dorea fund button
             fundCampaign.disabled = false;

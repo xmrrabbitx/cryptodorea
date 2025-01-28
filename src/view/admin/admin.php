@@ -299,7 +299,11 @@ function dorea_main_page_content():void
     print ('
         <!-- transaction expired warning modal -->
         <div id="trxExpired" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
-            <p class="!text-base">Warning: The transaction is expired, you may lose your money! <br> please reject previous transaction on metamask and try again...</p>
+            <span class="col-span-1">
+              <svg class="size-6 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                 <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+            </svg>
+            <p class="!text-sm !mt-3">Warning: The transaction is expired! <br> please reject previous transaction <br> on metamask and try again...</p>
             <div class="!mt-5">
             </div>
         </div>
@@ -310,6 +314,7 @@ function dorea_main_page_content():void
     print ('
         <!-- failed campaign payment modal -->
         <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+            </span>
             <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
             <div class="!mt-5">
                 <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>

@@ -83,6 +83,11 @@ function dorea_admin_pay_campaign():void
     print("            
             <p class='!pl-5' id='dorea_error' style='display:none;'></p>
             <p class='!pl-5' id='dorea_success' style='display:none;'></p>
+
+            <!-- Warning before transaction! -->
+            <div id='beforeTrxModal' class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border' style='display: none'>
+               <p class='!text-sm !mt-3'>Please Do not leave the page <br> until the transaction is complete!</p>
+            </div>
     ");
 
     /**
