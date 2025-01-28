@@ -1,6 +1,6 @@
-=== Crypto Dorea ===
+=== Crypto Dorea: Crypto Cashback for WooCommerce _ Create Crypto Cashback Campaigns for the Most Loyal Customers ===
 Contributors: hadimirzaie
-Tags: cashback, loyalty, crypto, cryptocashback, loyaltyprogram
+Tags: cashback, loyalty, crypto, cryptocashback, loyaltyprogram, woocommerce
 Requires at least: 6.4.3
 Tested up to: 6.7.1
 Stable tag: 1.0.0
