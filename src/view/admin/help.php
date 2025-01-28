@@ -16,7 +16,11 @@ function dorea_admin_help_campaign():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/help.css'));
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/help.css'),
+        array(),
+        1,
+        true
+    );
 
     $createCampaignImg = plugins_url('/pics/help/createCampaign.jpeg', __FILE__);
     $createCampaignImg2 = plugins_url('/pics/help/createCampaign2.jpeg', __FILE__);

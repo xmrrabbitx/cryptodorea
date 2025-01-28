@@ -20,7 +20,10 @@ function dorea_admin_trx_campaign():void
     add_filter('update_footer', 'update_admin_footer_text', 11);
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE', plugins_url('/cryptodorea/css/trxList.css'));
+    wp_enqueue_style('DOREA_ADMIN_STYLE', plugins_url('/cryptodorea/css/trxList.css'),
+    array(),
+    1
+    );
 
     if(isset($_GET['_wpnonce'])) {
 

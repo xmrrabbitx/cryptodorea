@@ -33,49 +33,11 @@ function admin_init():void
     //add_filter( 'update_footer', '__return_empty_string', 11 );
 
     // core js style
-    wp_enqueue_script('DOREA_CORE_STYLE', plugins_url('/cryptodorea/js/style.min.js'));
-
-/*
-    // add module type to scripts
-    add_filter('script_loader_tag', 'add_type_checkout_legacy', 10, 3);
-    function add_type_checkout_legacy($tag, $handle, $src)
-    {
-        // if not your script, do nothing and return original $tag
-        if ('DOREA_CHECKOUTLEGACY_SCRIPT' !== $handle) {
-            return $tag;
-        }
-        // change the script tag by adding type="module" and return it.
-        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-        return $tag;
-    }
-
-    // add module type to scripts
-    add_filter('script_loader_tag', 'add_type_checkoutbeforeproccessed', 10, 3);
-    function add_type_checkoutbeforeproccessed($tag, $handle, $src)
-    {
-        // if not your script, do nothing and return original $tag
-        if ('DOREA_CHECKOUT_BEFORE_PROCESSED_SCRIPT' !== $handle) {
-            return $tag;
-        }
-        // change the script tag by adding type="module" and return it.
-        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-        return $tag;
-    }
-
-
-    // add module type to scripts
-    add_filter('script_loader_tag', 'add_type_ordered', 10, 3);
-    function add_type_ordered($tag, $handle, $src)
-    {
-        // if not your script, do nothing and return original $tag
-        if ('DOREA_ORDERED_SCRIPT' !== $handle) {
-            return $tag;
-        }
-        // change the script tag by adding type="module" and return it.
-        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-        return $tag;
-    }
-    */
+    wp_enqueue_script('DOREA_CORE_STYLE', plugins_url('/cryptodorea/js/style.min.js'),
+        array(),
+        1,
+        true
+    );
 
 
 }

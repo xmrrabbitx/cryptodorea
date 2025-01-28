@@ -22,14 +22,22 @@ function dorea_admin_pay_campaign():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'));
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'),
+        array(),
+        1,
+        true
+    );
 
     // load campaign credit scripts
     $ajaxNonce = wp_create_nonce("switchCampaign_nonce");
     $params = array(
         "switchAjaxNonce"=>$ajaxNonce
     );
-    wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
     wp_localize_script('DOREA_PAYMENT_SCRIPT', 'param', $params);
 
     static $qualifiedUserEthers;
@@ -344,7 +352,11 @@ function dorea_admin_pay_campaign():void
                 $remainingAmount = bcsub((float)array_sum($totalEthers), number_format((float)$contractAmount, 10), 10);
 
                 // load campaign credit scripts
-                wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
+                wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'),
+                    array(),
+                    1,
+                    true
+                );
 
                 // add module type to script
                 add_filter('script_loader_tag', 'add_type_fund', 10, 3);
@@ -384,7 +396,12 @@ function dorea_admin_pay_campaign():void
                 ');
 
                 // load fail break script
-                wp_enqueue_script('DOREA_FUNDFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/fundFailBreak.js'), array('jquery', 'jquery-ui-core'));
+                wp_enqueue_script('DOREA_FUNDFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/fundFailBreak.js'), array('jquery', 'jquery-ui-core'),
+                    array(),
+                    1,
+                    true
+                );
+
                 $param = array(
                     'contractAddress' => $doreaContractAddress,
                 );
@@ -415,7 +432,11 @@ function dorea_admin_pay_campaign():void
                 ");
 
                 // load campaign credit scripts
-                wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+                wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'),
+                    array(),
+                    1,
+                    true
+                );
 
                 // add module type to script
                 add_filter('script_loader_tag', 'add_type_pay', 10, 3);
@@ -469,7 +490,11 @@ function dorea_admin_pay_campaign():void
                     </div>
                 ');
                 // load fail break script
-                wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/payFailBreak.js'), array('jquery', 'jquery-ui-core'));
+                wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/payFailBreak.js'), array('jquery', 'jquery-ui-core'),
+                    array(),
+                    1,
+                    true
+                );
 
                 wp_localize_script('DOREA_PAYFAILBREAK_SCRIPT', 'params', $params);
 

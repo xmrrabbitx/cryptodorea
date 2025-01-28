@@ -24,6 +24,7 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
 
+
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {
@@ -132,7 +133,11 @@ function dorea_main_page_content():void
     $cashbackList = $cashback->list();
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/admin.css'));
+    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/admin.css'),
+        array(),
+        1,
+        true
+    );
 
     print("
         <main>
@@ -310,7 +315,11 @@ function dorea_main_page_content():void
         </div>
     ');
     // load fail break script
-    wp_enqueue_script_module('DOREA_ADMIN_SCRIPT',plugins_url('/cryptodorea/js/admin.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script_module('DOREA_ADMIN_SCRIPT',plugins_url('/cryptodorea/js/admin.js'), array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
 
     print ('
         <!-- failed campaign payment modal -->
@@ -324,7 +333,11 @@ function dorea_main_page_content():void
     ');
 
     // load fail break script
-    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
 
 
     // add module type to scripts

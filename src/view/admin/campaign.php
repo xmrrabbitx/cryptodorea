@@ -30,7 +30,11 @@ function dorea_cashback_campaign_content():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load campaign css styles
-    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'));
+    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'),
+        array(),
+        1,
+        true
+    );
 
     // load campaign scripts
     wp_enqueue_script_module('DOREA_CAMPAIGN_SCRIPT',plugins_url('/cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'));

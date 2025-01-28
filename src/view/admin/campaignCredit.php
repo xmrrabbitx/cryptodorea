@@ -17,7 +17,11 @@ function dorea_cashback_campaign_credit():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load campaign credit Style
-    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'));
+    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'),
+        array(),
+        1,
+        true
+    );
 
     if(isset($_GET['_wpnonce'])) {
         $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
@@ -35,7 +39,11 @@ function dorea_cashback_campaign_credit():void
             // load campaign credit scripts
 
 
-            wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
+            wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'),
+                array(),
+                1,
+                true
+            );
 
             $params = array(
                 'campaignName' => $campaignName,
