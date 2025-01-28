@@ -43,14 +43,6 @@ function dorea_cashback_campaign_credit():void
             );
             wp_localize_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'param', $params);
 
-            /*
-            wp_add_inline_script(
-                'DOREA_CAMPAIGNCREDIT_SCRIPT',
-                'window.doreaCampaignParams',
-                'before'
-            );
-            */
-
             // add module type to scripts
             add_filter('script_loader_tag', 'add_type_campaigncredit', 10, 3);
             function add_type_campaigncredit($tag, $handle, $src)
@@ -59,10 +51,11 @@ function dorea_cashback_campaign_credit():void
                 if ('DOREA_CAMPAIGNCREDIT_SCRIPT' !== $handle) {
                     return $tag;
                 }
-                $insert_position = strpos($tag, 'src="') - 1;
 
+                $position = strpos($tag, 'src="') - 1;
                 // change the script tag by adding type="module" and return it.
-                $outTag = substr($tag, 0, $insert_position) . ' type="module" ' . substr($tag, $insert_position);
+                $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
                 return $outTag;
             }
 

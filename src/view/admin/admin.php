@@ -324,9 +324,9 @@ function dorea_main_page_content():void
     ');
 
     // load fail break script
-    wp_enqueue_script_module('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
 
-    /*
+
     // add module type to scripts
     add_filter('script_loader_tag', 'add_type_deployfailbreak', 10, 3);
     function add_type_deployfailbreak($tag, $handle, $src)
@@ -335,11 +335,14 @@ function dorea_main_page_content():void
         if ('DOREA_DEPLOYFAILBREAK_SCRIPT' !== $handle) {
             return $tag;
         }
+
+        $position = strpos($tag, 'src="') - 1;
         // change the script tag by adding type="module" and return it.
-        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-        return $tag;
+        $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
+        return $outTag;
     }
-    */
+
 }
 
 /**

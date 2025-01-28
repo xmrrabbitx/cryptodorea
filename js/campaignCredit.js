@@ -8,7 +8,6 @@ import {abi,bytecode} from "./compile.js";
 
 const beforeTrxModal = document.getElementById("beforeTrxModal");
 
-console.log(param)
 // Request access to Metamask
 setTimeout(delay, 1000)
 function delay(){

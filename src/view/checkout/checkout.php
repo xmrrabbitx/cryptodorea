@@ -294,9 +294,12 @@ function cashback(): void
                                 if ('DOREA_CHECKOUT_SCRIPT' !== $handle) {
                                     return $tag;
                                 }
+
+                                $position = strpos($tag, 'src="') - 1;
                                 // change the script tag by adding type="module" and return it.
-                                $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-                                return $tag;
+                                $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
+                                return $outTag;
                             }
 
                         }

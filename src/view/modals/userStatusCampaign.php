@@ -72,7 +72,6 @@ function userStatusCampaign():void
 
 
         // load claim campaign scripts
-        wp_enqueue_script_module('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'));
-
+        wp_enqueue_script('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'));
 
 }

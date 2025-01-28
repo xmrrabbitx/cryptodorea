@@ -185,7 +185,7 @@ function dorea_admin_pay_campaign():void
 
             if ($i <= count($userList) - 1) {
 
-                var_dump($userList);
+                //var_dump($userList);
                 //var_dump($userList[$i]);
 
                 $users = $userList[$i];
@@ -354,9 +354,12 @@ function dorea_admin_pay_campaign():void
                     if ('DOREA_FUND_SCRIPT' !== $handle) {
                         return $tag;
                     }
+
+                    $position = strpos($tag, 'src="') - 1;
                     // change the script tag by adding type="module" and return it.
-                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-                    return $tag;
+                    $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
+                    return $outTag;
                 }
 
                 $ajaxNonce = wp_create_nonce("fundCampaign_nonce");
@@ -395,9 +398,12 @@ function dorea_admin_pay_campaign():void
                     if ('DOREA_FUNDFAILBREAK_SCRIPT' !== $handle) {
                         return $tag;
                     }
+
+                    $position = strpos($tag, 'src="') - 1;
                     // change the script tag by adding type="module" and return it.
-                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-                    return $tag;
+                    $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
+                    return $outTag;
                 }
 
             } else {
@@ -419,9 +425,12 @@ function dorea_admin_pay_campaign():void
                     if ('DOREA_PAY_SCRIPT' !== $handle) {
                         return $tag;
                     }
+
+                    $position = strpos($tag, 'src="') - 1;
                     // change the script tag by adding type="module" and return it.
-                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-                    return $tag;
+                    $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
+                    return $outTag;
                 }
 
                 $qualifiedWalletAddresses = wp_json_encode($qualifiedWalletAddresses);
@@ -472,9 +481,12 @@ function dorea_admin_pay_campaign():void
                     if ('DOREA_PAYFAILBREAK_SCRIPT' !== $handle) {
                         return $tag;
                     }
+
+                    $position = strpos($tag, 'src="') - 1;
                     // change the script tag by adding type="module" and return it.
-                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
-                    return $tag;
+                    $outTag = substr($tag, 0, $position) . ' type="module" ' . substr($tag, $position);
+
+                    return $outTag;
                 }
 
             }
