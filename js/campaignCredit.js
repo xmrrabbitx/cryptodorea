@@ -158,6 +158,8 @@ function delay(){
                             }
                         ).then(async function (response) {
 
+                            $(beforeTrxModal).hide("slow");
+
                             let contractAddress = response.target;
 
                             sessionStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName}) );
