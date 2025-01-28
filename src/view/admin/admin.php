@@ -24,7 +24,6 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
 
-
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {
@@ -136,7 +135,6 @@ function dorea_main_page_content():void
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/admin.css'),
         array(),
         1,
-        true
     );
 
     print("

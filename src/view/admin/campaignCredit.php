@@ -20,7 +20,6 @@ function dorea_cashback_campaign_credit():void
     wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'),
         array(),
         1,
-        true
     );
 
     if(isset($_GET['_wpnonce'])) {

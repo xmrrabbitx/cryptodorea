@@ -33,11 +33,10 @@ function dorea_cashback_campaign_content():void
     wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'),
         array(),
         1,
-        true
     );
 
     // load campaign scripts
-    wp_enqueue_script_module('DOREA_CAMPAIGN_SCRIPT',plugins_url('/cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',plugins_url('/cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'));
 
     // utilities helper functions
     $dateCalculator = new dateCalculator();

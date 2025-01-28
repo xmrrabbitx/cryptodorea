@@ -25,7 +25,6 @@ function dorea_admin_pay_campaign():void
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'),
         array(),
         1,
-        true
     );
 
     // load campaign credit scripts

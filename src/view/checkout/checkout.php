@@ -123,7 +123,10 @@ function cashback(): void
         if (!WC()->cart->get_cart_contents_count() == 0) {
 
             // load claim campaign style
-            wp_enqueue_style('DOREA_CHECKOUT_STYLE', plugins_url('/cryptodorea/css/checkout.css'));
+            wp_enqueue_style('DOREA_CHECKOUT_STYLE', plugins_url('/cryptodorea/css/checkout.css'),
+                array(),
+                1,
+            );
 
             // get cashback list of admin
             $cashback = new cashbackController();
@@ -283,7 +286,11 @@ function cashback(): void
                             );
 
                             // check and add to cash back program
-                            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
+                            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'),
+                                array(),
+                                1,
+                                true
+                            );
                             wp_localize_script('DOREA_CHECKOUT_SCRIPT', 'param', $params);
 
                             // add module type to scripts

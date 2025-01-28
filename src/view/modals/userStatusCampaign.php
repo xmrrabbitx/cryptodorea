@@ -8,7 +8,10 @@ namespace Cryptodorea\DoreaCashback\view\modals\userStatusCampaign;
 function userStatusCampaign():void
 {
         // load claim campaign style
-        wp_enqueue_style('DOREA_USERSTATUSCAMPAIGN_STYLE', plugins_url('/cryptodorea/css/userStatusCampaign.css'));
+        wp_enqueue_style('DOREA_USERSTATUSCAMPAIGN_STYLE', plugins_url('/cryptodorea/css/userStatusCampaign.css'),
+            array(),
+            1
+        );
 
         $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
 
@@ -72,6 +75,10 @@ function userStatusCampaign():void
 
 
         // load claim campaign scripts
-        wp_enqueue_script('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'));
+        wp_enqueue_script('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'),
+            array(),
+            1,
+            true
+        );
 
 }

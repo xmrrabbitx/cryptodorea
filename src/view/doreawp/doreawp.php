@@ -38,7 +38,11 @@ function doreawpRequest()
     if(is_user_logged_in()) {
 
         // core js style
-        wp_enqueue_script('DOREA_CORE_STYLE', plugins_url('/cryptodorea/js/style.min.js'));
+        wp_enqueue_script('DOREA_CORE_STYLE', plugins_url('/cryptodorea/js/style.min.js'),
+            array(),
+            1,
+            true
+        );
 
         // autoremove deleted campaigns
         $checkout = new checkoutController();

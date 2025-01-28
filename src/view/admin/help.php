@@ -19,7 +19,6 @@ function dorea_admin_help_campaign():void
     wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/help.css'),
         array(),
         1,
-        true
     );
 
     $createCampaignImg = plugins_url('/pics/help/createCampaign.jpeg', __FILE__);
@@ -29,6 +28,9 @@ function dorea_admin_help_campaign():void
     $fundCampaign2 = plugins_url('/pics/help/fundCampaign2.jpeg', __FILE__);
     $disableEnable = plugins_url('/pics/help/disableEnable.jpeg', __FILE__);
     $disableEnable2 = plugins_url('/pics/help/disableEnable2.jpeg', __FILE__);
+
+
+    echo wp_get_attachment_image( 'createCampaignImg', 'thumbnail', false, '' );
 
     print("
         <main>
