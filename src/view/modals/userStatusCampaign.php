@@ -65,11 +65,14 @@ function userStatusCampaign():void
                        </svg>
                    </span>  
                    <h5 class='bold'>Sorry</h5>
-                   <h6>You didn\'t join any Campaigns yet!</h6>      
+                   <h6>You didn't join any Campaigns yet!</h6>      
                 </div>
             ");
         }
 
+
         // load claim campaign scripts
-        wp_enqueue_script('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'));
+        wp_enqueue_script_module('DOREA_USERSTATUSCAMPAIGN_SCRIPT', plugins_url('/cryptodorea/js/userStatusCampaign.js'), array('jquery', 'jquery-ui-core'));
+
+
 }

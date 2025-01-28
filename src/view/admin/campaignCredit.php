@@ -33,14 +33,41 @@ function dorea_cashback_campaign_credit():void
             $ajaxNonce = wp_create_nonce("campaign_credit_nonce");
 
             // load campaign credit scripts
+
+
             wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'));
 
-            // set  enc value for deployment
             $params = array(
                 'campaignName' => $campaignName,
                 "ajaxNonce"=>$ajaxNonce
             );
             wp_localize_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'param', $params);
+
+            /*
+            wp_add_inline_script(
+                'DOREA_CAMPAIGNCREDIT_SCRIPT',
+                'window.doreaCampaignParams',
+                'before'
+            );
+            */
+
+            // add module type to scripts
+            add_filter('script_loader_tag', 'add_type_campaigncredit', 10, 3);
+            function add_type_campaigncredit($tag, $handle, $src)
+            {
+                // if not your script, do nothing and return original $tag
+                if ('DOREA_CAMPAIGNCREDIT_SCRIPT' !== $handle) {
+                    return $tag;
+                }
+                $insert_position = strpos($tag, 'src="') - 1;
+
+                // change the script tag by adding type="module" and return it.
+                $outTag = substr($tag, 0, $insert_position) . ' type="module" ' . substr($tag, $insert_position);
+                return $outTag;
+            }
+
+            //wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT');
+
 
         } else {
             wp_redirect('admin.php?page=crypto-dorea-cashback');
@@ -103,7 +130,7 @@ function dorea_cashback_campaign_credit():void
         </div>
     ');
     // load fail break script
-    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script_module('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
 
 
 }

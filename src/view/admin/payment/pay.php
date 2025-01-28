@@ -45,9 +45,10 @@ function dorea_admin_pay_campaign():void
     if(isset($_GET['_wpnonce'])) {
         $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
         if (isset($_GET['cashbackName']) && wp_verify_nonce($nonce, 'payment_nonce')) {
-            $cashbackName = sanitize_key($_GET['cashbackName']) ?? null;
+            $cashbackName = sanitize_key(wp_unslash($_GET['cashbackName'])) ?? null;
 
             $cashbackInfo = get_transient($cashbackName) ?? null;
+
             if (!$cashbackInfo) {
                 wp_redirect('admin.php?page=crypto-dorea-cashback');
             }
@@ -184,7 +185,7 @@ function dorea_admin_pay_campaign():void
 
             if ($i <= count($userList) - 1) {
 
-                //var_dump($userList);
+                var_dump($userList);
                 //var_dump($userList[$i]);
 
                 $users = $userList[$i];
@@ -345,6 +346,19 @@ function dorea_admin_pay_campaign():void
                 // load campaign credit scripts
                 wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'));
 
+                // add module type to script
+                add_filter('script_loader_tag', 'add_type_fund', 10, 3);
+                function add_type_fund($tag, $handle, $src)
+                {
+                    // if not your script, do nothing and return original $tag
+                    if ('DOREA_FUND_SCRIPT' !== $handle) {
+                        return $tag;
+                    }
+                    // change the script tag by adding type="module" and return it.
+                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+                    return $tag;
+                }
+
                 $ajaxNonce = wp_create_nonce("fundCampaign_nonce");
 
                 // pass params value for deployment
@@ -373,6 +387,19 @@ function dorea_admin_pay_campaign():void
                 );
                 wp_localize_script('DOREA_FUNDFAILBREAK_SCRIPT', 'params', $param);
 
+                // add module type to scripts
+                add_filter('script_loader_tag', 'add_type_fundfailbreak', 10, 3);
+                function add_type_fundfailbreak($tag, $handle, $src)
+                {
+                    // if not your script, do nothing and return original $tag
+                    if ('DOREA_FUNDFAILBREAK_SCRIPT' !== $handle) {
+                        return $tag;
+                    }
+                    // change the script tag by adding type="module" and return it.
+                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+                    return $tag;
+                }
+
             } else {
                 print("
                     <!-- Pay Campaign -->
@@ -383,6 +410,19 @@ function dorea_admin_pay_campaign():void
 
                 // load campaign credit scripts
                 wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'));
+
+                // add module type to script
+                add_filter('script_loader_tag', 'add_type_pay', 10, 3);
+                function add_type_pay($tag, $handle, $src)
+                {
+                    // if not your script, do nothing and return original $tag
+                    if ('DOREA_PAY_SCRIPT' !== $handle) {
+                        return $tag;
+                    }
+                    // change the script tag by adding type="module" and return it.
+                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+                    return $tag;
+                }
 
                 $qualifiedWalletAddresses = wp_json_encode($qualifiedWalletAddresses);
 
@@ -423,6 +463,20 @@ function dorea_admin_pay_campaign():void
                 wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/payFailBreak.js'), array('jquery', 'jquery-ui-core'));
 
                 wp_localize_script('DOREA_PAYFAILBREAK_SCRIPT', 'params', $params);
+
+                // add module type to scripts
+                add_filter('script_loader_tag', 'add_type_payfailbreak', 10, 3);
+                function add_type_payfailbreak($tag, $handle, $src)
+                {
+                    // if not your script, do nothing and return original $tag
+                    if ('DOREA_PAYFAILBREAK_SCRIPT' !== $handle) {
+                        return $tag;
+                    }
+                    // change the script tag by adding type="module" and return it.
+                    $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+                    return $tag;
+                }
+
             }
         }
         else{

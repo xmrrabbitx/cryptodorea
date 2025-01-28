@@ -87,9 +87,10 @@ function dorea_update_feild( $order_id ) {
                 if (get_option($campaign . '_contract_address')) {
                     // check if campaign started or not
                     if ($checkoutController->expire($campaign)) {
-
-                        if (!empty($_POST[$campaignInfo['campaignName']])) {
-                            $campaignNamesJoined[] = sanitize_text_field($campaignInfo['campaignName']);
+                        if(isset($_POST[$campaignInfo['campaignName']])) {
+                            if (!empty($_POST[$campaignInfo['campaignName']])) {
+                                $campaignNamesJoined[] = sanitize_text_field(wp_unslash($campaignInfo['campaignName']));
+                            }
                         }
                     }
                 }
@@ -276,8 +277,28 @@ function cashback(): void
                         if ($contractAddressConfirm & $mode === "on") {
                             print('</div><div class="!col-span-1 !mt-2"><p class="!text-sm !mt-3" id="dorea_error" style="display:none;color:#ff5d5d;"></p><input class="!p-3 !text-sm !mt-1 !ml-1 !bg-white !shadow-none !rounded-md" id="dorea_walletaddress" type="text" placeholder="wallet address..."><button id="doreaChkConfirm" class="!rounded !mt-3 !pl-5 !pr-5 !pt-3 !pb-3">Join</button></div></div>');
 
+                            $ajaxNonce = wp_create_nonce("checkout_nonce");
+                            $params = array(
+                                "checkoutAjaxNonce"=>$ajaxNonce
+                            );
+
                             // check and add to cash back program
                             wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'));
+                            wp_localize_script('DOREA_CHECKOUT_SCRIPT', 'param', $params);
+
+                            // add module type to scripts
+                            add_filter('script_loader_tag', 'add_type_checkout', 10, 3);
+                            function add_type_checkout($tag, $handle, $src)
+                            {
+                                // if not your script, do nothing and return original $tag
+                                if ('DOREA_CHECKOUT_SCRIPT' !== $handle) {
+                                    return $tag;
+                                }
+                                // change the script tag by adding type="module" and return it.
+                                $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+                                return $tag;
+                            }
+
                         }
 
                         print('</div>');
@@ -294,14 +315,17 @@ function cashback(): void
 add_action('wp_ajax_dorea_ordered_received','dorea_ordered_received');
 function dorea_ordered_received()
 {
-    if(isset($_POST['data'])) {
+    if(isset($_GET['_wpnonce'])) {
+        $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+        if (isset($_POST['data']) && wp_verify_nonce($nonce, 'checkout_nonce')) {
 
-        // get Json Data
-        $json_data = stripslashes($_POST['data']);
+            // get Json Data
+            $json_data = sanitize_text_field(wp_unslash($_POST['data']));
 
-        $campaignQueue = get_option('dorea_campaign_queue');
+            $campaignQueue = get_option('dorea_campaign_queue');
 
-        $campaignQueue === true ? update_option('dorea_campaign_queue', $json_data) : add_option('dorea_campaign_queue', $json_data);
+            $campaignQueue === true ? update_option('dorea_campaign_queue', $json_data) : add_option('dorea_campaign_queue', $json_data);
+        }
     }
 }
 
@@ -373,7 +397,6 @@ function orderReceived($orderId):void
                        $checkout->autoRemove();
                        $checkout->checkout($campaignLists, sanitize_text_field(sanitize_key($campaignQueue->walletAddress)));
                    } else {
-                       error_log('campaign is expired or not enabled!');
                        $error = true;
                    }
                }

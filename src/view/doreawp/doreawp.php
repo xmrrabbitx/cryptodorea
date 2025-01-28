@@ -11,6 +11,20 @@ add_action('woocommerce_account_content','myAccount', 10);
 function myAccount()
 {
     userStatusCampaign();
+    /*
+    // add module type to script
+    add_filter('script_loader_tag', 'add_type_userStatusCampaign', 10, 3);
+    function add_type_userStatusCampaign($tag, $handle, $src)
+    {
+        // if not your script, do nothing and return original $tag
+        if ('DOREA_USERSTATUSCAMPAIGN_SCRIPT' !== $handle) {
+            return $tag;
+        }
+        // change the script tag by adding type="module" and return it.
+        $tag = '<script type="module" src="' . esc_url($src) . '"></script>';
+        return $tag;
+    }
+    */
 }
 
 add_action('wp','doreawpRequest', 10);
