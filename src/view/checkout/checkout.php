@@ -45,15 +45,15 @@ function dorea_checkout_field_process() {
                     }
 
                     if (in_array(true, $checkoboxes)) {
-                        if (!isset($_POST['dorea_wallet_address'])) {
-                            if (!sanitize_text_field(wp_unslash($_POST['dorea_wallet_address']))) {
+                        if (isset($_POST['dorea_wallet_address'])) {
+                            if (empty(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])))) {
                                 wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
                             }
                         }
                     }
 
                     if(isset($_POST['dorea_wallet_address'])) {
-                        if (sanitize_text_field(wp_unslash($_POST['dorea_wallet_address']))) {
+                        if (!empty(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])))) {
                             if (substr(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])), 0, 2) !== '0x') {
                                 wc_add_notice(esc_html__('Wallet Address must start with 0x!', 'cryptodorea'), 'error');
                             } elseif (strlen(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address']))) < 42) {
@@ -64,6 +64,7 @@ function dorea_checkout_field_process() {
                             }
                         }
                     }
+
                 }
             }
         }
