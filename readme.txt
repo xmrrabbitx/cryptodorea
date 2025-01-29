@@ -13,7 +13,7 @@ Crypto Dorea is a new innovative Loyalty Program brought to your business using 
 == Description ==
 
 There is no limitation in Crypto Dorea; you can launch your crypto campaign cashback and give rewards to your most loyal customers
-using the blockchain payment system on a specific date and  for special events like Christmas or Halloween.
+using the blockchain payment system on a specific date and for special events like Christmas or Halloween.
 We believe in privacy. All the processes are decentralized and transparent on supported blockchains.
 
 ### Main Features ###
