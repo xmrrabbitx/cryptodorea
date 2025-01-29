@@ -21,16 +21,18 @@ function dorea_admin_help_campaign():void
         1,
     );
 
-    $createCampaignImg = plugins_url('/pics/help/createCampaign.jpeg', __FILE__);
-    $createCampaignImg2 = plugins_url('/pics/help/createCampaign2.jpeg', __FILE__);
-    $createCampaignImg3 = plugins_url('/pics/help/createCampaign3.jpeg', __FILE__);
-    $fundCampaign = plugins_url('/pics/help/fundCampaign.jpeg', __FILE__);
-    $fundCampaign2 = plugins_url('/pics/help/fundCampaign2.jpeg', __FILE__);
-    $disableEnable = plugins_url('/pics/help/disableEnable.jpeg', __FILE__);
-    $disableEnable2 = plugins_url('/pics/help/disableEnable2.jpeg', __FILE__);
+    // Usage Example
+    $image_set = array(
+        'createCampaignImg'  => 'pics/help/createCampaign.jpeg',
+        'createCampaignImg2' => 'pics/help/createCampaign2.jpeg',
+        'createCampaignImg3' => 'pics/help/createCampaign3.jpeg',
+        'fundCampaign'       => 'pics/help/fundCampaign.jpeg',
+        'fundCampaign2'      => 'pics/help/fundCampaign2.jpeg',
+        'disableEnable'      => 'pics/help/disableEnable.jpeg',
+        'disableEnable2'     => 'pics/help/disableEnable2.jpeg',
+    );
 
-
-    echo wp_get_attachment_image( 'createCampaignImg', 'thumbnail', false, '' );
+    $img_ids = handle_plugin_images_to_media($image_set);
 
     print("
         <main>
@@ -43,14 +45,20 @@ function dorea_admin_help_campaign():void
             you can select the \"Create Your First Cashback Campaign\" option on the main page to create your first campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-                <img class='!pt-3' src='". esc_url($createCampaignImg) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
+            ".wp_get_attachment_image($img_ids['createCampaignImg'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg'))
+            ))."
             </div>
             
             <p class='!w-10/12 !pl-5 !mt-5'>
             2. Otherwise, you can choose the  \"Create Campaign\" option from the sidebar.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-                <img class='!pt-3' src='". esc_url($createCampaignImg2) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
+            ".wp_get_attachment_image($img_ids['createCampaignImg2'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg2'))
+            ))."                
             </div>
             
             <p class='!w-10/12 !pl-5 !mt-5  !leading-7'>
@@ -72,7 +80,10 @@ function dorea_admin_help_campaign():void
             this amount is equal to 0.0015 ETH.
             </p>
             <div class='!flex !justify-center !items-center !mt-2 !p-5'>
-                <img class='!pt-3' src='". esc_url($createCampaignImg3) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
+            ".wp_get_attachment_image($img_ids['createCampaignImg3'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg3'))
+            ))." 
             </div>
            
             <hr class='!w-12/12'>
@@ -86,7 +97,10 @@ function dorea_admin_help_campaign():void
             before funding your campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-                <img class='!pt-3' src='". esc_url($fundCampaign) ."' alt='no image!' sizes='(max-width: 50em) 87vw, 680px'>
+            ".wp_get_attachment_image($img_ids['fundCampaign'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'fundCampaign'))
+            ))." 
             </div>
             
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
@@ -96,7 +110,10 @@ function dorea_admin_help_campaign():void
             
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-                <img class='!pt-3 w-8/12' src='". esc_url($fundCampaign2) ."' alt='no image!' >
+             ".wp_get_attachment_image($img_ids['fundCampaign2'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'fundCampaign2'))
+            ))." 
             </div>
             
             <hr class='!w-12/12 !mt-5'>
@@ -150,12 +167,113 @@ function dorea_admin_help_campaign():void
             </p>
             
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-                <img class='!pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40' src='". esc_url($disableEnable) ."' alt='no image!'>
-                <img class='!pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40' src='". esc_url($disableEnable2) ."' alt='no image!'>
+             <span>
+             ".wp_get_attachment_image($img_ids['disableEnable'], '', false, array(
+                'class' => 'help-image !pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'disableEnable'))
+            ))."
+             </span>
+             <span>
+             ".wp_get_attachment_image($img_ids['disableEnable2'], '', false, array(
+                'class' => 'help-image !pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40',
+                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'disableEnable2'))
+            ))."
+             </span> 
             </div>
-            
-            
           </div>
         </main>
     ");
+}
+
+
+/**
+ * Handles multiple images from plugin directory to media library
+ *
+ * @param array $images Array of image configurations ['image_key' => 'relative/path.jpg']
+ * @return array Attachment IDs (false for failed items)
+ */
+function handle_plugin_images_to_media($images) {
+    $stored_ids = get_option('plugin_image_attachment_ids', array());
+    $upload_dir = wp_upload_dir();
+    $results = array();
+
+    foreach ($images as $key => $rel_path) {
+
+        // Check if already processed and valid
+        if (isset($stored_ids[$key]) && get_post($stored_ids[$key])) {
+            $results[$key] = $stored_ids[$key];
+            continue;
+        }
+
+        // Set up paths
+        $plugin_full_path = plugin_dir_path(__FILE__) . $rel_path;
+
+        $target_rel_path = 'plugin-assets/' . $rel_path;
+        $target_full_path = $upload_dir['basedir'] . '/' . $target_rel_path;
+
+        // Check existing in media library
+        $existing = new WP_Query(array(
+            'post_type' => 'attachment',
+            'posts_per_page' => 1,
+            'post_status' => 'inherit',
+            'meta_query' => array(array(
+                'key' => '_wp_attached_file',
+                'value' => $target_rel_path
+            ))
+        ));
+
+
+        if ($existing->have_posts()) {
+            $attachment_id = $existing->posts[0]->ID;
+            $stored_ids[$key] = $attachment_id;
+            $results[$key] = $attachment_id;
+            continue;
+        }
+
+        // Validate source file
+        if (!file_exists($plugin_full_path)) {
+            $results[$key] = false;
+            continue;
+        }
+
+        // Create target directory
+        $target_dir = dirname($target_full_path);
+        if (!wp_mkdir_p($target_dir)) {
+            $results[$key] = false;
+            continue;
+        }
+
+        // Copy file
+        if (!copy($plugin_full_path, $target_full_path)) {
+            $results[$key] = false;
+            continue;
+        }
+
+        // Insert attachment
+        $filetype = wp_check_filetype(basename($target_full_path), null);
+        $attachment_args = array(
+            'post_mime_type' => $filetype['type'],
+            'post_title' => sanitize_file_name(pathinfo($target_full_path, PATHINFO_FILENAME)),
+            'post_content' => '',
+            'post_status' => 'inherit'
+        );
+
+        $attachment_id = wp_insert_attachment($attachment_args, $target_full_path);
+
+        if (is_wp_error($attachment_id)) {
+            $results[$key] = false;
+            continue;
+        }
+
+        // Generate metadata
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+        $metadata = wp_generate_attachment_metadata($attachment_id, $target_full_path);
+        wp_update_attachment_metadata($attachment_id, $metadata);
+
+        $stored_ids[$key] = $attachment_id;
+        $results[$key] = $attachment_id;
+    }
+
+    update_option('plugin_image_attachment_ids', $stored_ids);
+    return $results;
 }
