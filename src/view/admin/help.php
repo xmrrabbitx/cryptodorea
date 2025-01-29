@@ -222,7 +222,6 @@ function handle_plugin_images_to_media($images) {
             ))
         ));
 
-
         if ($existing->have_posts()) {
             $attachment_id = $existing->posts[0]->ID;
             $stored_ids[$key] = $attachment_id;

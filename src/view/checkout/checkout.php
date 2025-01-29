@@ -82,7 +82,6 @@ function dorea_update_feild( $order_id ) {
         $nonce = sanitize_text_field(wp_unslash($_POST['dorea_wpnonce']));
         if (wp_verify_nonce($nonce, 'dorea_checkout_nonce')) {
 
-
             // get cashback list of admin
             $cashback = new cashbackController();
             $cashbackList = $cashback->list();

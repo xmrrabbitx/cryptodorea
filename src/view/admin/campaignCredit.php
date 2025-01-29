@@ -132,7 +132,6 @@ function dorea_cashback_campaign_credit():void
     // load fail break script
     wp_enqueue_script_module('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
 
-
 }
 
 /**
@@ -142,7 +141,6 @@ add_action('wp_ajax_dorea_contract_address', 'dorea_contract_address');
 
 function dorea_contract_address()
 {
-
     if(isset($_GET['_wpnonce'])) {
         $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
         if (isset($_POST['data']) && wp_verify_nonce($nonce, 'campaign_credit_nonce')) {
