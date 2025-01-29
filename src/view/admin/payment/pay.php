@@ -70,7 +70,7 @@ function dorea_admin_pay_campaign():void
             wp_localize_script('DOREA_PAYMENT_SCRIPT', 'switchParams', $switchParams);
 
             print(("<h3 class='!pl-5 !text-xs'><span class='!font-bold'>Campaign: </span>" . esc_html($cashbackName) . "</h3></br>
-                <div><span class='!pl-5 !text-xs !font-bold'>Campaign Balance: </span>".esc_html($cashbackInfo['contractAmount'])." ETH</div>
+                <div><span class='!pl-5 !text-xs !font-bold'>Campaign Balance: </span>".esc_html(number_format($cashbackInfo['contractAmount'],5))." ETH</div>
                 <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent !rounded-md'>
                     <div class='!pr-5 !text-right'><span class='!pr-1'>disable</span> 
                         <label class='switch'>
@@ -591,7 +591,6 @@ function dorea_admin_pay_campaign():void
 add_action('wp_ajax_dorea_switchCampaign', 'dorea_switchCampaign');
 function dorea_switchCampaign()
 {
-    var_dump($_GET['_wpnonce']);
     if(isset($_GET['_wpnonce'])) {
         $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
         if (isset($_POST['data']) && wp_verify_nonce($nonce, 'switchCampaign_nonce')) {

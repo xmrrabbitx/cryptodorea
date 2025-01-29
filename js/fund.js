@@ -121,6 +121,12 @@ jQuery(document).ready(async function($) {
 
             const contract = new ethers.Contract(contractAddress, abi, signer);
 
+            let balance = await contract.getBalance();
+            console.log(balance)
+            balance = convertWeiToEther(parseInt(balance));
+            console.log(balance)
+            console.log(fundAgainAmount.toString())
+
             await contract.fundAgain(
                 messageHash,
                 v,
@@ -194,6 +200,8 @@ jQuery(document).ready(async function($) {
             body.style.userSelect = 'visible'; // enable text selection
             body.style.overflow = 'visible'; // Prevent scrolling
 
+            console.log( error.revert.args[0])
+            console.log( error.revert)
             if(typeof error.revert === "undefined")   {
                 errorMessg.innerHTML  = "Something went wrong. please try again!";
             } else {
