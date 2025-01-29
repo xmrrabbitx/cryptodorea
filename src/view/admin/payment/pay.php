@@ -202,7 +202,7 @@ function dorea_admin_pay_campaign():void
                 $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
                 //hypothetical price of eth _ get this from an online service
                 //$ethBasePrice = 0.0004;
-                //var_dump($ethBasePrice);
+                //var_dump(ethHelper::ethPrice());
 
                 if($ethBasePrice) {
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
