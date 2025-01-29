@@ -14,7 +14,8 @@ class dateCalculator extends dateCalculatorAbstract
     public function currentDate()
     {
 
-        return time();
+        //return time();
+        return current_time('timestamp');
 
     }
 
@@ -48,17 +49,6 @@ class dateCalculator extends dateCalculatorAbstract
     {
 
         return gmdate('d', $time);
-
-    }
-
-    /**
-     * calculate date time in the future
-     * @param $date in Date Format
-     */
-    public function futureDate($day, $month, $year)
-    {
-
-        return $date = mktime(0, 0, 0, $month, $day, $year); //e.g: 7 1 2000
 
     }
 

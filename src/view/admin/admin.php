@@ -6,12 +6,13 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
 //$currentDate = (int)strtotime(date("d.m.Y") . " 00:00:00");
 //var_dump($currentDate);
-//$campaignInfo = get_transient('dorea_c9c1d13');
-//$campaignInfo['timestampStart'] = '1737391850';
-//$campaignInfo['timestampExpire'] = '1737996650';
-//set_transient('dorea_c9c1d13', $campaignInfo);
-//var_dump(get_transient('dorea_c9c1d13'));
-//var_dump(get_transient('blackfriday_80ea72d'));
+//$campaignInfo = get_transient('doreaaccounttest_3dba39c');
+//$campaignInfo['timestampStart'] = '1738203303000';
+//$campaignInfo['timestampExpire'] = '1738359123';
+//set_transient('doreaaccounttest_3dba39c', $campaignInfo);
+//var_dump(get_transient('test_9845f26'));
+//var_dump(get_transient('doreaaccounttest_3dba39c'));
+
 
 //$n = (0.00002 + 0.00002);
 //var_dump(sprintf('%.10f', $n));

@@ -133,7 +133,7 @@ class checkoutController extends checkoutAbstract
     {
         $camapaignInfo = get_transient($campaign);
 
-        $currentDate = (int)strtotime(gmdate("d.m.Y") . " 00:00:00");
+        $currentDate = current_time('timestamp');
 
         return $camapaignInfo['timestampExpire'] >= $currentDate && $camapaignInfo['timestampStart'] <= $currentDate ?? false;
 
@@ -144,7 +144,7 @@ class checkoutController extends checkoutAbstract
     {
         $camapaignInfo = get_transient($campaign);
 
-        $currentDate = (int)strtotime(gmdate("d.m.Y") . " 00:00:00");
+        $currentDate = current_time('timestamp');
 
         if($camapaignInfo['timestampExpire'] < $currentDate){
             return "expired";

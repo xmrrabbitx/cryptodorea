@@ -234,10 +234,11 @@ function dorea_admin_cashback_campaign():void
             $expMode = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['expDate'])));
 
             $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . " 00:00:00");
+
             if($expMode === "weekly") {
-                $timestampExpire = $timestampStart + 691199; // calculate next 7 days of timestamp
+                $timestampExpire = $timestampStart + 604800; // calculate next 7 days of timestamp
             }elseif($expMode === "monthly") {
-                $timestampExpire = $timestampStart + 691199 * 4; // calculate next 1 month of timestamp
+                $timestampExpire = $timestampStart + 2592000; // calculate next 1 month of timestamp
             }
 
             // add random hash to campaign name
