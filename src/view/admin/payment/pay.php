@@ -354,7 +354,7 @@ function dorea_admin_pay_campaign():void
                 ");
 
                 // calculate remaining amount eth to pay
-                $remainingAmount = bcsub(number_format((float)array_sum($totalEthers),10), number_format((float)$contractAmount, 10), 5);
+                $remainingAmount = bcsub((float)array_sum($totalEthers), number_format((float)$contractAmount, 10), 5);
                 //var_dump($remainingAmount);
                 // load campaign credit scripts
                 wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'),
