@@ -3,7 +3,6 @@
 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./ethers.min.js";
 import {abi} from "./compile.js";
 
-console.log("fund")
 jQuery(document).ready(async function($) {
 
     function convertWeiToEther(amount){

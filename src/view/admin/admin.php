@@ -11,12 +11,11 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 //$campaignInfo['timestampExpire'] = '1737996650';
 //set_transient('dorea_c9c1d13', $campaignInfo);
 //var_dump(get_transient('dorea_c9c1d13'));
-//var_dump(get_transient('dorea3_d3b48fe'));
+//var_dump(get_transient('blackfriday_80ea72d'));
 
 //$n = (0.00002 + 0.00002);
 //var_dump(sprintf('%.10f', $n));
 //    $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
-
 
 /**
  * add menu options to admin panels

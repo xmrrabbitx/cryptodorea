@@ -296,7 +296,17 @@ function cashback(): void
                                                 $addtoCashback = false;
                                             }
 
-                                            print("<div class='!flex !mt-1'><div class='!w-1/12 !ml-1'><input id='doreaaddtocashbackcheckbox_" . esc_html($campaign) . "' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($campaign) . "'></div><label id='doreaaddtocashbacklabel_" . esc_html($campaign) . "' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>" . esc_html($campaignInfo['campaignNameLable']) . "</label></div>");
+                                            echo("
+                                                <div class='!flex !mt-1'>
+                                                    <div class='!w-1/12 !ml-1'>
+                                                        <input id='doreaaddtocashbackcheckbox_" . esc_html($campaign) . "' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($campaign) . "'>
+                                                    </div>
+                                                    
+                                                    <label id='doreaaddtocashbacklabel_".esc_html($campaign)."' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($campaignInfo['campaignNameLable'])."</label>
+                                                    
+                                                </div>
+                                            ");
+
                                         }
                                     }
                                 }

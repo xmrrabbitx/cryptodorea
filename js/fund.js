@@ -6,7 +6,7 @@ import {abi} from "./compile.js";
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
 const beforeTrxModal = document.getElementById("beforeTrxModal");
-console.log(param.fundAjaxNonce)
+
 jQuery(document).ready(async function($) {
 
     if(sessionStorage.getItem('deployState')){
@@ -14,6 +14,22 @@ jQuery(document).ready(async function($) {
     }
 
     fundCampaign.addEventListener("click", async function(){
+
+        // connect to Arbitrium One  Mainnet
+        await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+                chainId: "0xa4b1",
+                rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+                chainName: "Arbitrum One",
+                nativeCurrency: {
+                    name: "ARB",
+                    symbol: "ETH",
+                    decimals: 18,
+                },
+                blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
+            }]
+        });
 
         /**
          *

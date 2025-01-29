@@ -20,22 +20,21 @@ function delay(){
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
-                /*
-                // connect to Base  Mainnet
+                // connect to Arbitrium One  Mainnet
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
                     params: [{
-                        chainId: "0x2105",
+                        chainId: "0xa4b1",
                         rpcUrls: ["https://arb1.arbitrum.io/rpc"],
                         chainName: "Arbitrum One",
                         nativeCurrency: {
                             name: "ARB",
-                            symbol: "ARB",
+                            symbol: "ETH",
+                            decimals: 18,
                         },
                         blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
                     }]
                 });
-                */
 
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");
@@ -150,7 +149,7 @@ function delay(){
                             const creditAmountInt = BigInt(Math.round(creditAmount * factor));
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
-
+                        console.log(contractAmountBigInt.toString())
                         await factory.deploy(
                             {
                                 value: contractAmountBigInt.toString(),

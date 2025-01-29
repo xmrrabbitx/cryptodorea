@@ -27,18 +27,6 @@ function dorea_admin_pay_campaign():void
         1,
     );
 
-    // load campaign credit scripts
-    $ajaxNonce = wp_create_nonce("switchCampaign_nonce");
-    $params = array(
-        "switchAjaxNonce"=>$ajaxNonce
-    );
-    wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'),
-        array(),
-        1,
-        true
-    );
-    wp_localize_script('DOREA_PAYMENT_SCRIPT', 'param', $params);
-
     static $qualifiedUserEthers;
     static $qualifiedWalletAddresses;
     static $fundOption;
@@ -69,7 +57,20 @@ function dorea_admin_pay_campaign():void
                 $mode = '';
             }
 
-            print(("<h3 class='!pl-5 !text-xs !font-bold'>Campaign: " . esc_html($cashbackName) . "</h3></br>
+            // load campaign credit scripts
+            wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'),
+                array(),
+                1,
+                true
+            );
+            $switchNonce = wp_create_nonce("switchCampaign_nonce");
+            $switchParams = array(
+                "switchAjaxNonce" => $switchNonce
+            );
+            wp_localize_script('DOREA_PAYMENT_SCRIPT', 'switchParams', $switchParams);
+
+            print(("<h3 class='!pl-5 !text-xs'><span class='!font-bold'>Campaign: </span>" . esc_html($cashbackName) . "</h3></br>
+                <div><span class='!pl-5 !text-xs !font-bold'>Campaign Balance: </span>".esc_html($cashbackInfo['contractAmount'])." ETH</div>
                 <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent !rounded-md'>
                     <div class='!pr-5 !text-right'><span class='!pr-1'>disable</span> 
                         <label class='switch'>
@@ -185,7 +186,7 @@ function dorea_admin_pay_campaign():void
             $userList[] = $i;
             $usersList[] = $i;
         }
-*/
+        */
 
         // pagination set to 100 queries
         for ($i = $j; $i <= ($pagination * 100)-1; $i++) {
@@ -199,9 +200,9 @@ function dorea_admin_pay_campaign():void
 
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
-                $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                //$ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
                 //hypothetical price of eth _ get this from an online service
-                //$ethBasePrice = 0.0004;
+                $ethBasePrice = 0.0004;
                 //var_dump(ethHelper::ethPrice());
 
                 if($ethBasePrice) {
@@ -223,9 +224,9 @@ function dorea_admin_pay_campaign():void
                         }, $qualifiedPurchases);
 
                         $totalPurchases = count($validPurchases) * $shoppingCount;
-                        $qualifiedPurchasesTotal = number_format(array_sum($validPurchases),10);
+                        $qualifiedPurchasesTotal = number_format(array_sum($validPurchases),5);
 
-                        $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 10);
+                        $userEther = number_format(((($qualifiedPurchasesTotal * $cryptoAmount) / 100) * $ethBasePrice), 5);
 
                         $userTotalPurchases[] = $totalPurchases;
                         $totalEthers[] = $userEther;
@@ -270,7 +271,7 @@ function dorea_admin_pay_campaign():void
 
                             print ("<span class='xl:!hidden lg:!hidden  md:!hidden  sm:!hidden !block'>Status</span><div class='!pl-3 !pt-1 !col-span-1 xl:!mx-auto lg:!mx-auto md:!mx-auto sm:!mx-auto  !mx-0 !float-left'>");
 
-                            if (sprintf("%.10f", (float)array_sum($totalEthers)) <= sprintf("%.10f", (float)$contractAmount) && $totalPurchases >= $cashbackInfo['shoppingCount']) {
+                            if (sprintf("%.5f", (float)array_sum($totalEthers)) <= sprintf("%.5f", (float)$contractAmount) && $totalPurchases >= $cashbackInfo['shoppingCount']) {
 
                                 // set qualified users to pay
                                 $qualifiedUserEthers[] = $userEther;
@@ -306,8 +307,10 @@ function dorea_admin_pay_campaign():void
                             $doreaContractAddress = get_option($cashbackName . '_contract_address');
                             if (!empty($totalEthers)) {
 
+                                //var_dump(sprintf("%.5f", (float)array_sum($totalEthers)));
+                                //var_dump(sprintf("%.5f", (float)$contractAmount));
                                 // check for funding campaign
-                                if (sprintf("%.10f", (float)array_sum($totalEthers)) > sprintf("%.10f", (float)$contractAmount)) {
+                                if (sprintf("%.5f", (float)array_sum($totalEthers)) > sprintf("%.5f", (float)$contractAmount)) {
 
                                     $fundOption = true;
                                 }
@@ -341,6 +344,7 @@ function dorea_admin_pay_campaign():void
                 return;
             }
 
+            // fund option triggers otherwise pay option triggers
             if ($fundOption) {
                 print("
                     <!-- Fund Campaign -->
@@ -350,14 +354,26 @@ function dorea_admin_pay_campaign():void
                 ");
 
                 // calculate remaining amount eth to pay
-                $remainingAmount = bcsub((float)array_sum($totalEthers), number_format((float)$contractAmount, 10), 10);
-
+                $remainingAmount = bcsub((float)array_sum($totalEthers), number_format((float)$contractAmount, 10), 5);
+                //var_dump($remainingAmount);
                 // load campaign credit scripts
                 wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
                 );
+
+                $ajaxNonce = wp_create_nonce("fundCampaign_nonce");
+
+                // pass params value for deployment
+                $fundParams = array(
+                    'contractAddress' => $doreaContractAddress,
+                    'campaignName' => $cashbackName,
+                    'remainingAmount' => $remainingAmount,
+                    "fundAjaxNonce"=>$ajaxNonce
+                );
+                wp_localize_script('DOREA_FUND_SCRIPT', 'param', $fundParams);
+
 
                 // add module type to script
                 add_filter('script_loader_tag', 'add_type_fund', 10, 3);
@@ -374,17 +390,6 @@ function dorea_admin_pay_campaign():void
 
                     return $outTag;
                 }
-
-                $ajaxNonce = wp_create_nonce("fundCampaign_nonce");
-
-                // pass params value for deployment
-                $params = array(
-                    'contractAddress' => $doreaContractAddress,
-                    'campaignName' => $cashbackName,
-                    'remainingAmount' => $remainingAmount,
-                    "fundAjaxNonce"=>$ajaxNonce
-                );
-                wp_localize_script('DOREA_FUND_SCRIPT', 'param', $params);
 
                 print ('
                     <!-- failed campaign payment modal -->
@@ -403,10 +408,10 @@ function dorea_admin_pay_campaign():void
                     true
                 );
 
-                $param = array(
+                $failBreakFundParam = array(
                     'contractAddress' => $doreaContractAddress,
                 );
-                wp_localize_script('DOREA_FUNDFAILBREAK_SCRIPT', 'params', $param);
+                wp_localize_script('DOREA_FUNDFAILBREAK_SCRIPT', 'params', $failBreakFundParam);
 
                 // add module type to scripts
                 add_filter('script_loader_tag', 'add_type_fundfailbreak', 10, 3);
@@ -424,7 +429,8 @@ function dorea_admin_pay_campaign():void
                     return $outTag;
                 }
 
-            } else {
+            }
+            else {
                 print("
                     <!-- Pay Campaign -->
                     <div class='!mx-auto !text-center !mt-5'>
@@ -468,8 +474,9 @@ function dorea_admin_pay_campaign():void
 
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
 
+                //var_dump($qualifiedUserEthers);
                 // pass params value for deployment
-                $params = array(
+                $payParams = array(
                     'contractAddress' => $doreaContractAddress,
                     'campaignName' => $cashbackName,
                     'qualifiedWalletAddresses' => $qualifiedWalletAddresses,
@@ -479,7 +486,7 @@ function dorea_admin_pay_campaign():void
                     'totalPurchases' => $userTotalPurchases,
                     "payAjaxNonce"=>$ajaxNonce
                 );
-                wp_localize_script('DOREA_PAY_SCRIPT', 'param', $params);
+                wp_localize_script('DOREA_PAY_SCRIPT', 'param', $payParams);
 
                 print ('
                     <!-- failed campaign payment modal -->
@@ -497,7 +504,7 @@ function dorea_admin_pay_campaign():void
                     true
                 );
 
-                wp_localize_script('DOREA_PAYFAILBREAK_SCRIPT', 'params', $params);
+                wp_localize_script('DOREA_PAYFAILBREAK_SCRIPT', 'params', $payParams);
 
                 // add module type to scripts
                 add_filter('script_loader_tag', 'add_type_payfailbreak', 10, 3);
@@ -584,6 +591,7 @@ function dorea_admin_pay_campaign():void
 add_action('wp_ajax_dorea_switchCampaign', 'dorea_switchCampaign');
 function dorea_switchCampaign()
 {
+    var_dump($_GET['_wpnonce']);
     if(isset($_GET['_wpnonce'])) {
         $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
         if (isset($_POST['data']) && wp_verify_nonce($nonce, 'switchCampaign_nonce')) {

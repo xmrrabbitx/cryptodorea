@@ -16,7 +16,24 @@ jQuery(document).ready(async function($) {
     }
 
     payCampaign.addEventListener("click", async function () {
-            function convertToWei(amounts) {
+
+        // connect to Arbitrium One  Mainnet
+        await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+                chainId: "0xa4b1",
+                rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+                chainName: "Arbitrum One",
+                nativeCurrency: {
+                    name: "ARB",
+                    symbol: "ETH",
+                    decimals: 18,
+                },
+                blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
+            }]
+        });
+
+        function convertToWei(amounts) {
 
                 let amountsBig = [];
                 amounts.forEach(
