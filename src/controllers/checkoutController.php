@@ -161,8 +161,6 @@ class checkoutController extends checkoutAbstract
     {
         $camapaignInfo = get_transient($campaign);
 
-        //$date = (int)strtotime(date("d.m.Y") . " 00:00:00", $camapaignInfo['timestampStart']);
-
         return gmdate('Y/m/d', $camapaignInfo['timestampStart']);
     }
 }

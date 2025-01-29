@@ -185,7 +185,7 @@ function dorea_admin_pay_campaign():void
             $userList[] = $i;
             $usersList[] = $i;
         }
-        */
+*/
 
         // pagination set to 100 queries
         for ($i = $j; $i <= ($pagination * 100)-1; $i++) {
@@ -315,6 +315,7 @@ function dorea_admin_pay_campaign():void
                         }
                     }
                 }
+
             }
 
         }
@@ -540,7 +541,7 @@ function dorea_admin_pay_campaign():void
             // backward arrow pagination
             print('
                <div class="">
-                    <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination - 1) . '">
+                    <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&_wpnonce='.$nonce.'&pagination=' . $pagination - 1) . '">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
                         </svg>
@@ -558,7 +559,7 @@ function dorea_admin_pay_campaign():void
             // forward arrow pagination
             print('      
                 <div class="">
-                     <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&pagination=' . $pagination + 1)  . '">
+                     <a class="!col-span-1 !mt-0 !pl-0 !focus:ring-0 !hover:text-[#ffa23f] campaignPayment_" id="dorea_pagination" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $cashbackName) . '&_wpnonce='.$nonce.'&pagination=' . $pagination + 1)  . '">
                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
                         </svg>
