@@ -7,6 +7,7 @@ import {
 import {abi,bytecode} from "./compile.js";
 
 const beforeTrxModal = document.getElementById("beforeTrxModal");
+let successMessg = document.getElementById("dorea_success");
 
 // Request access to Metamask
 setTimeout(delay, 1000)
@@ -149,7 +150,7 @@ function delay(){
                             const creditAmountInt = BigInt(Math.round(creditAmount * factor));
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
-                        console.log(contractAmountBigInt.toString())
+
                         await factory.deploy(
                             {
                                 value: contractAmountBigInt.toString(),
@@ -157,7 +158,10 @@ function delay(){
                             }
                         ).then(async function (response) {
 
-                            $(beforeTrxModal).hide("slow");
+                            successMessg.innerHTML = "payment has been successfull!";
+                            $(successMessg).show("slow");
+                            await new Promise(r => setTimeout(r, 1500));
+                            $(successMessg).hide("slow");
 
                             let contractAddress = response.target;
 

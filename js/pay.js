@@ -145,8 +145,6 @@ jQuery(document).ready(async function($) {
                     s
                 ).then(async function (response) {
 
-                    $(beforeTrxModal).hide("slow");
-
                     sessionStorage.setItem('payFailBreak', JSON.stringify({campaignName}) );
 
                     response.wait().then(async (receipt) => {
@@ -176,6 +174,8 @@ jQuery(document).ready(async function($) {
                                     }),
                                 },
                                 complete: function (response) {
+
+                                    $(beforeTrxModal).hide("slow");
 
                                     sessionStorage.removeItem('payFailBreak');
                                     sessionStorage.removeItem('deployState');

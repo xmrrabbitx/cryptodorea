@@ -6,6 +6,7 @@ import {abi} from "./compile.js";
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
 const beforeTrxModal = document.getElementById("beforeTrxModal");
+let successMessg = document.getElementById("dorea_success");
 
 jQuery(document).ready(async function($) {
 
@@ -121,12 +122,6 @@ jQuery(document).ready(async function($) {
 
             const contract = new ethers.Contract(contractAddress, abi, signer);
 
-            let balance = await contract.getBalance();
-            console.log(balance)
-            balance = convertWeiToEther(parseInt(balance));
-            console.log(balance)
-            console.log(fundAgainAmount.toString())
-
             await contract.fundAgain(
                 messageHash,
                 v,
@@ -138,17 +133,17 @@ jQuery(document).ready(async function($) {
                 },
             ).then(async function(response){
 
-                $(beforeTrxModal).hide("slow");
-
                 sessionStorage.setItem('fundFailBreak', JSON.stringify({campaignName}) );
 
                 response.wait().then(async (receipt) => {
 
                     // transaction on confirmed and mined
                     if (receipt) {
-                        let succMessage = "payment has been successfull!";
 
+                        successMessg.innerHTML = "payment has been successfull!";
+                        $(successMessg).show("slow");
                         await new Promise(r => setTimeout(r, 1500));
+                        $(successMessg).hide("slow");
 
                         let balance = await contract.getBalance();
                         balance = convertWeiToEther(parseInt(balance));
@@ -164,6 +159,8 @@ jQuery(document).ready(async function($) {
                                 }),
                             },
                             complete: function (response) {
+
+                                $(beforeTrxModal).hide("slow");
 
                                 sessionStorage.removeItem('fundFailBreak');
                                 sessionStorage.removeItem('deployState');

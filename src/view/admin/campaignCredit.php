@@ -77,6 +77,7 @@ function dorea_cashback_campaign_credit():void
     print('  
        <main>
             <h1 class="!p-5 !text-sm !font-bold">Fund Campaign</h1> </br>
+            
     ');
 
     if(isset($_GET['cashbackName'])){
@@ -86,7 +87,8 @@ function dorea_cashback_campaign_credit():void
 
     print('
             <p id="errorMessg" style="display: none" class="!pl-5"></p>
-            
+            <p class="!pl-5" id="dorea_success" style="display:none;"></p>
+
             <!-- Warning before transaction! -->
             <div id="beforeTrxModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
                <p class="!text-sm !mt-3">Please Do not leave the page <br> until the transaction is complete!</p>
