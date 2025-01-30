@@ -1,18 +1,7 @@
 <?php
 
-
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\utilities\dateCalculator;
-
-// check nonce validation
-add_action('check_admin_referer', 'dorea_referer_check',10,2);
-function dorea_referer_check($action, $result)
-{
-    if (!$result) {
-       // error_log("Invalid nonce for action: $action");
-    }
-    return $action;
-}
 
 /**
  * Crypto Cashback Campaign

@@ -36,8 +36,6 @@ function dorea_cashback_campaign_credit():void
             $ajaxNonce = wp_create_nonce("campaign_credit_nonce");
 
             // load campaign credit scripts
-
-
             wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'),
                 array(),
                 1,
@@ -65,9 +63,6 @@ function dorea_cashback_campaign_credit():void
 
                 return $outTag;
             }
-
-            //wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT');
-
 
         } else {
             wp_redirect('admin.php?page=crypto-dorea-cashback');

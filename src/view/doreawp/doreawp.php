@@ -66,6 +66,5 @@ function doreawpRequest()
             return $items;
         }
         add_filter('woocommerce_account_menu_items', 'dorea_cashback_menu');
-
     }
 }

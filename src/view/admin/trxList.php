@@ -161,5 +161,4 @@ function dorea_admin_trx_campaign():void
             }
 
             print("</div></main>");
-
 }
