@@ -91,7 +91,6 @@ function delay(){
                             params: [userAddress, "latest"]
                     });
 
-
                     // check balance of metamask wallet
                     if (parseInt(userBalance) < 300000000000000) {
 
