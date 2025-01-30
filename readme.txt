@@ -1,4 +1,4 @@
-=== Crypto Dorea: Create Crypto Cashback for WooCommerce ===
+=== Crypto Dorea: Crypto Cashback for WooCommerce ===
 Contributors: hadimirzaie
 Tags: cashback, crypto, woocommerce, web3, ethereum
 Requires at least: 6.4.3
