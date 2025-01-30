@@ -93,7 +93,7 @@ function delay(){
 
 
                     // check balance of metamask wallet
-                    if (parseInt(userBalance) < 300000000000000) {
+                    if (parseInt(userBalance) <= 300000000000000) {
 
                         document.getElementById("doreaFund").disabled = false;
                         errorMessg.innerHTML = "not enough balance to support fee! \n please fund your wallet at least 0.0003 ETH!";
