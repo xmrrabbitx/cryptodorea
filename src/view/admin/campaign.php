@@ -233,7 +233,7 @@ function dorea_admin_cashback_campaign():void
 
             $expMode = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['expDate'])));
 
-            $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . " 00:00:00");
+            $timestampStart = strtotime($startDateDay . '.' . $startDateMonth . '.' . $startDateYear . ' ' . date_i18n('H:i:s'));
 
             if($expMode === "weekly") {
                 $timestampExpire = $timestampStart + 604800; // calculate next 7 days of timestamp

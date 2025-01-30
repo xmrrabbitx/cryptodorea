@@ -178,32 +178,18 @@ function dorea_admin_pay_campaign():void
 
         $j = $pagination - 1 === 0 ? 0 : ($pagination-1) * 100;
 
-        //test data
-        /*
-        $userList = []; // for test
-        $usersList = []; // for test
-        for ($i=0;$i<373;$i++){
-            $userList[] = $i;
-            $usersList[] = $i;
-        }
-        */
 
         // pagination set to 100 queries
         for ($i = $j; $i <= ($pagination * 100)-1; $i++) {
 
             if ($i <= count($userList) - 1) {
 
-                //var_dump($userList);
-                //var_dump($userList[$i]);
-
                 $users = $userList[$i];
 
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
+                // base eth price
                 $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
-                //hypothetical price of eth _ get this from an online service
-                //$ethBasePrice = 0.0004;
-                //var_dump(ethHelper::ethPrice());
 
                 if($ethBasePrice) {
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
@@ -307,8 +293,6 @@ function dorea_admin_pay_campaign():void
                             $doreaContractAddress = get_option($cashbackName . '_contract_address');
                             if (!empty($totalEthers)) {
 
-                                //var_dump(sprintf("%.5f", (float)array_sum($totalEthers)));
-                                //var_dump(sprintf("%.5f", (float)$contractAmount));
                                 // check for funding campaign
                                 if (sprintf("%.5f", (float)array_sum($totalEthers)) > sprintf("%.5f", (float)$contractAmount)) {
 
@@ -355,7 +339,7 @@ function dorea_admin_pay_campaign():void
 
                 // calculate remaining amount eth to pay
                 $remainingAmount = bcsub((float)array_sum($totalEthers), number_format((float)$contractAmount, 10), 5);
-                //var_dump($remainingAmount);
+
                 // load campaign credit scripts
                 wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'),
                     array(),
@@ -474,7 +458,6 @@ function dorea_admin_pay_campaign():void
 
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
 
-                //var_dump($qualifiedUserEthers);
                 // pass params value for deployment
                 $payParams = array(
                     'contractAddress' => $doreaContractAddress,

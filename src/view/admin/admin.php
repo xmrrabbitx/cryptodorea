@@ -4,20 +4,6 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
-//$currentDate = (int)strtotime(date("d.m.Y") . " 00:00:00");
-//var_dump($currentDate);
-//$campaignInfo = get_transient('doreaaccounttest_3dba39c');
-//$campaignInfo['timestampStart'] = '1738203303000';
-//$campaignInfo['timestampExpire'] = '1738359123';
-//set_transient('doreaaccounttest_3dba39c', $campaignInfo);
-//var_dump(get_transient('test_9845f26'));
-//var_dump(get_transient('doreaaccounttest_3dba39c'));
-
-
-//$n = (0.00002 + 0.00002);
-//var_dump(sprintf('%.10f', $n));
-//    $campaignUser = get_option('dorea_campaigninfo_user_' . wp_get_current_user()->user_login);
-
 /**
  * add menu options to admin panels
  */

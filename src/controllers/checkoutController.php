@@ -149,7 +149,6 @@ class checkoutController extends checkoutAbstract
         if($camapaignInfo['timestampExpire'] < $currentDate){
             return "expired";
         }elseif($camapaignInfo['timestampStart'] > $currentDate){
-
             return "notStarted";
         }
 
@@ -160,7 +159,7 @@ class checkoutController extends checkoutAbstract
     public function timestampToDate($campaign)
     {
         $camapaignInfo = get_transient($campaign);
-
-        return gmdate('Y/m/d', $camapaignInfo['timestampStart']);
+;
+        return gmdate('Y-m-d H:i:s', $camapaignInfo['timestampStart']);
     }
 }
