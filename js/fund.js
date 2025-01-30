@@ -16,7 +16,7 @@ jQuery(document).ready(async function($) {
 
     fundCampaign.addEventListener("click", async function(){
 
-        // connect to Arbitrium One  Mainnet
+        // connect to Arbitrum One  Mainnet
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
             params: [{

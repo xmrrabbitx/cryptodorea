@@ -21,7 +21,7 @@ function delay(){
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
-                // connect to Arbitrium One  Mainnet
+                // connect to Arbitrum One  Mainnet
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
                     params: [{

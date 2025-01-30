@@ -34,7 +34,7 @@ For now, our focus is on Ethereum; in the future, there will be more cryptocurre
 
 = Which blockchain network are supported? =
 
-For now, it supports Arbitrium One Network; in the future, there will be more network support.
+For now, it supports Arbitrum One Network; in the future, there will be more network support.
 
 = Does Cryptodorea integrate with WooCommerce? =
 
