@@ -56,7 +56,11 @@ class usersController extends usersAbstract
 
         $paymentTrxIds = get_option("paymentTrxIds");
         if($paymentTrxIds) {
-            if (!in_array($trxId, $paymentTrxIds[$campaignName])) {
+            if(isset($paymentTrxIds[$campaignName])) {
+                if (!in_array($trxId, $paymentTrxIds[$campaignName])) {
+                    $paymentTrxIds[$campaignName][] = $trxId;
+                }
+            }else{
                 $paymentTrxIds[$campaignName][] = $trxId;
             }
             update_option("paymentTrxIds", $paymentTrxIds);

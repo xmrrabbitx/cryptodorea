@@ -4,14 +4,15 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
-var_dump(get_option('paymentTrxIds'));
-
 /**
  * add menu options to admin panels
  */
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
+
+    var_dump(get_option('paymentTrxIds'));
+
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {

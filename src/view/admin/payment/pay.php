@@ -676,7 +676,7 @@ function trxIdsGenerate($cashbackName)
     $paymentTrxIds = get_option('paymentTrxIds');
     $trxHash = "0x" . bin2hex(random_bytes(32));
     if(isset($paymentTrxIds)) {
-        if ($paymentTrxIds) {
+        if ($paymentTrxIds[$cashbackName]) {
             if (!in_array($trxHash, $paymentTrxIds[$cashbackName])) {
                 return $trxHash;
             } else {
