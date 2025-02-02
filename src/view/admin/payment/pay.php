@@ -457,6 +457,10 @@ function dorea_admin_pay_campaign():void
                 ');
 
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
+                $trxId = trxIdsGenerate($cashbackName);
+
+                var_dump($doreaContractAddress);
+                var_dump($trxId);
 
                 // pass params value for deployment
                 $payParams = array(
@@ -467,7 +471,8 @@ function dorea_admin_pay_campaign():void
                     'cryptoAmount' => $cryptoAmount,
                     'usersList' => $usersList,
                     'totalPurchases' => $userTotalPurchases,
-                    "payAjaxNonce"=>$ajaxNonce
+                    "payAjaxNonce" => $ajaxNonce,
+                    "trxId" => $trxId
                 );
                 wp_localize_script('DOREA_PAY_SCRIPT', 'param', $payParams);
 
@@ -656,9 +661,29 @@ function dorea_pay():void
 
                 // check is_paid
                 $users = new usersController();
-                $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases);
+                $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases, $json->trxId);
 
             }
+        }
+    }
+}
+
+/**
+ * Generate transactions Ids
+ */
+function trxIdsGenerate($cashbackName)
+{
+    $paymentTrxIds = get_option('paymentTrxIds');
+    $trxHash = "0x" . bin2hex(random_bytes(32));
+    if(isset($paymentTrxIds)) {
+        if ($paymentTrxIds) {
+            if (!in_array($trxHash, $paymentTrxIds[$cashbackName])) {
+                return $trxHash;
+            } else {
+                return trxIdsGenerate($cashbackName);
+            }
+        }else{
+            return $trxHash;
         }
     }
 }

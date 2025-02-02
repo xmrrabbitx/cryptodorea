@@ -4,6 +4,8 @@ use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 
+var_dump(get_option('paymentTrxIds'));
+
 /**
  * add menu options to admin panels
  */

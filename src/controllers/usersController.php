@@ -31,7 +31,7 @@ class usersController extends usersAbstract
         }
     }
 
-    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases): bool
+    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases, $trxId): bool
     {
         for($i=0;$i<=count($userList) -1;$i++) {
             $campaignUser = get_option('dorea_campaigninfo_user_' . $userList[$i]);
@@ -53,6 +53,17 @@ class usersController extends usersAbstract
         }
 
         $claimedUsers = get_option("dorea_claimed_users_" . $campaignName);
+
+        $paymentTrxIds = get_option("paymentTrxIds");
+        if($paymentTrxIds) {
+            if (!in_array($trxId, $paymentTrxIds[$campaignName])) {
+                $paymentTrxIds[$campaignName][] = $trxId;
+            }
+            update_option("paymentTrxIds", $paymentTrxIds);
+        }else{
+            $paymentTrxIds[$campaignName][] = $trxId;
+            add_option("paymentTrxIds", $paymentTrxIds);
+        }
 
         if($claimedUsers){
             $claimedUsers = array_merge($claimedUsers, $userList);

@@ -17,6 +17,7 @@ jQuery(document).ready(async function($) {
 
     payCampaign.addEventListener("click", async function () {
 
+        /*
         // connect to Arbitrum One  Mainnet
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
@@ -32,6 +33,7 @@ jQuery(document).ready(async function($) {
                 blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
             }]
         });
+        */
 
         function convertToWei(amounts) {
 
@@ -136,9 +138,12 @@ jQuery(document).ready(async function($) {
                     return true;
                 }
 
+                console.log(s)
+
                 await contract.pay(
                     JSON.parse(userAddresses),
                     amounts,
+                    param.trxId,
                     messageHash,
                     v,
                     r,
@@ -170,7 +175,8 @@ jQuery(document).ready(async function($) {
                                         'balance': balance,
                                         "campaignName": campaignName,
                                         "totalPurchases": param.totalPurchases,
-                                        "claimedAmount": param.qualifiedUserEthers
+                                        "claimedAmount": param.qualifiedUserEthers,
+                                        "trxId":param.trxId
                                     }),
                                 },
                                 complete: function (response) {

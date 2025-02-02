@@ -21,6 +21,7 @@ function delay(){
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
+                /*
                 // connect to Arbitrum One  Mainnet
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
@@ -36,6 +37,7 @@ function delay(){
                         blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
                     }]
                 });
+                 */
 
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");
