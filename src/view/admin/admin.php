@@ -11,7 +11,8 @@ add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
 
-    var_dump(get_option('paymentTrxIds'));
+    //var_dump(get_option('paymentTrxIds'));
+    var_dump(get_transient('test_ea774d6'));
 
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 

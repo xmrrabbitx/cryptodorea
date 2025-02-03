@@ -58,6 +58,7 @@ jQuery(document).ready(async function($) {
 
         let balance = await contract.getBalance();
         balance = convertWeiToEther(parseInt(balance));
+        let trxId = await contract.checkTrxIds();
 
         jQuery.ajax({
             type: "post",

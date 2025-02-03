@@ -95,7 +95,8 @@ jQuery(document).ready(async function($) {
 
             // show warning before Trx popup message
             $(beforeTrxModal).show("slow");
-            await new Promise(r => setTimeout(r, 2000));
+            await new Promise(r => setTimeout(r, 3000));
+            $(beforeTrxModal).hide("slow");
 
             sessionStorage.setItem('deployState', 'false');
 

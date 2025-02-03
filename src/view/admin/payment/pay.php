@@ -485,6 +485,7 @@ function dorea_admin_pay_campaign():void
                         </div>
                     </div>
                 ');
+
                 // load fail break script
                 wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/payFailBreak.js'), array('jquery', 'jquery-ui-core'),
                     array(),

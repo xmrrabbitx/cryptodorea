@@ -109,13 +109,13 @@ function delay(){
 
                     const body = document.body;
 
+
                     try {
 
                         // show warning before Trx popup message
                         $(beforeTrxModal).show("slow");
-                        await new Promise(r => setTimeout(r, 2000));
-
-                        sessionStorage.setItem('deployState', 'false');
+                        await new Promise(r => setTimeout(r, 3000));
+                        $(beforeTrxModal).hide("slow");
 
                         // Disable interactions
                         body.style.pointerEvents = 'none';
@@ -152,65 +152,64 @@ function delay(){
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
 
-                        await factory.deploy(
+                        let contractObj = await factory.deploy(
                             {
                                 value: contractAmountBigInt.toString(),
                                 gasLimit: 3000000,
                             }
-                        ).then(async function (response) {
+                        );
+
+                        let _wpnonce =  param.ajaxNonce;
+                        let failedTime = Date.now();
+                        let contractAddress = contractObj.target;
+                        sessionStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName, failedTime, _wpnonce}) );
+
+                        contractObj.waitForDeployment().then(async (receipt) => {
 
                             successMessg.innerHTML = "payment has been successfull!";
                             $(successMessg).show("slow");
                             await new Promise(r => setTimeout(r, 1500));
                             $(successMessg).hide("slow");
 
-                            let contractAddress = response.target;
+                            let contractAddress = receipt.target;
 
-                            sessionStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName}) );
+                            if (receipt) {
 
-                            // wait for deployment
-                            response.waitForDeployment().then(async (receipt) => {
+                                const contract = new ethers.Contract(contractAddress, abi, signer);
 
-                                if (receipt) {
+                                let balance = await contract.getBalance();
+                                balance = convertWeiToEther(parseInt(balance));
 
-                                    const contract = new ethers.Contract(contractAddress, abi, signer);
+                                jQuery.ajax({
+                                    type: "post",
+                                    url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.ajaxNonce,
+                                    data: {
+                                        action: "dorea_contract_address",  // the action to fire in the server
+                                        data: JSON.stringify({
+                                            "contractAddress":contractAddress,
+                                            "contractAmount": balance,
+                                            "campaignName":campaignName
+                                        }),
+                                    },
+                                    complete: function (response) {
 
-                                    let balance = await contract.getBalance();
-                                    balance = convertWeiToEther(parseInt(balance));
+                                        $(beforeTrxModal).hide("slow");
 
+                                        sessionStorage.removeItem('deployFailBreak');
 
-                                    jQuery.ajax({
-                                        type: "post",
-                                        url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.ajaxNonce,
-                                        data: {
-                                            action: "dorea_contract_address",  // the action to fire in the server
-                                            data: JSON.stringify({
-                                                "contractAddress":contractAddress,
-                                                "contractAmount": balance,
-                                                "campaignName":campaignName
-                                            }),
-                                        },
-                                        complete: function (response) {
+                                        //window.location.reload();
 
-                                            $(beforeTrxModal).hide("slow");
+                                        // enable interactions
+                                        body.style.pointerEvents = 'visible';
+                                        body.style.opacity = '1';
+                                        body.style.userSelect = 'visible'; // enable text selection
+                                        body.style.overflow = 'visible'; // Prevent scrolling
 
-                                            sessionStorage.removeItem('deployFailBreak');
-                                            sessionStorage.removeItem('deployState');
+                                        return false;
+                                    },
+                                });
 
-                                            window.location.reload();
-
-                                            // enable interactions
-                                            body.style.pointerEvents = 'visible';
-                                            body.style.opacity = '1';
-                                            body.style.userSelect = 'visible'; // enable text selection
-                                            body.style.overflow = 'visible'; // Prevent scrolling
-
-                                            return false;
-                                        },
-                                    });
-
-                                }
-                            });
+                            }
 
                         });
 
@@ -242,12 +241,6 @@ function delay(){
                     // enable dorea fund button
                     document.getElementById("doreaFund").disabled = false;
 
-                    let trxExpired = document.getElementById("trxExpired");
-                    trxExpired.addEventListener("click", async () => {
-                        let trxExpired = document.getElementById("trxExpired");
-                        $(trxExpired).hide("slow");
-                    });
-
                 }
                 else{
 
@@ -260,7 +253,6 @@ function delay(){
                     $(errorMessg).hide("slow");
 
                 }
-
             })
         });
     })();
