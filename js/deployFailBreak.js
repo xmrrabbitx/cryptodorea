@@ -16,7 +16,7 @@ jQuery(document).ready(async function($) {
 
     }
 
-    let deployFailBreak = sessionStorage.getItem('deployFailBreak');
+    let deployFailBreak = localStorage.getItem('deployFailBreak');
     if(deployFailBreak){
         let contractAddress = JSON.parse(deployFailBreak).contractAddress;
         let campaignName = JSON.parse(deployFailBreak).campaignName;
@@ -67,12 +67,12 @@ jQuery(document).ready(async function($) {
                                 // pop up message to reload the  page after interrupt transaction
                                 let failBreakModal = document.getElementById("failBreakModal");
                                 $(failBreakModal).show("slow");
-                                sessionStorage.removeItem('deployFailBreak');
+                                localStorage.removeItem('deployFailBreak');
                                 return false;
                             },
                         });
 
-                        sessionStorage.removeItem('deployFailBreak');
+                        localStorage.removeItem('deployFailBreak');
 
                         return true;
                     }
@@ -83,7 +83,7 @@ jQuery(document).ready(async function($) {
                 await new Promise(r => setTimeout(r, 1500));
                 $(errorMessg).hide("slow");
 
-                sessionStorage.removeItem('deployFailBreak');
+                localStorage.removeItem('deployFailBreak');
 
             })();
         }

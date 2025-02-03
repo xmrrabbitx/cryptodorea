@@ -162,7 +162,7 @@ function delay(){
                         let _wpnonce =  param.ajaxNonce;
                         let failedTime = Date.now();
                         let contractAddress = contractObj.target;
-                        sessionStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName, failedTime, _wpnonce}) );
+                        localStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName, failedTime, _wpnonce}) );
 
                         contractObj.waitForDeployment().then(async (receipt) => {
 
@@ -195,7 +195,7 @@ function delay(){
 
                                         $(beforeTrxModal).hide("slow");
 
-                                        sessionStorage.removeItem('deployFailBreak');
+                                        localStorage.removeItem('deployFailBreak');
 
                                         //window.location.reload();
 
@@ -218,7 +218,7 @@ function delay(){
 
                         $(beforeTrxModal).hide("slow");
 
-                        sessionStorage.removeItem('deployState');
+                        localStorage.removeItem('deployState');
 
                         document.getElementById("doreaFund").disabled = false;
 

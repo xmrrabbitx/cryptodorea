@@ -12,7 +12,7 @@ function dorea_add_menu_page(): void
 {
 
     //var_dump(get_option('paymentTrxIds'));
-    var_dump(get_transient('test_ea774d6'));
+    var_dump(get_transient('test_f945dbe'));
 
     $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
 
