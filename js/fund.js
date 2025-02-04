@@ -10,9 +10,9 @@ let successMessg = document.getElementById("dorea_success");
 
 jQuery(document).ready(async function($) {
 
-    if(sessionStorage.getItem('deployState')){
-        location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
-    }
+    //if(localStorage.getItem('deployState')){
+    //    location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+    //}
 
     fundCampaign.addEventListener("click", async function(){
 
@@ -92,13 +92,10 @@ jQuery(document).ready(async function($) {
         const body = document.body;
 
         try{
-
             // show warning before Trx popup message
             $(beforeTrxModal).show("slow");
             await new Promise(r => setTimeout(r, 3000));
             $(beforeTrxModal).hide("slow");
-
-            sessionStorage.setItem('deployState', 'false');
 
             // disable dorea fund button
             fundCampaign.disabled = true;
@@ -125,7 +122,7 @@ jQuery(document).ready(async function($) {
 
             const contract = new ethers.Contract(contractAddress, abi, signer);
 
-            await contract.fundAgain(
+            let fundObj = await contract.fundAgain(
                 messageHash,
                 v,
                 r,
@@ -134,11 +131,14 @@ jQuery(document).ready(async function($) {
                     value: fundAgainAmount.toString(),
                     gasLimit :3000000,
                 },
-            ).then(async function(response){
+            );
 
-                sessionStorage.setItem('fundFailBreak', JSON.stringify({campaignName}) );
+            //let trxHash = fundObj.hash;
+            let _wpnonce =  param.fundAjaxNonce;
+            let amount = fundAgainAmount.toString();
+            localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce}) );
 
-                response.wait().then(async (receipt) => {
+            await fundObj.wait().then(async (receipt) => {
 
                     // transaction on confirmed and mined
                     if (receipt) {
@@ -165,10 +165,9 @@ jQuery(document).ready(async function($) {
 
                                 $(beforeTrxModal).hide("slow");
 
-                                sessionStorage.removeItem('fundFailBreak');
-                                sessionStorage.removeItem('deployState');
+                                localStorage.removeItem('fundFailBreak');
 
-                                window.location.reload();
+                                //window.location.reload();
 
                                 // enable interactions
                                 body.style.pointerEvents = 'visible';
@@ -181,15 +180,13 @@ jQuery(document).ready(async function($) {
                         });
 
                     }
-                });
-
-            })
+            });
         }
         catch (error) {
 
             $(beforeTrxModal).hide("slow");
 
-            sessionStorage.removeItem('deployState');
+            localStorage.removeItem('fundFailBreak');
 
             // enable dorea fund button
             fundCampaign.disabled = false;

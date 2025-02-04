@@ -13,11 +13,13 @@ jQuery(document).ready(async function($) {
 
     }
 
-    let fundFailBreak = sessionStorage.getItem('fundFailBreak');
+    let fundFailBreak = localStorage.getItem('fundFailBreak');
 
     if(fundFailBreak){
         let contractAddress = params.contractAddress;
         let campaignName = JSON.parse(fundFailBreak).campaignName;
+        let amount = JSON.parse(fundFailBreak).amount;
+        let _wpnonce = JSON.parse(fundFailBreak)._wpnonce;
 
         const provider = new BrowserProvider(window.ethereum);
 
@@ -27,28 +29,33 @@ jQuery(document).ready(async function($) {
         const contract = new ethers.Contract(contractAddress, abi, signer);
 
         let balance = await contract.getBalance();
-        balance = convertWeiToEther(parseInt(balance));
+        if(balance >= amount) {
+            console.log(balance)
+            console.log(amount)
+            balance = convertWeiToEther(parseInt(balance));
 
-        jQuery.ajax({
-            type: "post",
-            url: `${window.location.origin}/wp-admin/admin-ajax.php`,
-            data: {
-                action: "dorea_fund",
-                data: JSON.stringify({
-                    "balance": balance,
-                    "campaignName": campaignName,
-                }),
-            },
-            complete: function (response) {
-                // pop up message to reload the  page after interrupt transaction
-                let failBreakModal = document.getElementById("failBreakModal");
-                $(failBreakModal).show("slow");
-                sessionStorage.removeItem('fundFailBreak');
-                return false;
-            },
-        });
+            jQuery.ajax({
+                type: "post",
+                url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + _wpnonce,
+                data: {
+                    action: "dorea_fund",
+                    data: JSON.stringify({
+                        "balance": balance,
+                        "campaignName": campaignName,
+                    }),
+                },
+                complete: function (response) {
+                    // pop up message to reload the  page after interrupt transaction
+                    let failBreakModal = document.getElementById("failBreakModal");
+                    $(failBreakModal).show("slow");
+                    localStorage.removeItem('fundFailBreak');
+                    return false;
+                },
+            });
 
-        sessionStorage.removeItem('fundFailBreak');
+        }
+
+        localStorage.removeItem('fundFailBreak');
 
     }
 

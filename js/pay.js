@@ -139,8 +139,6 @@ jQuery(document).ready(async function($) {
                     return true;
                 }
 
-                console.log(s)
-
                 await contract.pay(
                     JSON.parse(userAddresses),
                     amounts,

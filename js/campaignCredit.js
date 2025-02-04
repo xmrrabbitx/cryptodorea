@@ -15,9 +15,9 @@ function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
 
-            if(sessionStorage.getItem('deployState')){
-                location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
-            }
+            //if(sessionStorage.getItem('deployState')){
+              //  location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+            //}
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
@@ -197,7 +197,7 @@ function delay(){
 
                                         localStorage.removeItem('deployFailBreak');
 
-                                        //window.location.reload();
+                                        window.location.reload();
 
                                         // enable interactions
                                         body.style.pointerEvents = 'visible';

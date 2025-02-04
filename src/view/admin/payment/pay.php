@@ -189,7 +189,8 @@ function dorea_admin_pay_campaign():void
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
                 // base eth price
-                $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                //$ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                $ethBasePrice = 0.0004;
 
                 if($ethBasePrice) {
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
