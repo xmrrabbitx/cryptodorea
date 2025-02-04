@@ -460,9 +460,6 @@ function dorea_admin_pay_campaign():void
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
                 $trxId = trxIdsGenerate($cashbackName);
 
-                var_dump($doreaContractAddress);
-                var_dump($trxId);
-
                 // pass params value for deployment
                 $payParams = array(
                     'contractAddress' => $doreaContractAddress,

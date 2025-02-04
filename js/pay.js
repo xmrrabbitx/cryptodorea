@@ -11,9 +11,9 @@ const beforeTrxModal = document.getElementById("beforeTrxModal");
 
 jQuery(document).ready(async function($) {
 
-    if(sessionStorage.getItem('deployState')){
-        location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
-    }
+   // if(sessionStorage.getItem('deployState')){
+    //    location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+   // }
 
     payCampaign.addEventListener("click", async function () {
 
@@ -96,8 +96,6 @@ jQuery(document).ready(async function($) {
                 await new Promise(r => setTimeout(r, 3000));
                 $(beforeTrxModal).hide("slow");
 
-                sessionStorage.setItem('deployState', 'false');
-
                 // disable dorea fund button
                 payCampaign.disabled = true;
 
@@ -129,6 +127,8 @@ jQuery(document).ready(async function($) {
                 const contract = new ethers.Contract(contractAddress, abi, signer);
 
                 let balance = await contract.getBalance();
+                console.log(balance)
+                console.log(amountsSum)
 
                 if (balance < amountsSum || parseInt(balance) === 0) {
 
@@ -139,7 +139,7 @@ jQuery(document).ready(async function($) {
                     return true;
                 }
 
-                await contract.pay(
+                let payObj = await contract.pay(
                     JSON.parse(userAddresses),
                     amounts,
                     param.trxId,
@@ -147,9 +147,14 @@ jQuery(document).ready(async function($) {
                     v,
                     r,
                     s
-                ).then(async function (response) {
+                )
 
-                    sessionStorage.setItem('payFailBreak', JSON.stringify({campaignName}) );
+                let trxId = param.trxId;
+                let _wpnonce =  param.payAjaxNonce;
+                let failedTime = Date.now();
+                localStorage.setItem('payFailBreak', JSON.stringify({campaignName, trxId, _wpnonce, failedTime}) );
+
+                await payObj.wait().then(async (receipt) => {
 
                     response.wait().then(async (receipt) => {
                         // transaction on confirmed and mined
@@ -182,8 +187,7 @@ jQuery(document).ready(async function($) {
 
                                     $(beforeTrxModal).hide("slow");
 
-                                    sessionStorage.removeItem('payFailBreak');
-                                    sessionStorage.removeItem('deployState');
+                                    localStorage.removeItem('payFailBreak');
 
                                     window.location.reload();
 
@@ -205,7 +209,7 @@ jQuery(document).ready(async function($) {
 
                 $(beforeTrxModal).hide("slow");
 
-                sessionStorage.removeItem('deployState');
+                localStorage.removeItem('deployState');
 
                 // enable dorea fund button
                 payCampaign.disabled = false;

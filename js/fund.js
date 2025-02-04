@@ -136,7 +136,8 @@ jQuery(document).ready(async function($) {
             //let trxHash = fundObj.hash;
             let _wpnonce =  param.fundAjaxNonce;
             let amount = fundAgainAmount.toString();
-            localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce}) );
+            let failedTime = Date.now();
+            localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce, failedTime}) );
 
             await fundObj.wait().then(async (receipt) => {
 
@@ -167,7 +168,7 @@ jQuery(document).ready(async function($) {
 
                                 localStorage.removeItem('fundFailBreak');
 
-                                //window.location.reload();
+                                window.location.reload();
 
                                 // enable interactions
                                 body.style.pointerEvents = 'visible';

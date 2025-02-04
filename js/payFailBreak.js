@@ -43,48 +43,68 @@ jQuery(document).ready(async function($) {
 
     let amounts = convertToWei(params.qualifiedUserEthers);
 
-    let payFailBreak = sessionStorage.getItem('payFailBreak');
+    let payFailBreak = localStorage.getItem('payFailBreak');
 
     if(payFailBreak){
         let contractAddress = params.contractAddress;
         let campaignName = JSON.parse(payFailBreak).campaignName;
+        let _wpnonce = JSON.parse(payFailBreak)._wpnonce;
+        let failedTime = JSON.parse(payFailBreak).failedTime;
+        let _trxId = JSON.parse(payFailBreak).trxId;
 
-        const provider = new BrowserProvider(window.ethereum);
+        let time;
+        if(Date.now() > (failedTime + 20000)){
+            time = 0;
+        }else {
+            time = ((failedTime + 20000) - Date.now());
+        }
 
-        // Get the signer from the provider metamask
-        const signer = await provider.getSigner();
+        setTimeout(delay, time)
+        function delay() {
+            (async () => {
 
-        const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        let balance = await contract.getBalance();
-        balance = convertWeiToEther(parseInt(balance));
-        let trxId = await contract.checkTrxIds();
+                const provider = new BrowserProvider(window.ethereum);
 
-        jQuery.ajax({
-            type: "post",
-            url: `${window.location.origin}/wp-admin/admin-ajax.php`,
-            data: {
-                action: "dorea_pay",
-                data: JSON.stringify({
-                    "userList":params.usersList,
-                    "amountWei": amounts,
-                    'balance': balance,
-                    "campaignName": campaignName,
-                    "totalPurchases": params.totalPurchases,
-                    "claimedAmount": params.qualifiedUserEthers
-                }),
-            },
-            complete: function (response) {
-                // pop up message to reload the  page after interrupt transaction
-                let failBreakModal = document.getElementById("failBreakModal");
-                $(failBreakModal).show("slow");
-                sessionStorage.removeItem('payFailBreak');
-                return false;
-            },
-        });
+                // Get the signer from the provider metamask
+                const signer = await provider.getSigner();
 
-        sessionStorage.removeItem('payFailBreak');
+                const contract = new ethers.Contract(contractAddress, abi, signer);
 
+                let balance = await contract.getBalance();
+                balance = convertWeiToEther(parseInt(balance));
+                let trxId = await contract.checkTrxIds(_trxId);
+
+                console.log(trxId)
+                if(trxId === true) {
+                    jQuery.ajax({
+                        type: "post",
+                        url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + _wpnonce,
+                        data: {
+                            action: "dorea_pay",
+                            data: JSON.stringify({
+                                "userList": params.usersList,
+                                "amountWei": amounts,
+                                'balance': balance,
+                                "campaignName": campaignName,
+                                "totalPurchases": params.totalPurchases,
+                                "claimedAmount": params.qualifiedUserEthers
+                            }),
+                        },
+                        complete: function (response) {
+                            // pop up message to reload the  page after interrupt transaction
+                            let failBreakModal = document.getElementById("failBreakModal");
+                            $(failBreakModal).show("slow");
+                            localStorage.removeItem('payFailBreak');
+                            return false;
+                        },
+                    });
+
+                }
+                localStorage.removeItem('payFailBreak');
+
+            })();
+        }
     }
 
     let failBreakReload = document.getElementById("failBreakReload");
