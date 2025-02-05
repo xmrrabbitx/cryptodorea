@@ -10,10 +10,6 @@ let successMessg = document.getElementById("dorea_success");
 
 jQuery(document).ready(async function($) {
 
-    //if(localStorage.getItem('deployState')){
-    //    location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
-    //}
-
     fundCampaign.addEventListener("click", async function(){
 
         /*
@@ -90,6 +86,7 @@ jQuery(document).ready(async function($) {
         const messageHash = ethers.id(message);
 
         const body = document.body;
+        let failBreakReload = document.getElementById("doreaFailedBreakStatusLoading");
 
         try{
             // show warning before Trx popup message
@@ -100,6 +97,7 @@ jQuery(document).ready(async function($) {
             // disable dorea fund button
             fundCampaign.disabled = true;
 
+            $(failBreakReload).show();
             // Disable interactions
             body.style.pointerEvents = 'none';
             body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -122,6 +120,11 @@ jQuery(document).ready(async function($) {
 
             const contract = new ethers.Contract(contractAddress, abi, signer);
 
+            let _wpnonce =  param.fundAjaxNonce;
+            let amount = fundAgainAmount.toString();
+            let failedTime = Date.now();
+            localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce, failedTime}) );
+
             let fundObj = await contract.fundAgain(
                 messageHash,
                 v,
@@ -132,12 +135,6 @@ jQuery(document).ready(async function($) {
                     gasLimit :3000000,
                 },
             );
-
-            //let trxHash = fundObj.hash;
-            let _wpnonce =  param.fundAjaxNonce;
-            let amount = fundAgainAmount.toString();
-            let failedTime = Date.now();
-            localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce, failedTime}) );
 
             await fundObj.wait().then(async (receipt) => {
 
@@ -170,6 +167,7 @@ jQuery(document).ready(async function($) {
 
                                 window.location.reload();
 
+                                $(failBreakReload).hide();
                                 // enable interactions
                                 body.style.pointerEvents = 'visible';
                                 body.style.opacity = '1';
@@ -186,6 +184,7 @@ jQuery(document).ready(async function($) {
         catch (error) {
 
             $(beforeTrxModal).hide("slow");
+            $(failBreakReload).hide();
 
             localStorage.removeItem('fundFailBreak');
 

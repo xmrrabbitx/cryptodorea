@@ -15,10 +15,6 @@ function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
 
-            //if(sessionStorage.getItem('deployState')){
-              //  location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
-            //}
-
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
                 /*
@@ -68,7 +64,8 @@ function delay(){
 
                         document.getElementById("doreaFund").disabled = false;
                         return false;
-                    } else if ( (/[^.0-9 ]/g.exec(contractAmount)) )  {
+                    }
+                    else if ( (/[^.0-9 ]/g.exec(contractAmount)) )  {
 
                         metamaskError.style.display = "block";
                         errorMessg.innerHTML = "cryptocurrency amount must be in the decimal format!";
@@ -80,7 +77,8 @@ function delay(){
                         document.getElementById("doreaFund").disabled = false;
                         return false;
 
-                    } else {
+                    }
+                    else {
                         metamaskError.style.display = "none";
                     }
 
@@ -108,7 +106,7 @@ function delay(){
                     }
 
                     const body = document.body;
-
+                    let failBreakReload = document.getElementById("doreaFailedBreakStatusLoading");
 
                     try {
 
@@ -117,6 +115,7 @@ function delay(){
                         await new Promise(r => setTimeout(r, 3000));
                         $(beforeTrxModal).hide("slow");
 
+                        $(failBreakReload).show();
                         // Disable interactions
                         body.style.pointerEvents = 'none';
                         body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -199,6 +198,7 @@ function delay(){
 
                                         window.location.reload();
 
+                                        $(failBreakReload).hide();
                                         // enable interactions
                                         body.style.pointerEvents = 'visible';
                                         body.style.opacity = '1';
@@ -217,6 +217,7 @@ function delay(){
                     catch (error) {
 
                         $(beforeTrxModal).hide("slow");
+                        $(failBreakReload).hide();
 
                         localStorage.removeItem('deployState');
 

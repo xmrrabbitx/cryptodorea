@@ -59,10 +59,25 @@ jQuery(document).ready(async function($) {
             time = ((failedTime + 20000) - Date.now());
         }
 
+        const body = document.body;
+        let failBreakReload = document.getElementById("doreaFailedBreakStatusLoading");
+        $(failBreakReload).show();
+        // Disable interactions
+        body.style.pointerEvents = 'none';
+        body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
+        body.style.userSelect = 'none'; // Disables text selection
+        body.style.overflow = 'hidden'; // Prevent scrolling
+
         setTimeout(delay, time)
         function delay() {
             (async () => {
 
+                $(failBreakReload).hide();
+                // enable interactions
+                body.style.pointerEvents = 'visible';
+                body.style.opacity = '1';
+                body.style.userSelect = 'visible'; // enable text selection
+                body.style.overflow = 'visible'; // Prevent scrolling
 
                 const provider = new BrowserProvider(window.ethereum);
 
