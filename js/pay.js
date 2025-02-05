@@ -140,6 +140,8 @@ jQuery(document).ready(async function($) {
                 let failedTime = Date.now();
                 localStorage.setItem('payFailBreak', JSON.stringify({campaignName, trxId, _wpnonce, failedTime}) );
 
+                localStorage.setItem("doreaTimer", true);
+
                 let payObj = await contract.pay(
                     JSON.parse(userAddresses),
                     amounts,
@@ -152,9 +154,8 @@ jQuery(document).ready(async function($) {
 
                 await payObj.wait().then(async (receipt) => {
 
-                    response.wait().then(async (receipt) => {
-                        // transaction on confirmed and mined
-                        if (receipt) {
+                    // transaction on confirmed and mined
+                    if (receipt) {
 
                             balance = await contract.getBalance();
                             balance = convertWeiToEther(parseInt(balance));
@@ -199,7 +200,7 @@ jQuery(document).ready(async function($) {
                             });
 
                         }
-                    });
+
                 });
             }
             catch (error) {

@@ -131,6 +131,7 @@ function dorea_cashback_campaign_credit():void
                 </svg>
             </div>
             <p class="!text-center !mt-3">please wait until sync is done...</p>
+            <p id="doreaTimerLoading" class="!text-center !mt-3" style="display: none"></p>
         </div>
         
         </main>

@@ -325,6 +325,7 @@ function dorea_main_page_content():void
                </svg>
            </div>
            <p class="!text-center !mt-3">please wait until sync is done...</p>
+           <p id="doreaTimerLoading" class="!text-center !mt-3" style="display: none"></p>
         </div>
     ');
 

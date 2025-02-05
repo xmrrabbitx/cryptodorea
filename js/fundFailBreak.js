@@ -38,7 +38,22 @@ jQuery(document).ready(async function($) {
         body.style.userSelect = 'none'; // Disables text selection
         body.style.overflow = 'hidden'; // Prevent scrolling
 
-        setTimeout(delay, time)
+        let timerStatus = localStorage.getItem("doreaTimer");
+        let timer = time;
+        let delayTime;
+        // counter timer to syc previous transaction or pay it until expiration
+        let doreaTimerLoading = document.getElementById("doreaTimerLoading");
+        doreaTimerLoading.style.display = "block";
+        if(timerStatus) {
+            for(timer;timer >= 0;){
+                await new Promise(r => setTimeout(r, 1000));
+                doreaTimerLoading.innerHTML = parseInt(timer / 1000);
+                timer = timer - 1000;
+                delayTime = timer;
+            }
+        }
+
+        setTimeout(delay, delayTime)
         function delay() {
             (async () => {
 

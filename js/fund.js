@@ -125,6 +125,8 @@ jQuery(document).ready(async function($) {
             let failedTime = Date.now();
             localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce, failedTime}) );
 
+            localStorage.setItem("doreaTimer", true);
+
             let fundObj = await contract.fundAgain(
                 messageHash,
                 v,
@@ -135,6 +137,8 @@ jQuery(document).ready(async function($) {
                     gasLimit :3000000,
                 },
             );
+
+            localStorage.removeItem("doreaTimer");
 
             await fundObj.wait().then(async (receipt) => {
 
