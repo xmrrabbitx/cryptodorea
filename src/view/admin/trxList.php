@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Transactions List of campaigns
  */
@@ -20,7 +22,7 @@ function dorea_admin_trx_campaign():void
     add_filter('update_footer', 'update_admin_footer_text', 11);
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE', plugins_url('/cryptodorea/css/trxList.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE', DOREA_PLUGIN_URL . ('css/doreaTrxList.css'),
     array(),
     1
     );
@@ -32,7 +34,7 @@ function dorea_admin_trx_campaign():void
         if (isset($_GET['cashbackName']) && isset($_GET['pagination']) && wp_verify_nonce($nonce, 'trx_list_nonce')) {
 
             $cashbackName = sanitize_text_field(wp_unslash($_GET['cashbackName'])) ?? null;
-            $cashbackInfo = get_transient($cashbackName);
+            $cashbackInfo = get_transient('dorea_' . $cashbackName);
             if (!$cashbackInfo) {
                 wp_redirect('admin.php?page=crypto-dorea-cashback');
             }

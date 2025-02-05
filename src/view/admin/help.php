@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * help page for users
  */
@@ -16,7 +18,7 @@ function dorea_admin_help_campaign():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/help.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE',DOREA_PLUGIN_URL .('css/doreaHelp.css'),
         array(),
         1,
     );
@@ -32,7 +34,7 @@ function dorea_admin_help_campaign():void
         'disableEnable2'     => 'pics/help/disableEnable2.jpeg',
     );
 
-    $img_ids = handle_plugin_images_to_media($image_set);
+    $img_ids = dorea_images_to_media($image_set);
 
     print("
         <main>
@@ -192,8 +194,8 @@ function dorea_admin_help_campaign():void
  * @param array $images Array of image configurations ['image_key' => 'relative/path.jpg']
  * @return array Attachment IDs (false for failed items)
  */
-function handle_plugin_images_to_media($images) {
-    $stored_ids = get_option('plugin_image_attachment_ids', array());
+function dorea_images_to_media($images) {
+    $stored_ids = get_option('dorea_image_attachment_ids', array());
     $upload_dir = wp_upload_dir();
     $results = array();
 
@@ -206,7 +208,7 @@ function handle_plugin_images_to_media($images) {
         }
 
         // Set up paths
-        $plugin_full_path = plugin_dir_path(__FILE__) . $rel_path;
+        $plugin_full_path = DOREA_PLUGIN_DIR . 'src/view/admin/' . $rel_path;
 
         $target_rel_path = 'plugin-assets/' . $rel_path;
         $target_full_path = $upload_dir['basedir'] . '/' . $target_rel_path;
@@ -273,6 +275,6 @@ function handle_plugin_images_to_media($images) {
         $results[$key] = $attachment_id;
     }
 
-    update_option('plugin_image_attachment_ids', $stored_ids);
+    update_option('dorea_image_attachment_ids', $stored_ids);
     return $results;
 }

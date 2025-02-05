@@ -94,7 +94,7 @@ class checkoutController extends checkoutAbstract
         $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
         $campaignInfoUser = $this->checkoutModel->list();
         $campaignInfoUserKeys = array_keys($campaignInfoUser);
-        $campaignList = get_option("campaign_list");
+        $campaignList = get_option("dorea_campaign_list");
 
         if($queueDeleteCampaigns) {
 
@@ -131,7 +131,7 @@ class checkoutController extends checkoutAbstract
     // check if expired campaign!
     public function expire($campaign):bool
     {
-        $camapaignInfo = get_transient($campaign);
+        $camapaignInfo = get_transient('dorea_' . $campaign);
 
         $currentDate = current_time('timestamp');
 
@@ -142,7 +142,7 @@ class checkoutController extends checkoutAbstract
     // check if expired or not started campaign!
     public function checkTimestamp($campaign):string
     {
-        $camapaignInfo = get_transient($campaign);
+        $camapaignInfo = get_transient('dorea_' . $campaign);
 
         $currentDate = current_time('timestamp');
 
@@ -158,8 +158,8 @@ class checkoutController extends checkoutAbstract
 
     public function timestampToDate($campaign)
     {
-        $camapaignInfo = get_transient($campaign);
-;
+        $camapaignInfo = get_transient('dorea_' . $campaign);
+
         return gmdate('Y-m-d H:i:s', $camapaignInfo['timestampStart']);
     }
 }

@@ -54,7 +54,7 @@ class usersController extends usersAbstract
 
         $claimedUsers = get_option("dorea_claimed_users_" . $campaignName);
 
-        $paymentTrxIds = get_option("paymentTrxIds");
+        $paymentTrxIds = get_option("dorea_paymentTrxIds");
         if($paymentTrxIds) {
             if(isset($paymentTrxIds[$campaignName])) {
                 if (!in_array($trxId, $paymentTrxIds[$campaignName])) {
@@ -63,10 +63,10 @@ class usersController extends usersAbstract
             }else{
                 $paymentTrxIds[$campaignName][] = $trxId;
             }
-            update_option("paymentTrxIds", $paymentTrxIds);
+            update_option("dorea_paymentTrxIds", $paymentTrxIds);
         }else{
             $paymentTrxIds[$campaignName][] = $trxId;
-            add_option("paymentTrxIds", $paymentTrxIds);
+            add_option("dorea_paymentTrxIds", $paymentTrxIds);
         }
 
         if($claimedUsers){

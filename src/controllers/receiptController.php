@@ -37,7 +37,7 @@ class receiptController extends receiptAbstract
         if(!empty($campaignListKeys)) {
             foreach ($campaignListKeys as $campaignName) {
 
-                $mode = get_transient($campaignName)['mode'];
+                $mode = get_transient('dorea_' . $campaignName)['mode'];
                 if($mode==="on") {
                     $orderIds = $campaignList[$campaignName]['order_ids'] ?? [];
 

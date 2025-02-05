@@ -1,7 +1,7 @@
 
 // load etherJs library
-import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./ethers.min.js";
-import {abi} from "./compile.js";
+import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./doreaEthers.min.js";
+import {abi} from "./doreaCompile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
@@ -138,7 +138,6 @@ jQuery(document).ready(async function($) {
                 },
             );
 
-            localStorage.removeItem("doreaTimer");
 
             await fundObj.wait().then(async (receipt) => {
 

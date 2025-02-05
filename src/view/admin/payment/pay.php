@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 use Cryptodorea\DoreaCashback\controllers\usersController;
 use Cryptodorea\DoreaCashback\controllers\expireCampaignController;
@@ -22,7 +24,7 @@ function dorea_admin_pay_campaign():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE',DOREA_PLUGIN_URL . ('/css/doreaPay.css'),
         array(),
         1,
     );
@@ -42,7 +44,7 @@ function dorea_admin_pay_campaign():void
         if (isset($_GET['cashbackName']) && wp_verify_nonce($nonce, 'payment_nonce')) {
             $cashbackName = sanitize_key(wp_unslash($_GET['cashbackName'])) ?? null;
 
-            $cashbackInfo = get_transient($cashbackName) ?? null;
+            $cashbackInfo = get_transient('dorea_' . $cashbackName) ?? null;
 
             if (!$cashbackInfo) {
                 wp_redirect('admin.php?page=crypto-dorea-cashback');
@@ -58,7 +60,7 @@ function dorea_admin_pay_campaign():void
             }
 
             // load campaign credit scripts
-            wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'),
+            wp_enqueue_script('DOREA_PAYMENT_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaPayment.js'), array('jquery', 'jquery-ui-core'),
                 array(),
                 1,
                 true
@@ -291,7 +293,7 @@ function dorea_admin_pay_campaign():void
                             ");
 
                             // get contract address of campaign
-                            $doreaContractAddress = get_option($cashbackName . '_contract_address');
+                            $doreaContractAddress = get_option("dorea_" . $cashbackName . '_contract_address');
                             if (!empty($totalEthers)) {
 
                                 // check for funding campaign
@@ -342,7 +344,7 @@ function dorea_admin_pay_campaign():void
                 $remainingAmount = bcsub(number_format((float)array_sum($totalEthers),10), number_format((float)$contractAmount, 10), 10);
 
                 // load campaign credit scripts
-                wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_FUND_SCRIPT', DOREA_PLUGIN_URL . ('/js/doreaFund.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -397,7 +399,7 @@ function dorea_admin_pay_campaign():void
                 ');
 
                 // load fail break script
-                wp_enqueue_script('DOREA_FUNDFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/fundFailBreak.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_FUNDFAILBREAK_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaFundFailBreak.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -434,7 +436,7 @@ function dorea_admin_pay_campaign():void
                 ");
 
                 // load campaign credit scripts
-                wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_PAY_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaPay.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -505,7 +507,7 @@ function dorea_admin_pay_campaign():void
                 ');
 
                 // load fail break script
-                wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/payFailBreak.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaPayFailBreak.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -607,7 +609,7 @@ function dorea_switchCampaign()
             $json = json_decode($json);
 
             if ($json) {
-                $campaignInfoUser = get_transient(sanitize_text_field($json->campaignName));
+                $campaignInfoUser = get_transient(sanitize_text_field('dorea_' . $json->campaignName));
                 if (sanitize_text_field($json->mode) === "on") {
                     $mode = "on";
                 } else if (sanitize_text_field($json->mode) === "off") {
@@ -615,7 +617,7 @@ function dorea_switchCampaign()
                 }
 
                 $campaignInfoUser['mode'] = $mode;
-                set_transient(sanitize_text_field($json->campaignName), $campaignInfoUser);
+                set_transient(sanitize_text_field('dorea_' . $json->campaignName), $campaignInfoUser);
 
             }
         }
@@ -637,13 +639,13 @@ function dorea_fund():void
             $json = json_decode($json);
 
             if ($json) {
-                $campaignInfoUser = get_transient(sanitize_text_field($json->campaignName));
+                $campaignInfoUser = get_transient(sanitize_text_field('dorea_' . $json->campaignName));
                 $campaignInfoUser['contractAmount'] = $json->balance;
 
                 $amount = $json->amount;
                 $totalPurchases = $json->totalPurchases;
 
-                set_transient($json->campaignName, $campaignInfoUser);
+                set_transient('dorea_' . $json->campaignName, $campaignInfoUser);
 
                 if (isset($json->usersList)) {
                     $usersList = $json->usersList;
@@ -672,11 +674,11 @@ function dorea_pay():void
 
             if (isset($json)) {
 
-                $campaignInfo = get_transient($json->campaignName);
+                $campaignInfo = get_transient('dorea_' . $json->campaignName);
 
                 // convert wei to ether
                 $campaignInfo['contractAmount'] = $json->balance;
-                set_transient($json->campaignName, $campaignInfo);
+                set_transient('dorea_' . $json->campaignName, $campaignInfo);
 
                 // check is_paid
                 $users = new usersController();
@@ -692,7 +694,7 @@ function dorea_pay():void
  */
 function trxIdsGenerate($cashbackName)
 {
-    $paymentTrxIds = get_option('paymentTrxIds');
+    $paymentTrxIds = get_option('dorea_paymentTrxIds');
     $trxHash = "0x" . bin2hex(random_bytes(32));
     if(isset($paymentTrxIds)) {
         if ($paymentTrxIds[$cashbackName]) {

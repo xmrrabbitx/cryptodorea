@@ -2,9 +2,9 @@
 import {
     BrowserProvider,
     ContractFactory, ethers,
-} from "./ethers.min.js";
+} from "./doreaEthers.min.js";
 
-import {abi,bytecode} from "./compile.js";
+import {abi,bytecode} from "./doreaCompile.js";
 
 const beforeTrxModal = document.getElementById("beforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
@@ -150,6 +150,8 @@ function delay(){
                             const creditAmountInt = BigInt(Math.round(creditAmount * factor));
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
+
+                        localStorage.setItem("doreaTimer", true);
 
                         let contractObj = await factory.deploy(
                             {

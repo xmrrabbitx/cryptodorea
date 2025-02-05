@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
 
@@ -29,10 +31,10 @@ function dorea_checkout_field_process() {
                     $checkoboxes = [];
                     foreach ($diffCampaignsList as $campaign) {
 
-                        $campaignInfo = get_transient($campaign);
+                        $campaignInfo = get_transient('dorea_' . $campaign);
 
                         // check if any campaign funded or not!
-                        if (get_option($campaign . '_contract_address')) {
+                        if (get_option('dorea_' . $campaign . '_contract_address')) {
                             // check if campaign started or not
                             if ($checkoutController->expire($campaign)) {
                                 if (isset($_POST[$campaignInfo['campaignName']])){
@@ -47,7 +49,7 @@ function dorea_checkout_field_process() {
                     if (in_array(true, $checkoboxes)) {
                         if (isset($_POST['dorea_wallet_address'])) {
                             if (empty(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])))) {
-                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             }
                         }
                     }
@@ -55,12 +57,12 @@ function dorea_checkout_field_process() {
                     if(isset($_POST['dorea_wallet_address'])) {
                         if (!empty(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])))) {
                             if (substr(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])), 0, 2) !== '0x') {
-                                wc_add_notice(esc_html__('Wallet Address must start with 0x!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Wallet Address must start with 0x!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             } elseif (strlen(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address']))) < 42) {
-                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             }
                             if (!in_array(true, $checkoboxes)) {
-                                wc_add_notice(esc_html__('Please choose at least one campaign!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Please choose at least one campaign!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             }
                         }
                     }
@@ -70,7 +72,6 @@ function dorea_checkout_field_process() {
         }
     }
 }
-
 
 /**
  * Update the order meta with field value
@@ -99,10 +100,10 @@ function dorea_update_feild( $order_id ) {
                     $campaignNamesJoined = [];
                     foreach ($diffCampaignsList as $campaign) {
 
-                        $campaignInfo = get_transient($campaign);
+                        $campaignInfo = get_transient('dorea_' . $campaign);
 
                         // check if any campaign funded or not!
-                        if (get_option($campaign . '_contract_address')) {
+                        if (get_option('dorea_' . $campaign . '_contract_address')) {
                             // check if campaign started or not
                             if ($checkoutController->expire($campaign)) {
                                 if (isset($_POST[$campaignInfo['campaignName']])) {
@@ -133,8 +134,8 @@ function dorea_update_feild( $order_id ) {
 /**
  * Crypto Cashback on Checkout View
  */
-add_action('wp', 'cashback', 10);
-function cashback(): void
+add_action('wp', 'doreaCashback', 10);
+function doreaCashback(): void
 {
     static $contractAddressConfirm;
 
@@ -143,7 +144,7 @@ function cashback(): void
         if (!WC()->cart->get_cart_contents_count() == 0) {
 
             // load claim campaign style
-            wp_enqueue_style('DOREA_CHECKOUT_STYLE', plugins_url('/cryptodorea/css/checkout.css'),
+            wp_enqueue_style('DOREA_CHECKOUT_STYLE', DOREA_PLUGIN_URL . ('css/doreaCheckout.css'),
                 array(),
                 1,
             );
@@ -194,10 +195,10 @@ function cashback(): void
                                     $campaignsList = [];
                                     foreach ($diffCampaignsList as $campaign) {
 
-                                        $campaignInfo = get_transient($campaign);
+                                        $campaignInfo = get_transient('dorea_' . $campaign);
 
                                         // check if any campaign funded or not!
-                                        if (get_option($campaign . '_contract_address')) {
+                                        if (get_option('dorea_' . $campaign . '_contract_address')) {
                                             // check if campaign started or not
                                             if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
                                                 if($title){
@@ -268,10 +269,10 @@ function cashback(): void
 
                                 foreach ($diffCampaignsList as $campaign) {
 
-                                    $campaignInfo = get_transient($campaign);
+                                    $campaignInfo = get_transient('dorea_' . $campaign);
 
                                     // check if any campaign funded or not!
-                                    if (get_option($campaign . '_contract_address')) {
+                                    if (get_option('dorea_' . $campaign . '_contract_address')) {
 
                                         $contractAddressConfirm = true;
                                         $mode = $campaignInfo['mode'];
@@ -326,7 +327,7 @@ function cashback(): void
                             );
 
                             // check and add to cash back program
-                            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'),
+                            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaCheckout.js'), array('jquery', 'jquery-ui-core'),
                                 array(),
                                 1,
                                 true
@@ -382,8 +383,8 @@ function dorea_ordered_received()
 /**
  * callback function on order received page
  */
-add_action('woocommerce_thankyou','orderReceived');
-function orderReceived($orderId):void
+add_action('woocommerce_thankyou','doreaOrderReceived');
+function doreaOrderReceived($orderId):void
 {
    static $error;
    static $walletAddress;
@@ -429,7 +430,7 @@ function orderReceived($orderId):void
                    foreach ($campaignLists as $campaign) {
 
                        $campaign = sanitize_text_field(sanitize_key($campaign));
-                       $cashbackInfo = get_transient($campaign) ?? null;
+                       $cashbackInfo = get_transient('dorea_' . $campaign) ?? null;
 
                        if (isset($cashbackInfo['mode'])) {
                            if ($cashbackInfo['mode'] === "on") {

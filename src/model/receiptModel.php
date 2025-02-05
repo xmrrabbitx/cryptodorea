@@ -4,7 +4,6 @@ namespace Cryptodorea\DoreaCashback\model;
 
 use Cryptodorea\DoreaCashback\abstracts\model\receiptModelAbstract;
 
-
 /**
  * an abstract for receipt model
  */

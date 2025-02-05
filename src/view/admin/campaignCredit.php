@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Crypto Cashback Campaign Credit
  * @throws Exception
@@ -17,7 +19,7 @@ function dorea_cashback_campaign_credit():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load campaign credit Style
-    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',plugins_url('/cryptodorea/css/campaignCredit.css'),
+    wp_enqueue_style('DOREA_CAMPAIGNCREDIT_STYLE',DOREA_PLUGIN_URL . ('css/doreaCampaignCredit.css'),
         array(),
         1,
     );
@@ -28,7 +30,7 @@ function dorea_cashback_campaign_credit():void
 
             $campaignName = sanitize_key($_GET['cashbackName']);
 
-            $doreaContractAddress = get_option($campaignName . '_contract_address');
+            $doreaContractAddress = get_option('dorea_' . $campaignName . '_contract_address');
             if ($doreaContractAddress) {
                 wp_redirect('admin.php?page=crypto-dorea-cashback');
             }
@@ -36,7 +38,7 @@ function dorea_cashback_campaign_credit():void
             $ajaxNonce = wp_create_nonce("campaign_credit_nonce");
 
             // load campaign credit scripts
-            wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', plugins_url('/cryptodorea/js/campaignCredit.js'), array('jquery', 'jquery-ui-core'),
+            wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaCampaignCredit.js'), array('jquery', 'jquery-ui-core'),
                 array(),
                 1,
                 true
@@ -67,6 +69,10 @@ function dorea_cashback_campaign_credit():void
         } else {
             wp_redirect('admin.php?page=crypto-dorea-cashback');
         }
+    }
+    else{
+        wp_redirect(wp_get_referer());
+        exit;
     }
 
     print('  
@@ -138,7 +144,7 @@ function dorea_cashback_campaign_credit():void
         
     ');
     // load fail break script
-    wp_enqueue_script_module('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'));
+    wp_enqueue_script_module('DOREA_DEPLOYFAILBREAK_SCRIPT',DOREA_PLUGIN_URL . ('js/doreaDeployFailBreak.js'), array('jquery', 'jquery-ui-core'));
 
 }
 
@@ -158,21 +164,21 @@ function dorea_contract_address()
             $json = json_decode($json_data);
 
             $campaignName = sanitize_key($json->campaignName);
-            $doreaContractAddress = get_option($campaignName . '_contract_address') ?? null;
+            $doreaContractAddress = get_option('dorea_' . $campaignName . '_contract_address') ?? null;
 
             $contractAddress = trim(htmlspecialchars(sanitize_text_field($json->contractAddress)));
             if ($doreaContractAddress) {
                 // update contract adddress of specific campaign
-                update_option($campaignName . '_contract_address', $contractAddress);
+                update_option('dorea_' . $campaignName . '_contract_address', $contractAddress);
             } else {
                 // set contract adddress into option
-                add_option($campaignName . '_contract_address', $contractAddress);
+                add_option('dorea_' . $campaignName . '_contract_address', $contractAddress);
             }
 
             $contractAmount = trim(htmlspecialchars(sanitize_text_field($json->contractAmount)));
             if ($contractAmount) {
 
-                $campaignInfo = get_transient($campaignName);
+                $campaignInfo = get_transient('dorea_' . $campaignName);
                 $campaignInfo['contractAmount'] = $contractAmount;
                 set_transient($campaignName, $campaignInfo);
 

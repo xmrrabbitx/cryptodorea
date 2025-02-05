@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
@@ -19,13 +21,13 @@ function dorea_cashback_campaign_content():void
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load campaign css styles
-    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'),
+    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',DOREA_PLUGIN_URL . ('css/doreaCampaign.css'),
         array(),
         1,
     );
 
     // load campaign scripts
-    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',plugins_url('/cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',DOREA_PLUGIN_URL . ('js/doreaCampaign.js'), array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
@@ -234,9 +236,9 @@ function dorea_admin_cashback_campaign():void
             $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
 
             $cashback = new cashbackController();
-            if(get_option('campaign_list')){
+            if(get_option('dorea_campaign_list')){
                 //throws error on existed campaign
-                if(in_array($campaignName, get_option('campaign_list'))){
+                if(in_array($campaignName, get_option('dorea_campaign_list'))){
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
                     wp_redirect($redirect_url);
                     exit;
@@ -250,9 +252,9 @@ function dorea_admin_cashback_campaign():void
 
             }else {
 
-                if (empty(get_option('campaign_list')) || get_option('campaign_list') === NULL) {
+                if (empty(get_option('dorea_campaign_list')) || get_option('dorea_campaign_list') === NULL) {
 
-                    delete_option('campaign_list');
+                    delete_option('dorea_campaign_list');
 
                 }
 

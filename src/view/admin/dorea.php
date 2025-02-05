@@ -1,8 +1,8 @@
 <?php
 
-use Cryptodorea\DoreaCashback\controllers\cashbackController;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
+use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 /**
  * add menu options to admin panels
@@ -10,10 +10,7 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
-    //var_dump(get_option('paymentTrxIds'));
-    //var_dump(get_transient('test_f945dbe'));
-
-    $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
+    $logoIco_path = DOREA_PLUGIN_DIR . 'src/view/admin/icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {
 
@@ -104,9 +101,6 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content():void
 {
-
-    $logo_path = plugins_url('/icons/doreaLogo.svg', __FILE__);
-
     // update admin footer
     function add_admin_footer_text() {
         return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
@@ -121,11 +115,10 @@ function dorea_main_page_content():void
     $cashbackList = $cashback->list();
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/admin.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE',DOREA_PLUGIN_URL . ('/css/doreaMain.css'),
         array(),
         1,
     );
-
     print("
         <main>
             <h1 class='!p-5 !text-sm !font-bold'>
@@ -153,10 +146,10 @@ function dorea_main_page_content():void
                     <div class='xl:!col-span-11 lg:!col-span-11 !col-span-10 !grid xl:!grid-cols-6 lg:!grid-cols-6 md:!grid-cols-6 sm:!grid-cols-6 !grid-cols-2'>
             ");
 
-            $campName = get_transient($campaignName)['campaignNameLable'];
+            $campName = get_transient('dorea_' . $campaignName)['campaignNameLable'];
             print('<span class="!col-span-1 !m-auto !text-center !whitespace-break-spaces">'. esc_html($campName) .'</span>');
 
-            $doreaContractAddress = get_option($campaignName . '_contract_address');
+            $doreaContractAddress = get_option('dorea_' . $campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
                 print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden inline-block !m-auto">funded</span>');
@@ -225,7 +218,7 @@ function dorea_main_page_content():void
                      </span>
             ');
 
-            $campaignInfo = get_transient($campaignName);
+            $campaignInfo = get_transient('dorea_' . $campaignName);
             $startDate = gmdate('Y/m/d',$campaignInfo['timestampStart']);
             $startDate = explode('/',$startDate);
 
@@ -274,14 +267,12 @@ function dorea_main_page_content():void
                 </div>
             ");
         }
-
     } else {
         $campaign_url = wp_nonce_url(esc_url(admin_url("/admin.php?page=campaigns")));
         print('<h3 class="!text-base !text-center !text-gray-400 !mt-16">Your Journey to Web3 Cashback</h3></br><p class="!pt-2 !mt-7 !text-center"> <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none shadow-md" href="'.esc_url($campaign_url)  .'">Create Your First Cashback Campaign</a></p>');
     }
-
     // pop up delete campaign modal
-    deleteModal();
+    doreaDeleteModal();
 
     print(" 
 
@@ -302,7 +293,7 @@ function dorea_main_page_content():void
         </div>
     ');
     // load fail break script
-    wp_enqueue_script_module('DOREA_ADMIN_SCRIPT',plugins_url('/cryptodorea/js/admin.js'), array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script_module('DOREA_ADMIN_SCRIPT',DOREA_PLUGIN_URL . ('/js/doreaAdmin.js'), array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
@@ -330,7 +321,7 @@ function dorea_main_page_content():void
     ');
 
     // load fail break script
-    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',DOREA_PLUGIN_URL . ('/js/doreaDeployFailBreak.js'), array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
@@ -353,6 +344,31 @@ function dorea_main_page_content():void
         return $outTag;
     }
 
+}
+
+
+/**
+ * Delete Campaign Modal
+ */
+function doreaDeleteModal():bool
+{
+    // load claim campaign scripts
+    wp_enqueue_script('DOREA_DELETECAMPAIGN_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaDeleteCampaign.js'), array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
+    return print ('
+       <!-- delete campaign modal -->
+        <div id="deleteModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+            <p class="!text-base">Are You Sure?</p>
+            <div class="!mt-5">
+                <button id="cancelDeleteCampaign" class="">Cancel</button>
+                <button id="DeleteCampaignConfirm" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Delete</button>
+            </div>
+        </div>
+    ');
 }
 
 /**
