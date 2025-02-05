@@ -49,4 +49,8 @@ Yes, it is integrated with the WooCommerce checkout and payment system.
 4. Pay Campaign
 5. Transactions List
 
+== External services ==
+
+This plugin connects to an API service (cryptocompare) to obtain the latest ETH price in USD from the market. no personal information send to this api,
+
 `<?php code(); ?>`

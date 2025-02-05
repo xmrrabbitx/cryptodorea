@@ -39,13 +39,6 @@ function doreaRequest()
     // check on Authentication
     if(is_user_logged_in()) {
 
-        // core js style
-        wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . ('js/doreaStyle.min.js'),
-            array(),
-            1,
-            true
-        );
-
         // autoremove deleted campaigns
         $checkout = new checkoutController();
         $checkout->autoRemove();

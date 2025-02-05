@@ -1,7 +1,6 @@
 
 let deleteCampaignModal = document.querySelectorAll(".deleteCampaign_");
 
-console.log("okkkk")
 deleteCampaignModal.forEach(
 
     (element) =>
