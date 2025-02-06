@@ -48,6 +48,7 @@ Yes, it is integrated with the WooCommerce checkout and payment system.
 3. Fund Campaign
 4. Pay Campaign
 5. Transactions List
+6. Claimed Rewards
 
 == External services ==
 
