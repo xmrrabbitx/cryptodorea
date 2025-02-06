@@ -70,6 +70,15 @@ function doreaRequest()
  */
 function doreaUserStatusCampaign():void
 {
+
+    /**
+     * load necessary libraries files
+     * tailwind css
+     */
+    print('
+        <script src="https://cdn.tailwindcss.com"></script>
+    ');
+
     // load claim campaign style
     wp_enqueue_style('DOREA_USERSTATUSCAMPAIGN_STYLE', DOREA_PLUGIN_URL . ('css/doreaUserStatusCampaign.css'),
         array(),
@@ -94,18 +103,18 @@ function doreaUserStatusCampaign():void
 
         if($sumUserEthers){
             print('
-                       <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
-                           <span id="doreaCloseError">
-                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right">
-                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                               </svg>
-                           </span>  
+               <div id="doreaClaimError" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border">            
+                   <span id="doreaCloseError">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 !text-rose-400 !cursor-pointer !hover:text-rose-200 !float-right">
+                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
+                   </span>  
                               
-                           <h5 class="!bold">Crypto Dorea</h5>
-                           <h6 class="!mt-3">Claimed Rewards: ' . esc_html(array_sum($sumUserEthers)) . ' ETH </h6>
+                   <h5 class="!bold">Crypto Dorea</h5>
+                   <h6 class="!mt-3">Claimed Rewards: ' . esc_html(array_sum($sumUserEthers)) . ' ETH </h6>
                                        
-                       </div>
-                    ');
+               </div>
+            ');
         }
         else {
             print('
@@ -117,7 +126,7 @@ function doreaUserStatusCampaign():void
                            </span>  
                               
                            <h5 class="bold">Sorry</h5>
-                           <h6 class="">You didn\'t have won any rewards yet!</h6>      
+                           <h6 class="">You have any rewards yet!</h6>      
                         </div>
                 ');
         }

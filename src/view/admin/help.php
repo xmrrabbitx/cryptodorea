@@ -25,13 +25,14 @@ function dorea_admin_help_campaign():void
 
     // Usage Example
     $image_set = array(
-        'createCampaignImg'  => 'pics/help/createCampaign.jpeg',
-        'createCampaignImg2' => 'pics/help/createCampaign2.jpeg',
-        'createCampaignImg3' => 'pics/help/createCampaign3.jpeg',
-        'fundCampaign'       => 'pics/help/fundCampaign.jpeg',
-        'fundCampaign2'      => 'pics/help/fundCampaign2.jpeg',
-        'disableEnable'      => 'pics/help/disableEnable.jpeg',
-        'disableEnable2'     => 'pics/help/disableEnable2.jpeg',
+        'doreaCreateCampaign'  => 'pics/help/doreaCreateCampaign.jpeg',
+        'doreaCreateCampaign2' => 'pics/help/doreaCreateCampaign2.jpeg',
+        'doreaCreateCampaign3' => 'pics/help/doreaCreateCampaign3.jpeg',
+        'doreaFundCampaign'       => 'pics/help/doreaFundCampaign.jpeg',
+        'doreaFundCampaign2'      => 'pics/help/doreaFundCampaign2.jpeg',
+        'doreaDisableEnable'      => 'pics/help/doreaDisableEnable.jpeg',
+        'doreaDisableEnable2'     => 'pics/help/doreaDisableEnable2.jpeg',
+        'doreaMenu'               => 'pics/help/doreaMenu.jpeg',
     );
 
     $img_ids = dorea_images_to_media($image_set);
@@ -47,9 +48,9 @@ function dorea_admin_help_campaign():void
             you can select the \"Create Your First Cashback Campaign\" option on the main page to create your first campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-            ".wp_get_attachment_image($img_ids['createCampaignImg'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaCreateCampaign'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaCreateCampaign'))
             ))."
             </div>
             
@@ -57,9 +58,9 @@ function dorea_admin_help_campaign():void
             2. Otherwise, you can choose the  \"Create Campaign\" option from the sidebar.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-            ".wp_get_attachment_image($img_ids['createCampaignImg2'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaCreateCampaign2'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg2'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaCreateCampaign2'))
             ))."                
             </div>
             
@@ -82,9 +83,9 @@ function dorea_admin_help_campaign():void
             this amount is equal to 0.0015 ETH.
             </p>
             <div class='!flex !justify-center !items-center !mt-2 !p-5'>
-            ".wp_get_attachment_image($img_ids['createCampaignImg3'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaCreateCampaign3'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg3'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaCreateCampaign3'))
             ))." 
             </div>
            
@@ -99,9 +100,9 @@ function dorea_admin_help_campaign():void
             before funding your campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-            ".wp_get_attachment_image($img_ids['fundCampaign'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaFundCampaign'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'fundCampaign'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaFundCampaign'))
             ))." 
             </div>
             
@@ -112,9 +113,9 @@ function dorea_admin_help_campaign():void
             
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-             ".wp_get_attachment_image($img_ids['fundCampaign2'], '', false, array(
+             ".wp_get_attachment_image($img_ids['doreaFundCampaign2'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'fundCampaign2'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaFundCampaign2'))
             ))." 
             </div>
             
@@ -170,15 +171,15 @@ function dorea_admin_help_campaign():void
             
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
              <span>
-             ".wp_get_attachment_image($img_ids['disableEnable'], '', false, array(
+             ".wp_get_attachment_image($img_ids['doreaDisableEnable'], '', false, array(
                 'class' => 'help-image !pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'disableEnable'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaDisableEnable'))
             ))."
              </span>
              <span>
-             ".wp_get_attachment_image($img_ids['disableEnable2'], '', false, array(
+             ".wp_get_attachment_image($img_ids['doreaDisableEnable2'], '', false, array(
                 'class' => 'help-image !pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'disableEnable2'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaDisableEnable2'))
             ))."
              </span> 
             </div>

@@ -137,6 +137,15 @@ function dorea_update_feild( $order_id ) {
 add_action('wp', 'doreaCashback', 10);
 function doreaCashback(): void
 {
+
+    /**
+     * load necessary libraries files
+     * tailwind css
+     */
+    print('
+       <script src="https://cdn.tailwindcss.com"></script>
+    ');
+
     static $contractAddressConfirm;
 
     if(is_checkout()) {
