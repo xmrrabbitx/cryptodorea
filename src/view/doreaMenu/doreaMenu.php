@@ -145,7 +145,7 @@ function doreaUserStatusCampaign():void
                        </svg>
                    </span>  
                    <h5 class='bold'>Sorry</h5>
-                   <h6>You didn't join any Campaigns yet!</h6>      
+                   <h6>You haven't joined any Campaigns yet!</h6>      
                 </div>
             ");
     }
