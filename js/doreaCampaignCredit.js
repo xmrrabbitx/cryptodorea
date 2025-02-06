@@ -10,7 +10,7 @@ import {
 
 import {abi,bytecode} from "./doreaCompile.js";
 
-const beforeTrxModal = document.getElementById("doreaBeforeTrxModal");
+const doreaBeforeTrxModal = document.getElementById("doreadoreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
 
 // Request access to Metamask
@@ -109,16 +109,16 @@ function delay(){
                     }
 
                     const body = document.body;
-                    let failBreakReload = document.getElementById("doreaFailedBreakStatusLoading");
+                    let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
 
                     try {
 
                         // show warning before Trx popup message
-                        $(beforeTrxModal).show("slow");
+                        $(doreaBeforeTrxModal).show("slow");
                         await new Promise(r => setTimeout(r, 3000));
-                        $(beforeTrxModal).hide("slow");
+                        $(doreaBeforeTrxModal).hide("slow");
 
-                        $(failBreakReload).show();
+                        $(doreaFailBreakLoading).show();
                         // Disable interactions
                         body.style.pointerEvents = 'none';
                         body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -197,13 +197,13 @@ function delay(){
                                     },
                                     complete: function (response) {
 
-                                        $(beforeTrxModal).hide("slow");
+                                        $(doreaBeforeTrxModal).hide("slow");
 
                                         localStorage.removeItem('deployFailBreak');
 
                                         window.location.reload();
 
-                                        $(failBreakReload).hide();
+                                        $(doreaFailBreakLoading).hide();
                                         // enable interactions
                                         body.style.pointerEvents = 'visible';
                                         body.style.opacity = '1';
@@ -221,8 +221,8 @@ function delay(){
                     }
                     catch (error) {
 
-                        $(beforeTrxModal).hide("slow");
-                        $(failBreakReload).hide();
+                        $(doreaBeforeTrxModal).hide("slow");
+                        $(doreaFailBreakLoading).hide();
 
                         localStorage.removeItem('deployState');
 
@@ -250,7 +250,7 @@ function delay(){
                 }
                 else{
 
-                    $(beforeTrxModal).hide("slow");
+                    $(doreaBeforeTrxModal).hide("slow");
 
                     metamaskError.style.display = "block";
                     errorMessg.innerHTML = "please install Metamask extension!";

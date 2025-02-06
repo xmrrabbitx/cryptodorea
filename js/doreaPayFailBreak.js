@@ -75,8 +75,8 @@ jQuery(document).ready(async function($) {
                 }
 
                 const body = document.body;
-                let failBreakReload = document.getElementById("doreaFailedBreakStatusLoading");
-                $(failBreakReload).show();
+                let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
+                $(doreaFailBreakLoading).show();
                 // Disable interactions
                 body.style.pointerEvents = 'none';
                 body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -103,7 +103,7 @@ jQuery(document).ready(async function($) {
                 function delay() {
                     (async () => {
 
-                        $(failBreakReload).hide();
+                        $(doreaFailBreakLoading).hide();
                         // enable interactions
                         body.style.pointerEvents = 'visible';
                         body.style.opacity = '1';
@@ -139,8 +139,8 @@ jQuery(document).ready(async function($) {
                                 },
                                 complete: function (response) {
                                     // pop up message to reload the  page after interrupt transaction
-                                    let failBreakModal = document.getElementById("failBreakModal");
-                                    $(failBreakModal).show("slow");
+                                    let doreaFailBreakModal = document.getElementById("doreaFailBreakModal");
+                                    $(doreaFailBreakModal).show("slow");
                                     localStorage.removeItem('payFailBreak');
                                     localStorage.removeItem('doreaPayStatus');
 
@@ -159,8 +159,8 @@ jQuery(document).ready(async function($) {
         }
     }
 
-    let failBreakReload = document.getElementById("failBreakReload");
-    failBreakReload.addEventListener("click", async () => {
+    let doreaFailBreakLoading = document.getElementById("doreaFailBreakLoading");
+    doreaFailBreakLoading.addEventListener("click", async () => {
         window.location.reload();
     });
 

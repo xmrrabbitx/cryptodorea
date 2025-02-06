@@ -7,7 +7,6 @@ import {abi} from "./doreaCompile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
-const beforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
 
 jQuery(document).ready(async function($) {
@@ -86,18 +85,19 @@ jQuery(document).ready(async function($) {
         const messageHash = ethers.id(message);
 
         const body = document.body;
-        let failBreakReload = document.getElementById("doreaFailedBreakStatusLoading");
+        let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
+        let doreaBeforeTrxModal = document.getElementById("doreadoreaBeforeTrxModal");
 
         try{
             // show warning before Trx popup message
-            $(beforeTrxModal).show("slow");
+            $(doreaBeforeTrxModal).show("slow");
             await new Promise(r => setTimeout(r, 3000));
-            $(beforeTrxModal).hide("slow");
+            $(doreaBeforeTrxModal).hide("slow");
 
             // disable dorea fund button
             fundCampaign.disabled = true;
 
-            $(failBreakReload).show();
+            $(doreaFailBreakLoading).show();
             // Disable interactions
             body.style.pointerEvents = 'none';
             body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -166,14 +166,14 @@ jQuery(document).ready(async function($) {
                             },
                             complete: function (response) {
 
-                                $(beforeTrxModal).hide("slow");
+                                $(doreaBeforeTrxModal).hide("slow");
 
                                 localStorage.removeItem('fundFailBreak');
                                 localStorage.removeItem('doreaFundStatus');
 
                                 window.location.reload();
 
-                                $(failBreakReload).hide();
+                                $(doreaFailBreakLoading).hide();
                                 // enable interactions
                                 body.style.pointerEvents = 'visible';
                                 body.style.opacity = '1';
@@ -189,8 +189,8 @@ jQuery(document).ready(async function($) {
         }
         catch (error) {
 
-            $(beforeTrxModal).hide("slow");
-            $(failBreakReload).hide();
+            $(doreaBeforeTrxModal).hide("slow");
+            $(doreaFailBreakLoading).hide();
 
             localStorage.removeItem('fundFailBreak');
             localStorage.removeItem('doreaFundStatus');

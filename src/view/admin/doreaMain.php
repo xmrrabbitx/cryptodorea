@@ -302,11 +302,11 @@ function dorea_main_page_content():void
 
     print ('
         <!-- failed campaign payment modal -->
-        <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+        <div id="doreaFailBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
             </span>
             <p class="!text-sm">The last payment was interrupted. <br> Please refresh the page...</p>
             <div class="!mt-5">
-                <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
+                <button id="doreaFailBreakLoading" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
             </div>
         </div>
         <div id="doreaFailedBreakStatusLoading" role="status" class="!fixed !top-[10%] z-10 inset-x-0 flex flex-col items-center justify-center" style="display: none">
