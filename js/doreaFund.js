@@ -1,6 +1,6 @@
 
 // load etherJs library
-import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./ether.min.js";
+import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./etherv67.min.js";
 import {abi} from "./doreaCompile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");

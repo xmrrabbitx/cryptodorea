@@ -2,7 +2,7 @@
 import {
     BrowserProvider,
     ContractFactory, ethers,
-} from "./ether.min.js";
+} from "./etherv67.min.js";
 
 import {abi,bytecode} from "./doreaCompile.js";
 
