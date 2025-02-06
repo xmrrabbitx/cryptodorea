@@ -47,7 +47,7 @@ jQuery(document).ready(async function($) {
     let amounts = convertToWei(params.qualifiedUserEthers);
 
     let payFailBreak = localStorage.getItem('payFailBreak');
-    let payStatus = localStorage.getItem('doreaFundStatus');
+    let payStatus = localStorage.getItem('doreaPayStatus');
     let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
 
     if(payFailBreak){

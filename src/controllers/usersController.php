@@ -72,6 +72,7 @@ class usersController extends usersAbstract
         if($claimedUsers){
             $claimedUsers = array_merge($claimedUsers, $userList);
             $claimedUsers = array_unique($claimedUsers);
+            $claimedUsers = array_values($claimedUsers);
         }
 
         return get_option("dorea_claimed_users_" . $campaignName) ? update_option("dorea_claimed_users_" . $campaignName, $claimedUsers) : add_option("dorea_claimed_users_" . $campaignName, $userList);

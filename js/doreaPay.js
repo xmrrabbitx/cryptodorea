@@ -193,7 +193,7 @@ jQuery(document).ready(async function($) {
                                     localStorage.removeItem('payFailBreak');
                                     localStorage.removeItem('doreaPayStatus');
 
-                                    window.location.reload();
+                                    //window.location.reload();
 
                                     $(failBreakReload).hide();
                                     // enable interactions

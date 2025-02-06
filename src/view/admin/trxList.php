@@ -41,7 +41,6 @@ function dorea_admin_trx_campaign():void
             $pagination = sanitize_text_field(wp_unslash($_GET['pagination'])) ?? 0;
             $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
 
-
         }
     }
 
@@ -89,7 +88,7 @@ function dorea_admin_trx_campaign():void
                 return;
             }
 
-    // show errors
+            // show errors
             print("      
                <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>      
                     <p id='dorea_error' style='display:none;'></p>
