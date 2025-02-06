@@ -16,7 +16,6 @@ jQuery(document).ready(async function($) {
 
     payCampaign.addEventListener("click", async function () {
 
-        /*
         // connect to Arbitrum One  Mainnet
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
@@ -32,7 +31,6 @@ jQuery(document).ready(async function($) {
                 blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
             }]
         });
-        */
 
         function convertToWei(amounts) {
 
@@ -193,7 +191,7 @@ jQuery(document).ready(async function($) {
                                     localStorage.removeItem('payFailBreak');
                                     localStorage.removeItem('doreaPayStatus');
 
-                                    //window.location.reload();
+                                    window.location.reload();
 
                                     $(failBreakReload).hide();
                                     // enable interactions
