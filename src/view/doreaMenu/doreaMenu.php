@@ -53,7 +53,7 @@ function doreaRequest()
             unset($items['customer-logout']);
 
             // Insert your dorea cashback menu item
-            $items['dorea_cashbback_menu'] = __('Dorea Cashback', 'cryptodorea');
+            $items['dorea_cashbback_menu'] = __('Dorea Cashback', 'crypto-dorea-crypto-cashback-for-woocommerce');
 
             // Insert back the logout item.
             $items['customer-logout'] = $logout;

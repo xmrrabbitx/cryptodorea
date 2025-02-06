@@ -248,7 +248,7 @@ function doreaCashback(): void
                                                 'type' => 'text',
                                                 'class' => array('dorea-wallet-address-class form-row-wide'),
                                                 'label' => 'wallet address', 'cryptodorea',
-                                                'placeholder' => __('Enter Wallet Address...', 'cryptodorea'),
+                                                'placeholder' => __('Enter Wallet Address...', 'crypto-dorea-crypto-cashback-for-woocommerce'),
                                                 'required' => false,
                                             ),
                                             $checkout->get_value('dorea_wallet_address')
