@@ -167,7 +167,7 @@ jQuery(document).ready(async function($) {
 
                             jQuery.ajax({
                                 type: "post",
-                                url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.payAjaxNonce,
+                                url: param.ajax_url + '?_wpnonce=' + param.payAjaxNonce,
                                 data: {
                                     action: "dorea_pay",
                                     data: JSON.stringify({

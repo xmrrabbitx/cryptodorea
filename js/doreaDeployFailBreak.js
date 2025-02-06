@@ -85,7 +85,7 @@ jQuery(document).ready(async function($) {
 
                         jQuery.ajax({
                             type: "post",
-                            url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + _wpnonce,
+                            url: param.ajax_url + '?_wpnonce=' + _wpnonce,
                             data: {
                                 action: "dorea_contract_address",  // the action to fire in the server
                                 data: JSON.stringify({

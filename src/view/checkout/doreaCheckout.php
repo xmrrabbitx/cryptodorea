@@ -332,7 +332,8 @@ function doreaCashback(): void
 
                             $ajaxNonce = wp_create_nonce("checkout_nonce");
                             $params = array(
-                                "checkoutAjaxNonce"=>$ajaxNonce
+                                "checkoutAjaxNonce"=>$ajaxNonce,
+                                'ajax_url' => admin_url('admin-ajax.php'),
                             );
 
                             // check and add to cash back program

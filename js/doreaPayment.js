@@ -17,7 +17,7 @@ jQuery(document).ready(async function($) {
 
             jQuery.ajax({
                 type: "post",
-                url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + switchParams.switchAjaxNonce,
+                url: param.ajax_url + '?_wpnonce=' + switchParams.switchAjaxNonce,
                 data: {
                     action: "dorea_switchCampaign",
                     data: JSON.stringify({

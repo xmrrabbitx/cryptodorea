@@ -154,7 +154,7 @@ jQuery(document).ready(async function($) {
 
                         jQuery.ajax({
                             type: "post",
-                            url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.fundAjaxNonce,
+                            url: param.ajax_url + '?_wpnonce=' + param.fundAjaxNonce,
                             data: {
                                 action: "dorea_fund",
                                 data: JSON.stringify({
