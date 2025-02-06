@@ -1,4 +1,8 @@
-
+/**
+ * load etherjs library
+ * URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+ * Source Code: https://github.com/ethers-io/ethers.js
+ */
 import {
     BrowserProvider,
     ContractFactory, ethers,
@@ -6,7 +10,7 @@ import {
 
 import {abi,bytecode} from "./doreaCompile.js";
 
-const beforeTrxModal = document.getElementById("beforeTrxModal");
+const beforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
 
 // Request access to Metamask

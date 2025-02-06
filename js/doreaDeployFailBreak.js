@@ -1,5 +1,8 @@
-
-// load etherJs library
+/**
+ * load etherjs library
+ * URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+ * Source Code: https://github.com/ethers-io/ethers.js
+ */
 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./etherv67.min.js";
 import {abi} from "./doreaCompile.js";
 

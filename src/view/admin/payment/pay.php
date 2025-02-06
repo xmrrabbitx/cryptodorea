@@ -100,6 +100,11 @@ function dorea_admin_pay_campaign():void
             <div id='beforeTrxModal' class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border' style='display: none'>
                <p class='!text-sm !mt-3'>Please Do not leave the page <br> until the transaction is complete!</p>
             </div>
+            
+            <!-- Warning on interrupted transaction! -->
+            <div id='doreaRjectMetamask' class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border' style='display: none'>
+               <p class='!text-sm !mt-3'>The last payment was interrupted. <br>Please reject the payment on metamask otherwise you may lose your money...</p>
+            </div>
     ");
 
     /**

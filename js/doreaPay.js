@@ -1,5 +1,8 @@
-
-// load etherJs library
+/**
+ * load etherjs library
+ * URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+ * Source Code: https://github.com/ethers-io/ethers.js
+ */
 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./etherv67.min.js";
 
 import {abi} from "./doreaCompile.js";
@@ -7,7 +10,7 @@ import {abi} from "./doreaCompile.js";
 let payCampaign = document.getElementById("dorea_pay");
 let errorMessg = document.getElementById("dorea_error");
 let successMessg = document.getElementById("dorea_success");
-const beforeTrxModal = document.getElementById("beforeTrxModal");
+const beforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 
 jQuery(document).ready(async function($) {
 
@@ -141,6 +144,7 @@ jQuery(document).ready(async function($) {
                 localStorage.setItem('payFailBreak', JSON.stringify({campaignName, trxId, _wpnonce, failedTime}) );
 
                 localStorage.setItem("doreaTimer", true);
+                localStorage.setItem("doreaPayStatus", 'open');
 
                 let payObj = await contract.pay(
                     JSON.parse(userAddresses),
@@ -151,6 +155,8 @@ jQuery(document).ready(async function($) {
                     r,
                     s
                 )
+
+                localStorage.setItem("doreaPayStatus", 'confirm');
 
                 await payObj.wait().then(async (receipt) => {
 
@@ -185,6 +191,7 @@ jQuery(document).ready(async function($) {
                                     $(beforeTrxModal).hide("slow");
 
                                     localStorage.removeItem('payFailBreak');
+                                    localStorage.removeItem('doreaPayStatus');
 
                                     window.location.reload();
 
@@ -209,6 +216,8 @@ jQuery(document).ready(async function($) {
                 $(failBreakReload).hide();
 
                 localStorage.removeItem('deployState');
+                localStorage.removeItem('doreaPayStatus');
+
 
                 // enable dorea fund button
                 payCampaign.disabled = false;

@@ -1,11 +1,13 @@
-
-// load etherJs library
+/**
+ * URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+ * Source Code: https://github.com/ethers-io/ethers.js
+ */
 import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./etherv67.min.js";
 import {abi} from "./doreaCompile.js";
 
 let fundCampaign = document.getElementById("dorea_fund");
 const errorMessg = document.getElementById("dorea_error");
-const beforeTrxModal = document.getElementById("beforeTrxModal");
+const beforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
 
 jQuery(document).ready(async function($) {
@@ -126,6 +128,7 @@ jQuery(document).ready(async function($) {
             localStorage.setItem('fundFailBreak', JSON.stringify({campaignName, amount, _wpnonce, failedTime}) );
 
             localStorage.setItem("doreaTimer", true);
+            localStorage.setItem("doreaFundStatus", 'open');
 
             let fundObj = await contract.fundAgain(
                 messageHash,
@@ -138,6 +141,7 @@ jQuery(document).ready(async function($) {
                 },
             );
 
+            localStorage.setItem("doreaFundStatus", 'confirm');
 
             await fundObj.wait().then(async (receipt) => {
 
@@ -167,6 +171,7 @@ jQuery(document).ready(async function($) {
                                 $(beforeTrxModal).hide("slow");
 
                                 localStorage.removeItem('fundFailBreak');
+                                localStorage.removeItem('doreaFundStatus');
 
                                 window.location.reload();
 
@@ -190,6 +195,7 @@ jQuery(document).ready(async function($) {
             $(failBreakReload).hide();
 
             localStorage.removeItem('fundFailBreak');
+            localStorage.removeItem('doreaFundStatus');
 
             // enable dorea fund button
             fundCampaign.disabled = false;

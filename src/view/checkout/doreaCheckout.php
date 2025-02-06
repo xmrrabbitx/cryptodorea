@@ -141,6 +141,8 @@ function doreaCashback(): void
     /**
      * load necessary libraries files
      * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
      */
     // load campaign credit scripts
     wp_enqueue_script('DOREA_CHECKOUTCSS_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
