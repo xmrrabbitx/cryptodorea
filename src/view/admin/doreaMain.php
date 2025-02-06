@@ -119,6 +119,7 @@ function dorea_main_page_content():void
         array(),
         1,
     );
+
     print("
         <main>
             <h1 class='!p-5 !text-sm !font-bold'>

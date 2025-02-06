@@ -73,10 +73,10 @@ function doreaUserStatusCampaign():void
 
     /**
      * load necessary libraries files
-     * tailwind css v3.4.17
+     * tailwind css v3.4.16
      */
     // load campaign credit scripts
-    wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'https://cdn.tailwindcss.com', array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script('DOREA_MENUCSS_SCRIPT', '', array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
