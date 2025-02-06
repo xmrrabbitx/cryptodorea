@@ -1,5 +1,7 @@
 /**
  * Smart Contract Structure
+ * you could see the source code of compiled solidity
+ * on /contracts/doreaLoyalty.sol
  * @type {[{inputs: *[], stateMutability: string, type: string},{outputs: *[], inputs: [{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string}], name: string, stateMutability: string, type: string},{outputs: *[], inputs: [{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string}], name: string, stateMutability: string, type: string},{outputs: [{name: string, internalType: string, type: string}], inputs: *[], name: string, stateMutability: string, type: string},{outputs: *[], inputs: [{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},{name: string, internalType: string, type: string},null], name: string, stateMutability: string, type: string}]}
  */
 let abi = [
