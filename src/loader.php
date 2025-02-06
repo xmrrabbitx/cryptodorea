@@ -21,7 +21,7 @@ function dorea_init():void
 {
     /**
      * load necessary libraries files
-     * tailwind css
+     * tailwind css v3.4.17
      */
     // load campaign credit scripts
     wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'https://cdn.tailwindcss.com', array('jquery', 'jquery-ui-core'),
