@@ -55,7 +55,7 @@ Yes, it is integrated with the WooCommerce checkout and payment system.
 This plugin connects to an API service (cryptocompare) to obtain the latest ETH price in USD format from the market. no personal information send to this api,
 URL: min-api.cryptocompare.com
 
-it includes Tailwind CSS v3.4.16.
+it includes Tailwind CSS v3.4.16 for style.
 the official CDN URL: https://cdn.tailwindcss.com
 Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
 
