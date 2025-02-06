@@ -85,7 +85,7 @@ jQuery(document).ready(async function($) {
 
             const body = document.body;
             let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
-            let doreaBeforeTrxModal = document.getElementById("doreadoreaBeforeTrxModal");
+            let doreaBeforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 
             try {
 

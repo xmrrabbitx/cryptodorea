@@ -10,7 +10,7 @@ import {
 
 import {abi,bytecode} from "./doreaCompile.js";
 
-const doreaBeforeTrxModal = document.getElementById("doreadoreaBeforeTrxModal");
+const doreaBeforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
 
 // Request access to Metamask
