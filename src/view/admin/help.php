@@ -120,6 +120,18 @@ function dorea_admin_help_campaign():void
             </div>
             
             <hr class='!w-12/12 !mt-5'>
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>My users want to know how much cashback they earned ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            Each user can access the claimed rewards number on the “My Account” page of WordPress. On that page, using the “Dorea Cashback” option, they could see the number of claimed rewards in ETH format.
+            </p>
+            <div class='!flex !justify-center !items-center !mt-5 !p-5'>
+            ".wp_get_attachment_image($img_ids['doreaMenu'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaMenu'))
+            ))." 
+            </div>
+            
+            <hr class='!w-12/12 !mt-5'>
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>Is it necessary to have installed WooCommerce ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
             Yes, WooCommerce is a prerequisite to the Cryptodorea plugin. Your woo-commerce purchases will be processed and monitored to pay the most loyal users.
