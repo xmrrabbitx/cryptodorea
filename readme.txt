@@ -1,9 +1,9 @@
 === Crypto Dorea: Crypto Cashback for WooCommerce ===
 Contributors: hadimirzaie
 Tags: cashback, crypto, woocommerce, web3, ethereum
-Requires at least: 6.4.3
-Tested up to: 6.7.1
-Stable tag: 1.0.0
+Requires at least: 6.4
+Tested up to: 6.7
+Stable tag: 1.1.1
 Requires PHP: 8.1
 WC tested up to: 9.4
 License: GPLv2 or later

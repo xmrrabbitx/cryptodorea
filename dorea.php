@@ -8,6 +8,7 @@
  * Version: 1.0.0
  * Author: Crypto Dorea Team
  * Author URI: https://cryptodorea.io
+ * Requires Plugins: woocommerce
  */
 
 define( 'DOREA_PLUGIN_FILE', __FILE__ );
