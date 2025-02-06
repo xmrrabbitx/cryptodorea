@@ -5,7 +5,7 @@
  *
  * Plugin Name: Crypto Dorea: Crypto Cashback for WooCommerce
  * Description: A New Innovative Crypto CashBack for the most loyal customers
- * Version: 1.0.0
+ * Version: 1.1.1
  * Author: Crypto Dorea Team
  * Author URI: https://cryptodorea.io
  * Requires Plugins: woocommerce

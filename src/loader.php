@@ -23,8 +23,11 @@ function dorea_init():void
      * load necessary libraries files
      * tailwind css
      */
-    print('
-        <script src="https://cdn.tailwindcss.com"></script>
-    ');
+    // load campaign credit scripts
+    wp_enqueue_script('DOREA_CAMPAIGNCREDIT_SCRIPT', 'https://cdn.tailwindcss.com', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
 
 }
