@@ -116,7 +116,7 @@ function doreaUserStatusCampaign():void
                    </span>  
                               
                    <h5 class="!bold">Crypto Dorea</h5>
-                   <h6 class="!mt-3">Claimed Rewards: ' . esc_html(array_sum($sumUserEthers)) . ' ETH </h6>
+                   <h6 class="!mt-3">Claimed Rewards: ' . esc_html(number_format(array_sum($sumUserEthers), 10)) . ' ETH </h6>
                                        
                </div>
             ');
