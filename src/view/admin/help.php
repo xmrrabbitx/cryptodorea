@@ -151,7 +151,7 @@ function dorea_admin_help_campaign():void
             
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How to Pay ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
-            1. after the cashback campaign is created and users joined the campaign, 
+            after the cashback campaign is created and users joined the campaign, 
             you can pay ethers to users. choose <span class='!font-bold'>\"Pay\"</span> option on the main page in each campaign section. 
             you should see the payment page now. On that page, you could pay campaign users.
             </p>
