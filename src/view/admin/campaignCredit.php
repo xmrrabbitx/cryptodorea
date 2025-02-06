@@ -145,6 +145,11 @@ function dorea_cashback_campaign_credit():void
         </main>
         
     ');
+    $params = array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+    );
+    wp_localize_script('DOREA_DEPLOYFAILBREAK_SCRIPT', 'param', $params);
+
     // load fail break script
     wp_enqueue_script_module('DOREA_DEPLOYFAILBREAK_SCRIPT',DOREA_PLUGIN_URL . ('js/doreaDeployFailBreak.js'), array('jquery', 'jquery-ui-core'));
 

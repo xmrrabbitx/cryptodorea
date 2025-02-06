@@ -78,7 +78,7 @@ jQuery(document).ready(async function($) {
 
                     jQuery.ajax({
                         type: "post",
-                        url: param.ajax_url + '?_wpnonce=' + _wpnonce,
+                        url: params.ajax_url + '?_wpnonce=' + _wpnonce,
                         data: {
                             action: "dorea_fund",
                             data: JSON.stringify({

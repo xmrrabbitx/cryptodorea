@@ -109,7 +109,7 @@ jQuery(document).ready(async function($) {
                 if(trxId === true) {
                     jQuery.ajax({
                         type: "post",
-                        url: param.ajax_url + '?_wpnonce=' + _wpnonce,
+                        url: params.ajax_url + '?_wpnonce=' + _wpnonce,
                         data: {
                             action: "dorea_pay",
                             data: JSON.stringify({

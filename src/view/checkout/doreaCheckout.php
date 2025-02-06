@@ -143,7 +143,7 @@ function doreaCashback(): void
      * tailwind css v3.4.16
      */
     // load campaign credit scripts
-    wp_enqueue_script('DOREA_CHECKOUTCSS_STYLE', '', array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script('DOREA_CHECKOUTCSS_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true

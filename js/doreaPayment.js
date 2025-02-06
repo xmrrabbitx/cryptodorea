@@ -12,12 +12,12 @@ jQuery(document).ready(async function($) {
         }else{
             mode = 'off';
         }
-
+console.log(mode)
         if(doreaCampaignNameSwitch.name) {
 
             jQuery.ajax({
                 type: "post",
-                url: param.ajax_url + '?_wpnonce=' + switchParams.switchAjaxNonce,
+                url: switchParams.ajax_url + '?_wpnonce=' + switchParams.switchAjaxNonce,
                 data: {
                     action: "dorea_switchCampaign",
                     data: JSON.stringify({
