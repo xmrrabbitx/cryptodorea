@@ -13,6 +13,18 @@ use Cryptodorea\DoreaCashback\utilities\ethHelper;
  */
 function dorea_admin_pay_campaign():void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     // update admin footer
     function add_admin_footer_text() {
         return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
@@ -704,8 +716,8 @@ function doreaTrxIdsGenerate($cashbackName)
 {
     $paymentTrxIds = get_option('dorea_paymentTrxIds');
     $trxHash = "0x" . bin2hex(random_bytes(32));
-    if(isset($paymentTrxIds)) {
-        if ($paymentTrxIds[$cashbackName]) {
+    if($paymentTrxIds) {
+        if(isset($paymentTrxIds[$cashbackName])) {
             if (!in_array($trxHash, $paymentTrxIds[$cashbackName])) {
                 return $trxHash;
             } else {

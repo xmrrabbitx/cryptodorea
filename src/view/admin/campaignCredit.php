@@ -195,11 +195,12 @@ function dorea_contract_address()
             }
 
             $contractAmount = trim(htmlspecialchars(sanitize_text_field($json->contractAmount)));
+
             if ($contractAmount) {
 
                 $campaignInfo = get_transient('dorea_' . $campaignName);
                 $campaignInfo['contractAmount'] = $contractAmount;
-                set_transient($campaignName, $campaignInfo);
+                set_transient('dorea_' . $campaignName, $campaignInfo);
 
             }
         }
