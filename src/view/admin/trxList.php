@@ -7,17 +7,29 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  */
 function dorea_admin_trx_campaign():void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     // update admin footer
     function add_admin_footer_text()
-            {
-                return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
-            }
+    {
+       return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
+    }
 
     add_filter('admin_footer_text', 'add_admin_footer_text', 11);
     function update_admin_footer_text()
-            {
-                return 'Version 1.0.0';
-            }
+    {
+       return 'Version 1.0.0';
+    }
 
     add_filter('update_footer', 'update_admin_footer_text', 11);
 
@@ -45,7 +57,7 @@ function dorea_admin_trx_campaign():void
     }
 
             print("
-                <main class="doreaContent">
+                <main class='doreaContent'>
                     <h1 class='!p-5 !text-sm !font-bold'>Transactions List</h1> </br>
                     <h2 class='!pl-5 !text-sm !font-bold'>Claimed Ethers</h2> </br>
             ");

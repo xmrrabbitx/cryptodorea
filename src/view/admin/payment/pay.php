@@ -34,7 +34,7 @@ function dorea_admin_pay_campaign():void
     static $fundOption;
 
     print("
-        <main class="doreaContent">
+        <main class='doreaContent'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethereum</h2> </br>
     ");

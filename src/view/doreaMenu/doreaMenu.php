@@ -70,7 +70,6 @@ function doreaRequest()
  */
 function doreaUserStatusCampaign():void
 {
-
     /**
      * load necessary libraries files
      * tailwind css v3.4.16
