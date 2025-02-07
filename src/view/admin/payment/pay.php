@@ -34,7 +34,7 @@ function dorea_admin_pay_campaign():void
     static $fundOption;
 
     print("
-        <main>
+        <main class="doreaContent">
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethereum</h2> </br>
     ");
@@ -477,7 +477,7 @@ function dorea_admin_pay_campaign():void
                 ');
 
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
-                $trxId = trxIdsGenerate($cashbackName);
+                $trxId = doreaTrxIdsGenerate($cashbackName);
 
                 // pass params value for deployment
                 $payParams = array(
@@ -700,7 +700,7 @@ function dorea_pay():void
 /**
  * Generate transactions Ids
  */
-function trxIdsGenerate($cashbackName)
+function doreaTrxIdsGenerate($cashbackName)
 {
     $paymentTrxIds = get_option('dorea_paymentTrxIds');
     $trxHash = "0x" . bin2hex(random_bytes(32));
@@ -709,7 +709,7 @@ function trxIdsGenerate($cashbackName)
             if (!in_array($trxHash, $paymentTrxIds[$cashbackName])) {
                 return $trxHash;
             } else {
-                return trxIdsGenerate($cashbackName);
+                return doreaTrxIdsGenerate($cashbackName);
             }
         }else{
             return $trxHash;

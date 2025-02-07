@@ -13,6 +13,7 @@ jQuery(document).ready(async function($) {
 
     fundCampaign.addEventListener("click", async function(){
 
+        /*
         // connect to Arbitrum One  Mainnet
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
@@ -28,6 +29,8 @@ jQuery(document).ready(async function($) {
                 blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
             }]
         });
+
+         */
 
         /**
          *

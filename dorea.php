@@ -11,6 +11,8 @@
  * Requires Plugins: woocommerce
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 define( 'DOREA_PLUGIN_FILE', __FILE__ );
 define( 'DOREA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DOREA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

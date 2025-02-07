@@ -45,7 +45,7 @@ function dorea_admin_trx_campaign():void
     }
 
             print("
-                <main>
+                <main class="doreaContent">
                     <h1 class='!p-5 !text-sm !font-bold'>Transactions List</h1> </br>
                     <h2 class='!pl-5 !text-sm !font-bold'>Claimed Ethers</h2> </br>
             ");

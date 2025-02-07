@@ -78,7 +78,7 @@ function dorea_cashback_campaign_credit():void
     }
 
     print('  
-       <main>
+       <main class="doreaContent">
             <h1 class="!p-5 !text-sm !font-bold">Fund Campaign</h1> </br>
             
     ');

@@ -15,6 +15,7 @@ jQuery(document).ready(async function($) {
 
     payCampaign.addEventListener("click", async function () {
 
+        /*
         // connect to Arbitrum One  Mainnet
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
@@ -30,6 +31,8 @@ jQuery(document).ready(async function($) {
                 blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
             }]
         });
+
+         */
 
         function convertToWei(amounts) {
 

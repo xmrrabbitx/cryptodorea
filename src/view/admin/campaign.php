@@ -44,7 +44,7 @@ function dorea_cashback_campaign_content():void
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
-    print("<main>");
+    print("<main class="doreaContent">");
     print("<h1 class='!p-5 !text-sm !font-bold'>Create Campaign</h1>");
 
     print("

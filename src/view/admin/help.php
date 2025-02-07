@@ -38,7 +38,7 @@ function dorea_admin_help_campaign():void
     $img_ids = dorea_images_to_media($image_set);
 
     print("
-        <main>
+        <main class="doreaContent">
             <h1 class='!p-5 !text-sm !font-bold'>Help</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>How to Start ?</h2> </br>
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>

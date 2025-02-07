@@ -121,7 +121,7 @@ function dorea_main_page_content():void
     );
 
     print("
-        <main>
+        <main class="doreaContent">
             <h1 class='!p-5 !text-sm !font-bold'>
                 Home
             </h1> 
