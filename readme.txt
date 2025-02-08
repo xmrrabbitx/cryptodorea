@@ -62,5 +62,3 @@ Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
 it includes Ethers.js v6.7.0 for blockchain interactions and payment.
 URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
 Source Code: https://github.com/ethers-io/ethers.js
-
-`<?php code(); ?>`
