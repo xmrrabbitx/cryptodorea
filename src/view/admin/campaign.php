@@ -28,7 +28,7 @@ function dorea_cashback_campaign_content():void
     }
     add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
     function update_admin_footer_text() {
-        return 'Version 1.0.0';
+        return 'Version 1.1.1';
     }
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
