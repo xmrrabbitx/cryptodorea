@@ -716,7 +716,7 @@ function doreaTrxIdsGenerate($cashbackName)
 {
     $paymentTrxIds = get_option('dorea_paymentTrxIds');
     $trxHash = "0x" . bin2hex(random_bytes(32));
-    if($paymentTrxIds) {
+    if(isset($paymentTrxIds)) {
         if(isset($paymentTrxIds[$cashbackName])) {
             if (!in_array($trxHash, $paymentTrxIds[$cashbackName])) {
                 return $trxHash;
