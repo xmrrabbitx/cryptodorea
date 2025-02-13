@@ -245,11 +245,11 @@ function dorea_main_page_content():void
 
             // payment page
             if($doreaContractAddress) {
-                $nonce = wp_create_nonce();
+                $nonce = wp_create_nonce('payment_nonce');
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500  campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wp_nonce' .esc_html($nonce).'">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500  campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wpnonce=' .esc_html($nonce).'">
                         <!-- payment-fund campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">

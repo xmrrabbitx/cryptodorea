@@ -139,7 +139,7 @@ function dorea_admin_pay_campaign():void
     }
 
     if(isset($_GET['pagination'])){
-    $pagination = sanitize_key($_GET['pagination']) ?? 0;
+        $pagination = sanitize_key($_GET['pagination']) ?? 0;
     }
 
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
