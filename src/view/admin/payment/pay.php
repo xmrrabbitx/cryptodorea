@@ -3,6 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
+use Cryptodorea\DoreaCashback\controllers\productController;
 use Cryptodorea\DoreaCashback\controllers\usersController;
 use Cryptodorea\DoreaCashback\controllers\expireCampaignController;
 use Cryptodorea\DoreaCashback\utilities\ethHelper;
@@ -145,6 +146,29 @@ function dorea_admin_pay_campaign():void
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
     $checkoutController = new checkoutController;
+
+    // get product categories
+    $productCategories = new productController();
+    //var_dump($productCategories->listCategories());
+    print('
+        
+        ');
+    foreach ($productCategories->listCategories() as $categories){
+        print("
+
+            <div class='!grid !grid-cols-1 !gap-2'>
+                <div class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>
+                     
+                    <div class='!flex !mt-1'>
+                        <div class='!w-1/12 !ml-1'>
+                            <input class='!accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($categories) . "'>
+                        </div>
+                         <label class='!w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
+                    </div>
+                </div>
+            </div>
+        ");
+    }
 
     if($checkoutController->checkTimestamp($cashbackName) === "expired"){
         print ("

@@ -170,8 +170,8 @@ function doreaCashback(): void
             $checkoutController = new checkoutController;
             $diffCampaignsList = $checkoutController->check($cashbackList);
 
+            // get product categories
             $productCategories = new productController();
-            var_dump($productCategories->listCategories());
 
             // check on Authentication user
             if (is_user_logged_in()) {
