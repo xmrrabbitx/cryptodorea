@@ -137,6 +137,24 @@ function dorea_update_feild( $order_id ) {
 add_action('wp', 'doreaCashback', 10);
 function doreaCashback(): void
 {
+
+    $categories = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'orderby'    => 'name',  // Optional: You can order the categories by name
+        'order'      => 'ASC',   // Optional: You can choose the order (ASC or DESC)
+        'hide_empty' => false,   // Optional: Set to true if you want to exclude empty categories
+    ) );
+
+    // Check if there are any categories
+    if ( !empty( $categories ) && !is_wp_error( $categories ) ) {
+        foreach ( $categories as $category ) {
+            echo 'Category Name: ' . $category->name . '<br>';
+            echo 'Category ID: ' . $category->term_id . '<br>';
+        }
+    } else {
+        echo 'No categories found.';
+    }
+
     /**
      * load necessary libraries files
      * tailwind css v3.4.16
