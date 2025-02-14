@@ -95,8 +95,6 @@ jQuery(document).ready(async function($) {
                 await new Promise(r => setTimeout(r, 3000));
                 $(doreaBeforeTrxModal).hide("slow");
 
-                console.log("trigger!");
-
                 // disable dorea fund button
                 payCampaign.disabled = true;
 
