@@ -6,7 +6,10 @@ let doreaProductCategoriesIcon = document.getElementById("doreaProductCategories
 let doreaProductCategoriesList = document.getElementById("doreaProductCategoriesList");
 let doreaProductCategoriesArrowDown = document.getElementById("doreaProductCategoriesArrowDown");
 let doreaProductCategoriesArrowUp = document.getElementById("doreaProductCategoriesArrowUp");
+let doreaProductCategoriesSubmit = document.getElementById("doreaProductCategoriesSubmit");
+let doreaProductCategoriesValues = document.querySelectorAll(".doreaProductCategoriesValues");
 
+let categoriesProducts = [];
 jQuery(document).ready(async function($) {
 
     // list of product categories
@@ -20,7 +23,38 @@ jQuery(document).ready(async function($) {
             $(doreaProductCategoriesArrowUp).show();
         }
     });
-
+    doreaProductCategoriesValues.forEach(
+        (element) => {
+            if (element.checked) {
+                categoriesProducts.push(element.value);
+            }
+            element.addEventListener('click', function () {
+                if (element.checked) {
+                    categoriesProducts.push(element.value);
+                } else {
+                    categoriesProducts = categoriesProducts.filter(function (letter) {
+                        return letter !== element.value;
+                    });
+                }
+            })
+        }
+    );
+    doreaProductCategoriesSubmit.addEventListener("click", async function () {
+        if (categoriesProducts.length > 0) {
+            jQuery.ajax({
+                type: "post",
+                url: categoryParams.ajax_url + '?_wpnonce=' + categoryParams.categoryAjaxNonce, data: {
+                    action: "dorea_category",
+                    data: JSON.stringify({
+                        "categories": categoriesProducts,
+                    }),
+                },
+                complete: function (response) {
+                    // response on completed!
+                },
+            });
+        }
+    });
     // switch campaign off/on
     doreaSwitchcCampaign.addEventListener("input", async function () {
         let mode;

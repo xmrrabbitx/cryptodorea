@@ -147,8 +147,17 @@ function dorea_admin_pay_campaign():void
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
     $checkoutController = new checkoutController;
 
+    $categoryNonce = wp_create_nonce("categoryCampaign_nonce");
+    $categoryParams = array(
+        "categoryAjaxNonce" => $categoryNonce,
+        'ajax_url' => admin_url('admin-ajax.php'),
+    );
+    wp_localize_script('DOREA_PAYMENT_SCRIPT', 'categoryParams', $categoryParams);
+
     // get product categories
     $productCategories = new productController();
+    $productCategoriesUser = get_option('doreaCategoryProducts') ?? null;
+    var_dump($productCategoriesUser);
     /**
      * Filter Products Categories
      */
@@ -170,16 +179,23 @@ function dorea_admin_pay_campaign():void
 
     ");
     foreach ($productCategories->listCategories() as $categories){
+        if(in_array($categories, $productCategoriesUser)){
+           $checked  = "checked";
+        }
+        else{
+          $checked = "";
+        }
         print("
               <div class='!flex !mt-1'>
                   <div class='!w-1/12 !ml-1'>
-                      <input class='!accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($categories) . "'>
+                      <input class='doreaProductCategoriesValues !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($categories) . "' $checked>
                   </div>
-                  <label class='!w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
+                  <label class='doreaProductCategoriesValues !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
               </div>
         ");
     }
     print(" 
+        <button id='doreaProductCategoriesSubmit'>save changes</button>
         </div>
           </div>
               </div>
@@ -718,7 +734,7 @@ function dorea_fund():void
 }
 
 /**
- * pay campaign
+ * pay campaign ajax
  */
 add_action('wp_ajax_dorea_pay', 'dorea_pay');
 function dorea_pay():void
@@ -765,5 +781,25 @@ function doreaTrxIdsGenerate($cashbackName)
         }else{
             return $trxHash;
         }
+    }
+}
+
+/**
+ * filter product categories ajax
+ */
+add_action('wp_ajax_dorea_category', 'dorea_category');
+function dorea_category():void
+{
+    if (isset($_GET['_wpnonce'])) {
+        $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+        if (isset($_POST['data']) && wp_verify_nonce($nonce, 'categoryCampaign_nonce')) {
+            $json = sanitize_text_field(wp_unslash($_POST['data'])) ?? null;
+            $json = json_decode($json);
+            $categories = $json->categories;
+            if(!empty($categories)) {
+                get_option('doreaCategoryProducts') == true ? update_option('doreaCategoryProducts', $categories) : add_option('doreaCategoryProducts',$categories);
+            }
+        }
+
     }
 }

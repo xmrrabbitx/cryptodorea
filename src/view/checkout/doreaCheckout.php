@@ -283,22 +283,43 @@ function doreaCashback(): void
                             // show campaigns in checkout page
                             if (!empty($cashbackList)) {
 
-                                foreach ($diffCampaignsList as $campaign) {
+                                // check on products categories
+                                //$productCategories = new productController();
+                                //$productCategories = $productCategories->listCategories();
+                                $productCategoriesUser = get_option('doreaCategoryProducts') ?? null;
+                                $productCategories = [];
+                                if(!empty($productCategoriesUser)){
+                                    //if()
+                                    foreach (WC()->cart->get_cart() as $cart_item) {
+                                        $product = $cart_item['data'];
+                                        $product_id = $product->get_id();
+                                        $categories = strip_tags(wc_get_product_category_list($product_id)); // Get categories without HTML
 
-                                    $campaignInfo = get_transient('dorea_' . $campaign);
+                                        if(in_array($categories, $productCategoriesUser)) {
+                                            $productCategories[] = true;
+                                        }else{
+                                            $productCategories[] = false;
+                                        }
+                                    }
+                                }
+                                var_dump($productCategories);
+                                if(in_array(true, $productCategories)) {
+                                    foreach ($diffCampaignsList as $campaign) {
 
-                                    // check if any campaign funded or not!
-                                    if (get_option('dorea_' . $campaign . '_contract_address')) {
+                                        $campaignInfo = get_transient('dorea_' . $campaign);
 
-                                        $contractAddressConfirm = true;
-                                        $mode = $campaignInfo['mode'];
+                                        // check if any campaign funded or not!
+                                        if (get_option('dorea_' . $campaign . '_contract_address')) {
 
-                                        // check if campaign started or not
-                                        if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
+                                            $contractAddressConfirm = true;
+                                            $mode = $campaignInfo['mode'];
 
-                                            // add to cash back program option
-                                            if ($addtoCashback) {
-                                                print("<div id='doreaOpen' class='!fixed xl:!left-auto lg:!left-auto md:!left-auto sm:!left-0 !left-0 !right-0 xl:!w-96 lg:!w-96 md:!w-96 sm:!w-screen !w-screen !bottom-[0%] !pr-2 !pb-2'>
+                                            // check if campaign started or not
+                                            if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
+
+                                                // add to cash back program option
+                                                if ($addtoCashback) {
+                                                    print("<div id='doreaOpen' class='!fixed xl:!left-auto lg:!left-auto md:!left-auto sm:!left-0 !left-0 !right-0 xl:!w-96 lg:!w-96 md:!w-96 sm:!w-screen !w-screen !bottom-[0%] !pr-2 !pb-2'>
                                                        <svg id='doreaOpenIcon' xmlns='http://www.w3.org/2000/svg' class='size-7 !cursor-pointer !float-right' viewBox='0 0 576 512'><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d='M512 80c8.8 0 16 7.2 16 16l0 32L48 128l0-32c0-8.8 7.2-16 16-16l448 0zm16 144l0 192c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16l0-192 480 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-48 0zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z'/></svg>                           
                                                    </div>
                                                    <div id='doreaCheckout' class='!fixed xl:!left-auto lg:!left-auto md:!left-auto sm:!left-0 !left-0 !right-0 !bottom-[0%] !bg-white xl:!w-96 lg:!w-96 md:!w-96 sm:!w-screen !w-screen  shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border'>
@@ -311,20 +332,21 @@ function doreaCashback(): void
                                                      <div class='!grid !grid-cols-1 !gap-2'>
                                                          <label class='!text-sm'>Choose the campaign you wish to participate in:</label>
                                                          <div id='doreaCampaignsSection' class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>");
-                                                $addtoCashback = false;
-                                            }
+                                                    $addtoCashback = false;
+                                                }
 
-                                            echo("
+                                                echo("
                                                 <div class='!flex !mt-1'>
                                                     <div class='!w-1/12 !ml-1'>
                                                         <input id='doreaaddtocashbackcheckbox_" . esc_html($campaign) . "' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($campaign) . "'>
                                                     </div>
                                                     
-                                                    <label id='doreaaddtocashbacklabel_".esc_html($campaign)."' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($campaignInfo['campaignNameLable'])."</label>
+                                                    <label id='doreaaddtocashbacklabel_" . esc_html($campaign) . "' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>" . esc_html($campaignInfo['campaignNameLable']) . "</label>
                                                     
                                                 </div>
                                             ");
 
+                                            }
                                         }
                                     }
                                 }
@@ -409,7 +431,36 @@ function doreaOrderReceived($orderId):void
 
    $order = json_decode(new WC_Order($orderId));
 
-   if(isset($order->id)) {
+    if(isset($order->id)) {
+
+        $orderCategory = wc_get_order($orderId);
+
+        // Loop through order items to retrieve product details
+        foreach ($orderCategory->get_items() as $item_id => $item) {
+            $product = $item->get_product(); // Get the product object
+            $product_name = $product->get_name(); // Get the product name
+            $product_id = $product->get_id();
+
+            // Get the categories for this product
+            $categories = get_the_terms($product_id, 'product_cat'); // Get product categories
+
+            // Check if categories exist
+            if ($categories && !is_wp_error($categories)) {
+                $category_names = [];
+                foreach ($categories as $category) {
+                    $category_names[] = $category->name; // Add category name to the array
+                }
+                $categories_list = implode(', ', $category_names); // Convert array to string
+            } else {
+                $categories_list = 'No categories found';
+            }
+
+            // Output product details and categories
+            echo "Product Name: $product_name\n";
+            echo "Categories: $categories_list\n";
+
+        }
+
 
        // get campaign info from HPO mode
        $campaignQueue = json_decode(get_option('dorea_campaign_queue'));

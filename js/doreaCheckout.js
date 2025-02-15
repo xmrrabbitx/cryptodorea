@@ -62,7 +62,6 @@ jQuery(document).ready(async function($) {
                         return false;
                     } else {
                         setValue();
-                        //dorea_walletaddress.style.border = '1px solid #00b300';
                     }
                 } else {
                     dorea_walletaddress.style.border = '1px solid #ccc'; // grey border on empty wallet address feild
