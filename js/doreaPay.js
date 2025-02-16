@@ -31,7 +31,6 @@ jQuery(document).ready(async function($) {
             }]
         });
 
-
         function convertToWei(amounts) {
 
                 let amountsBig = [];

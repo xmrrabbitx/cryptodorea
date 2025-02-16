@@ -20,107 +20,121 @@ jQuery(document).ready(async function($) {
     }
 
     let deployFailBreak = localStorage.getItem('deployFailBreak');
+    let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
+    let deployStatus = localStorage.getItem('doreaDeployStatus');
+
     if(deployFailBreak){
-        let contractAddress = JSON.parse(deployFailBreak).contractAddress;
-        let campaignName = JSON.parse(deployFailBreak).campaignName;
-        let failedTime = JSON.parse(deployFailBreak).failedTime;
-        let _wpnonce = JSON.parse(deployFailBreak)._wpnonce;
+        if (deployStatus === "open") {
+            localStorage.removeItem('doreaDeployStatus');
+            $(doreaRjectMetamask).show('slow');
+            await new Promise(r => setTimeout(r, 10000));
+            $(doreaRjectMetamask).hide('slow');
+            return false;
+        } else if (deployStatus === "confirm") {
 
-        let time;
-        if(Date.now() > (failedTime + 20000)){
-           time = 0;
-        }else {
-            time = ((failedTime + 20000) - Date.now());
-        }
 
-        const body = document.body;
-        let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
-        $(doreaFailBreakLoading).show();
-        // Disable interactions
-        body.style.pointerEvents = 'none';
-        body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
-        body.style.userSelect = 'none'; // Disables text selection
-        body.style.overflow = 'hidden'; // Prevent scrolling
+            let contractAddress = JSON.parse(deployFailBreak).contractAddress;
+            let campaignName = JSON.parse(deployFailBreak).campaignName;
+            let failedTime = JSON.parse(deployFailBreak).failedTime;
+            let _wpnonce = JSON.parse(deployFailBreak)._wpnonce;
 
-        let timerStatus = localStorage.getItem("doreaTimer");
-        let timer = time;
-        let delayTime;
-        // counter timer to syc previous transaction or pay it until expiration
-        let doreaTimerLoading = document.getElementById("doreaTimerLoading");
-        doreaTimerLoading.style.display = "block";
-        if(timerStatus) {
-            for(timer;timer >= 0;){
-                await new Promise(r => setTimeout(r, 1000));
-                doreaTimerLoading.innerHTML = parseInt(timer / 1000);
-                timer = timer - 1000;
-                delayTime = timer;
+            let time;
+            if (Date.now() > (failedTime + 20000)) {
+                time = 0;
+            } else {
+                time = ((failedTime + 20000) - Date.now());
             }
-        }
 
-        setTimeout(delay, delayTime)
-        function delay() {
-            (async () => {
+            const body = document.body;
+            let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
+            $(doreaFailBreakLoading).show();
+            // Disable interactions
+            body.style.pointerEvents = 'none';
+            body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
+            body.style.userSelect = 'none'; // Disables text selection
+            body.style.overflow = 'hidden'; // Prevent scrolling
 
-                $(doreaFailBreakLoading).hide();
-                // enable interactions
-                body.style.pointerEvents = 'visible';
-                body.style.opacity = '1';
-                body.style.userSelect = 'visible'; // enable text selection
-                body.style.overflow = 'visible'; // Prevent scrolling
-
-
-                const provider = new BrowserProvider(window.ethereum);
-
-                // Get the signer from the provider metamask
-                const signer = await provider.getSigner();
-
-                async function isContract(contractAddress) {
-                    const code = await provider.getCode(contractAddress);
-                    return code !== "0x"; // Returns true if a contract exists, false otherwise
+            let timerStatus = localStorage.getItem("doreaTimer");
+            let timer = time;
+            let delayTime;
+            // counter timer to syc previous transaction or pay it until expiration
+            let doreaTimerLoading = document.getElementById("doreaTimerLoading");
+            doreaTimerLoading.style.display = "block";
+            if (timerStatus) {
+                for (timer; timer >= 0;) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    doreaTimerLoading.innerHTML = parseInt(timer / 1000);
+                    timer = timer - 1000;
+                    delayTime = timer;
                 }
+            }
 
-                isContract(contractAddress).then(async (status) => {
-                    if (status === true) {
-                        const contract = new ethers.Contract(contractAddress, abi, signer);
+            setTimeout(delay, delayTime)
 
-                        let balance = await contract.getBalance();
-                        balance = convertWeiToEther(parseInt(balance));
+            function delay() {
+                (async () => {
 
-                        jQuery.ajax({
-                            type: "post",
-                            url: param.ajax_url + '?_wpnonce=' + _wpnonce,
-                            data: {
-                                action: "dorea_contract_address",  // the action to fire in the server
-                                data: JSON.stringify({
-                                    "contractAddress": contractAddress,
-                                    "contractAmount": balance,
-                                    "campaignName": campaignName
-                                }),
-                            },
-                            complete: async function (response) {
+                    $(doreaFailBreakLoading).hide();
+                    // enable interactions
+                    body.style.pointerEvents = 'visible';
+                    body.style.opacity = '1';
+                    body.style.userSelect = 'visible'; // enable text selection
+                    body.style.overflow = 'visible'; // Prevent scrolling
 
-                                // pop up message to reload the  page after interrupt transaction
-                                let doreaFailBreakModal = document.getElementById("doreaFailBreakModal");
-                                $(doreaFailBreakModal).show("slow");
-                                localStorage.removeItem('deployFailBreak');
-                                return false;
-                            },
-                        });
 
-                        localStorage.removeItem('deployFailBreak');
+                    const provider = new BrowserProvider(window.ethereum);
 
-                        return true;
+                    // Get the signer from the provider metamask
+                    const signer = await provider.getSigner();
+
+                    async function isContract(contractAddress) {
+                        const code = await provider.getCode(contractAddress);
+                        return code !== "0x"; // Returns true if a contract exists, false otherwise
                     }
-                });
 
-                errorMessg.innerHTML = "the Contract Deployment probably was not Successfull! please try again...";
-                $(errorMessg).show("slow");
-                await new Promise(r => setTimeout(r, 1500));
-                $(errorMessg).hide("slow");
+                    isContract(contractAddress).then(async (status) => {
+                        if (status === true) {
+                            const contract = new ethers.Contract(contractAddress, abi, signer);
 
-                localStorage.removeItem('deployFailBreak');
+                            let balance = await contract.getBalance();
+                            balance = convertWeiToEther(parseInt(balance));
 
-            })();
+                            jQuery.ajax({
+                                type: "post",
+                                url: param.ajax_url + '?_wpnonce=' + _wpnonce,
+                                data: {
+                                    action: "dorea_contract_address",  // the action to fire in the server
+                                    data: JSON.stringify({
+                                        "contractAddress": contractAddress,
+                                        "contractAmount": balance,
+                                        "campaignName": campaignName
+                                    }),
+                                },
+                                complete: async function (response) {
+
+                                    // pop up message to reload the  page after interrupt transaction
+                                    let doreaFailBreakModal = document.getElementById("doreaFailBreakModal");
+                                    $(doreaFailBreakModal).show("slow");
+                                    localStorage.removeItem('deployFailBreak');
+                                    return false;
+                                },
+                            });
+
+                            localStorage.removeItem('deployFailBreak');
+
+                            return true;
+                        }
+                    });
+
+                    errorMessg.innerHTML = "the Contract Deployment probably was not Successfull! please try again...";
+                    $(errorMessg).show("slow");
+                    await new Promise(r => setTimeout(r, 1500));
+                    $(errorMessg).hide("slow");
+
+                    localStorage.removeItem('deployFailBreak');
+
+                })();
+            }
         }
     }
 

@@ -51,7 +51,6 @@ jQuery(document).ready(async function($) {
     let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
 
     if(payFailBreak){
-        console.log(payStatus)
         if(payStatus) {
             if (payStatus === "open") {
                 localStorage.removeItem('doreaPayStatus');

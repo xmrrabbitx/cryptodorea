@@ -154,6 +154,11 @@ function dorea_cashback_campaign_credit():void
             <p id="doreaTimerLoading" class="!text-center !mt-3" style="display: none"></p>
         </div>
         
+        <!-- Warning on interrupted transaction! -->
+        <div id="doreaRjectMetamask" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+           <p class="!text-sm !mt-3">The last payment was interrupted. <br>Please reject the payment on metamask otherwise you may lose your money...</p>
+        </div>
+        
         </main>
         
     ');

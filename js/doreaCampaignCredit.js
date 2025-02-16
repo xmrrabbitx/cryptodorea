@@ -12,12 +12,24 @@ import {abi,bytecode} from "./doreaCompile.js";
 
 const doreaBeforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
+let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
 
 // Request access to Metamask
 setTimeout(delay, 1000)
 function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
+
+            let deployStatus = localStorage.getItem('doreaDeployStatus');
+
+            // error on open metamask transaction
+            if (deployStatus === "open") {
+                localStorage.removeItem('doreaDeployStatus');
+                $(doreaRjectMetamask).show('slow');
+                await new Promise(r => setTimeout(r, 10000));
+                $(doreaRjectMetamask).hide('slow');
+                return false;
+            }
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
 
@@ -36,6 +48,7 @@ function delay(){
                         blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
                     }]
                 });
+
 
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");
@@ -154,6 +167,7 @@ function delay(){
                         }
 
                         localStorage.setItem("doreaTimer", true);
+                        localStorage.setItem('doreaDeployStatus', 'open');
 
                         let contractObj = await factory.deploy(
                             {
@@ -175,6 +189,8 @@ function delay(){
                             $(successMessg).hide("slow");
 
                             let contractAddress = receipt.target;
+
+                            localStorage.setItem('doreaDeployStatus', 'confirm');
 
                             if (receipt) {
 
@@ -223,7 +239,7 @@ function delay(){
                         $(doreaBeforeTrxModal).hide("slow");
                         $(doreaFailBreakLoading).hide();
 
-                        localStorage.removeItem('deployState');
+                        localStorage.removeItem('doreaDeployStatus');
 
                         document.getElementById("doreaFund").disabled = false;
 
