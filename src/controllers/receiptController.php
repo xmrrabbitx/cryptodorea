@@ -37,36 +37,37 @@ class receiptController extends receiptAbstract
         if(!empty($campaignListKeys)) {
             foreach ($campaignListKeys as $campaignName) {
 
-                $mode = get_transient('dorea_' . $campaignName)['mode'];
-                if($mode==="on") {
-                    $orderIds = $campaignList[$campaignName]['order_ids'] ?? [];
+               $mode = get_transient('dorea_' . $campaignName)['mode'];
+               if ($mode === "on") {
+                        $orderIds = $campaignList[$campaignName]['order_ids'] ?? [];
 
-                    if (!in_array($order->id, $orderIds)) {
+                        if (!in_array($order->id, $orderIds)) {
 
-                        if (isset($campaignList[$campaignName]['purchaseCounts'])) {
+                            if (isset($campaignList[$campaignName]['purchaseCounts'])) {
 
-                            $purchaseCounts = $campaignList[$campaignName]['purchaseCounts'] + 1;
+                                $purchaseCounts = $campaignList[$campaignName]['purchaseCounts'] + 1;
 
-                        } else {
+                            } else {
 
-                            $purchaseCounts = 1;
+                                $purchaseCounts = 1;
+
+                            }
+
+                            // add sum of total to list
+                            $campaignList[$campaignName]['total'][] = (float)$order->total;
+
+                            $campaignList[$campaignName]['order_ids'][] = $order->id;
+
+                            // it must trigger and count campaign on every each of product
+                            $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts' => $purchaseCounts];
+                            $campaignInfo = array_merge($campaignList[$campaignName], $items);
+
+                            $campaignList[$campaignName] = $campaignInfo;
+                            $campaignInfoResult = $campaignList;
 
                         }
-
-                        // add sum of total to list
-                        $campaignList[$campaignName]['total'][] = (float)$order->total;
-
-                        $campaignList[$campaignName]['order_ids'][] = $order->id;
-
-                        // it must trigger and count campaign on every each of product
-                        $items = ['displayName' => $displayName, 'userEmail' => $userEmail, 'purchaseCounts' => $purchaseCounts];
-                        $campaignInfo = array_merge($campaignList[$campaignName], $items);
-
-                        $campaignList[$campaignName] = $campaignInfo;
-                        $campaignInfoResult = $campaignList;
-
                     }
-                }
+
             }
 
             if ($campaignInfoResult) {

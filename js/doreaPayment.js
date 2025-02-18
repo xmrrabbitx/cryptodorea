@@ -1,5 +1,4 @@
 
-
 let doreaSwitchcCampaign = document.getElementById('doreaSwitchcCampaign');
 let doreaCampaignNameSwitch = document.getElementById('doreaCampaignNameSwitch');
 let doreaProductCategoriesIcon = document.getElementById("doreaProductCategoriesIcon");
@@ -47,6 +46,7 @@ jQuery(document).ready(async function($) {
                     action: "dorea_category",
                     data: JSON.stringify({
                         "categories": categoriesProducts,
+                        "campaignName":categoryParams.campaignName
                     }),
                 },
                 complete: function (response) {

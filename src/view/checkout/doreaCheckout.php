@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
-use Cryptodorea\DoreaCashback\controllers\productController;
+//use Cryptodorea\DoreaCashback\controllers\productController;
 
 /**
  * error handling of checkout fields
@@ -170,9 +170,6 @@ function doreaCashback(): void
             $checkoutController = new checkoutController;
             $diffCampaignsList = $checkoutController->check($cashbackList);
 
-            // get product categories
-            $productCategories = new productController();
-
             // check on Authentication user
             if (is_user_logged_in()) {
 
@@ -286,26 +283,26 @@ function doreaCashback(): void
                                 // check on products categories
                                 //$productCategories = new productController();
                                 //$productCategories = $productCategories->listCategories();
-                                $productCategoriesUser = get_option('doreaCategoryProducts') ?? null;
-                                $productCategories = [];
-                                if(!empty($productCategoriesUser)){
-                                    //if()
-                                    foreach (WC()->cart->get_cart() as $cart_item) {
-                                        $product = $cart_item['data'];
-                                        $product_id = $product->get_id();
-                                        $categories = strip_tags(wc_get_product_category_list($product_id)); // Get categories without HTML
 
-                                        if(in_array($categories, $productCategoriesUser)) {
-                                            $productCategories[] = true;
-                                        }else{
-                                            $productCategories[] = false;
+                                //var_dump($productCategories);
+                                foreach ($diffCampaignsList as $campaign) {
+                                    $productCategoriesUser = get_option('doreaCategoryProducts' . $campaign) ?? null;
+                                    $productCategories = [];
+                                    // check product categories
+                                    if(!empty($productCategoriesUser)){
+                                        foreach (WC()->cart->get_cart() as $cart_item) {
+                                            $product = $cart_item['data'];
+                                            $product_id = $product->get_id();
+                                            $categories = strip_tags(wc_get_product_category_list($product_id)); // Get categories without HTML
+
+                                            if(in_array($categories, $productCategoriesUser)) {
+                                                $productCategories[] = true;
+                                            }else{
+                                                $productCategories[] = false;
+                                            }
                                         }
                                     }
-                                }
-                                var_dump($productCategories);
-                                if(in_array(true, $productCategories)) {
-                                    foreach ($diffCampaignsList as $campaign) {
-
+                                    if (in_array(true, $productCategories)) {
                                         $campaignInfo = get_transient('dorea_' . $campaign);
 
                                         // check if any campaign funded or not!
@@ -348,6 +345,7 @@ function doreaCashback(): void
 
                                             }
                                         }
+
                                     }
                                 }
                             }
@@ -456,11 +454,10 @@ function doreaOrderReceived($orderId):void
             }
 
             // Output product details and categories
-            echo "Product Name: $product_name\n";
-            echo "Categories: $categories_list\n";
+            //echo "Product Name: $product_name\n";
+            //echo "Categories: $categories_list\n";
 
         }
-
 
        // get campaign info from HPO mode
        $campaignQueue = json_decode(get_option('dorea_campaign_queue'));

@@ -151,13 +151,15 @@ function dorea_admin_pay_campaign():void
     $categoryParams = array(
         "categoryAjaxNonce" => $categoryNonce,
         'ajax_url' => admin_url('admin-ajax.php'),
+        "campaignName"=>$cashbackName
     );
     wp_localize_script('DOREA_PAYMENT_SCRIPT', 'categoryParams', $categoryParams);
 
     // get product categories
     $productCategories = new productController();
-    $productCategoriesUser = get_option('doreaCategoryProducts') ?? null;
-    var_dump($productCategoriesUser);
+    $productCategoriesUser = get_option('doreaCategoryProducts' . $cashbackName) == true ? get_option('doreaCategoryProducts' . $cashbackName) : [];
+var_dump($cashbackName);
+var_dump($productCategoriesUser);
     /**
      * Filter Products Categories
      */
@@ -178,6 +180,7 @@ function dorea_admin_pay_campaign():void
                 <div id='doreaProductCategoriesList' class='!pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left' style='display: none'>  
 
     ");
+
     foreach ($productCategories->listCategories() as $categories){
         if(in_array($categories, $productCategoriesUser)){
            $checked  = "checked";
@@ -193,9 +196,11 @@ function dorea_admin_pay_campaign():void
                   <label class='doreaProductCategoriesValues !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
               </div>
         ");
+
     }
+
     print(" 
-        <button id='doreaProductCategoriesSubmit'>save changes</button>
+        <button id='doreaProductCategoriesSubmit' class='!mt-5 !ml-1'>save changes</button>
         </div>
           </div>
               </div>
@@ -795,11 +800,11 @@ function dorea_category():void
         if (isset($_POST['data']) && wp_verify_nonce($nonce, 'categoryCampaign_nonce')) {
             $json = sanitize_text_field(wp_unslash($_POST['data'])) ?? null;
             $json = json_decode($json);
+            $campaignName = sanitize_text_field(wp_unslash($json->campaignName));
             $categories = $json->categories;
             if(!empty($categories)) {
-                get_option('doreaCategoryProducts') == true ? update_option('doreaCategoryProducts', $categories) : add_option('doreaCategoryProducts',$categories);
+                get_option('doreaCategoryProducts' . $campaignName) == true ? update_option('doreaCategoryProducts' . $campaignName, $categories) : add_option('doreaCategoryProducts' . $campaignName,$categories);
             }
         }
-
     }
 }
