@@ -18,7 +18,7 @@ class receiptController extends receiptAbstract
 
     }
 
-    function is_paid($order, $campaignList):void
+    function is_paid($order, $order_obj, $campaignList):void
     {
 
         static $campaignInfoResult;
@@ -37,6 +37,39 @@ class receiptController extends receiptAbstract
         if(!empty($campaignListKeys)) {
             foreach ($campaignListKeys as $campaignName) {
 
+                $campaignCategories = get_option('doreaCategoryProducts' . $campaignName) ?? [];
+
+                if(!empty($campaignCategories)) {
+                    $total = [];
+                    foreach ($order_obj->get_items() as $item_id => $item) {
+                        $price = $item->get_total(); // Total price for the item (including quantity)
+
+                        $product = $item->get_product(); // Get the product object
+                        $product_id = $product->get_id();
+
+                        // Get the categories for this product
+                        $categories = get_the_terms($product_id, 'product_cat'); // Get product categories
+
+                        // Check if categories exist
+                        if ($categories && !is_wp_error($categories)) {
+                            $category_names = [];
+                            foreach ($categories as $category) {
+                                $category_names[] = $category->name; // Add category name to the array
+                            }
+                            $categories = implode(', ', $category_names); // Convert array to string
+                        }
+
+                        if(in_array($categories, $campaignCategories)) {
+                            $price = trim(strip_tags(html_entity_decode(wc_price($price))));
+                            $total[] = (float)str_replace("$", '', $price);
+                        }
+                    }
+                    $total = array_sum($total);
+                }else{
+                    $total = (float)$order->total;
+
+                }
+var_dump($total);
                $mode = get_transient('dorea_' . $campaignName)['mode'];
                if ($mode === "on") {
                         $orderIds = $campaignList[$campaignName]['order_ids'] ?? [];
@@ -54,7 +87,7 @@ class receiptController extends receiptAbstract
                             }
 
                             // add sum of total to list
-                            $campaignList[$campaignName]['total'][] = (float)$order->total;
+                            $campaignList[$campaignName]['total'][] = $total;
 
                             $campaignList[$campaignName]['order_ids'][] = $order->id;
 
@@ -69,7 +102,7 @@ class receiptController extends receiptAbstract
                     }
 
             }
-
+var_dump($campaignInfoResult);
             if ($campaignInfoResult) {
                 // store campaign info into model
                 $this->receiptModel->add($campaignInfoResult);

@@ -280,12 +280,8 @@ function doreaCashback(): void
                             // show campaigns in checkout page
                             if (!empty($cashbackList)) {
 
-                                // check on products categories
-                                //$productCategories = new productController();
-                                //$productCategories = $productCategories->listCategories();
-
-                                //var_dump($productCategories);
                                 foreach ($diffCampaignsList as $campaign) {
+
                                     $productCategoriesUser = get_option('doreaCategoryProducts' . $campaign) ?? null;
                                     $productCategories = [];
                                     // check product categories
@@ -302,7 +298,7 @@ function doreaCashback(): void
                                             }
                                         }
                                     }
-                                    if (in_array(true, $productCategories)) {
+                                    if (in_array(true, $productCategories) || empty($productCategories)) {
                                         $campaignInfo = get_transient('dorea_' . $campaign);
 
                                         // check if any campaign funded or not!
@@ -428,8 +424,9 @@ function doreaOrderReceived($orderId):void
    static $walletAddress;
 
    $order = json_decode(new WC_Order($orderId));
+   $order_obj = new WC_Order($orderId);
 
-    if(isset($order->id)) {
+   if(isset($order->id)) {
 
         $orderCategory = wc_get_order($orderId);
 
@@ -464,7 +461,7 @@ function doreaOrderReceived($orderId):void
 
        // get campaign info from legacy mode
        if (!$campaignQueue) {
-               foreach ($order->meta_data as $meta_data) {
+          foreach ($order->meta_data as $meta_data) {
                    if ($meta_data->key === 'dorea_walletaddress') {
                        $walletAddress = [
                            'walletAddress' => $meta_data->value,
@@ -476,10 +473,10 @@ function doreaOrderReceived($orderId):void
                        ];
                    }
                }
-               if ($walletAddress) {
+          if ($walletAddress) {
                    $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
                }
-           }
+       }
 
        // store new camppaigns
        if ($campaignQueue) {
@@ -522,7 +519,7 @@ function doreaOrderReceived($orderId):void
        if (!$error) {
            // receive order details
            $checkout = new checkoutController();
-           $checkout->orederReceived($order);
+           $checkout->orederReceived($order, $order_obj);
        }
 
        delete_option('dorea_campaign_queue');

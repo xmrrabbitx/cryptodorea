@@ -79,12 +79,12 @@ class checkoutController extends checkoutAbstract
 
     }
 
-    public function orederReceived($order):void
+    public function orederReceived($order, $order_obj):void
     {
 
        // call receipt controller
        $receipt = new receiptController();
-       $receipt->is_paid($order, $this->checkoutModel->list());
+       $receipt->is_paid($order,$order_obj,  $this->checkoutModel->list());
 
     }
 

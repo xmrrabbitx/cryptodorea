@@ -267,10 +267,10 @@ var_dump($productCategoriesUser);
                 $users = $userList[$i];
 
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
-
+var_dump($campaignUser);
                 // base eth price
-                $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
-
+                //$ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                $ethBasePrice = 0.0004;
                 if($ethBasePrice) {
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
@@ -283,6 +283,7 @@ var_dump($productCategoriesUser);
                         array_map(function ($value) use ($shoppingCount, &$validPurchases) {
 
                             if (count($value) == $shoppingCount) {
+                                var_dump($value);
                                 $value = array_sum($value);
                                 // calculate percentage of each value
                                 $validPurchases[] = $value;
@@ -550,7 +551,7 @@ var_dump($productCategoriesUser);
 
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
                 $trxId = doreaTrxIdsGenerate($cashbackName);
-
+var_dump($qualifiedUserEthers);
                 // pass params value for deployment
                 $payParams = array(
                     'contractAddress' => $doreaContractAddress,

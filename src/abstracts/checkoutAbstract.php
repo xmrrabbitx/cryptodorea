@@ -12,6 +12,6 @@ abstract class checkoutAbstract{
     abstract function addtoList($campaignNames, $userWalletAddress);
     abstract function autoRemove();
     abstract function expire(string $campaign);
-    abstract function orederReceived($order);
+    abstract function orederReceived($order, $order_obj);
 
 }
