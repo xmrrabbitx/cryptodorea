@@ -74,7 +74,7 @@ function dorea_cashback_campaign_content():void
 
         <form class='!grid !grid-cols-1 !mt-5' method='POST' action='".esc_url($credit_url)."' id='cashback_campaign'>
             
-            <input type='hidden' name='action' value='cashback_campaign'>
+           <input type='hidden' name='action' value='cashback_campaign'>
            
            <!-- campaign name field -->
            <div class='!col-span-1 !w-12/12'>
@@ -100,6 +100,11 @@ function dorea_cashback_campaign_content():void
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
                 <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='user shopping count'>
+            </div>
+            
+            <div class='!col-span-1 !w-12/12 !mt-3'>
+                <!-- Checkout Text -->
+                <input id='campaignSlogan' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='campaignSlogan' placeholder='insert casmpaign slogan'>
             </div>
             
             <div class='!col-span-1 !w-12/12 !mt-5'>
@@ -217,6 +222,7 @@ function dorea_admin_cashback_campaign():void
             }
             $campaignName = trim(sanitize_text_field(sanitize_key(wp_unslash($_POST['campaignName']))));
             $cryptoType = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['cryptoType'])));
+            $campaignSlogan = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['campaignSlogan'])));
 
             if(!is_numeric(trim(sanitize_text_field(wp_unslash($_POST['cryptoAmount'])))) || !is_numeric(trim(sanitize_text_field(wp_unslash($_POST['shoppingCount']))))){
                 //throws error on amount format
@@ -271,7 +277,7 @@ function dorea_admin_cashback_campaign():void
                 }
 
                 // create campaign
-                $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
+                $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount, $campaignSlogan, $timestampStart, $timestampExpire);
 
                 $url = 'admin.php?page=credit&cashbackName=' . $campaignName;
                 $nonce = wp_create_nonce("deploy_campaign_nonce");
