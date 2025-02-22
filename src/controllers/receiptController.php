@@ -13,7 +13,6 @@ class receiptController extends receiptAbstract
 
     function __construct()
     {
-
         $this->receiptModel = new receiptModel();
 
     }
