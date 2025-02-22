@@ -162,4 +162,29 @@ class checkoutController extends checkoutAbstract
 
         return gmdate('Y-m-d H:i:s', $camapaignInfo['timestampStart']);
     }
+
+    /**
+     * get cart items categories
+     */
+    function doreaCartCategories(string $campaign):array
+    {
+        $productCategoriesUser = get_option('doreaCategoryProducts' . $campaign) ?? null;
+        $productCategories = [];
+        // check product categories
+        if(!empty($productCategoriesUser)){
+            foreach (WC()->cart->get_cart() as $cart_item) {
+                $product = $cart_item['data'];
+                $product_id = $product->get_id();
+                $categories = strip_tags(wc_get_product_category_list($product_id)); // Get categories without HTML
+
+                if(in_array($categories, $productCategoriesUser)) {
+                    $productCategories[] = true;
+                }else{
+                    $productCategories[] = false;
+                }
+            }
+        }
+
+        return $productCategories;
+    }
 }

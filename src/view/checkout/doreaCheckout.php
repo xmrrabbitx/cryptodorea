@@ -280,22 +280,7 @@ function doreaCashback(): void
 
                                 foreach ($diffCampaignsList as $campaign) {
 
-                                    $productCategoriesUser = get_option('doreaCategoryProducts' . $campaign) ?? null;
-                                    $productCategories = [];
-                                    // check product categories
-                                    if(!empty($productCategoriesUser)){
-                                        foreach (WC()->cart->get_cart() as $cart_item) {
-                                            $product = $cart_item['data'];
-                                            $product_id = $product->get_id();
-                                            $categories = strip_tags(wc_get_product_category_list($product_id)); // Get categories without HTML
-
-                                            if(in_array($categories, $productCategoriesUser)) {
-                                                $productCategories[] = true;
-                                            }else{
-                                                $productCategories[] = false;
-                                            }
-                                        }
-                                    }
+                                    $productCategories = $checkoutController->doreaCartCategories($campaign) ?? null;
                                     if (in_array(true, $productCategories) || empty($productCategories)) {
                                         $campaignInfo = get_transient('dorea_' . $campaign);
 
@@ -427,34 +412,6 @@ function doreaOrderReceived($orderId):void
    $order_obj = new WC_Order($orderId);
 
    if(isset($order->id)) {
-
-        $orderCategory = wc_get_order($orderId);
-
-        // Loop through order items to retrieve product details
-        foreach ($orderCategory->get_items() as $item_id => $item) {
-            $product = $item->get_product(); // Get the product object
-            $product_name = $product->get_name(); // Get the product name
-            $product_id = $product->get_id();
-
-            // Get the categories for this product
-            $categories = get_the_terms($product_id, 'product_cat'); // Get product categories
-
-            // Check if categories exist
-            if ($categories && !is_wp_error($categories)) {
-                $category_names = [];
-                foreach ($categories as $category) {
-                    $category_names[] = $category->name; // Add category name to the array
-                }
-                $categories_list = implode(', ', $category_names); // Convert array to string
-            } else {
-                $categories_list = 'No categories found';
-            }
-
-            // Output product details and categories
-            //echo "Product Name: $product_name\n";
-            //echo "Categories: $categories_list\n";
-
-        }
 
        // get campaign info from HPO mode
        $campaignQueue = json_decode(get_option('dorea_campaign_queue'));
