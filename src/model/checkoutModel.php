@@ -26,7 +26,7 @@ class checkoutModel extends checkoutModelAbstract
     {
         // add/update campaigns info user
         $campaignList = $this->list();
-        $campaignsAdmin = get_option("campaign_list");
+        $campaignsAdmin = get_option("dorea_campaign_list");
 
         $campaignInfo = [];
         if($campaignsAdmin) {

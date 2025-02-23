@@ -1,9 +1,9 @@
 === Crypto Dorea: Crypto Cashback for WooCommerce ===
 Contributors: hadimirzaie
 Tags: cashback, crypto, woocommerce, web3, ethereum
-Requires at least: 6.4.3
-Tested up to: 6.7.1
-Stable tag: 1.0.0
+Requires at least: 6.4
+Tested up to: 6.7
+Stable tag: 1.1.1
 Requires PHP: 8.1
 WC tested up to: 9.4
 License: GPLv2 or later
@@ -13,7 +13,7 @@ Crypto Dorea is a new innovative Loyalty Program brought to your business using 
 
 == Description ==
 
-There is no limitation in **Crypto Dorea**; you can launch your crypto campaign cashback in **3 clicks** and give rewards to **your most loyal customers**
+There is no limitation in **Crypto Dorea**; you can launch your crypto campaign cashback in just **3 clicks** and give rewards to **your most loyal customers**
 using the blockchain payment system on a specific date and for special events like Christmas or Halloween.
 We believe in privacy. All the processes are decentralized and transparent on supported blockchains.
 
@@ -48,5 +48,17 @@ Yes, it is integrated with the WooCommerce checkout and payment system.
 3. Fund Campaign
 4. Pay Campaign
 5. Transactions List
+6. Claimed Rewards
 
-`<?php code(); ?>`
+== External services ==
+
+This plugin connects to an API service (cryptocompare) to obtain the latest ETH price in USD format from the market. no personal information send to this api,
+URL: min-api.cryptocompare.com
+
+it includes Tailwind CSS v3.4.16 for style.
+the official CDN URL: https://cdn.tailwindcss.com
+Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+
+it includes Ethers.js v6.7.0 for blockchain interactions and payment.
+URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+Source Code: https://github.com/ethers-io/ethers.js

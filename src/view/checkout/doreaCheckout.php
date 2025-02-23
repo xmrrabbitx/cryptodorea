@@ -1,7 +1,10 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
+//use Cryptodorea\DoreaCashback\controllers\productController;
 
 /**
  * error handling of checkout fields
@@ -29,10 +32,10 @@ function dorea_checkout_field_process() {
                     $checkoboxes = [];
                     foreach ($diffCampaignsList as $campaign) {
 
-                        $campaignInfo = get_transient($campaign);
+                        $campaignInfo = get_transient('dorea_' . $campaign);
 
                         // check if any campaign funded or not!
-                        if (get_option($campaign . '_contract_address')) {
+                        if (get_option('dorea_' . $campaign . '_contract_address')) {
                             // check if campaign started or not
                             if ($checkoutController->expire($campaign)) {
                                 if (isset($_POST[$campaignInfo['campaignName']])){
@@ -47,7 +50,7 @@ function dorea_checkout_field_process() {
                     if (in_array(true, $checkoboxes)) {
                         if (isset($_POST['dorea_wallet_address'])) {
                             if (empty(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])))) {
-                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             }
                         }
                     }
@@ -55,12 +58,12 @@ function dorea_checkout_field_process() {
                     if(isset($_POST['dorea_wallet_address'])) {
                         if (!empty(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])))) {
                             if (substr(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address'])), 0, 2) !== '0x') {
-                                wc_add_notice(esc_html__('Wallet Address must start with 0x!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Wallet Address must start with 0x!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             } elseif (strlen(sanitize_text_field(wp_unslash($_POST['dorea_wallet_address']))) < 42) {
-                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Please enter a valid wallet address!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             }
                             if (!in_array(true, $checkoboxes)) {
-                                wc_add_notice(esc_html__('Please choose at least one campaign!', 'cryptodorea'), 'error');
+                                wc_add_notice(esc_html__('Please choose at least one campaign!', 'crypto-dorea-crypto-cashback-for-woocommerce'), 'error');
                             }
                         }
                     }
@@ -70,7 +73,6 @@ function dorea_checkout_field_process() {
         }
     }
 }
-
 
 /**
  * Update the order meta with field value
@@ -99,10 +101,10 @@ function dorea_update_feild( $order_id ) {
                     $campaignNamesJoined = [];
                     foreach ($diffCampaignsList as $campaign) {
 
-                        $campaignInfo = get_transient($campaign);
+                        $campaignInfo = get_transient('dorea_' . $campaign);
 
                         // check if any campaign funded or not!
-                        if (get_option($campaign . '_contract_address')) {
+                        if (get_option('dorea_' . $campaign . '_contract_address')) {
                             // check if campaign started or not
                             if ($checkoutController->expire($campaign)) {
                                 if (isset($_POST[$campaignInfo['campaignName']])) {
@@ -133,9 +135,21 @@ function dorea_update_feild( $order_id ) {
 /**
  * Crypto Cashback on Checkout View
  */
-add_action('wp', 'cashback', 10);
-function cashback(): void
+add_action('wp', 'doreaCashback', 10);
+function doreaCashback(): void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     static $contractAddressConfirm;
 
     if(is_checkout()) {
@@ -143,7 +157,7 @@ function cashback(): void
         if (!WC()->cart->get_cart_contents_count() == 0) {
 
             // load claim campaign style
-            wp_enqueue_style('DOREA_CHECKOUT_STYLE', plugins_url('/cryptodorea/css/checkout.css'),
+            wp_enqueue_style('DOREA_CHECKOUT_STYLE', DOREA_PLUGIN_URL . ('css/doreaCheckout.css'),
                 array(),
                 1,
             );
@@ -194,10 +208,10 @@ function cashback(): void
                                     $campaignsList = [];
                                     foreach ($diffCampaignsList as $campaign) {
 
-                                        $campaignInfo = get_transient($campaign);
+                                        $campaignInfo = get_transient('dorea_' . $campaign);
 
                                         // check if any campaign funded or not!
-                                        if (get_option($campaign . '_contract_address')) {
+                                        if (get_option('dorea_' . $campaign . '_contract_address')) {
                                             // check if campaign started or not
                                             if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
                                                 if($title){
@@ -232,8 +246,8 @@ function cashback(): void
                                             array(
                                                 'type' => 'text',
                                                 'class' => array('dorea-wallet-address-class form-row-wide'),
-                                                'label' => 'wallet address', 'cryptodorea',
-                                                'placeholder' => __('Enter Wallet Address...', 'cryptodorea'),
+                                                'label' => 'wallet address', 'crypto-dorea-crypto-cashback-for-woocommerce',
+                                                'placeholder' => __('Enter Wallet Address...', 'crypto-dorea-crypto-cashback-for-woocommerce'),
                                                 'required' => false,
                                             ),
                                             $checkout->get_value('dorea_wallet_address')
@@ -252,9 +266,7 @@ function cashback(): void
 
                                 }
                             }
-
                         }
-
                     }
                     // HPO mode enabled!
                     else {
@@ -268,20 +280,22 @@ function cashback(): void
 
                                 foreach ($diffCampaignsList as $campaign) {
 
-                                    $campaignInfo = get_transient($campaign);
+                                    $productCategories = $checkoutController->doreaCartCategories($campaign) ?? null;
+                                    if (in_array(true, $productCategories) || empty($productCategories)) {
+                                        $campaignInfo = get_transient('dorea_' . $campaign);
 
-                                    // check if any campaign funded or not!
-                                    if (get_option($campaign . '_contract_address')) {
+                                        // check if any campaign funded or not!
+                                        if (get_option('dorea_' . $campaign . '_contract_address')) {
 
-                                        $contractAddressConfirm = true;
-                                        $mode = $campaignInfo['mode'];
+                                            $contractAddressConfirm = true;
+                                            $mode = $campaignInfo['mode'];
 
-                                        // check if campaign started or not
-                                        if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
+                                            // check if campaign started or not
+                                            if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {
 
-                                            // add to cash back program option
-                                            if ($addtoCashback) {
-                                                print("<div id='doreaOpen' class='!fixed xl:!left-auto lg:!left-auto md:!left-auto sm:!left-0 !left-0 !right-0 xl:!w-96 lg:!w-96 md:!w-96 sm:!w-screen !w-screen !bottom-[0%] !pr-2 !pb-2'>
+                                                // add to cash back program option
+                                                if ($addtoCashback) {
+                                                    print("<div id='doreaOpen' class='!fixed xl:!left-auto lg:!left-auto md:!left-auto sm:!left-0 !left-0 !right-0 xl:!w-96 lg:!w-96 md:!w-96 sm:!w-screen !w-screen !bottom-[0%] !pr-2 !pb-2'>
                                                        <svg id='doreaOpenIcon' xmlns='http://www.w3.org/2000/svg' class='size-7 !cursor-pointer !float-right' viewBox='0 0 576 512'><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d='M512 80c8.8 0 16 7.2 16 16l0 32L48 128l0-32c0-8.8 7.2-16 16-16l448 0zm16 144l0 192c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16l0-192 480 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24l48 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-48 0zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z'/></svg>                           
                                                    </div>
                                                    <div id='doreaCheckout' class='!fixed xl:!left-auto lg:!left-auto md:!left-auto sm:!left-0 !left-0 !right-0 !bottom-[0%] !bg-white xl:!w-96 lg:!w-96 md:!w-96 sm:!w-screen !w-screen  shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-7 !rounded-md !text-center !border'>
@@ -294,21 +308,25 @@ function cashback(): void
                                                      <div class='!grid !grid-cols-1 !gap-2'>
                                                          <label class='!text-sm'>Choose the campaign you wish to participate in:</label>
                                                          <div id='doreaCampaignsSection' class='!grid !grid-cols-1 !pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left'>");
-                                                $addtoCashback = false;
-                                            }
+                                                    $addtoCashback = false;
+                                                }
 
-                                            echo("
+                                                $seperator = !empty($campaignInfo['campaignSlogan']) ? " _ " : "";
+
+                                                echo("
                                                 <div class='!flex !mt-1'>
                                                     <div class='!w-1/12 !ml-1'>
                                                         <input id='doreaaddtocashbackcheckbox_" . esc_html($campaign) . "' class='dorea_add_to_cashback_checkbox_ !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($campaign) . "'>
                                                     </div>
                                                     
-                                                    <label id='doreaaddtocashbacklabel_".esc_html($campaign)."' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($campaignInfo['campaignNameLable'])."</label>
+                                                    <label id='doreaaddtocashbacklabel_" . esc_html($campaign) . "' class='dorea_add_to_cashback_label_ !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>" . esc_html($campaignInfo['campaignNameLable']) . $seperator . $campaignInfo['campaignSlogan'] . "</label>
                                                     
                                                 </div>
                                             ");
 
+                                            }
                                         }
+
                                     }
                                 }
                             }
@@ -322,11 +340,12 @@ function cashback(): void
 
                             $ajaxNonce = wp_create_nonce("checkout_nonce");
                             $params = array(
-                                "checkoutAjaxNonce"=>$ajaxNonce
+                                "checkoutAjaxNonce"=>$ajaxNonce,
+                                'ajax_url' => admin_url('admin-ajax.php'),
                             );
 
                             // check and add to cash back program
-                            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', plugins_url('/cryptodorea/js/checkout.js'), array('jquery', 'jquery-ui-core'),
+                            wp_enqueue_script('DOREA_CHECKOUT_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaCheckout.js'), array('jquery', 'jquery-ui-core'),
                                 array(),
                                 1,
                                 true
@@ -353,6 +372,7 @@ function cashback(): void
 
                         print('</div>');
                     }
+
                 }
             }
         }
@@ -382,13 +402,14 @@ function dorea_ordered_received()
 /**
  * callback function on order received page
  */
-add_action('woocommerce_thankyou','orderReceived');
-function orderReceived($orderId):void
+add_action('woocommerce_thankyou','doreaOrderReceived');
+function doreaOrderReceived($orderId):void
 {
    static $error;
    static $walletAddress;
 
    $order = json_decode(new WC_Order($orderId));
+   $order_obj = new WC_Order($orderId);
 
    if(isset($order->id)) {
 
@@ -397,7 +418,7 @@ function orderReceived($orderId):void
 
        // get campaign info from legacy mode
        if (!$campaignQueue) {
-               foreach ($order->meta_data as $meta_data) {
+          foreach ($order->meta_data as $meta_data) {
                    if ($meta_data->key === 'dorea_walletaddress') {
                        $walletAddress = [
                            'walletAddress' => $meta_data->value,
@@ -409,10 +430,10 @@ function orderReceived($orderId):void
                        ];
                    }
                }
-               if ($walletAddress) {
+          if ($walletAddress) {
                    $campaignQueue = (object)array_merge($campaignlist, $walletAddress);
                }
-           }
+       }
 
        // store new camppaigns
        if ($campaignQueue) {
@@ -429,7 +450,7 @@ function orderReceived($orderId):void
                    foreach ($campaignLists as $campaign) {
 
                        $campaign = sanitize_text_field(sanitize_key($campaign));
-                       $cashbackInfo = get_transient($campaign) ?? null;
+                       $cashbackInfo = get_transient('dorea_' . $campaign) ?? null;
 
                        if (isset($cashbackInfo['mode'])) {
                            if ($cashbackInfo['mode'] === "on") {
@@ -455,7 +476,7 @@ function orderReceived($orderId):void
        if (!$error) {
            // receive order details
            $checkout = new checkoutController();
-           $checkout->orederReceived($order);
+           $checkout->orederReceived($order, $order_obj);
        }
 
        delete_option('dorea_campaign_queue');

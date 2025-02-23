@@ -1,13 +1,18 @@
-
+/**
+ * load etherjs library
+ * URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+ * Source Code: https://github.com/ethers-io/ethers.js
+ */
 import {
     BrowserProvider,
     ContractFactory, ethers,
-} from "./ethers.min.js";
+} from "./etherv67.min.js";
 
-import {abi,bytecode} from "./compile.js";
+import {abi,bytecode} from "./doreaCompile.js";
 
-const beforeTrxModal = document.getElementById("beforeTrxModal");
+const doreaBeforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 let successMessg = document.getElementById("dorea_success");
+let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
 
 // Request access to Metamask
 setTimeout(delay, 1000)
@@ -15,12 +20,19 @@ function delay(){
     (async () => {
         jQuery(document).ready(async function($) {
 
-            if(sessionStorage.getItem('deployState')){
-                location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
+            let deployStatus = localStorage.getItem('doreaDeployStatus');
+
+            // error on open metamask transaction
+            if (deployStatus === "open") {
+                localStorage.removeItem('doreaDeployStatus');
+                $(doreaRjectMetamask).show('slow');
+                await new Promise(r => setTimeout(r, 10000));
+                $(doreaRjectMetamask).hide('slow');
+                return false;
             }
 
             document.getElementById("doreaFund").addEventListener("click", async () => {
-
+/*
                 // connect to Arbitrum One  Mainnet
                 await window.ethereum.request({
                     method: "wallet_addEthereumChain",
@@ -36,7 +48,7 @@ function delay(){
                         blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
                     }]
                 });
-
+*/
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");
 
@@ -66,7 +78,8 @@ function delay(){
 
                         document.getElementById("doreaFund").disabled = false;
                         return false;
-                    } else if ( (/[^.0-9 ]/g.exec(contractAmount)) )  {
+                    }
+                    else if ( (/[^.0-9 ]/g.exec(contractAmount)) )  {
 
                         metamaskError.style.display = "block";
                         errorMessg.innerHTML = "cryptocurrency amount must be in the decimal format!";
@@ -78,7 +91,8 @@ function delay(){
                         document.getElementById("doreaFund").disabled = false;
                         return false;
 
-                    } else {
+                    }
+                    else {
                         metamaskError.style.display = "none";
                     }
 
@@ -106,15 +120,16 @@ function delay(){
                     }
 
                     const body = document.body;
+                    let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
 
                     try {
 
                         // show warning before Trx popup message
-                        $(beforeTrxModal).show("slow");
-                        await new Promise(r => setTimeout(r, 2000));
+                        $(doreaBeforeTrxModal).show("slow");
+                        await new Promise(r => setTimeout(r, 3000));
+                        $(doreaBeforeTrxModal).hide("slow");
 
-                        sessionStorage.setItem('deployState', 'false');
-
+                        $(doreaFailBreakLoading).show();
                         // Disable interactions
                         body.style.pointerEvents = 'none';
                         body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -150,74 +165,79 @@ function delay(){
                             contractAmountBigInt = creditAmountInt * multiplier / BigInt(factor);
                         }
 
-                        await factory.deploy(
+                        localStorage.setItem("doreaTimer", true);
+                        localStorage.setItem('doreaDeployStatus', 'open');
+
+                        let contractObj = await factory.deploy(
                             {
                                 value: contractAmountBigInt.toString(),
                                 gasLimit: 3000000,
                             }
-                        ).then(async function (response) {
+                        );
+
+                        let _wpnonce =  param.ajaxNonce;
+                        let failedTime = Date.now();
+                        let contractAddress = contractObj.target;
+                        localStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName, failedTime, _wpnonce}) );
+
+                        contractObj.waitForDeployment().then(async (receipt) => {
 
                             successMessg.innerHTML = "payment has been successfull!";
                             $(successMessg).show("slow");
                             await new Promise(r => setTimeout(r, 1500));
                             $(successMessg).hide("slow");
 
-                            let contractAddress = response.target;
+                            let contractAddress = receipt.target;
+                            localStorage.setItem('doreaDeployStatus', 'confirm');
 
-                            sessionStorage.setItem('deployFailBreak', JSON.stringify({contractAddress, campaignName}) );
+                            if (receipt) {
 
-                            // wait for deployment
-                            response.waitForDeployment().then(async (receipt) => {
+                                const contract = new ethers.Contract(contractAddress, abi, signer);
 
-                                if (receipt) {
+                                let balance = await contract.getBalance();
+                                balance = convertWeiToEther(parseInt(balance));
 
-                                    const contract = new ethers.Contract(contractAddress, abi, signer);
+                                jQuery.ajax({
+                                    type: "post",
+                                    url: param.ajax_url + '?_wpnonce=' + param.ajaxNonce,
+                                    data: {
+                                        action: "dorea_contract_address",  // the action to fire in the server
+                                        data: JSON.stringify({
+                                            "contractAddress":contractAddress,
+                                            "contractAmount": balance,
+                                            "campaignName":campaignName
+                                        }),
+                                    },
+                                    complete: function (response) {
 
-                                    let balance = await contract.getBalance();
-                                    balance = convertWeiToEther(parseInt(balance));
+                                        $(doreaBeforeTrxModal).hide("slow");
 
+                                        localStorage.removeItem('deployFailBreak');
 
-                                    jQuery.ajax({
-                                        type: "post",
-                                        url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.ajaxNonce,
-                                        data: {
-                                            action: "dorea_contract_address",  // the action to fire in the server
-                                            data: JSON.stringify({
-                                                "contractAddress":contractAddress,
-                                                "contractAmount": balance,
-                                                "campaignName":campaignName
-                                            }),
-                                        },
-                                        complete: function (response) {
+                                        window.location.reload();
 
-                                            $(beforeTrxModal).hide("slow");
+                                        $(doreaFailBreakLoading).hide();
+                                        // enable interactions
+                                        body.style.pointerEvents = 'visible';
+                                        body.style.opacity = '1';
+                                        body.style.userSelect = 'visible'; // enable text selection
+                                        body.style.overflow = 'visible'; // Prevent scrolling
 
-                                            sessionStorage.removeItem('deployFailBreak');
-                                            sessionStorage.removeItem('deployState');
+                                        return false;
+                                    },
+                                });
 
-                                            window.location.reload();
-
-                                            // enable interactions
-                                            body.style.pointerEvents = 'visible';
-                                            body.style.opacity = '1';
-                                            body.style.userSelect = 'visible'; // enable text selection
-                                            body.style.overflow = 'visible'; // Prevent scrolling
-
-                                            return false;
-                                        },
-                                    });
-
-                                }
-                            });
+                            }
 
                         });
 
                     }
                     catch (error) {
 
-                        $(beforeTrxModal).hide("slow");
+                        $(doreaBeforeTrxModal).hide("slow");
+                        $(doreaFailBreakLoading).hide();
 
-                        sessionStorage.removeItem('deployState');
+                        localStorage.removeItem('doreaDeployStatus');
 
                         document.getElementById("doreaFund").disabled = false;
 
@@ -240,16 +260,10 @@ function delay(){
                     // enable dorea fund button
                     document.getElementById("doreaFund").disabled = false;
 
-                    let trxExpired = document.getElementById("trxExpired");
-                    trxExpired.addEventListener("click", async () => {
-                        let trxExpired = document.getElementById("trxExpired");
-                        $(trxExpired).hide("slow");
-                    });
-
                 }
                 else{
 
-                    $(beforeTrxModal).hide("slow");
+                    $(doreaBeforeTrxModal).hide("slow");
 
                     metamaskError.style.display = "block";
                     errorMessg.innerHTML = "please install Metamask extension!";
@@ -258,7 +272,6 @@ function delay(){
                     $(errorMessg).hide("slow");
 
                 }
-
             })
         });
     })();

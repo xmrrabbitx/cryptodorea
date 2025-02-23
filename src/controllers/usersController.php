@@ -31,7 +31,7 @@ class usersController extends usersAbstract
         }
     }
 
-    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases): bool
+    function is_claimed($userList, $campaignName, $claimedAmount, $totalPurchases, $trxId): bool
     {
         for($i=0;$i<=count($userList) -1;$i++) {
             $campaignUser = get_option('dorea_campaigninfo_user_' . $userList[$i]);
@@ -54,9 +54,25 @@ class usersController extends usersAbstract
 
         $claimedUsers = get_option("dorea_claimed_users_" . $campaignName);
 
+        $paymentTrxIds = get_option("dorea_paymentTrxIds");
+        if($paymentTrxIds) {
+            if(isset($paymentTrxIds[$campaignName])) {
+                if (!in_array($trxId, $paymentTrxIds[$campaignName])) {
+                    $paymentTrxIds[$campaignName][] = $trxId;
+                }
+            }else{
+                $paymentTrxIds[$campaignName][] = $trxId;
+            }
+            update_option("dorea_paymentTrxIds", $paymentTrxIds);
+        }else{
+            $paymentTrxIds[$campaignName][] = $trxId;
+            add_option("dorea_paymentTrxIds", $paymentTrxIds);
+        }
+
         if($claimedUsers){
             $claimedUsers = array_merge($claimedUsers, $userList);
             $claimedUsers = array_unique($claimedUsers);
+            $claimedUsers = array_values($claimedUsers);
         }
 
         return get_option("dorea_claimed_users_" . $campaignName) ? update_option("dorea_claimed_users_" . $campaignName, $claimedUsers) : add_option("dorea_claimed_users_" . $campaignName, $userList);

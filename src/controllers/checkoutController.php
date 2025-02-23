@@ -79,12 +79,12 @@ class checkoutController extends checkoutAbstract
 
     }
 
-    public function orederReceived($order):void
+    public function orederReceived($order, $order_obj):void
     {
 
        // call receipt controller
        $receipt = new receiptController();
-       $receipt->is_paid($order, $this->checkoutModel->list());
+       $receipt->is_paid($order,$order_obj,  $this->checkoutModel->list());
 
     }
 
@@ -94,7 +94,7 @@ class checkoutController extends checkoutAbstract
         $queueDeleteCampaigns = get_transient('dorea_queue_delete_campaigns');
         $campaignInfoUser = $this->checkoutModel->list();
         $campaignInfoUserKeys = array_keys($campaignInfoUser);
-        $campaignList = get_option("campaign_list");
+        $campaignList = get_option("dorea_campaign_list");
 
         if($queueDeleteCampaigns) {
 
@@ -131,7 +131,7 @@ class checkoutController extends checkoutAbstract
     // check if expired campaign!
     public function expire($campaign):bool
     {
-        $camapaignInfo = get_transient($campaign);
+        $camapaignInfo = get_transient('dorea_' . $campaign);
 
         $currentDate = current_time('timestamp');
 
@@ -142,7 +142,7 @@ class checkoutController extends checkoutAbstract
     // check if expired or not started campaign!
     public function checkTimestamp($campaign):string
     {
-        $camapaignInfo = get_transient($campaign);
+        $camapaignInfo = get_transient('dorea_' . $campaign);
 
         $currentDate = current_time('timestamp');
 
@@ -158,8 +158,35 @@ class checkoutController extends checkoutAbstract
 
     public function timestampToDate($campaign)
     {
-        $camapaignInfo = get_transient($campaign);
-;
+        $camapaignInfo = get_transient('dorea_' . $campaign);
+
         return gmdate('Y-m-d H:i:s', $camapaignInfo['timestampStart']);
+    }
+
+    /**
+     * get cart items categories
+     */
+    function doreaCartCategories(string $campaign):array
+    {
+        $productCategoriesUser = get_option('doreaCategoryProducts' . $campaign) ?? null;
+        $productCategories = [];
+        // check product categories
+        if(!empty($productCategoriesUser)){
+            foreach (WC()->cart->get_cart() as $cart_item) {
+                $product = $cart_item['data'];
+                $product_id = $product->get_id();
+                $categories = strip_tags(wc_get_product_category_list($product_id));
+
+                foreach ($productCategoriesUser as $cat) {
+                    if (str_contains($categories, $cat)) {
+                        $productCategories[] = true;
+                    } else {
+                        $productCategories[] = false;
+                    }
+                }
+            }
+        }
+
+        return $productCategories;
     }
 }

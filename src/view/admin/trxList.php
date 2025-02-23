@@ -1,26 +1,40 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Transactions List of campaigns
  */
 function dorea_admin_trx_campaign():void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     // update admin footer
     function add_admin_footer_text()
-            {
-                return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
-            }
+    {
+       return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
+    }
 
     add_filter('admin_footer_text', 'add_admin_footer_text', 11);
     function update_admin_footer_text()
-            {
-                return 'Version 1.0.0';
-            }
+    {
+       return 'Version 1.1.1';
+    }
 
     add_filter('update_footer', 'update_admin_footer_text', 11);
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE', plugins_url('/cryptodorea/css/trxList.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE', DOREA_PLUGIN_URL . ('css/doreaTrxList.css'),
     array(),
     1
     );
@@ -32,19 +46,18 @@ function dorea_admin_trx_campaign():void
         if (isset($_GET['cashbackName']) && isset($_GET['pagination']) && wp_verify_nonce($nonce, 'trx_list_nonce')) {
 
             $cashbackName = sanitize_text_field(wp_unslash($_GET['cashbackName'])) ?? null;
-            $cashbackInfo = get_transient($cashbackName);
+            $cashbackInfo = get_transient('dorea_' . $cashbackName);
             if (!$cashbackInfo) {
                 wp_redirect('admin.php?page=crypto-dorea-cashback');
             }
             $pagination = sanitize_text_field(wp_unslash($_GET['pagination'])) ?? 0;
             $claimedUsers = get_option("dorea_claimed_users_" . $cashbackName) ?? null;
 
-
         }
     }
 
             print("
-                <main>
+                <main class='doreaContent'>
                     <h1 class='!p-5 !text-sm !font-bold'>Transactions List</h1> </br>
                     <h2 class='!pl-5 !text-sm !font-bold'>Claimed Ethers</h2> </br>
             ");
@@ -87,7 +100,7 @@ function dorea_admin_trx_campaign():void
                 return;
             }
 
-    // show errors
+            // show errors
             print("      
                <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>      
                     <p id='dorea_error' style='display:none;'></p>

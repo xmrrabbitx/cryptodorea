@@ -1,3 +1,4 @@
+
 @font-face {
     font-family: 'Poppins';
     src: url('../fonts/Poppins-Regular.ttf');
@@ -5,6 +6,6 @@
 body{
     background: #f6f6f6 !important;
 }
-main{
+main.doreaContent{
     font-family: "Poppins", sans-serif !important;
 }

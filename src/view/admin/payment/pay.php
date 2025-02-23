@@ -1,6 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
+use Cryptodorea\DoreaCashback\controllers\productController;
 use Cryptodorea\DoreaCashback\controllers\usersController;
 use Cryptodorea\DoreaCashback\controllers\expireCampaignController;
 use Cryptodorea\DoreaCashback\utilities\ethHelper;
@@ -11,18 +14,30 @@ use Cryptodorea\DoreaCashback\utilities\ethHelper;
  */
 function dorea_admin_pay_campaign():void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     // update admin footer
     function add_admin_footer_text() {
         return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
     }
     add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
     function update_admin_footer_text() {
-        return 'Version 1.0.0';
+        return 'Version 1.1.1';
     }
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/pay.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE',DOREA_PLUGIN_URL . ('/css/doreaPay.css'),
         array(),
         1,
     );
@@ -32,7 +47,7 @@ function dorea_admin_pay_campaign():void
     static $fundOption;
 
     print("
-        <main>
+        <main class='doreaContent'>
             <h1 class='!p-5 !text-sm !font-bold'>Payment</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>Get Paid in Ethereum</h2> </br>
     ");
@@ -42,7 +57,7 @@ function dorea_admin_pay_campaign():void
         if (isset($_GET['cashbackName']) && wp_verify_nonce($nonce, 'payment_nonce')) {
             $cashbackName = sanitize_key(wp_unslash($_GET['cashbackName'])) ?? null;
 
-            $cashbackInfo = get_transient($cashbackName) ?? null;
+            $cashbackInfo = get_transient('dorea_' . $cashbackName) ?? null;
 
             if (!$cashbackInfo) {
                 wp_redirect('admin.php?page=crypto-dorea-cashback');
@@ -58,14 +73,15 @@ function dorea_admin_pay_campaign():void
             }
 
             // load campaign credit scripts
-            wp_enqueue_script('DOREA_PAYMENT_SCRIPT', plugins_url('/cryptodorea/js/payment.js'), array('jquery', 'jquery-ui-core'),
+            wp_enqueue_script('DOREA_PAYMENT_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaPayment.js'), array('jquery', 'jquery-ui-core'),
                 array(),
                 1,
                 true
             );
             $switchNonce = wp_create_nonce("switchCampaign_nonce");
             $switchParams = array(
-                "switchAjaxNonce" => $switchNonce
+                "switchAjaxNonce" => $switchNonce,
+                'ajax_url' => admin_url('admin-ajax.php'),
             );
             wp_localize_script('DOREA_PAYMENT_SCRIPT', 'switchParams', $switchParams);
 
@@ -94,8 +110,13 @@ function dorea_admin_pay_campaign():void
             <p class='!pl-5' id='dorea_success' style='display:none;'></p>
 
             <!-- Warning before transaction! -->
-            <div id='beforeTrxModal' class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border' style='display: none'>
+            <div id='doreaBeforeTrxModal' class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border' style='display: none'>
                <p class='!text-sm !mt-3'>Please Do not leave the page <br> until the transaction is complete!</p>
+            </div>
+            
+            <!-- Warning on interrupted transaction! -->
+            <div id='doreaRjectMetamask' class='!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border' style='display: none'>
+               <p class='!text-sm !mt-3'>The last payment was interrupted. <br>Please reject the payment on metamask otherwise you may lose your money...</p>
             </div>
     ");
 
@@ -125,6 +146,64 @@ function dorea_admin_pay_campaign():void
     $cryptoAmount = $cashbackInfo['cryptoAmount'];
     $userList = get_option("dorea_campaigns_users_" . $cashbackName);
     $checkoutController = new checkoutController;
+
+    $categoryNonce = wp_create_nonce("categoryCampaign_nonce");
+    $categoryParams = array(
+        "categoryAjaxNonce" => $categoryNonce,
+        'ajax_url' => admin_url('admin-ajax.php'),
+        "campaignName"=>$cashbackName
+    );
+    wp_localize_script('DOREA_PAYMENT_SCRIPT', 'categoryParams', $categoryParams);
+
+    // get product categories
+    $productCategories = new productController();
+    $productCategoriesUser = get_option('doreaCategoryProducts' . $cashbackName) == true ? get_option('doreaCategoryProducts' . $cashbackName) : [];
+
+    /**
+     * Filter Products Categories
+     */
+    print("
+        <div class='!grid !grid-cols-1 !gap-2'>
+           <div id='doreaProductCategoriesIcon' class='flex hover:!text-amber-500'>
+           
+           Filer Product Categories 
+           <!-- arrow down -->
+           <svg id='doreaProductCategoriesArrowDown' stroke-width='1.5' stroke='currentColor' xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='size-4 bi bi-chevron-down !mt-1 !ml-2' viewBox='0 0 16 16'>
+              <path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/>
+           </svg>
+           <!-- arrow up -->
+           <svg id='doreaProductCategoriesArrowUp' xmlns='http://www.w3.org/2000/svg' width='16' height='16' stroke-width='1.5' stroke='currentColor' class='size-4 bi bi-chevron-up !mt-1 !ml-2' viewBox='0 0 16 16'>
+              <path fill-rule='evenodd' d='M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z'/>
+           </svg>
+           </div>
+                <div id='doreaProductCategoriesList' class='!pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left' style='display: none'>  
+
+    ");
+
+    foreach ($productCategories->listCategories() as $categories){
+        if(in_array($categories, $productCategoriesUser)){
+           $checked  = "checked";
+        }
+        else{
+          $checked = "";
+        }
+        print("
+              <div class='!flex !mt-1'>
+                  <div class='!w-1/12 !ml-1'>
+                      <input class='doreaProductCategoriesValues !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($categories) . "' $checked>
+                  </div>
+                  <label class='doreaProductCategoriesValues !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
+              </div>
+        ");
+
+    }
+
+    print(" 
+        <button id='doreaProductCategoriesSubmit' class='!mt-5 !ml-1'>save changes</button>
+        </div>
+          </div>
+              </div>
+    ");
 
     if($checkoutController->checkTimestamp($cashbackName) === "expired"){
         print ("
@@ -189,8 +268,8 @@ function dorea_admin_pay_campaign():void
                 $campaignUser = get_option('dorea_campaigninfo_user_' . $users);
 
                 // base eth price
-                $ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
-
+                //$ethBasePrice = bcdiv(1 , ethHelper::ethPrice(),10);
+                $ethBasePrice = 0.0004;
                 if($ethBasePrice) {
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
@@ -290,7 +369,7 @@ function dorea_admin_pay_campaign():void
                             ");
 
                             // get contract address of campaign
-                            $doreaContractAddress = get_option($cashbackName . '_contract_address');
+                            $doreaContractAddress = get_option("dorea_" . $cashbackName . '_contract_address');
                             if (!empty($totalEthers)) {
 
                                 // check for funding campaign
@@ -341,7 +420,7 @@ function dorea_admin_pay_campaign():void
                 $remainingAmount = bcsub(number_format((float)array_sum($totalEthers),10), number_format((float)$contractAmount, 10), 10);
 
                 // load campaign credit scripts
-                wp_enqueue_script('DOREA_FUND_SCRIPT', plugins_url('/cryptodorea/js/fund.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_FUND_SCRIPT', DOREA_PLUGIN_URL . ('/js/doreaFund.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -354,7 +433,8 @@ function dorea_admin_pay_campaign():void
                     'contractAddress' => $doreaContractAddress,
                     'campaignName' => $cashbackName,
                     'remainingAmount' => $remainingAmount,
-                    "fundAjaxNonce"=>$ajaxNonce
+                    "fundAjaxNonce"=>$ajaxNonce,
+                    'ajax_url' => admin_url('admin-ajax.php'),
                 );
                 wp_localize_script('DOREA_FUND_SCRIPT', 'param', $fundParams);
 
@@ -377,16 +457,26 @@ function dorea_admin_pay_campaign():void
 
                 print ('
                     <!-- failed campaign payment modal -->
-                    <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
-                        <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
+                    <div id="doreaFailBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+                        <p class="!text-sm">The last payment was interrupted. <br> Please refresh the page...</p>
                         <div class="!mt-5">
-                            <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
+                            <button id="doreaFailBreakLoading" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
                         </div>
+                    </div>
+                    <div id="doreaFailedBreakStatusLoading" role="status" class="!fixed !top-[10%] z-10 inset-x-0 flex flex-col items-center justify-center" style="display: none">
+                        <div>
+                            <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-yellow-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                        </div>
+                        <p class="!text-center !mt-3">please wait until the sync is done...</p>
+                        <p id="doreaTimerLoading" class="!text-center !mt-3" style="display: none"></p>
                     </div>
                 ');
 
                 // load fail break script
-                wp_enqueue_script('DOREA_FUNDFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/fundFailBreak.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_FUNDFAILBREAK_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaFundFailBreak.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -394,6 +484,7 @@ function dorea_admin_pay_campaign():void
 
                 $failBreakFundParam = array(
                     'contractAddress' => $doreaContractAddress,
+                    'ajax_url' => admin_url('admin-ajax.php'),
                 );
                 wp_localize_script('DOREA_FUNDFAILBREAK_SCRIPT', 'params', $failBreakFundParam);
 
@@ -423,7 +514,7 @@ function dorea_admin_pay_campaign():void
                 ");
 
                 // load campaign credit scripts
-                wp_enqueue_script('DOREA_PAY_SCRIPT', plugins_url('/cryptodorea/js/pay.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_PAY_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaPay.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -457,6 +548,7 @@ function dorea_admin_pay_campaign():void
                 ');
 
                 $ajaxNonce = wp_create_nonce("payCampaign_nonce");
+                $trxId = doreaTrxIdsGenerate($cashbackName);
 
                 // pass params value for deployment
                 $payParams = array(
@@ -467,21 +559,34 @@ function dorea_admin_pay_campaign():void
                     'cryptoAmount' => $cryptoAmount,
                     'usersList' => $usersList,
                     'totalPurchases' => $userTotalPurchases,
-                    "payAjaxNonce"=>$ajaxNonce
+                    "payAjaxNonce" => $ajaxNonce,
+                    "trxId" => $trxId,
+                    'ajax_url' => admin_url('admin-ajax.php'),
                 );
                 wp_localize_script('DOREA_PAY_SCRIPT', 'param', $payParams);
 
                 print ('
                     <!-- failed campaign payment modal -->
-                    <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
-                        <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
+                    <div id="doreaFailBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+                        <p class="!text-sm">The last payment was interrupted. <br> Please refresh the page...</p>
                         <div class="!mt-5">
-                            <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
+                            <button id="doreaFailBreakLoading" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
                         </div>
                     </div>
+                    <div id="doreaFailedBreakStatusLoading" role="status" class="!fixed !top-[10%] z-10 inset-x-0 flex flex-col items-center justify-center" style="display: none">
+                        <div>
+                            <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-yellow-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                        </div>
+                        <p class="!text-center !mt-3">please wait until the sync is done...</p>
+                        <p id="doreaTimerLoading" class="!text-center !mt-3" style="display: none"></p>
+                    </div>
                 ');
+
                 // load fail break script
-                wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', plugins_url('/cryptodorea/js/payFailBreak.js'), array('jquery', 'jquery-ui-core'),
+                wp_enqueue_script('DOREA_PAYFAILBREAK_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaPayFailBreak.js'), array('jquery', 'jquery-ui-core'),
                     array(),
                     1,
                     true
@@ -583,7 +688,7 @@ function dorea_switchCampaign()
             $json = json_decode($json);
 
             if ($json) {
-                $campaignInfoUser = get_transient(sanitize_text_field($json->campaignName));
+                $campaignInfoUser = get_transient(sanitize_text_field('dorea_' . $json->campaignName));
                 if (sanitize_text_field($json->mode) === "on") {
                     $mode = "on";
                 } else if (sanitize_text_field($json->mode) === "off") {
@@ -591,7 +696,7 @@ function dorea_switchCampaign()
                 }
 
                 $campaignInfoUser['mode'] = $mode;
-                set_transient(sanitize_text_field($json->campaignName), $campaignInfoUser);
+                set_transient(sanitize_text_field('dorea_' . $json->campaignName), $campaignInfoUser);
 
             }
         }
@@ -613,13 +718,13 @@ function dorea_fund():void
             $json = json_decode($json);
 
             if ($json) {
-                $campaignInfoUser = get_transient(sanitize_text_field($json->campaignName));
+                $campaignInfoUser = get_transient(sanitize_text_field('dorea_' . $json->campaignName));
                 $campaignInfoUser['contractAmount'] = $json->balance;
 
                 $amount = $json->amount;
                 $totalPurchases = $json->totalPurchases;
 
-                set_transient($json->campaignName, $campaignInfoUser);
+                set_transient('dorea_' . $json->campaignName, $campaignInfoUser);
 
                 if (isset($json->usersList)) {
                     $usersList = $json->usersList;
@@ -633,7 +738,7 @@ function dorea_fund():void
 }
 
 /**
- * pay campaign
+ * pay campaign ajax
  */
 add_action('wp_ajax_dorea_pay', 'dorea_pay');
 function dorea_pay():void
@@ -648,17 +753,57 @@ function dorea_pay():void
 
             if (isset($json)) {
 
-                $campaignInfo = get_transient($json->campaignName);
+                $campaignInfo = get_transient('dorea_' . $json->campaignName);
 
                 // convert wei to ether
                 $campaignInfo['contractAmount'] = $json->balance;
-                set_transient($json->campaignName, $campaignInfo);
+                set_transient('dorea_' . $json->campaignName, $campaignInfo);
 
                 // check is_paid
                 $users = new usersController();
-                $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases);
+                $users->is_claimed($json->userList, $json->campaignName, $json->claimedAmount, $json->totalPurchases, $json->trxId);
 
             }
+        }
+    }
+}
+
+/**
+ * Generate transactions Ids
+ */
+function doreaTrxIdsGenerate($cashbackName)
+{
+    $paymentTrxIds = get_option('dorea_paymentTrxIds');
+    $trxHash = "0x" . bin2hex(random_bytes(32));
+    if(isset($paymentTrxIds)) {
+        if(isset($paymentTrxIds[$cashbackName])) {
+            if (!in_array($trxHash, $paymentTrxIds[$cashbackName])) {
+                return $trxHash;
+            } else {
+                return doreaTrxIdsGenerate($cashbackName);
+            }
+        }else{
+            return $trxHash;
+        }
+    }
+}
+
+/**
+ * filter product categories ajax
+ */
+add_action('wp_ajax_dorea_category', 'dorea_category');
+function dorea_category():void
+{
+    if (isset($_GET['_wpnonce'])) {
+        $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+        if (isset($_POST['data']) && wp_verify_nonce($nonce, 'categoryCampaign_nonce')) {
+            $json = sanitize_text_field(wp_unslash($_POST['data'])) ?? null;
+            $json = json_decode($json);
+            $campaignName = sanitize_text_field(wp_unslash($json->campaignName));
+            $categories = $json->categories;
+
+            get_option('doreaCategoryProducts' . $campaignName) == true || get_option('doreaCategoryProducts' . $campaignName) === [] ? update_option('doreaCategoryProducts' . $campaignName, $categories) : add_option('doreaCategoryProducts' . $campaignName,$categories);
+
         }
     }
 }

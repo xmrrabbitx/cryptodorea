@@ -1,8 +1,8 @@
 <?php
 
-use Cryptodorea\DoreaCashback\controllers\cashbackController;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
+use Cryptodorea\DoreaCashback\controllers\cashbackController;
 
 /**
  * add menu options to admin panels
@@ -10,7 +10,7 @@ include_once WP_PLUGIN_DIR . '/cryptodorea/src/view/modals/deleteCampaign.php';
 add_action('admin_menu', 'dorea_add_menu_page');
 function dorea_add_menu_page(): void
 {
-    $logoIco_path = plugin_dir_path(__FILE__) . 'icons/doreaLogo_ico.svg';
+    $logoIco_path = DOREA_PLUGIN_DIR . 'src/view/admin/icons/doreaLogo_ico.svg';
 
     if (file_exists($logoIco_path)) {
 
@@ -101,8 +101,17 @@ function dorea_add_menu_page(): void
  */
 function dorea_main_page_content():void
 {
-
-    $logo_path = plugins_url('/icons/doreaLogo.svg', __FILE__);
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
 
     // update admin footer
     function add_admin_footer_text() {
@@ -110,7 +119,7 @@ function dorea_main_page_content():void
     }
     add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
     function update_admin_footer_text() {
-        return 'Version 1.0.0';
+        return 'Version 1.1.1';
     }
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
@@ -118,13 +127,13 @@ function dorea_main_page_content():void
     $cashbackList = $cashback->list();
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/admin.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE',DOREA_PLUGIN_URL . ('/css/doreaMain.css'),
         array(),
         1,
     );
 
     print("
-        <main>
+        <main class='doreaContent'>
             <h1 class='!p-5 !text-sm !font-bold'>
                 Home
             </h1> 
@@ -150,10 +159,10 @@ function dorea_main_page_content():void
                     <div class='xl:!col-span-11 lg:!col-span-11 !col-span-10 !grid xl:!grid-cols-6 lg:!grid-cols-6 md:!grid-cols-6 sm:!grid-cols-6 !grid-cols-2'>
             ");
 
-            $campName = get_transient($campaignName)['campaignNameLable'];
+            $campName = get_transient('dorea_' . $campaignName)['campaignNameLable'];
             print('<span class="!col-span-1 !m-auto !text-center !whitespace-break-spaces">'. esc_html($campName) .'</span>');
 
-            $doreaContractAddress = get_option($campaignName . '_contract_address');
+            $doreaContractAddress = get_option('dorea_' . $campaignName . '_contract_address');
 
             if ($doreaContractAddress) {
                 print ('<span class="!col-span-1 !text-emerald-500 xl:!block lg:!block md:!block sm:!block !hidden inline-block !m-auto">funded</span>');
@@ -222,7 +231,7 @@ function dorea_main_page_content():void
                      </span>
             ');
 
-            $campaignInfo = get_transient($campaignName);
+            $campaignInfo = get_transient('dorea_' . $campaignName);
             $startDate = gmdate('Y/m/d',$campaignInfo['timestampStart']);
             $startDate = explode('/',$startDate);
 
@@ -236,11 +245,11 @@ function dorea_main_page_content():void
 
             // payment page
             if($doreaContractAddress) {
-                $nonce = wp_create_nonce();
+                $nonce = wp_create_nonce('payment_nonce');
                 print('
                     </div>
                     <div class="lg:!col-span-1 !col-span-2">
-                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500  campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wp_nonce' .esc_html($nonce).'">
+                    <a class="!col-span-1 !self-center !focus:ring-0 !focus:outline-none !outline-none !text-black hover:!text-amber-500  campaignPayment_" id="campaignPayment_' . esc_js($campaignName) . '_' . esc_js($doreaContractAddress) . '" href="' . esc_url(admin_url('/admin.php?page=dorea_payment&cashbackName=' . $campaignName)) . '&pagination=1&_wpnonce=' .esc_html($nonce).'">
                         <!-- payment-fund campaign page link -->
                         <span class="!float-right">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -271,14 +280,12 @@ function dorea_main_page_content():void
                 </div>
             ");
         }
-
     } else {
         $campaign_url = wp_nonce_url(esc_url(admin_url("/admin.php?page=campaigns")));
         print('<h3 class="!text-base !text-center !text-gray-400 !mt-16">Your Journey to Web3 Cashback</h3></br><p class="!pt-2 !mt-7 !text-center"> <a class="!basis-12 !p-10 !text-black !hover:text-black lg:!text-[13px] md:!text-[14px] sm:!text-sm !text-[11px] !bg-[#faca43] !text-center !rounded-xl !focus:ring-0 !focus:outline-none !outline-none shadow-md" href="'.esc_url($campaign_url)  .'">Create Your First Cashback Campaign</a></p>');
     }
-
     // pop up delete campaign modal
-    deleteModal();
+    doreaDeleteModal();
 
     print(" 
 
@@ -299,7 +306,7 @@ function dorea_main_page_content():void
         </div>
     ');
     // load fail break script
-    wp_enqueue_script_module('DOREA_ADMIN_SCRIPT',plugins_url('/cryptodorea/js/admin.js'), array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script_module('DOREA_ADMIN_SCRIPT',DOREA_PLUGIN_URL . ('/js/doreaAdmin.js'), array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
@@ -307,17 +314,27 @@ function dorea_main_page_content():void
 
     print ('
         <!-- failed campaign payment modal -->
-        <div id="failBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+        <div id="doreaFailBreakModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
             </span>
-            <p class="!text-base">The last payment was interrupted. <br> Please refresh the page...</p>
+            <p class="!text-sm">The last payment was interrupted. <br> Please refresh the page...</p>
             <div class="!mt-5">
-                <button id="failBreakReload" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
+                <button id="doreaFailBreakLoading" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Reload</button>
             </div>
+        </div>
+        <div id="doreaFailedBreakStatusLoading" role="status" class="!fixed !top-[10%] z-10 inset-x-0 flex flex-col items-center justify-center" style="display: none">
+           <div>
+               <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-yellow-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                   <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+               </svg>
+           </div>
+           <p class="!text-center !mt-3">please wait until the sync is done...</p>
+           <p id="doreaTimerLoading" class="!text-center !mt-3" style="display: none"></p>
         </div>
     ');
 
     // load fail break script
-    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',plugins_url('/cryptodorea/js/deployFailBreak.js'), array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script('DOREA_DEPLOYFAILBREAK_SCRIPT',DOREA_PLUGIN_URL . ('/js/doreaDeployFailBreak.js'), array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
@@ -340,6 +357,31 @@ function dorea_main_page_content():void
         return $outTag;
     }
 
+}
+
+
+/**
+ * Delete Campaign Modal
+ */
+function doreaDeleteModal():bool
+{
+    // load claim campaign scripts
+    wp_enqueue_script('DOREA_DELETECAMPAIGN_SCRIPT', DOREA_PLUGIN_URL . ('js/doreaDeleteCampaign.js'), array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
+    return print ('
+       <!-- delete campaign modal -->
+        <div id="deleteModal" class="!fixed !mx-auto !left-0 !right-0 !top-[20%] !bg-white !w-96 shadow-[0_5px_25px_-15px_rgba(0,0,0,0.3)] !p-10 !rounded-md !text-center !border" style="display: none">
+            <p class="!text-base">Are You Sure?</p>
+            <div class="!mt-5">
+                <button id="cancelDeleteCampaign" class="">Cancel</button>
+                <button id="DeleteCampaignConfirm" class="!bg-[#faca43] !p-[9px] !ml-5 !rounded-md">Delete</button>
+            </div>
+        </div>
+    ');
 }
 
 /**

@@ -5,10 +5,17 @@
  *
  * Plugin Name: Crypto Dorea: Crypto Cashback for WooCommerce
  * Description: A New Innovative Crypto CashBack for the most loyal customers
- * Version: 1.0.0
+ * Version: 1.1.1
  * Author: Crypto Dorea Team
  * Author URI: https://cryptodorea.io
+ * Requires Plugins: woocommerce
  */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+define( 'DOREA_PLUGIN_FILE', __FILE__ );
+define( 'DOREA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'DOREA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 include_once __DIR__ . '/vendor/autoload.php';
 

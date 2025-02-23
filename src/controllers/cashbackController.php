@@ -9,14 +9,14 @@ use Cryptodorea\DoreaCashback\abstracts\cashbackAbstract;
  */
 class cashbackController extends cashbackAbstract
 {
-    public function create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount, $timestampStart, $timestampExpire):void
+    public function create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount, $campaignSlogan, $timestampStart, $timestampExpire):void
     {
-        $campaignInfo = ['campaignName' => $campaignName, 'campaignNameLable'=>$campaignNameLable, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, "timestampStart"=>$timestampStart, "timestampExpire"=>$timestampExpire, 'mode'=>'on'] ?? null;
+        $campaignInfo = ['campaignName' => $campaignName, 'campaignNameLable'=>$campaignNameLable, 'cryptoType' => $cryptoType, 'cryptoAmount' => $cryptoAmount, 'shoppingCount' => $shoppingCount, 'campaignSlogan' => $campaignSlogan,  "timestampStart"=>$timestampStart, "timestampExpire"=>$timestampExpire, 'mode'=>'on'] ?? null;
 
         if (empty($this->list()) || !in_array($campaignName, $this->list())) {
             if ($campaignInfo) {
 
-                set_transient($campaignName, $campaignInfo);
+                set_transient('dorea_' . $campaignName, $campaignInfo);
                 $this->addtoList($campaignName);
 
             }
@@ -25,21 +25,21 @@ class cashbackController extends cashbackAbstract
 
     public function list()
     {
-        return get_option('campaign_list');
+        return get_option('dorea_campaign_list');
     }
 
     public function addtoList($campaignName)
     {
         if (!empty($campaignName)) {
 
-            $list = get_option('campaign_list');
+            $list = get_option('dorea_campaign_list');
 
             if ($list) {
                 array_push($list, $campaignName);
-                update_option('campaign_list', $list);
+                update_option('dorea_campaign_list', $list);
             } else {
                 $list = [$campaignName];
-                add_option('campaign_list', $list);
+                add_option('dorea_campaign_list', $list);
             }
 
         }
@@ -52,18 +52,18 @@ class cashbackController extends cashbackAbstract
     {
         if (!empty($campaignName)) {
 
-            delete_transient($campaignName); // remove campaign information
-            delete_option($campaignName . '_contract_address'); // remove campaign contract address
+            delete_transient('dorea_' . $campaignName); // remove campaign information
+            delete_option("dorea_" . $campaignName . '_contract_address'); // remove campaign contract address
 
-            // remove or update campaign_list
+            // remove or update dorea_campaign_list
             if($this->list()) {
                 $key = array_search($campaignName, $this->list());
-                $campaignsList = get_option('campaign_list');
+                $campaignsList = get_option('dorea_campaign_list');
                 unset($campaignsList[$key]);
-                update_option('campaign_list', $campaignsList);
+                update_option('dorea_campaign_list', $campaignsList);
             }
-            if(empty(get_option('campaign_list'))){
-                delete_option('campaign_list');
+            if(empty(get_option('dorea_campaign_list'))){
+                delete_option('dorea_campaign_list');
             }
 
             // remove dorea_campaigninfo_user_

@@ -1,41 +1,56 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * help page for users
  */
 function dorea_admin_help_campaign():void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     // update admin footer
     function add_admin_footer_text() {
         return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
     }
     add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
     function update_admin_footer_text() {
-        return 'Version 1.0.0';
+        return 'Version 1.1.1';
     }
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load admin css styles
-    wp_enqueue_style('DOREA_ADMIN_STYLE',plugins_url('/cryptodorea/css/help.css'),
+    wp_enqueue_style('DOREA_MAIN_STYLE',DOREA_PLUGIN_URL .('css/doreaHelp.css'),
         array(),
         1,
     );
 
     // Usage Example
     $image_set = array(
-        'createCampaignImg'  => 'pics/help/createCampaign.jpeg',
-        'createCampaignImg2' => 'pics/help/createCampaign2.jpeg',
-        'createCampaignImg3' => 'pics/help/createCampaign3.jpeg',
-        'fundCampaign'       => 'pics/help/fundCampaign.jpeg',
-        'fundCampaign2'      => 'pics/help/fundCampaign2.jpeg',
-        'disableEnable'      => 'pics/help/disableEnable.jpeg',
-        'disableEnable2'     => 'pics/help/disableEnable2.jpeg',
+        'doreaCreateCampaign'  => 'pics/help/doreaCreateCampaign.jpeg',
+        'doreaCreateCampaign2' => 'pics/help/doreaCreateCampaign2.jpeg',
+        'doreaCreateCampaign3' => 'pics/help/doreaCreateCampaign3.jpeg',
+        'doreaFundCampaign'       => 'pics/help/doreaFundCampaign.jpeg',
+        'doreaFundCampaign2'      => 'pics/help/doreaFundCampaign2.jpeg',
+        'doreaDisableEnable'      => 'pics/help/doreaDisableEnable.jpeg',
+        'doreaDisableEnable2'     => 'pics/help/doreaDisableEnable2.jpeg',
+        'doreaMenu'               => 'pics/help/doreaMenu.jpeg',
     );
 
-    $img_ids = handle_plugin_images_to_media($image_set);
+    $img_ids = dorea_images_to_media($image_set);
 
     print("
-        <main>
+        <main class='doreaContent'>
             <h1 class='!p-5 !text-sm !font-bold'>Help</h1> </br>
             <h2 class='!pl-5 !text-sm !font-bold'>How to Start ?</h2> </br>
             <div class='!container !pl-5 !pt-2 !pb-5 !shadow-transparent  !rounded-md'>
@@ -45,9 +60,9 @@ function dorea_admin_help_campaign():void
             you can select the \"Create Your First Cashback Campaign\" option on the main page to create your first campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-            ".wp_get_attachment_image($img_ids['createCampaignImg'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaCreateCampaign'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaCreateCampaign'))
             ))."
             </div>
             
@@ -55,9 +70,9 @@ function dorea_admin_help_campaign():void
             2. Otherwise, you can choose the  \"Create Campaign\" option from the sidebar.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-            ".wp_get_attachment_image($img_ids['createCampaignImg2'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaCreateCampaign2'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg2'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaCreateCampaign2'))
             ))."                
             </div>
             
@@ -80,9 +95,9 @@ function dorea_admin_help_campaign():void
             this amount is equal to 0.0015 ETH.
             </p>
             <div class='!flex !justify-center !items-center !mt-2 !p-5'>
-            ".wp_get_attachment_image($img_ids['createCampaignImg3'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaCreateCampaign3'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'createCampaignImg3'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaCreateCampaign3'))
             ))." 
             </div>
            
@@ -97,9 +112,9 @@ function dorea_admin_help_campaign():void
             before funding your campaign.
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-            ".wp_get_attachment_image($img_ids['fundCampaign'], '', false, array(
+            ".wp_get_attachment_image($img_ids['doreaFundCampaign'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'fundCampaign'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaFundCampaign'))
             ))." 
             </div>
             
@@ -110,9 +125,21 @@ function dorea_admin_help_campaign():void
             
             </p>
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
-             ".wp_get_attachment_image($img_ids['fundCampaign2'], '', false, array(
+             ".wp_get_attachment_image($img_ids['doreaFundCampaign2'], '', false, array(
                 'class' => 'help-image',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'fundCampaign2'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaFundCampaign2'))
+            ))." 
+            </div>
+            
+            <hr class='!w-12/12 !mt-5'>
+            <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>My users want to know how much cashback they earned ?</h2> 
+            <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
+            Each user can access the claimed rewards number on the “My Account” page of WordPress. On that page, using the “Dorea Cashback” option, they could see the number of claimed rewards in ETH format.
+            </p>
+            <div class='!flex !justify-center !items-center !mt-5 !p-5'>
+            ".wp_get_attachment_image($img_ids['doreaMenu'], '', false, array(
+                'class' => 'help-image',
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaMenu'))
             ))." 
             </div>
             
@@ -128,7 +155,7 @@ function dorea_admin_help_campaign():void
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
             When you fund a campaign, you send it to the Ethereum blockchain. Besides the amount of money you send to the campaign, 
             a small amount of fee (regularly less than $1) pays for the blockchain. Also, 10% of the campaign amount will be calculated and sent to Dorea's Account Address: 
-            <span class='!font-bold'> 0xca578e925551aCB0d86D3557a6fF26a68034C88b </span>
+            <span class='!font-bold'> 0x15cddCcF29A3d2653cCA38f4d752bd78171fa180 </span>
             as the service payment. This 10% guarantees the efforts of the Dorea Team to keep going on optimizing and making better the crypto Dorea plugin.
             </p>
             
@@ -136,7 +163,7 @@ function dorea_admin_help_campaign():void
             
             <h2 class='!pl-5 !mt-5 !text-sm !font-bold !mt-5'>How to Pay ?</h2> 
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
-            1. after the cashback campaign is created and users joined the campaign, 
+            after the cashback campaign is created and users joined the campaign, 
             you can pay ethers to users. choose <span class='!font-bold'>\"Pay\"</span> option on the main page in each campaign section. 
             you should see the payment page now. On that page, you could pay campaign users.
             </p>
@@ -168,15 +195,15 @@ function dorea_admin_help_campaign():void
             
             <div class='!flex !justify-center !items-center !mt-5 !p-5'>
              <span>
-             ".wp_get_attachment_image($img_ids['disableEnable'], '', false, array(
+             ".wp_get_attachment_image($img_ids['doreaDisableEnable'], '', false, array(
                 'class' => 'help-image !pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'disableEnable'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaDisableEnable'))
             ))."
              </span>
              <span>
-             ".wp_get_attachment_image($img_ids['disableEnable2'], '', false, array(
+             ".wp_get_attachment_image($img_ids['doreaDisableEnable2'], '', false, array(
                 'class' => 'help-image !pt-3 xl:!w-52 lg:!w-52 md:!w-52 sm:!w-44 !w-40',
-                'alt'   => ucfirst(str_replace(array('createCampaign', 'fundCampaign', 'disableEnable'), '', 'disableEnable2'))
+                'alt'   => ucfirst(str_replace(array('doreaCreateCampaign', 'doreaFundCampaign', 'doreaDisableEnable'), '', 'doreaDisableEnable2'))
             ))."
              </span> 
             </div>
@@ -192,8 +219,8 @@ function dorea_admin_help_campaign():void
  * @param array $images Array of image configurations ['image_key' => 'relative/path.jpg']
  * @return array Attachment IDs (false for failed items)
  */
-function handle_plugin_images_to_media($images) {
-    $stored_ids = get_option('plugin_image_attachment_ids', array());
+function dorea_images_to_media($images) {
+    $stored_ids = get_option('dorea_image_attachment_ids', array());
     $upload_dir = wp_upload_dir();
     $results = array();
 
@@ -206,7 +233,7 @@ function handle_plugin_images_to_media($images) {
         }
 
         // Set up paths
-        $plugin_full_path = plugin_dir_path(__FILE__) . $rel_path;
+        $plugin_full_path = DOREA_PLUGIN_DIR . 'src/view/admin/' . $rel_path;
 
         $target_rel_path = 'plugin-assets/' . $rel_path;
         $target_full_path = $upload_dir['basedir'] . '/' . $target_rel_path;
@@ -273,6 +300,6 @@ function handle_plugin_images_to_media($images) {
         $results[$key] = $attachment_id;
     }
 
-    update_option('plugin_image_attachment_ids', $stored_ids);
+    update_option('dorea_image_attachment_ids', $stored_ids);
     return $results;
 }

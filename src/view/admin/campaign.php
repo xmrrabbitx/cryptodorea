@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\utilities\dateCalculator;
 
@@ -8,24 +10,36 @@ use Cryptodorea\DoreaCashback\utilities\dateCalculator;
  */
 function dorea_cashback_campaign_content():void
 {
+    /**
+     * load necessary libraries files
+     * tailwind css v3.4.16
+     * the official CDN URL: https://cdn.tailwindcss.com
+     * Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
+     */
+    wp_enqueue_script('DOREA_CORE_STYLE', DOREA_PLUGIN_URL . 'js/tailWindCssV3416.min.js', array('jquery', 'jquery-ui-core'),
+        array(),
+        1,
+        true
+    );
+
     // update admin footer
     function add_admin_footer_text() {
         return 'Crypto Dorea: <a class="!underline" href="https://cryptodorea.io">cryptodorea.io</a>';
     }
     add_filter( 'admin_footer_text', 'add_admin_footer_text', 11 );
     function update_admin_footer_text() {
-        return 'Version 1.0.0';
+        return 'Version 1.1.1';
     }
     add_filter( 'update_footer', 'update_admin_footer_text', 11 );
 
     // load campaign css styles
-    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',plugins_url('/cryptodorea/css/campaign.css'),
+    wp_enqueue_style('DOREA_CAMPAIGN_STYLE',DOREA_PLUGIN_URL . ('css/doreaCampaign.css'),
         array(),
         1,
     );
 
     // load campaign scripts
-    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',plugins_url('/cryptodorea/js/campaign.js'), array('jquery', 'jquery-ui-core'),
+    wp_enqueue_script('DOREA_CAMPAIGN_SCRIPT',DOREA_PLUGIN_URL . ('js/doreaCampaign.js'), array('jquery', 'jquery-ui-core'),
         array(),
         1,
         true
@@ -42,7 +56,7 @@ function dorea_cashback_campaign_content():void
     $monthsList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     $daysList = ['January'=>31, 'February'=>29, 'March'=>31, 'April'=>30, 'May'=>31, 'June'=>30, 'July'=>31, 'August'=>31, 'September'=>30, 'October'=>31, 'November'=>30, 'December'=>31];
 
-    print("<main>");
+    print("<main class='doreaContent'>");
     print("<h1 class='!p-5 !text-sm !font-bold'>Create Campaign</h1>");
 
     print("
@@ -60,7 +74,7 @@ function dorea_cashback_campaign_content():void
 
         <form class='!grid !grid-cols-1 !mt-5' method='POST' action='".esc_url($credit_url)."' id='cashback_campaign'>
             
-            <input type='hidden' name='action' value='cashback_campaign'>
+           <input type='hidden' name='action' value='cashback_campaign'>
            
            <!-- campaign name field -->
            <div class='!col-span-1 !w-12/12'>
@@ -86,6 +100,11 @@ function dorea_cashback_campaign_content():void
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Shopping Counts options -->
                 <input id='shoppingCount' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='shoppingCount' placeholder='user shopping count'>
+            </div>
+            
+            <div class='!col-span-1 !w-12/12 !mt-3'>
+                <!-- Checkout Text -->
+                <input id='campaignSlogan' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='campaignSlogan' placeholder='casmpaign slogan (optional)'>
             </div>
             
             <div class='!col-span-1 !w-12/12 !mt-5'>
@@ -203,6 +222,7 @@ function dorea_admin_cashback_campaign():void
             }
             $campaignName = trim(sanitize_text_field(sanitize_key(wp_unslash($_POST['campaignName']))));
             $cryptoType = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['cryptoType'])));
+            $campaignSlogan = htmlspecialchars(sanitize_text_field(wp_unslash($_POST['campaignSlogan'])));
 
             if(!is_numeric(trim(sanitize_text_field(wp_unslash($_POST['cryptoAmount'])))) || !is_numeric(trim(sanitize_text_field(wp_unslash($_POST['shoppingCount']))))){
                 //throws error on amount format
@@ -234,9 +254,9 @@ function dorea_admin_cashback_campaign():void
             $campaignName = $campaignName . "_" . substr(md5(openssl_random_pseudo_bytes(20)),-7);
 
             $cashback = new cashbackController();
-            if(get_option('campaign_list')){
+            if(get_option('dorea_campaign_list')){
                 //throws error on existed campaign
-                if(in_array($campaignName, get_option('campaign_list'))){
+                if(in_array($campaignName, get_option('dorea_campaign_list'))){
                     $redirect_url = add_query_arg('existedCampaignError', urlencode('Campaign is already existed!'), $referer);
                     wp_redirect($redirect_url);
                     exit;
@@ -250,14 +270,14 @@ function dorea_admin_cashback_campaign():void
 
             }else {
 
-                if (empty(get_option('campaign_list')) || get_option('campaign_list') === NULL) {
+                if (empty(get_option('dorea_campaign_list')) || get_option('dorea_campaign_list') === NULL) {
 
-                    delete_option('campaign_list');
+                    delete_option('dorea_campaign_list');
 
                 }
 
                 // create campaign
-                $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount,$timestampStart, $timestampExpire);
+                $cashback->create($campaignName, $campaignNameLable, $cryptoType, $cryptoAmount, $shoppingCount, $campaignSlogan, $timestampStart, $timestampExpire);
 
                 $url = 'admin.php?page=credit&cashbackName=' . $campaignName;
                 $nonce = wp_create_nonce("deploy_campaign_nonce");

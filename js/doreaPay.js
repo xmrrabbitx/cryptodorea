@@ -1,22 +1,20 @@
+/**
+ * load etherjs library
+ * URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
+ * Source Code: https://github.com/ethers-io/ethers.js
+ */
+import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./etherv67.min.js";
 
-// load etherJs library
-import {ethers, BrowserProvider, ContractFactory, formatEther, formatUnits, parseEther, Wallet} from "./ethers.min.js";
-
-import {abi} from "./compile.js";
+import {abi} from "./doreaCompile.js";
 
 let payCampaign = document.getElementById("dorea_pay");
 let errorMessg = document.getElementById("dorea_error");
 let successMessg = document.getElementById("dorea_success");
-const beforeTrxModal = document.getElementById("beforeTrxModal");
 
 jQuery(document).ready(async function($) {
 
-    if(sessionStorage.getItem('deployState')){
-        location.replace(`${window.location.origin}/wp-admin/admin.php?page=crypto-dorea-cashback`);
-    }
-
     payCampaign.addEventListener("click", async function () {
-
+/*
         // connect to Arbitrum One  Mainnet
         await window.ethereum.request({
             method: "wallet_addEthereumChain",
@@ -32,6 +30,7 @@ jQuery(document).ready(async function($) {
                 blockExplorerUrls: ["https://arbitrum.blockscout.com/"]
             }]
         });
+*/
 
         function convertToWei(amounts) {
 
@@ -86,18 +85,20 @@ jQuery(document).ready(async function($) {
             const messageHash = ethers.id(message);
 
             const body = document.body;
+            let doreaFailBreakLoading = document.getElementById("doreaFailedBreakStatusLoading");
+            let doreaBeforeTrxModal = document.getElementById("doreaBeforeTrxModal");
 
             try {
 
                 // show warning before Trx popup message
-                $(beforeTrxModal).show("slow");
-                await new Promise(r => setTimeout(r, 2000));
-
-                sessionStorage.setItem('deployState', 'false');
+                $(doreaBeforeTrxModal).show("slow");
+                await new Promise(r => setTimeout(r, 3000));
+                $(doreaBeforeTrxModal).hide("slow");
 
                 // disable dorea fund button
                 payCampaign.disabled = true;
 
+                $(doreaFailBreakLoading).show();
                 // Disable interactions
                 body.style.pointerEvents = 'none';
                 body.style.opacity = '0.5'; // Optional: Makes the body look grayed out
@@ -136,20 +137,30 @@ jQuery(document).ready(async function($) {
                     return true;
                 }
 
-                await contract.pay(
+                let trxId = param.trxId;
+                let _wpnonce =  param.payAjaxNonce;
+                let failedTime = Date.now();
+                localStorage.setItem('payFailBreak', JSON.stringify({campaignName, trxId, _wpnonce, failedTime}) );
+
+                localStorage.setItem("doreaTimer", true);
+                localStorage.setItem("doreaPayStatus", 'open');
+
+                let payObj = await contract.pay(
                     JSON.parse(userAddresses),
                     amounts,
+                    param.trxId,
                     messageHash,
                     v,
                     r,
                     s
-                ).then(async function (response) {
+                )
 
-                    sessionStorage.setItem('payFailBreak', JSON.stringify({campaignName}) );
+                localStorage.setItem("doreaPayStatus", 'confirm');
 
-                    response.wait().then(async (receipt) => {
-                        // transaction on confirmed and mined
-                        if (receipt) {
+                await payObj.wait().then(async (receipt) => {
+
+                    // transaction on confirmed and mined
+                    if (receipt) {
 
                             balance = await contract.getBalance();
                             balance = convertWeiToEther(parseInt(balance));
@@ -161,7 +172,7 @@ jQuery(document).ready(async function($) {
 
                             jQuery.ajax({
                                 type: "post",
-                                url: `${window.location.origin}/wp-admin/admin-ajax.php?_wpnonce=` + param.payAjaxNonce,
+                                url: param.ajax_url + '?_wpnonce=' + param.payAjaxNonce,
                                 data: {
                                     action: "dorea_pay",
                                     data: JSON.stringify({
@@ -170,18 +181,20 @@ jQuery(document).ready(async function($) {
                                         'balance': balance,
                                         "campaignName": campaignName,
                                         "totalPurchases": param.totalPurchases,
-                                        "claimedAmount": param.qualifiedUserEthers
+                                        "claimedAmount": param.qualifiedUserEthers,
+                                        "trxId":param.trxId
                                     }),
                                 },
                                 complete: function (response) {
 
-                                    $(beforeTrxModal).hide("slow");
+                                    $(doreaBeforeTrxModal).hide("slow");
 
-                                    sessionStorage.removeItem('payFailBreak');
-                                    sessionStorage.removeItem('deployState');
+                                    localStorage.removeItem('payFailBreak');
+                                    localStorage.removeItem('doreaPayStatus');
 
                                     window.location.reload();
 
+                                    $(doreaFailBreakLoading).hide();
                                     // enable interactions
                                     body.style.pointerEvents = 'visible';
                                     body.style.opacity = '1';
@@ -193,14 +206,17 @@ jQuery(document).ready(async function($) {
                             });
 
                         }
-                    });
+
                 });
             }
             catch (error) {
 
-                $(beforeTrxModal).hide("slow");
+                $(doreaBeforeTrxModal).hide("slow");
+                $(doreaFailBreakLoading).hide();
 
-                sessionStorage.removeItem('deployState');
+                localStorage.removeItem('deployState');
+                localStorage.removeItem('doreaPayStatus');
+
 
                 // enable dorea fund button
                 payCampaign.disabled = false;
