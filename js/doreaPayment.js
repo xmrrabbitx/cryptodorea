@@ -39,7 +39,8 @@ jQuery(document).ready(async function($) {
         }
     );
     doreaProductCategoriesSubmit.addEventListener("click", async function () {
-        if (categoriesProducts.length > 0) {
+
+        console.log(categoriesProducts)
             jQuery.ajax({
                 type: "post",
                 url: categoryParams.ajax_url + '?_wpnonce=' + categoryParams.categoryAjaxNonce, data: {
@@ -50,10 +51,10 @@ jQuery(document).ready(async function($) {
                     }),
                 },
                 complete: function (response) {
-                    // response on completed!
+
                 },
             });
-        }
+            $(doreaProductCategoriesList).toggle("slow");
     });
     // switch campaign off/on
     doreaSwitchcCampaign.addEventListener("input", async function () {

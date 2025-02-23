@@ -104,7 +104,7 @@ function dorea_cashback_campaign_content():void
             
             <div class='!col-span-1 !w-12/12 !mt-3'>
                 <!-- Checkout Text -->
-                <input id='campaignSlogan' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='campaignSlogan' placeholder='insert casmpaign slogan'>
+                <input id='campaignSlogan' class='!border-hidden !w-64 !mt-2 !p-2' type='text' name='campaignSlogan' placeholder='casmpaign slogan (optional)'>
             </div>
             
             <div class='!col-span-1 !w-12/12 !mt-5'>

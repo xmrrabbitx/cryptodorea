@@ -801,9 +801,9 @@ function dorea_category():void
             $json = json_decode($json);
             $campaignName = sanitize_text_field(wp_unslash($json->campaignName));
             $categories = $json->categories;
-            if(!empty($categories)) {
-                get_option('doreaCategoryProducts' . $campaignName) == true ? update_option('doreaCategoryProducts' . $campaignName, $categories) : add_option('doreaCategoryProducts' . $campaignName,$categories);
-            }
+
+            get_option('doreaCategoryProducts' . $campaignName) == true || get_option('doreaCategoryProducts' . $campaignName) === [] ? update_option('doreaCategoryProducts' . $campaignName, $categories) : add_option('doreaCategoryProducts' . $campaignName,$categories);
+
         }
     }
 }

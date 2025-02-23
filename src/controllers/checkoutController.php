@@ -175,12 +175,14 @@ class checkoutController extends checkoutAbstract
             foreach (WC()->cart->get_cart() as $cart_item) {
                 $product = $cart_item['data'];
                 $product_id = $product->get_id();
-                $categories = strip_tags(wc_get_product_category_list($product_id)); // Get categories without HTML
+                $categories = strip_tags(wc_get_product_category_list($product_id));
 
-                if(in_array($categories, $productCategoriesUser)) {
-                    $productCategories[] = true;
-                }else{
-                    $productCategories[] = false;
+                foreach ($productCategoriesUser as $cat) {
+                    if (str_contains($categories, $cat)) {
+                        $productCategories[] = true;
+                    } else {
+                        $productCategories[] = false;
+                    }
                 }
             }
         }
