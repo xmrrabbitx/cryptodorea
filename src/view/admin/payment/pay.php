@@ -157,7 +157,7 @@ function dorea_admin_pay_campaign():void
 
     // get product categories
     $productCategories = new productController();
-    $productCategoriesUser = get_option('doreaCategoryProducts' . $cashbackName) == true ? get_option('doreaCategoryProducts' . $cashbackName) : [];
+    $productCategoriesUser = get_option('dorea_category_products_' . $cashbackName) == true ? get_option('dorea_category_products_' . $cashbackName) : [];
 
     /**
      * Filter Products Categories
@@ -274,7 +274,7 @@ function dorea_admin_pay_campaign():void
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
                         $purchaseCounts[] = true;
-
+var_dump($campaignUser[$cashbackName]);
                         // calculate final price in ETH format
                         $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'], $shoppingCount);
 
@@ -802,7 +802,7 @@ function dorea_category():void
             $campaignName = sanitize_text_field(wp_unslash($json->campaignName));
             $categories = $json->categories;
 
-            get_option('doreaCategoryProducts' . $campaignName) == true || get_option('doreaCategoryProducts' . $campaignName) === [] ? update_option('doreaCategoryProducts' . $campaignName, $categories) : add_option('doreaCategoryProducts' . $campaignName,$categories);
+            get_option('dorea_category_products_' . $campaignName) == true || get_option('dorea_category_products_' . $campaignName) === [] ? update_option('dorea_category_products_' . $campaignName, $categories) : add_option('dorea_category_products_' . $campaignName,$categories);
 
         }
     }

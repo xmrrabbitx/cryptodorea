@@ -36,7 +36,7 @@ class receiptController extends receiptAbstract
         if(!empty($campaignListKeys)) {
             foreach ($campaignListKeys as $campaignName) {
 
-               $campaignCategories = get_option('doreaCategoryProducts' . $campaignName) ?? [];
+               $campaignCategories = get_option('dorea_category_products_' . $campaignName) ?? [];
                if(!empty($campaignCategories)) {
                     $total = [];
                     /**
@@ -60,16 +60,20 @@ class receiptController extends receiptAbstract
                             $categories = implode(', ', $category_names);
                         }
 
-                        if(in_array($categories, $campaignCategories)) {
-                            $price = trim(strip_tags(html_entity_decode(wc_price($price))));
-                            $total[] = (float)str_replace("$", '', $price);
+                        foreach ($campaignCategories as $cat) {
+                            if (str_contains($categories, $cat)) {
+                                $price = trim(strip_tags(html_entity_decode(wc_price($price))));
+
+                                $total[] = (float)str_replace("$", '', $price);
+                            }
                         }
                     }
+
                     $total = array_sum($total);
                 }
                else{
                     $total = (float)$order->total;
-                }
+               }
 
                $mode = get_transient('dorea_' . $campaignName)['mode'];
                if ($mode === "on") {

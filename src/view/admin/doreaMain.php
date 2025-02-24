@@ -359,7 +359,6 @@ function dorea_main_page_content():void
 
 }
 
-
 /**
  * Delete Campaign Modal
  */
@@ -390,7 +389,7 @@ function doreaDeleteModal():bool
 include('campaign.php');
 
 /**
- * Credit
+ * Credit Campaign
  */
 include('campaignCredit.php');
 

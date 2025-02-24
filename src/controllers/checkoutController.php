@@ -168,7 +168,7 @@ class checkoutController extends checkoutAbstract
      */
     function doreaCartCategories(string $campaign):array
     {
-        $productCategoriesUser = get_option('doreaCategoryProducts' . $campaign) ?? null;
+        $productCategoriesUser = get_option('dorea_category_products_' . $campaign) ?? null;
         $productCategories = [];
         // check product categories
         if(!empty($productCategoriesUser)){

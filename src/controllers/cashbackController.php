@@ -95,6 +95,12 @@ class cashbackController extends cashbackAbstract
             if($campaignUsers){
                 delete_option("dorea_campaigns_users_" . $campaignName);
             }
+
+            // remove campaign users filter categories
+            $campaignCategories = get_option("dorea_category_products_" . $campaignName);
+            if($campaignCategories){
+                delete_option("dorea_category_products_" . $campaignName);
+            }
         }
     }
 }
