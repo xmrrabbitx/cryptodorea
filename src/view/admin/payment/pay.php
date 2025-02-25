@@ -179,7 +179,7 @@ function dorea_admin_pay_campaign():void
                 <div id='doreaProductCategoriesList' class='!pb-5 !p-3  !w-auto !ml-1 !mr-1 !p-2 !col-span-1 !mt-2 !rounded-sm !border border-slate-700 !float-left' style='display: none'>  
 
     ");
-
+    $i = 0;
     foreach ($productCategories->listCategories() as $categories){
         if(in_array($categories, $productCategoriesUser)){
            $checked  = "checked";
@@ -190,12 +190,12 @@ function dorea_admin_pay_campaign():void
         print("
               <div class='!flex !mt-1'>
                   <div class='!w-1/12 !ml-1'>
-                      <input class='doreaProductCategoriesValues !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($categories) . "' $checked>
+                      <input id='doreaProductCategoriesValues_".$i."' class='doreaProductCategoriesValues !accent-white !text-white !mt-1 !cursor-pointer' type='checkbox' value='" . esc_html($categories) . "' $checked>
                   </div>
-                  <label class='doreaProductCategoriesValues !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
+                  <label id='doreaProductCategoriesValues_".$i."' class='doreaProductCategoriesValues !w-11/12 !pl-3 !text-left !ml-0 xl:!text-sm lg:!text-sm md:!text-sm sm:!text-sm !text-[12px] !float-left !content-center !whitespace-break-spaces !cursor-pointer'>".esc_html($categories)."</label>
               </div>
         ");
-
+        $i++;
     }
 
     print(" 
@@ -274,7 +274,7 @@ function dorea_admin_pay_campaign():void
                     if ($campaignUser && $campaignUser[$cashbackName]['purchaseCounts'] >= $shoppingCount) {
 
                         $purchaseCounts[] = true;
-var_dump($campaignUser[$cashbackName]);
+
                         // calculate final price in ETH format
                         $qualifiedPurchases = array_chunk($campaignUser[$cashbackName]['total'], $shoppingCount);
 

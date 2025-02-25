@@ -7,6 +7,7 @@ let doreaProductCategoriesArrowDown = document.getElementById("doreaProductCateg
 let doreaProductCategoriesArrowUp = document.getElementById("doreaProductCategoriesArrowUp");
 let doreaProductCategoriesSubmit = document.getElementById("doreaProductCategoriesSubmit");
 let doreaProductCategoriesValues = document.querySelectorAll(".doreaProductCategoriesValues");
+let doreaProductCategoriesLabels = document.querySelectorAll(".doreaProductCategoriesLabels");
 
 let categoriesProducts = [];
 jQuery(document).ready(async function($) {
@@ -28,6 +29,13 @@ jQuery(document).ready(async function($) {
                 categoriesProducts.push(element.value);
             }
             element.addEventListener('click', function () {
+                let id = element.id.split('_')[1];
+                let  checkbox = document.getElementById('doreaProductCategoriesValues_' + id);
+
+                if(element.tagName === "LABEL") {
+                    checkbox.checked = checkbox.checked !== true;
+                }
+
                 if (element.checked) {
                     categoriesProducts.push(element.value);
                 } else {
@@ -35,6 +43,14 @@ jQuery(document).ready(async function($) {
                         return letter !== element.value;
                     });
                 }
+            })
+        }
+    );
+    doreaProductCategoriesLabels.forEach(
+        (element) => {
+
+            element.addEventListener('click', function () {
+                console.log(doreaProductCategoriesValues.value);
             })
         }
     );
