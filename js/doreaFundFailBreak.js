@@ -21,7 +21,6 @@ jQuery(document).ready(async function($) {
     let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
 
     if(fundFailBreak){
-        console.log(fundStatus)
         if(fundStatus) {
             if (fundStatus === "open") {
                 localStorage.removeItem('doreaFundStatus');

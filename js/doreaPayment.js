@@ -7,7 +7,6 @@ let doreaProductCategoriesArrowDown = document.getElementById("doreaProductCateg
 let doreaProductCategoriesArrowUp = document.getElementById("doreaProductCategoriesArrowUp");
 let doreaProductCategoriesSubmit = document.getElementById("doreaProductCategoriesSubmit");
 let doreaProductCategoriesValues = document.querySelectorAll(".doreaProductCategoriesValues");
-let doreaProductCategoriesLabels = document.querySelectorAll(".doreaProductCategoriesLabels");
 
 let categoriesProducts = [];
 jQuery(document).ready(async function($) {
@@ -46,18 +45,8 @@ jQuery(document).ready(async function($) {
             })
         }
     );
-    doreaProductCategoriesLabels.forEach(
-        (element) => {
-
-            element.addEventListener('click', function () {
-                console.log(doreaProductCategoriesValues.value);
-            })
-        }
-    );
     doreaProductCategoriesSubmit.addEventListener("click", async function () {
-
-        console.log(categoriesProducts)
-            jQuery.ajax({
+         jQuery.ajax({
                 type: "post",
                 url: categoryParams.ajax_url + '?_wpnonce=' + categoryParams.categoryAjaxNonce, data: {
                     action: "dorea_category",

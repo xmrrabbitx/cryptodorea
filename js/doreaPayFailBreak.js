@@ -51,7 +51,6 @@ jQuery(document).ready(async function($) {
     let doreaRjectMetamask = document.getElementById('doreaRjectMetamask');
 
     if(payFailBreak){
-        console.log(payStatus)
         if(payStatus) {
             if (payStatus === "open") {
                 localStorage.removeItem('doreaPayStatus');
@@ -121,7 +120,6 @@ jQuery(document).ready(async function($) {
                         balance = convertWeiToEther(parseInt(balance));
                         let trxId = await contract.checkTrxIds(_trxId);
 
-                        console.log(trxId)
                         if (trxId === true) {
                             jQuery.ajax({
                                 type: "post",
