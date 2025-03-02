@@ -155,7 +155,7 @@ function dorea_admin_help_campaign():void
             <p class='!w-10/12 !pl-5 !mt-3 !leading-7'>
             When you fund a campaign, you send it to the Ethereum blockchain. Besides the amount of money you send to the campaign, 
             a small amount of fee (regularly less than $1) pays for the blockchain. Also, 10% of the campaign amount will be calculated and sent to Dorea's Account Address: 
-            <span class='!font-bold'> 0x15cddCcF29A3d2653cCA38f4d752bd78171fa180 </span>
+            <span class='!font-bold'> 0xD259dcA1DaD40c3bD798E308cF6c82DB43d8d1Dc </span>
             as the service payment. This 10% guarantees the efforts of the Dorea Team to keep going on optimizing and making better the crypto Dorea plugin.
             </p>
             

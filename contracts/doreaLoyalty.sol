@@ -6,7 +6,7 @@ pragma solidity >=0.4.20 <0.9.0;
 */
 contract cryptoDorea {
 
-    address private doreaAddress = 0x15cddCcF29A3d2653cCA38f4d752bd78171fa180;
+    address private doreaAddress = 0xD259dcA1DaD40c3bD798E308cF6c82DB43d8d1Dc;
     uint256 private _percentage = 10;
     address private _signer;
     bytes32[] private _trxIds;

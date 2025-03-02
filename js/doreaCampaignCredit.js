@@ -49,7 +49,6 @@ function delay(){
                     }]
                 });
 
-
                 let errorMessg = document.getElementById("errorMessg");
                 const metamaskError = document.getElementById("dorea_metamask_error");
 
