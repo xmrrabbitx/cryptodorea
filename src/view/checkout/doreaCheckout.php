@@ -4,7 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 use Cryptodorea\DoreaCashback\controllers\cashbackController;
 use Cryptodorea\DoreaCashback\controllers\checkoutController;
-//use Cryptodorea\DoreaCashback\controllers\productController;
 
 /**
  * error handling of checkout fields
@@ -270,7 +269,7 @@ function doreaCashback(): void
                     }
                     // HPO mode enabled!
                     else {
-                        $mode = null;
+
                         if (!empty($diffCampaignsList)) {
 
                             $addtoCashback = true;
@@ -288,7 +287,6 @@ function doreaCashback(): void
                                         if (get_option('dorea_' . $campaign . '_contract_address')) {
 
                                             $contractAddressConfirm = true;
-                                            $mode = $campaignInfo['mode'];
 
                                             // check if campaign started or not
                                             if ($checkoutController->expire($campaign) && $campaignInfo['mode'] === "on") {

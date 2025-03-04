@@ -35,18 +35,21 @@ jQuery(document).ready(async function($) {
                     checkbox.checked = checkbox.checked !== true;
                 }
 
-                if (element.checked) {
-                    categoriesProducts.push(element.value);
+                if (element.checked || checkbox.checked) {
+                    let value = element.value === true ? element.value : element.innerText;
+                    categoriesProducts.push(value);
                 } else {
                     categoriesProducts = categoriesProducts.filter(function (letter) {
-                        return letter !== element.value;
+                        let value = element.value === true ? element.value : element.innerText;
+                        return letter !== value;
                     });
                 }
             })
         }
     );
     doreaProductCategoriesSubmit.addEventListener("click", async function () {
-         jQuery.ajax({
+         console.log(categoriesProducts)
+        jQuery.ajax({
                 type: "post",
                 url: categoryParams.ajax_url + '?_wpnonce=' + categoryParams.categoryAjaxNonce, data: {
                     action: "dorea_category",
@@ -58,8 +61,8 @@ jQuery(document).ready(async function($) {
                 complete: function (response) {
 
                 },
-            });
-            $(doreaProductCategoriesList).toggle("slow");
+        });
+        $(doreaProductCategoriesList).toggle("slow");
     });
     // switch campaign off/on
     doreaSwitchcCampaign.addEventListener("input", async function () {

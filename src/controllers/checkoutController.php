@@ -172,6 +172,7 @@ class checkoutController extends checkoutAbstract
         $productCategories = [];
         // check product categories
         if(!empty($productCategoriesUser)){
+
             foreach (WC()->cart->get_cart() as $cart_item) {
                 $product = $cart_item['data'];
                 $product_id = $product->get_id();
