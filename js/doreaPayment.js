@@ -8,7 +8,6 @@ let doreaProductCategoriesArrowUp = document.getElementById("doreaProductCategor
 let doreaProductCategoriesSubmit = document.getElementById("doreaProductCategoriesSubmit");
 let doreaProductCategoriesValues = document.querySelectorAll(".doreaProductCategoriesValues");
 
-let categoriesProducts = [];
 jQuery(document).ready(async function($) {
 
     // list of product categories
@@ -22,6 +21,8 @@ jQuery(document).ready(async function($) {
             $(doreaProductCategoriesArrowUp).show();
         }
     });
+
+    let categoriesProducts = [];
     doreaProductCategoriesValues.forEach(
         (element) => {
             if (element.checked) {
@@ -34,13 +35,12 @@ jQuery(document).ready(async function($) {
                 if(element.tagName === "LABEL") {
                     checkbox.checked = checkbox.checked !== true;
                 }
-
                 if (element.checked || checkbox.checked) {
-                    let value = element.value === true ? element.value : element.innerText;
+                    let value = element.innerText === "" ? element.value : element.innerText;
                     categoriesProducts.push(value);
                 } else {
                     categoriesProducts = categoriesProducts.filter(function (letter) {
-                        let value = element.value === true ? element.value : element.innerText;
+                        let value = element.innerText === "" ? element.value : element.innerText;
                         return letter !== value;
                     });
                 }
@@ -48,7 +48,6 @@ jQuery(document).ready(async function($) {
         }
     );
     doreaProductCategoriesSubmit.addEventListener("click", async function () {
-         console.log(categoriesProducts)
         jQuery.ajax({
                 type: "post",
                 url: categoryParams.ajax_url + '?_wpnonce=' + categoryParams.categoryAjaxNonce, data: {
@@ -91,5 +90,4 @@ jQuery(document).ready(async function($) {
             });
         }
     })
-
 })
