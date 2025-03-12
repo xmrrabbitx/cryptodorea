@@ -24,6 +24,8 @@ We believe in privacy. All the processes are decentralized and transparent on su
 * Monitor the purchases of the most loyal customers at special events.
 * You can set as many Ethereum for cashback as you want, from $0.1 to $1000, or any amount you wish to.
 * enable/disable the crypto cashback campaign whenever you want.
+* Set custom slogan labels for each campaign.
+* Filter campaigns based on product category.
 
 you can check and find out more on [CryptoDorea](https://cryptodorea.io)
 
@@ -62,3 +64,9 @@ Source code: https://github.com/tailwindlabs/tailwindcss/tree/v3.4.16
 it includes Ethers.js v6.7.0 for blockchain interactions and payment.
 URL: https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js
 Source Code: https://github.com/ethers-io/ethers.js
+
+== Changelog ==
+
+= 1.2.0 =
+* adding custom slogan filed feature
+* adding filter product feature
