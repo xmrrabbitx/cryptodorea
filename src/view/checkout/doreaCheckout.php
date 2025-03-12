@@ -220,12 +220,14 @@ function doreaCashback(): void
                                                     ");
                                                 }
 
+                                                $seperator = !empty($campaignInfo['campaignSlogan']) ? " _ " : "";
+
                                                 woocommerce_form_field(
                                                     $campaignInfo['campaignName'],
                                                     array(
                                                         'type' => 'checkbox',
                                                         'class' => array('dorea-campaigns-class form-row-wide'),
-                                                        'label' => $campaignInfo['campaignNameLable'],
+                                                        'label' => $campaignInfo['campaignNameLable'] . $seperator . $campaignInfo['campaignSlogan'],
                                                         'required' => false,
                                                         'custom_attributes' => array('optional' => false)
                                                     ),
